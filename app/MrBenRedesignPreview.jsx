@@ -1016,9 +1016,17 @@ export default function MrBenRedesignPreview() {
   const [lang, setLang] = useState("fr");
   const t = useI18n(lang);
 
-  return (
-    <div className="min-h-screen bg-white text-zinc-900">
-      ...
-    </div>
-  );
+return (
+  <div className="min-h-screen bg-white text-zinc-900">
+    <TopBar t={t} />
+    <Nav onQuote={() => setQuoteOpen(true)} t={t} lang={lang} setLang={setLang} />
+    <Hero onQuote={() => setQuoteOpen(true)} t={t} />
+    <Services t={t} />
+    <Gallery t={t} />
+    <Reviews t={t} />
+    <ServiceArea t={t} />
+    <Contact onQuote={() => setQuoteOpen(true)} t={t} />
+    <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} t={t} />
+  </div>
+);
 }
