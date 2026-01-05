@@ -12,19 +12,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
   title: {
     default: "MrBen.ca",
     template: "%s | MrBen.ca",
   },
+  description: "Professional window cleaning, gutter cleaning, and exterior washing",
   icons: {
-    icon: "/favicon.png",
-    apple: "/apple-touch-icon.png",
+    icon: "/favicon-32x32.png",
+    apple: "/apple-touch-icon-180x180.png",
   },
 };
 
-  description: "Professional window cleaning, gutter cleaning, and exterior washing",
-};
 
 
 export default function RootLayout({
