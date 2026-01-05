@@ -12,9 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
+export const metadata = {
   title: {
     default: "MrBen.ca",
     template: "%s | MrBen.ca",
@@ -25,6 +23,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon-180x180.png",
   },
 };
+
 
 
 
