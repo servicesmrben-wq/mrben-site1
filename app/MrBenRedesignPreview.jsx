@@ -47,7 +47,7 @@ const SERVICE_AREAS = [
 
 const IMAGE_URLS = [
   // HERO IMAGE — in Next.js, place your file in /public/images and use a public path like this:
-  "/public/hero.jpg",
+  "/hero.jpg",
 
   // Gallery placeholders (replace with your own)
   "https://images.unsplash.com/photo-1581579185169-9b0c2b3c0b6f?auto=format&fit=crop&w=1600&q=70",
