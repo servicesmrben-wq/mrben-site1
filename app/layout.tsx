@@ -17,6 +17,12 @@ export const metadata = {
     default: "MrBen.ca",
     template: "%s | MrBen.ca",
   },
+  icons: {
+    icon: "/favicon.png",
+    apple: "/apple-touch-icon.png",
+  },
+};
+
   description: "Professional window cleaning, gutter cleaning, and exterior washing",
 };
 
