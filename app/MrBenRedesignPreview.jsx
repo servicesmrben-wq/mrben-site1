@@ -433,8 +433,9 @@ function Hero({ onQuote, t }) {
       <div className="absolute inset-0 opacity-100">
         <img src={IMAGE_URLS[0]} alt="Hero" className="h-full w-full object-cover" />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/70 via-zinc-950/50 to-zinc-950" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/30 to-zinc-950/70" />
 
+      
       <div className="relative mx-auto max-w-6xl px-4 py-16 sm:py-20">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
