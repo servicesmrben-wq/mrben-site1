@@ -430,7 +430,7 @@ function Nav({ onQuote, t, lang, setLang }) {
 function Hero({ onQuote, t }) {
   return (
     <div className="relative overflow-hidden bg-zinc-950">
-      <div className="absolute inset-0 opacity-70">
+      <div className="absolute inset-0 opacity-100">
         <img src={IMAGE_URLS[0]} alt="Hero" className="h-full w-full object-cover" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/70 via-zinc-950/50 to-zinc-950" />
