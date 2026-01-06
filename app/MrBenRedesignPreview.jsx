@@ -607,7 +607,7 @@ function Gallery({ t }) {
         <p className="mt-3 text-base text-zinc-600">{t("galleryP")}</p>
 
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-          {GALLERY_URLS.map((src) => (
+          {IMAGE_URLS.slice(1).map((src) => (
             <div
               key={src}
               className="overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-50"
