@@ -606,21 +606,22 @@ function Gallery({ t }) {
         </h3>
         <p className="mt-3 text-base text-zinc-600">{t("galleryP")}</p>
 
-        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-          {IMAGE_URLS.slice(1).map((src) => (
-            <div
-              key={src}
-              className="overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-50"
-            >
-              <img
-                src={src}
-                alt="Gallery"
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
+<div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
+  {IMAGE_URLS.slice(1).map((src) => (
+    <div
+      key={src}
+      className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-50"
+    >
+      <img
+        src={src}
+        alt="Gallery"
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+      />
+    </div>
+  ))}
+</div>
+
       </div>
     </section>
   );
