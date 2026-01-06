@@ -26,11 +26,11 @@ import {
  */
 
 const BRAND = {
-  name: "MrBenTest.ca",
+  name: "MrBen.ca",
   phoneDisplay: "514-699-7145",
   phoneHref: "tel:+15146997145",
-  email: "services.mrben@gmail.com",
-  emailHref: "mailto:services.mrben@gmail.com",
+  email: "info@mrben.ca",
+  emailHref: "info@mrben.ca",
 };
 
 const SERVICE_AREAS = [
@@ -73,7 +73,7 @@ const i18n = {
     navContact: "Contact",
     navCall: "Appeler",
     navOnline: "Demande en ligne",
-    navSub: "Lavage • Gouttières • Pression",
+    navSub: "Vitres • Gouttières • Pression",
 
     // Hero
     heroBadgeA: "Résidentiel & commercial",
