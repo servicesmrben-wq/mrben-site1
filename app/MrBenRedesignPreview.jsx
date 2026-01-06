@@ -46,10 +46,8 @@ const SERVICE_AREAS = [
 ];
 
 const IMAGE_URLS = [
-  // HERO IMAGE — in Next.js, place your file in /public/images and use a public path like this:
   "/hero.jpg",
 
-  // GALLERY IMAGES (in /public/gallery)
   "/gallery/IMG_20160719_112351214_HDR.jpg",
   "/gallery/window_side_by_side.jpg",
   "/gallery/20180710_113343_HDR.jpg",
@@ -60,6 +58,7 @@ const IMAGE_URLS = [
   "/gallery/20191024_104344_HDR.jpg",
   "/gallery/20190902_095350.jpg",
   "/gallery/ce03f5d2-8956-4b11-b65c-cf51085e4f4e.jpg",
+];
 
 const i18n = {
   fr: {
