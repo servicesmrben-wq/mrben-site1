@@ -598,30 +598,43 @@ function Services({ t }) {
 }
 
 function Gallery({ t }) {
+  const imgs = useMemo(() => IMAGE_URLS.slice(1), []);
+  const [active, setActive] = useState(0);
+
   return (
     <section id="galerie" className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
-        <h3 className="text-3xl font-semibold tracking-tight text-zinc-900">
-          {t("galleryT")}
-        </h3>
-        <p className="mt-3 text-base text-zinc-600">{t("galleryP")}</p>
+      <div className="mx-auto max-w-6xl px-4 pb-14 sm:pb-16">
+        <SectionTitle kicker={t("secGalK")} title={t("secGalT")} subtitle={t("secGalS")} />
 
-<div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-  {IMAGE_URLS.slice(1).map((src) => (
-    <div
-      key={src}
-      className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-50"
-    >
-      <img
-        src={src}
-        alt="Gallery"
-        className="absolute inset-0 h-full w-full object-cover"
-        loading="lazy"
-      />
-    </div>
-  ))}
-</div>
+        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-5">
+          <div className="lg:col-span-3">
+            <div className="overflow-hidden rounded-3xl border border-zinc-200 shadow-sm">
+              <img src={imgs[active]} alt="Work" className="h-[320px] w-full object-cover sm:h-[420px]" />
+            </div>
+          </div>
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-2">
+              {imgs.map((src, i) => (
+                <button
+                  key={src}
+                  onClick={() => setActive(i)}
+                  className={classNames(
+                    "overflow-hidden rounded-2xl border shadow-sm transition",
+                    i === active ? "border-zinc-900 ring-2 ring-zinc-900" : "border-zinc-200 hover:border-zinc-400"
+                  )}
+                  aria-label={`View image ${i + 1}`}
+                >
+                  <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
+                </button>
+              ))}
+            </div>
 
+            <div className="mt-6 rounded-3xl border border-zinc-200 bg-zinc-50 p-5 shadow-sm">
+              <div className="text-sm font-semibold text-zinc-900">{t("tip")}</div>
+              <p className="mt-1 text-sm text-zinc-600">{t("tipText")}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
