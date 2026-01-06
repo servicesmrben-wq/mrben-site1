@@ -49,13 +49,17 @@ const IMAGE_URLS = [
   // HERO IMAGE — in Next.js, place your file in /public/images and use a public path like this:
   "/hero.jpg",
 
-  // Gallery placeholders (replace with your own)
-  "https://images.unsplash.com/photo-1581579185169-9b0c2b3c0b6f?auto=format&fit=crop&w=1600&q=70",
-  "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1600&q=70",
-  "https://images.unsplash.com/photo-1503428593586-e225b39bddfe?auto=format&fit=crop&w=1600&q=70",
-  "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=1600&q=70",
-  "https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?auto=format&fit=crop&w=1600&q=70",
-];
+  // GALLERY IMAGES (in /public/gallery)
+  "/gallery/IMG_20160719_112351214_HDR.jpg",
+  "/gallery/window_side_by_side.jpg",
+  "/gallery/20180710_113343_HDR.jpg",
+  "/gallery/lavage-pression-beton.jpg",
+  "/gallery/cleaning-a-rain-gutter.webp",
+  "/gallery/20180710_142453.jpg",
+  "/gallery/20190617_110022.jpg",
+  "/gallery/20191024_104344_HDR.jpg",
+  "/gallery/20190902_095350.jpg",
+  "/gallery/ce03f5d2-8956-4b11-b65c-cf51085e4f4e.jpg",
 
 const i18n = {
   fr: {
