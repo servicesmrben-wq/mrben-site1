@@ -58,6 +58,9 @@ const IMAGE_URLS = [
   "/gallery/20191024_104344_HDR_gallery.jpg",
   "/gallery/20190902_095350_gallery.jpg",
   "/gallery/ce03f5d2-8956-4b11-b65c-cf51085e4f4e~1_gallery.jpg",
+  "/gallery/powerwashing-driveway.jpg",
+  "/gallery/gutters-clean.jpg",
+  "/gallery/merged-horizonta-windows.jpg",
 ];
 
 const i18n = {
