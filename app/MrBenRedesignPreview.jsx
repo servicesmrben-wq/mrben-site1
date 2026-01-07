@@ -48,16 +48,16 @@ const SERVICE_AREAS = [
 const IMAGE_URLS = [
   "/hero.jpg",
 
-  "/gallery/IMG_20160719_112351214_HDR.jpg",
-  "/gallery/window_side_by_side.jpg",
-  "/gallery/20180710_113343_HDR.jpg",
-  "/gallery/lavage-pression-beton.jpg",
-  "/gallery/cleaning-a-rain-gutter.webp",
-  "/gallery/20180710_142453.jpg",
-  "/gallery/20190617_110022.jpg",
-  "/gallery/20191024_104344_HDR.jpg",
-  "/gallery/20190902_095350.jpg",
-  "/gallery/ce03f5d2-8956-4b11-b65c-cf51085e4f4e.jpg",
+  "/gallery/IMG_20160719_112351214_HDR_Easy-Resize.com_gallery.jpg",
+  "/gallery/window_side_by_side_gallery.jpg",
+  "/gallery/20180710_113343_HDR_gallery.jpg",
+  "/gallery/lavage pression beton_gallery.jpg",
+  "/gallery/Cleaning a Rain Gutter_gallery.jpg",
+  "/gallery/20180710_142453_gallery.jpg",
+  "/gallery/20190617_110022_gallery.jpg",
+  "/gallery/20191024_104344_HDR_gallery.jpg",
+  "/gallery/20190902_095350_gallery.jpg",
+  "/gallery/ce03f5d2-8956-4b11-b65c-cf51085e4f4e~1_gallery.jpg",
 ];
 
 const i18n = {
