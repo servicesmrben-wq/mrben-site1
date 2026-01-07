@@ -781,7 +781,7 @@ function ServiceArea({ t }) {
   );
 }
 
-function Contact({ onQuote, t }) {
+function Contact({ t }) {
   return (
     <section id="contact" className="bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
