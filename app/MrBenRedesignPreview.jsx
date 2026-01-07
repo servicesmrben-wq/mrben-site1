@@ -847,10 +847,15 @@ function Contact({ onQuote, t }) {
 
           <div className="rounded-3xl bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-lg font-semibold text-zinc-900">{t("formT")}</div>
-                <p className="mt-1 text-sm text-zinc-600">{t("formP")}</p>
-              </div>
+  <div>
+    <div className="text-lg font-semibold text-zinc-900">
+      {t("formT")}
+    </div>
+    <p className="mt-1 text-sm text-zinc-600">
+      {t("formP")}
+    </p>
+  </div>
+</div>
 
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Input label={t("name")} placeholder={t("name")} />
