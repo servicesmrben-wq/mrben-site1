@@ -851,13 +851,6 @@ function Contact({ onQuote, t }) {
                 <div className="text-lg font-semibold text-zinc-900">{t("formT")}</div>
                 <p className="mt-1 text-sm text-zinc-600">{t("formP")}</p>
               </div>
-              <button
-                onClick={onQuote}
-                className="inline-flex items-center gap-2 rounded-2xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
-              >
-                {t("open")} <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
 
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Input label={t("name")} placeholder={t("name")} />
