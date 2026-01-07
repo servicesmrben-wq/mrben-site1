@@ -725,13 +725,33 @@ function ValueCard({ icon, title, desc }) {
 
 function ServiceArea({ t }) {
   return (
-    <section id="territoire" className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
-        <SectionTitle kicker={t("secAreaK")} title={t("secAreaT")} subtitle={t("secAreaS")} />
+    <section
+      id="territoire"
+      className="relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/territoire-map.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Light overlay so text/cards stay readable */}
+      <div className="absolute inset-0 bg-white/70" />
+
+      {/* Content */}
+      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:py-16">
+        <SectionTitle
+          kicker={t("secAreaK")}
+          title={t("secAreaT")}
+          subtitle={t("secAreaS")}
+        />
 
         <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
           <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm lg:col-span-2">
-            <div className="text-sm font-semibold text-zinc-900">{t("cities")}</div>
+            <div className="text-sm font-semibold text-zinc-900">
+              {t("cities")}
+            </div>
+
             <div className="mt-4 flex flex-wrap gap-2">
               {SERVICE_AREAS.map((c) => (
                 <span
@@ -743,12 +763,17 @@ function ServiceArea({ t }) {
                 </span>
               ))}
             </div>
+
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
           </div>
 
           <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm">
-            <div className="text-sm font-semibold text-zinc-900">{t("convTip")}</div>
-            <p className="mt-2 text-sm text-zinc-600">{t("convTipText")}</p>
+            <div className="text-sm font-semibold text-zinc-900">
+              {t("convTip")}
+            </div>
+            <p className="mt-2 text-sm text-zinc-600">
+              {t("convTipText")}
+            </p>
           </div>
         </div>
       </div>
