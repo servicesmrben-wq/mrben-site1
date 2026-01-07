@@ -632,10 +632,7 @@ function Gallery({ t }) {
               ))}
             </div>
 
-            <div className="mt-6 rounded-3xl border border-zinc-200 bg-zinc-50 p-5 shadow-sm">
-              <div className="text-sm font-semibold text-zinc-900">{t("tip")}</div>
-              <p className="mt-1 text-sm text-zinc-600">{t("tipText")}</p>
-            </div>
+
           </div>
         </div>
       </div>
