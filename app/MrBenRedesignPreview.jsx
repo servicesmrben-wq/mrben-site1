@@ -919,13 +919,13 @@ function Contact({ t }) {
   );
 }
 
-function Input({ label, placeholder }) {
+function Input({ label, ...inputProps }) {
   return (
     <label className="block">
       <div className="text-sm font-semibold text-zinc-900">{label}</div>
       <input
+        {...inputProps}
         className="mt-2 w-full rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400"
-        placeholder={placeholder}
       />
     </label>
   );
