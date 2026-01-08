@@ -1004,6 +1004,77 @@ async function onSubmit(e) {
                 <p className="mt-2 text-xs text-zinc-500">{t("descHint")}</p>
               </div>
 
+              {/* Image upload */}
+<div className="mt-4">
+  <div className="text-sm font-semibold text-zinc-900">
+    {t("langShort") === "FR" ? "Photo (optionnel)" : "Photo (optional)"}
+  </div>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="mt-2 block w-full text-sm"
+    onChange={async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setUploading(true);
+      setStatus({ state: "idle", message: "" });
+
+      try {
+        const data = new FormData();
+        data.append("file", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: data,
+        });
+
+        const json = await res.json().catch(() => ({}));
+
+        if (!res.ok || !json.url) {
+          setImageUrl("");
+          setStatus({
+            state: "error",
+            message:
+              json?.error ||
+              (t("langShort") === "FR"
+                ? "Échec du téléversement. Veuillez réessayer."
+                : "Upload failed. Please try again."),
+          });
+          return;
+        }
+
+        setImageUrl(json.url);
+      } catch {
+        setImageUrl("");
+        setStatus({
+          state: "error",
+          message:
+            t("langShort") === "FR"
+              ? "Erreur réseau pendant le téléversement."
+              : "Network error during upload.",
+        });
+      } finally {
+        setUploading(false);
+      }
+    }}
+  />
+
+  {uploading && (
+    <p className="mt-2 text-xs text-zinc-500">
+      {t("langShort") === "FR" ? "Téléversement..." : "Uploading..."}
+    </p>
+  )}
+
+  {imageUrl && !uploading && (
+    <p className="mt-2 text-xs text-emerald-700 break-all">
+      {t("langShort") === "FR" ? "Image téléversée :" : "Image uploaded:"} {imageUrl}
+    </p>
+  )}
+</div>
+
+
               {status.state !== "idle" && (
                 <div
                   className={`mt-4 rounded-2xl p-3 text-sm ${
@@ -1024,7 +1095,7 @@ async function onSubmit(e) {
 
               <button
                 type="submit"
-                disabled={status.state === "sending"}
+disabled={status.state === "sending" || uploading}
                 className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 disabled:opacity-60"
               >
                 {status.state === "sending"
