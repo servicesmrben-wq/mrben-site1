@@ -790,8 +790,12 @@ function Contact({ t }) {
     message: "",
   });
 
+  const [imageUrl, setImageUrl] = useState(""); // empty string is easier than null
+  const [uploading, setUploading] = useState(false);
+
   const [services, setServices] = useState([]);
-  const [status, setStatus] = useState({ state: "idle", message: "" }); 
+
+  const [status, setStatus] = useState({ state: "idle", message: "" });
   // state: "idle" | "sending" | "success" | "error"
 
   const serviceOptions = [
@@ -807,58 +811,66 @@ function Contact({ t }) {
     );
   }
 
-  async function onSubmit(e) {
-    e.preventDefault();
-    setStatus({ state: "sending", message: "" });
+async function onSubmit(e) {
+  e.preventDefault();
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          phone: form.phone,
-          email: form.email,
-          address: form.address,
-          services,
-          message: form.message,
-        }),
-      });
+  if (uploading) {
+    setStatus({
+      state: "error",
+      message: t("langShort") === "FR" ? "Téléversement en cours..." : "Upload in progress...",
+    });
+    return;
+  }
 
-      const data = await res.json().catch(() => ({}));
+  setStatus({ state: "sending", message: "" });
 
-      if (!res.ok || !data.ok) {
-        setStatus({
-          state: "error",
-          message:
-            data?.error ||
-            (t("langShort") === "FR"
-              ? "Échec de l’envoi. Veuillez réessayer."
-              : "Failed to send. Please try again."),
-        });
-        return;
-      }
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        address: form.address,
+        services,
+        message: form.message,
+        imageUrl: imageUrl || "", // ✅ add this
+      }),
+    });
 
-      setStatus({
-        state: "success",
-        message:
-          t("langShort") === "FR"
-            ? "Message envoyé. Nous vous contacterons sous peu."
-            : "Message sent. We will contact you shortly.",
-      });
+    const data = await res.json().catch(() => ({}));
 
-      setForm({ name: "", phone: "", email: "", address: "", message: "" });
-      setServices([]);
-    } catch {
+    if (!res.ok || !data.ok) {
       setStatus({
         state: "error",
         message:
-          t("langShort") === "FR"
-            ? "Erreur réseau. Veuillez réessayer."
-            : "Network error. Please try again.",
+          data?.error ||
+          (t("langShort") === "FR"
+            ? "Échec de l’envoi. Veuillez réessayer."
+            : "Failed to send. Please try again."),
       });
+      return;
     }
+
+    setStatus({
+      state: "success",
+      message:
+        t("langShort") === "FR"
+          ? "Message envoyé. Nous vous contacterons sous peu."
+          : "Message sent. We will contact you shortly.",
+    });
+
+    setForm({ name: "", phone: "", email: "", address: "", message: "" });
+    setServices([]);
+    setImageUrl(""); // ✅ clear uploaded image link after success
+  } catch {
+    setStatus({
+      state: "error",
+      message: t("langShort") === "FR" ? "Erreur réseau. Veuillez réessayer." : "Network error. Please try again.",
+    });
   }
+}
 
   return (
     <section id="contact" className="bg-zinc-950">
