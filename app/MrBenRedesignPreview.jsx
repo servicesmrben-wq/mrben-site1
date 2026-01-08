@@ -782,6 +782,84 @@ function ServiceArea({ t }) {
 }
 
 function Contact({ t }) {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    message: "",
+  });
+
+  const [services, setServices] = useState([]);
+  const [status, setStatus] = useState({ state: "idle", message: "" }); 
+  // state: "idle" | "sending" | "success" | "error"
+
+  const serviceOptions = [
+    t("langShort") === "FR" ? "Lavage de vitres intérieures/extérieures" : "Interior/exterior windows",
+    t("langShort") === "FR" ? "Lavage de vitres extérieures seulement" : "Exterior windows only",
+    t("langShort") === "FR" ? "Vidange de gouttières" : "Gutter cleaning",
+    t("langShort") === "FR" ? "Lavage de revêtement" : "Siding wash",
+  ];
+
+  function toggleService(label) {
+    setServices((prev) =>
+      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
+    );
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    setStatus({ state: "sending", message: "" });
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          address: form.address,
+          services,
+          message: form.message,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        setStatus({
+          state: "error",
+          message:
+            data?.error ||
+            (t("langShort") === "FR"
+              ? "Échec de l’envoi. Veuillez réessayer."
+              : "Failed to send. Please try again."),
+        });
+        return;
+      }
+
+      setStatus({
+        state: "success",
+        message:
+          t("langShort") === "FR"
+            ? "Message envoyé. Nous vous contacterons sous peu."
+            : "Message sent. We will contact you shortly.",
+      });
+
+      setForm({ name: "", phone: "", email: "", address: "", message: "" });
+      setServices([]);
+    } catch {
+      setStatus({
+        state: "error",
+        message:
+          t("langShort") === "FR"
+            ? "Erreur réseau. Veuillez réessayer."
+            : "Network error. Please try again.",
+      });
+    }
+  }
+
   return (
     <section id="contact" className="bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
@@ -847,60 +925,104 @@ function Contact({ t }) {
 
           <div className="rounded-3xl bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
-  <div>
-    <div className="text-lg font-semibold text-zinc-900">
-      {t("formT")}
-    </div>
-    <p className="mt-1 text-sm text-zinc-600">
-      {t("formP")}
-    </p>
-  </div>
-</div>
-
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Input label={t("name")} placeholder={t("name")} />
-              <Input label={t("phoneLabel")} placeholder={BRAND.phoneDisplay} />
-              <Input label={t("emailLabel")} placeholder="you@example.com" />
-              <Input label={t("address")} placeholder={t("address")} />
-            </div>
-
-            <div className="mt-4">
-              <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
-              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {[
-                  t("langShort") === "FR" ? "Lavage de vitres intérieures/extérieures" : "Interior/exterior windows",
-                  t("langShort") === "FR" ? "Lavage de vitres extérieures seulement" : "Exterior windows only",
-                  t("langShort") === "FR" ? "Vidange de gouttières" : "Gutter cleaning",
-                  t("langShort") === "FR" ? "Lavage de revêtement" : "Siding wash",
-                ].map((x) => (
-                  <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                    <input type="checkbox" className="mt-1" />
-                    <span className="text-sm text-zinc-700">{x}</span>
-                  </label>
-                ))}
+              <div>
+                <div className="text-lg font-semibold text-zinc-900">{t("formT")}</div>
+                <p className="mt-1 text-sm text-zinc-600">{t("formP")}</p>
               </div>
             </div>
 
-            <div className="mt-4">
-              <div className="text-sm font-semibold text-zinc-900">{t("desc")}</div>
-              <textarea
-                rows={4}
-                className="mt-2 w-full rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400"
-                placeholder={
-                  t("langShort") === "FR"
-                    ? "Ex.: maison plain-pied, 12 fenêtres, besoin vitres + gouttières..."
-                    : "Example: single-storey, 12 windows, need windows + gutters..."
-                }
-              />
-              <p className="mt-2 text-xs text-zinc-500">{t("descHint")}</p>
-            </div>
+            <form onSubmit={onSubmit}>
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Input
+                  label={t("name")}
+                  placeholder={t("name")}
+                  value={form.name}
+                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                />
+                <Input
+                  label={t("phoneLabel")}
+                  placeholder={BRAND.phoneDisplay}
+                  value={form.phone}
+                  onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+                />
+                <Input
+                  label={t("emailLabel")}
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                />
+                <Input
+                  label={t("address")}
+                  placeholder={t("address")}
+                  value={form.address}
+                  onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))}
+                />
+              </div>
 
-            <button
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
-              onClick={() => alert("Preview: connect this button to your email/CRM.")}
-            >
-              {t("send")} <ArrowRight className="h-4 w-4" />
-            </button>
+              <div className="mt-4">
+                <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
+                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {serviceOptions.map((x) => (
+                    <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
+                      <input
+                        type="checkbox"
+                        className="mt-1"
+                        checked={services.includes(x)}
+                        onChange={() => toggleService(x)}
+                      />
+                      <span className="text-sm text-zinc-700">{x}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <div className="text-sm font-semibold text-zinc-900">{t("desc")}</div>
+                <textarea
+                  rows={4}
+                  className="mt-2 w-full rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400"
+                  placeholder={
+                    t("langShort") === "FR"
+                      ? "Ex.: maison plain-pied, 12 fenêtres, besoin vitres + gouttières..."
+                      : "Example: single-storey, 12 windows, need windows + gutters..."
+                  }
+                  value={form.message}
+                  onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
+                />
+                <p className="mt-2 text-xs text-zinc-500">{t("descHint")}</p>
+              </div>
+
+              {status.state !== "idle" && (
+                <div
+                  className={`mt-4 rounded-2xl p-3 text-sm ${
+                    status.state === "success"
+                      ? "bg-emerald-50 text-emerald-900"
+                      : status.state === "error"
+                      ? "bg-red-50 text-red-900"
+                      : "bg-zinc-50 text-zinc-900"
+                  }`}
+                >
+                  {status.state === "sending"
+                    ? t("langShort") === "FR"
+                      ? "Envoi en cours..."
+                      : "Sending..."
+                    : status.message}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={status.state === "sending"}
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 disabled:opacity-60"
+              >
+                {status.state === "sending"
+                  ? t("langShort") === "FR"
+                    ? "Envoi..."
+                    : "Sending..."
+                  : t("send")}{" "}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </form>
 
             <div className="mt-5 rounded-2xl bg-zinc-50 p-4">
               <div className="text-xs font-semibold text-zinc-900">{t("quick")}</div>
