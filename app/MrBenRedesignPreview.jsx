@@ -1206,15 +1206,6 @@ function QuoteModal({ open, onClose, t }) {
                   }
                 />
 
-                <div className="mt-4 rounded-2xl bg-zinc-50 p-4">
-                  <div className="text-sm font-semibold text-zinc-900">
-                    {t("langShort") === "FR" ? "Pour aller plus vite" : "To go faster"}
-                  </div>
-                  <p className="mt-1 text-sm text-zinc-600">
-                    {t("langShort") === "FR" ? "Envoyez quelques photos à" : "Email a few photos to"} {" "}
-                    <span className="font-semibold">{BRAND.email}</span>.
-                  </p>
-                </div>
               </div>
             )}
 
