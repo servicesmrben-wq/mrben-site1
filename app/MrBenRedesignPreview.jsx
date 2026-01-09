@@ -1103,12 +1103,6 @@ disabled={status.state === "sending" || uploading}
               </button>
             </form>
 
-            <div className="mt-5 rounded-2xl bg-zinc-50 p-4">
-              <div className="text-xs font-semibold text-zinc-900">{t("quick")}</div>
-              <div className="mt-1 text-xs text-zinc-600">
-                {t("quickTextA")} <span className="font-semibold">{BRAND.email}</span>.
-              </div>
-            </div>
           </div>
         </div>
 
