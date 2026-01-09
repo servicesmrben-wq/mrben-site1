@@ -184,12 +184,10 @@ const i18n = {
     choose: "Choisissez un ou plusieurs services",
     desc: "Description",
     descHint:
-      "Astuce: joindre des photos par courriel accélère la soumission.",
+      "Astuce : ajouter des photos accélère l’obtention d’un devis.",
     send: "Envoyer la demande",
-    quick: "Option rapide",
-    quickTextA: "Envoyez des photos à ",
-
     modalTitle: "Demande en ligne",
+    
     modalStep: "Étape",
     modalOf: "sur",
     cancel: "Annuler",
@@ -314,10 +312,8 @@ const i18n = {
     address: "Address",
     choose: "Choose one or more services",
     desc: "Details",
-    descHint: "Tip: emailing photos speeds up quoting.",
+    descHint: "Tip: adding photos speeds up quoting.",
     send: "Send request",
-    quick: "Quick option",
-    quickTextA: "Email photos to ",
 
     modalTitle: "Online request",
     modalStep: "Step",
