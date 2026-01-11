@@ -303,8 +303,6 @@ const i18n = {
     services: "Services",
 
     formT: "Online request",
-    formP:
-      "Simple form (UI). We can connect it to your email, Square, or a CRM.",
     open: "Open",
     name: "Name",
     phoneLabel: "Phone",
@@ -935,7 +933,6 @@ async function onSubmit(e) {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-zinc-900">{t("formT")}</div>
-                <p className="mt-1 text-sm text-zinc-600">{t("formP")}</p>
               </div>
             </div>
 
