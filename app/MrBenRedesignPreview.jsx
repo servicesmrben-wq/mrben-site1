@@ -87,7 +87,7 @@ const i18n = {
     heroH1a: "Des vitres impeccables.",
     heroH1b: "Une maison qui a l’air neuve.",
     heroP:
-      "Équipe attentionnée, courtoise et ponctuelle — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
+      "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
     heroStat1T: "Finition sans traces",
     heroStat1S: "Détails soignés",
