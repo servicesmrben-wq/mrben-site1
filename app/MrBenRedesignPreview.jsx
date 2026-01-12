@@ -170,7 +170,7 @@ const i18n = {
     phone: "Téléphone",
     email: "Courriel",
     hours: "Heures",
-    hoursText: "Lundi–Vendredi • 8h–17h (exemple)",
+    hoursText: "Lundi–Vendredi • 8h–17h",
     services: "Services",
 
     formT: "Demande en ligne",
@@ -185,6 +185,12 @@ const i18n = {
     desc: "Description",
     descHint:
       "Astuce : ajouter des photos accélère l’obtention d’un devis.",
+    photoLabel: "Ajoutez quelques images de votre maison ici !",
+    photoHelper: "JPG/PNG • 5 Mo max par photo • 1 à 5 photos",
+    photoErrorMax: "Maximum 5 photos.",
+    photoErrorType: "Formats acceptés : JPG/JPEG et PNG.",
+    photoErrorSize: "Chaque photo doit faire 5 Mo ou moins.",
+    photoRemove: "Retirer",
     send: "Envoyer la demande",
     modalTitle: "Demande en ligne",
     
@@ -299,7 +305,7 @@ const i18n = {
     phone: "Phone",
     email: "Email",
     hours: "Hours",
-    hoursText: "Mon–Fri • 8am–5pm (example)",
+    hoursText: "Mon–Fri • 8am–5pm",
     services: "Services",
 
     formT: "Online request",
@@ -311,6 +317,12 @@ const i18n = {
     choose: "Choose one or more services",
     desc: "Details",
     descHint: "Tip: adding photos speeds up quoting.",
+    photoLabel: "Add a few images of your house here!",
+    photoHelper: "JPG/PNG • 5 MB max per photo • up to 5 photos",
+    photoErrorMax: "Maximum 5 photos.",
+    photoErrorType: "Accepted formats: JPG/JPEG and PNG.",
+    photoErrorSize: "Each photo must be 5 MB or less.",
+    photoRemove: "Remove",
     send: "Send request",
 
     modalTitle: "Online request",
@@ -784,13 +796,18 @@ function Contact({ t }) {
     message: "",
   });
 
-  const [imageUrl, setImageUrl] = useState(""); // empty string is easier than null
-  const [uploading, setUploading] = useState(false);
+  const [images, setImages] = useState([]);
+  const [imageError, setImageError] = useState("");
+  const [previews, setPreviews] = useState([]);
 
   const [services, setServices] = useState([]);
 
   const [status, setStatus] = useState({ state: "idle", message: "" });
   // state: "idle" | "sending" | "success" | "error"
+
+  const MAX_IMAGES = 5;
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
 
   const serviceOptions = [
     t("langShort") === "FR" ? "Lavage de vitres intérieures/extérieures" : "Interior/exterior windows",
@@ -805,13 +822,39 @@ function Contact({ t }) {
     );
   }
 
+  function validateImages(list) {
+    if (list.length > MAX_IMAGES) {
+      return t("photoErrorMax");
+    }
+    if (list.some((file) => !ALLOWED_IMAGE_TYPES.includes(file.type))) {
+      return t("photoErrorType");
+    }
+    if (list.some((file) => file.size > MAX_IMAGE_SIZE)) {
+      return t("photoErrorSize");
+    }
+    return "";
+  }
+
+  React.useEffect(() => {
+    const nextPreviews = images.map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+    }));
+    setPreviews(nextPreviews);
+    return () => {
+      nextPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    };
+  }, [images]);
+
 async function onSubmit(e) {
   e.preventDefault();
 
-  if (uploading) {
+  const validationMessage = validateImages(images);
+  if (validationMessage) {
+    setImageError(validationMessage);
     setStatus({
       state: "error",
-      message: t("langShort") === "FR" ? "Téléversement en cours..." : "Upload in progress...",
+      message: validationMessage,
     });
     return;
   }
@@ -819,18 +862,20 @@ async function onSubmit(e) {
   setStatus({ state: "sending", message: "" });
 
   try {
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("phone", form.phone);
+    formData.append("email", form.email);
+    formData.append("address", form.address);
+    formData.append("services", JSON.stringify(services));
+    formData.append("message", form.message);
+    images.forEach((file) => {
+      formData.append("images", file);
+    });
+
     const res = await fetch("/api/contact", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: form.name,
-        phone: form.phone,
-        email: form.email,
-        address: form.address,
-        services,
-        message: form.message,
-        imageUrl: imageUrl || "", // ✅ add this
-      }),
+      body: formData,
     });
 
     const data = await res.json().catch(() => ({}));
@@ -857,7 +902,8 @@ async function onSubmit(e) {
 
     setForm({ name: "", phone: "", email: "", address: "", message: "" });
     setServices([]);
-    setImageUrl(""); // ✅ clear uploaded image link after success
+    setImages([]);
+    setImageError("");
   } catch {
     setStatus({
       state: "error",
@@ -946,7 +992,7 @@ async function onSubmit(e) {
                 />
                 <Input
                   label={t("phoneLabel")}
-                  placeholder={BRAND.phoneDisplay}
+                  placeholder="450-555-0123"
                   value={form.phone}
                   onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
                 />
@@ -998,74 +1044,82 @@ async function onSubmit(e) {
               </div>
 
               {/* Image upload */}
-<div className="mt-4">
-  <div className="text-sm font-semibold text-zinc-900">
-    {t("langShort") === "FR" ? "Photo (optionnel)" : "Photo (optional)"}
-  </div>
+              <div className="mt-4">
+                <div className="text-sm font-semibold text-zinc-900">
+                  {t("photoLabel")}
+                </div>
 
-  <input
-    type="file"
-    accept="image/*"
-    className="mt-2 block w-full text-sm"
-    onChange={async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+                <div className="mt-2 rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    multiple
+                    className="block w-full text-sm text-zinc-900"
+                    onChange={(e) => {
+                      const selected = Array.from(e.target.files || []);
+                      if (!selected.length) return;
 
-      setUploading(true);
-      setStatus({ state: "idle", message: "" });
+                      const nextImages = [...images, ...selected];
+                      const validationMessage = validateImages(nextImages);
 
-      try {
-        const data = new FormData();
-        data.append("file", file);
+                      if (validationMessage) {
+                        setImageError(validationMessage);
+                        setStatus({ state: "idle", message: "" });
+                        e.target.value = "";
+                        return;
+                      }
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: data,
-        });
+                      setImages(nextImages);
+                      setImageError("");
+                      setStatus({ state: "idle", message: "" });
+                      e.target.value = "";
+                    }}
+                  />
 
-        const json = await res.json().catch(() => ({}));
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+                    <span>{t("photoHelper")}</span>
+                    <span className="hidden text-zinc-300 sm:inline">•</span>
+                    <span>
+                      {t("langShort") === "FR"
+                        ? `${images.length} sur ${MAX_IMAGES} sélectionnées`
+                        : `${images.length} of ${MAX_IMAGES} selected`}
+                    </span>
+                  </div>
+                </div>
 
-        if (!res.ok || !json.url) {
-          setImageUrl("");
-          setStatus({
-            state: "error",
-            message:
-              json?.error ||
-              (t("langShort") === "FR"
-                ? "Échec du téléversement. Veuillez réessayer."
-                : "Upload failed. Please try again."),
-          });
-          return;
-        }
+                {imageError && (
+                  <p className="mt-2 text-xs text-red-600">{imageError}</p>
+                )}
 
-        setImageUrl(json.url);
-      } catch {
-        setImageUrl("");
-        setStatus({
-          state: "error",
-          message:
-            t("langShort") === "FR"
-              ? "Erreur réseau pendant le téléversement."
-              : "Network error during upload.",
-        });
-      } finally {
-        setUploading(false);
-      }
-    }}
-  />
-
-  {uploading && (
-    <p className="mt-2 text-xs text-zinc-500">
-      {t("langShort") === "FR" ? "Téléversement..." : "Uploading..."}
-    </p>
-  )}
-
-  {imageUrl && !uploading && (
-    <p className="mt-2 text-xs text-emerald-700 break-all">
-      {t("langShort") === "FR" ? "Image téléversée :" : "Image uploaded:"} {imageUrl}
-    </p>
-  )}
-</div>
+                {previews.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    {previews.map((preview, index) => (
+                      <div
+                        key={`${preview.url}-${preview.file.name}`}
+                        className="relative h-20 w-20 overflow-hidden rounded-2xl border border-zinc-200"
+                      >
+                        <img
+                          src={preview.url}
+                          alt={preview.file.name}
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          aria-label={t("photoRemove")}
+                          className="absolute right-1 top-1 rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold text-zinc-700 shadow-sm"
+                          onClick={() => {
+                            const next = images.filter((_, i) => i !== index);
+                            setImages(next);
+                            setImageError(validateImages(next));
+                          }}
+                        >
+                          {t("photoRemove")}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
 
               {status.state !== "idle" && (
@@ -1088,7 +1142,7 @@ async function onSubmit(e) {
 
               <button
                 type="submit"
-disabled={status.state === "sending" || uploading}
+                disabled={status.state === "sending"}
                 className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 disabled:opacity-60"
               >
                 {status.state === "sending"
@@ -1164,7 +1218,7 @@ function QuoteModal({ open, onClose, t }) {
             {step === 1 ? (
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input label={t("name")} placeholder={t("name")} />
-                <Input label={t("phoneLabel")} placeholder={BRAND.phoneDisplay} />
+                <Input label={t("phoneLabel")} placeholder="450-555-0123" />
                 <Input label={t("emailLabel")} placeholder="you@example.com" />
                 <Input label={t("address")} placeholder={t("address")} />
                 <div className="sm:col-span-2">
@@ -1223,21 +1277,26 @@ function QuoteModal({ open, onClose, t }) {
 }
 
 export default function MrBenRedesignPreview() {
-  const [quoteOpen, setQuoteOpen] = useState(false);
   const [lang, setLang] = useState("fr");
   const t = useI18n(lang);
 
-return (
-  <div className="min-h-screen bg-white text-zinc-900">
-    <TopBar t={t} />
-    <Nav onQuote={() => setQuoteOpen(true)} t={t} lang={lang} setLang={setLang} />
-    <Hero onQuote={() => setQuoteOpen(true)} t={t} />
-    <Services t={t} />
-    <Gallery t={t} />
-    <Reviews t={t} />
-    <ServiceArea t={t} />
-    <Contact onQuote={() => setQuoteOpen(true)} t={t} />
-    <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} t={t} />
-  </div>
-);
+  const scrollToContact = React.useCallback(() => {
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-white text-zinc-900">
+      <TopBar t={t} />
+      <Nav onQuote={scrollToContact} t={t} lang={lang} setLang={setLang} />
+      <Hero onQuote={scrollToContact} t={t} />
+      <Services t={t} />
+      <Gallery t={t} />
+      <Reviews t={t} />
+      <ServiceArea t={t} />
+      <Contact onQuote={scrollToContact} t={t} />
+    </div>
+  );
 }
