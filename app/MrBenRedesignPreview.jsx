@@ -27,8 +27,8 @@ import {
 
 const BRAND = {
   name: "MrBen.ca",
-  phoneDisplay: "450-555-0123",
-  phoneHref: "tel:+14505550123",
+  phoneDisplay: "514-699-7145",
+  phoneHref: "tel:+15146997145",
   email: "info@mrben.ca",
   emailHref: "info@mrben.ca",
 };
@@ -992,7 +992,7 @@ async function onSubmit(e) {
                 />
                 <Input
                   label={t("phoneLabel")}
-                  placeholder={BRAND.phoneDisplay}
+                  placeholder="450-555-0123"
                   value={form.phone}
                   onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
                 />
@@ -1218,7 +1218,7 @@ function QuoteModal({ open, onClose, t }) {
             {step === 1 ? (
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input label={t("name")} placeholder={t("name")} />
-                <Input label={t("phoneLabel")} placeholder={BRAND.phoneDisplay} />
+                <Input label={t("phoneLabel")} placeholder="450-555-0123" />
                 <Input label={t("emailLabel")} placeholder="you@example.com" />
                 <Input label={t("address")} placeholder={t("address")} />
                 <div className="sm:col-span-2">
