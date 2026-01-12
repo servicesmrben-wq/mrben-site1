@@ -109,6 +109,7 @@ const i18n = {
     serviceVitresB1: "Résidentiel & commercial",
     serviceVitresB2: "Équipement pour hauteurs",
     serviceVitresB3: "Finition sans traces",
+    serviceVitresIconAlt: "Icône lavage de vitres",
 
     serviceGoutT: "Vidange de gouttières",
     serviceGoutD:
@@ -117,6 +118,7 @@ const i18n = {
     serviceGoutB1: "Retrait des débris",
     serviceGoutB2: "Vérification d’écoulement",
     serviceGoutB3: "Conseils prévention",
+    serviceGoutIconAlt: "Icône vidange de gouttières",
 
     servicePressT: "Nettoyage à pression",
     servicePressD:
@@ -125,6 +127,7 @@ const i18n = {
     servicePressB1: "Allées & patios",
     servicePressB2: "Revêtement extérieur",
     servicePressB3: "Clôtures & terrasses",
+    servicePressIconAlt: "Icône nettoyage à pression",
 
     serviceCTA: "Demander une soumission",
 
@@ -245,6 +248,7 @@ const i18n = {
     serviceVitresB1: "Residential & commercial",
     serviceVitresB2: "Equipment for heights",
     serviceVitresB3: "Streak-free finish",
+    serviceVitresIconAlt: "Window cleaning icon",
 
     serviceGoutT: "Gutter cleaning",
     serviceGoutD:
@@ -253,6 +257,7 @@ const i18n = {
     serviceGoutB1: "Remove debris",
     serviceGoutB2: "Flow check",
     serviceGoutB3: "Prevention advice",
+    serviceGoutIconAlt: "Gutter cleaning icon",
 
     servicePressT: "Pressure washing",
     servicePressD:
@@ -261,6 +266,7 @@ const i18n = {
     servicePressB1: "Driveways & patios",
     servicePressB2: "Exterior siding",
     servicePressB3: "Fences & decks",
+    servicePressIconAlt: "Pressure washing icon",
 
     serviceCTA: "Request a quote",
 
@@ -518,6 +524,8 @@ function Services({ t }) {
       title: t("serviceVitresT"),
       desc: t("serviceVitresD"),
       highlight: t("serviceVitresH"),
+      iconSrc: "/icons/window-squeegee-90x70.png",
+      iconAlt: t("serviceVitresIconAlt"),
       bullets: [t("serviceVitresB1"), t("serviceVitresB2"), t("serviceVitresB3")],
     },
     {
@@ -525,6 +533,8 @@ function Services({ t }) {
       title: t("serviceGoutT"),
       desc: t("serviceGoutD"),
       highlight: t("serviceGoutH"),
+      iconSrc: "/icons/gutter-leaves-90x70.png",
+      iconAlt: t("serviceGoutIconAlt"),
       bullets: [t("serviceGoutB1"), t("serviceGoutB2"), t("serviceGoutB3")],
     },
     {
@@ -532,6 +542,8 @@ function Services({ t }) {
       title: t("servicePressT"),
       desc: t("servicePressD"),
       highlight: t("servicePressH"),
+      iconSrc: "/icons/pressure-wash-90x70.png",
+      iconAlt: t("servicePressIconAlt"),
       bullets: [t("servicePressB1"), t("servicePressB2"), t("servicePressB3")],
     },
   ];
@@ -556,8 +568,8 @@ function Services({ t }) {
                   <div className="text-lg font-semibold text-zinc-900">{s.title}</div>
                   <div className="mt-2 text-sm leading-relaxed text-zinc-600">{s.desc}</div>
                 </div>
-                <div className="rounded-2xl bg-zinc-900 px-3 py-1 text-xs font-semibold text-white">
-                  {s.highlight}
+                <div className="flex h-[70px] w-[90px] items-center justify-center rounded-2xl bg-zinc-900">
+                  <img src={s.iconSrc} alt={s.iconAlt} className="h-[70px] w-[90px] object-contain" />
                 </div>
               </div>
 
