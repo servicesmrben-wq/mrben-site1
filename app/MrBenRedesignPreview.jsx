@@ -1050,8 +1050,12 @@ async function onSubmit(e) {
                   {t("photoLabel")}
                 </div>
 
-                <div className="mt-2 rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400">
+                <label
+                  htmlFor="contactPhotos"
+                  className="mt-2 block cursor-pointer rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400 focus-within:ring-2 focus-within:ring-zinc-200"
+                >
                   <input
+                    id="contactPhotos"
                     type="file"
                     accept="image/jpeg,image/png"
                     multiple
@@ -1086,7 +1090,7 @@ async function onSubmit(e) {
                         : `${images.length} of ${MAX_IMAGES} selected`}
                     </span>
                   </div>
-                </div>
+                </label>
 
                 {imageError && (
                   <p className="mt-2 text-xs text-red-600">{imageError}</p>
