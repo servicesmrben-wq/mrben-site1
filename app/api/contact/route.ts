@@ -2,14 +2,9 @@ import { Resend } from "resend";
 
 export const runtime = "nodejs"; // Resend requires Node runtime (not Edge)
 
-type Payload = {
-  name?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
-  services?: string[];
-  message?: string;
-};
+const MAX_IMAGES = 5;
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -31,14 +26,45 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = (await req.json()) as Payload;
+    const formData = await req.formData();
 
-    const name = (body.name || "").trim();
-    const phone = (body.phone || "").trim();
-    const email = (body.email || "").trim();
-    const address = (body.address || "").trim();
-    const services = Array.isArray(body.services) ? body.services : [];
-    const message = (body.message || "").trim();
+    const name = (formData.get("name")?.toString() || "").trim();
+    const phone = (formData.get("phone")?.toString() || "").trim();
+    const email = (formData.get("email")?.toString() || "").trim();
+    const address = (formData.get("address")?.toString() || "").trim();
+    const servicesRaw = formData.get("services")?.toString() || "[]";
+    const message = (formData.get("message")?.toString() || "").trim();
+
+    let services: string[] = [];
+    try {
+      const parsed = JSON.parse(servicesRaw);
+      services = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      services = [];
+    }
+
+    const files = formData
+      .getAll("images")
+      .filter((item): item is File => item instanceof File);
+
+    if (files.length > MAX_IMAGES) {
+      return new Response(JSON.stringify({ ok: false, error: "Too many images." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    if (files.some((file) => !ALLOWED_IMAGE_TYPES.includes(file.type))) {
+      return new Response(JSON.stringify({ ok: false, error: "Invalid image type." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    if (files.some((file) => file.size > MAX_IMAGE_SIZE)) {
+      return new Response(JSON.stringify({ ok: false, error: "Image exceeds size limit." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     if (!name) {
       return new Response(JSON.stringify({ ok: false, error: "Name is required." }), {
@@ -63,10 +89,22 @@ export async function POST(req: Request) {
       phone ? `Phone: ${phone}` : `Phone: (not provided)`,
       address ? `Address: ${address}` : `Address: (not provided)`,
       `Services: ${services.length ? services.join(", ") : "(none selected)"}`,
+      files.length ? `Images attached: ${files.length}` : "",
       "",
       "Message:",
       message || "(no message)",
     ];
+
+    const attachments = await Promise.all(
+      files.map(async (file) => {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        return {
+          filename: file.name || "attachment",
+          content: buffer.toString("base64"),
+          contentType: file.type || "application/octet-stream",
+        };
+      })
+    );
 
     const { data, error } = await resend.emails.send({
       from: FROM,
@@ -74,7 +112,8 @@ export async function POST(req: Request) {
       // reply_to makes "Reply" go to the customer
       replyTo: email,
       subject,
-      text: textLines.join("\n"),
+      text: textLines.filter(Boolean).join("\n"),
+      attachments: attachments.length ? attachments : undefined,
     });
 
     if (error) {
