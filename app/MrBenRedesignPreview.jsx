@@ -170,7 +170,7 @@ const i18n = {
     phone: "Téléphone",
     email: "Courriel",
     hours: "Heures",
-    hoursText: "Lundi–Vendredi • 8h–17h (exemple)",
+    hoursText: "Lundi–Vendredi • 8h–17h",
     services: "Services",
 
     formT: "Demande en ligne",
@@ -299,7 +299,7 @@ const i18n = {
     phone: "Phone",
     email: "Email",
     hours: "Hours",
-    hoursText: "Mon–Fri • 8am–5pm (example)",
+    hoursText: "Mon–Fri • 8am–5pm",
     services: "Services",
 
     formT: "Online request",
