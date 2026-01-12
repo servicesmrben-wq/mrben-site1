@@ -395,9 +395,11 @@ function Nav({ onQuote, t, lang, setLang }) {
     <div className="sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <a href="#" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-zinc-900 text-white shadow-sm">
-            <span className="text-sm font-semibold">MB</span>
-          </div>
+          <img
+            src="/brand/mrben-logo.png"
+            alt="MrBen logo"
+            className="h-9 w-28 rounded-xl object-contain shadow-sm sm:w-32"
+          />
           <div>
             <div className="text-sm font-semibold text-zinc-900">{BRAND.name}</div>
             <div className="text-xs text-zinc-500">{t("navSub")}</div>
