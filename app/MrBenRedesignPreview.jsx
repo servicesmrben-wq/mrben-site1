@@ -99,7 +99,8 @@ const i18n = {
     // Sections
     secServicesK: "Ce qu’on fait",
     secServicesT: "Services principaux",
-    secServicesS: "Trois services, un standard: travail propre, rapide et durable.",
+    secServicesS:
+      "Trois services, un standard: travail propre, rapide et adapté à vos besoins.",
 
     serviceVitresT: "Lavage de vitres",
     serviceVitresD:
@@ -235,7 +236,7 @@ const i18n = {
     // Sections
     secServicesK: "What we do",
     secServicesT: "Core services",
-    secServicesS: "Three services, one standard: clean, fast, durable work.",
+    secServicesS: "Three services, one standard: clean, fast, and tailored to your needs.",
 
     serviceVitresT: "Window cleaning",
     serviceVitresD:
