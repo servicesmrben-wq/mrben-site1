@@ -27,8 +27,8 @@ import {
 
 const BRAND = {
   name: "MrBen.ca",
-  phoneDisplay: "514-699-7145",
-  phoneHref: "tel:+15146997145",
+  phoneDisplay: "450-555-0123",
+  phoneHref: "tel:+14505550123",
   email: "info@mrben.ca",
   emailHref: "info@mrben.ca",
 };
