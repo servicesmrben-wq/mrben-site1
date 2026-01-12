@@ -398,11 +398,10 @@ function Nav({ onQuote, t, lang, setLang }) {
           <img
             src="/brand/mrben-logo.png"
             alt="MrBen logo"
-            className="h-9 w-28 rounded-xl object-contain shadow-sm sm:w-32"
+            className="h-9 w-28 rounded-xl object-contain sm:w-32"
           />
           <div>
-            <div className="text-sm font-semibold text-zinc-900">{BRAND.name}</div>
-            <div className="text-xs text-zinc-500">{t("navSub")}</div>
+            <div className="text-sm text-zinc-500">{t("navSub")}</div>
           </div>
         </a>
 
