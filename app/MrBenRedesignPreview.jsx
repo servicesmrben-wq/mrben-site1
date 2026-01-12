@@ -185,7 +185,7 @@ const i18n = {
     desc: "Description",
     descHint:
       "Astuce : ajouter des photos accélère l’obtention d’un devis.",
-    photoLabel: "Photos (optionnel)",
+    photoLabel: "Ajoutez quelques images de votre maison ici !",
     photoHelper: "JPG/PNG • 5 Mo max par photo • 1 à 5 photos",
     photoErrorMax: "Maximum 5 photos.",
     photoErrorType: "Formats acceptés : JPG/JPEG et PNG.",
@@ -317,7 +317,7 @@ const i18n = {
     choose: "Choose one or more services",
     desc: "Details",
     descHint: "Tip: adding photos speeds up quoting.",
-    photoLabel: "Photos (optional)",
+    photoLabel: "Add a few images of your house here!",
     photoHelper: "JPG/PNG • 5 MB max per photo • up to 5 photos",
     photoErrorMax: "Maximum 5 photos.",
     photoErrorType: "Accepted formats: JPG/JPEG and PNG.",
@@ -1049,40 +1049,42 @@ async function onSubmit(e) {
                   {t("photoLabel")}
                 </div>
 
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  multiple
-                  className="mt-2 block w-full text-sm"
-                  onChange={(e) => {
-                    const selected = Array.from(e.target.files || []);
-                    if (!selected.length) return;
+                <div className="mt-2 rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    multiple
+                    className="block w-full text-sm text-zinc-900"
+                    onChange={(e) => {
+                      const selected = Array.from(e.target.files || []);
+                      if (!selected.length) return;
 
-                    const nextImages = [...images, ...selected];
-                    const validationMessage = validateImages(nextImages);
+                      const nextImages = [...images, ...selected];
+                      const validationMessage = validateImages(nextImages);
 
-                    if (validationMessage) {
-                      setImageError(validationMessage);
+                      if (validationMessage) {
+                        setImageError(validationMessage);
+                        setStatus({ state: "idle", message: "" });
+                        e.target.value = "";
+                        return;
+                      }
+
+                      setImages(nextImages);
+                      setImageError("");
                       setStatus({ state: "idle", message: "" });
                       e.target.value = "";
-                      return;
-                    }
+                    }}
+                  />
 
-                    setImages(nextImages);
-                    setImageError("");
-                    setStatus({ state: "idle", message: "" });
-                    e.target.value = "";
-                  }}
-                />
-
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
-                  <span>{t("photoHelper")}</span>
-                  <span className="hidden text-zinc-300 sm:inline">•</span>
-                  <span>
-                    {t("langShort") === "FR"
-                      ? `${images.length} sur ${MAX_IMAGES} sélectionnées`
-                      : `${images.length} of ${MAX_IMAGES} selected`}
-                  </span>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+                    <span>{t("photoHelper")}</span>
+                    <span className="hidden text-zinc-300 sm:inline">•</span>
+                    <span>
+                      {t("langShort") === "FR"
+                        ? `${images.length} sur ${MAX_IMAGES} sélectionnées`
+                        : `${images.length} of ${MAX_IMAGES} selected`}
+                    </span>
+                  </div>
                 </div>
 
                 {imageError && (
@@ -1275,21 +1277,26 @@ function QuoteModal({ open, onClose, t }) {
 }
 
 export default function MrBenRedesignPreview() {
-  const [quoteOpen, setQuoteOpen] = useState(false);
   const [lang, setLang] = useState("fr");
   const t = useI18n(lang);
 
-return (
-  <div className="min-h-screen bg-white text-zinc-900">
-    <TopBar t={t} />
-    <Nav onQuote={() => setQuoteOpen(true)} t={t} lang={lang} setLang={setLang} />
-    <Hero onQuote={() => setQuoteOpen(true)} t={t} />
-    <Services t={t} />
-    <Gallery t={t} />
-    <Reviews t={t} />
-    <ServiceArea t={t} />
-    <Contact onQuote={() => setQuoteOpen(true)} t={t} />
-    <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} t={t} />
-  </div>
-);
+  const scrollToContact = React.useCallback(() => {
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-white text-zinc-900">
+      <TopBar t={t} />
+      <Nav onQuote={scrollToContact} t={t} lang={lang} setLang={setLang} />
+      <Hero onQuote={scrollToContact} t={t} />
+      <Services t={t} />
+      <Gallery t={t} />
+      <Reviews t={t} />
+      <ServiceArea t={t} />
+      <Contact onQuote={scrollToContact} t={t} />
+    </div>
+  );
 }
