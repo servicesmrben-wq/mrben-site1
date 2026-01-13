@@ -391,6 +391,7 @@ function TopBar({ t }) {
 
 function Nav({ onQuote, t, lang, setLang }) {
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const navSubLines = React.useMemo(() => t("navSub").split(" • "), [t]);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -425,7 +426,13 @@ function Nav({ onQuote, t, lang, setLang }) {
             className="h-12 w-auto object-contain sm:h-14 md:h-16 lg:h-20"
           />
           <div>
-            <div className="text-sm text-zinc-500">{t("navSub")}</div>
+            <div className="text-xs leading-tight text-zinc-500 sm:text-sm">
+              {navSubLines.map((line, index) => (
+                <span key={`${line}-${index}`} className="block">
+                  • {line}
+                </span>
+              ))}
+            </div>
           </div>
         </a>
 
