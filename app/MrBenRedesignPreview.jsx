@@ -391,7 +391,7 @@ function TopBar({ t }) {
 
 function Nav({ onQuote, t, lang, setLang }) {
   const [isScrolled, setIsScrolled] = React.useState(false);
-  const navSubLines = React.useMemo(() => t("navSub").split("    "), [t]);
+  const navSubLines = React.useMemo(() => t("navSub").split(" • "), [t]);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -419,7 +419,7 @@ function Nav({ onQuote, t, lang, setLang }) {
       } ${headerSurface} transition-colors`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="#" className="flex items-center gap-2">
+        <a href="#" className="flex items-center gap-3">
           <img
             src="/brand/mrben-logo-transparent.png"
             alt="MrBen.ca"
@@ -429,7 +429,7 @@ function Nav({ onQuote, t, lang, setLang }) {
             <div className="text-xs leading-tight text-zinc-500 sm:text-sm">
               {navSubLines.map((line, index) => (
                 <span key={`${line}-${index}`} className="block">
-                  • {line}
+                  {line}
                 </span>
               ))}
             </div>
