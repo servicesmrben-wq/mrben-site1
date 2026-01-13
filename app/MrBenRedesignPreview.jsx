@@ -663,20 +663,22 @@ function Gallery({ t }) {
             </div>
           </div>
           <div className="lg:col-span-2">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-2">
-              {imgs.map((src, i) => (
-                <button
-                  key={src}
-                  onClick={() => setActive(i)}
-                  className={classNames(
-                    "overflow-hidden rounded-2xl border shadow-sm transition",
-                    i === active ? "border-zinc-900 ring-2 ring-zinc-900" : "border-zinc-200 hover:border-zinc-400"
-                  )}
-                  aria-label={`View image ${i + 1}`}
-                >
-                  <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
-                </button>
-              ))}
+            <div className="max-h-none overflow-visible lg:max-h-[420px] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-2">
+                {imgs.map((src, i) => (
+                  <button
+                    key={src}
+                    onClick={() => setActive(i)}
+                    className={classNames(
+                      "overflow-hidden rounded-2xl border shadow-sm transition",
+                      i === active ? "border-zinc-900 ring-2 ring-zinc-900" : "border-zinc-200 hover:border-zinc-400"
+                    )}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
+                  </button>
+                ))}
+              </div>
             </div>
 
 
