@@ -390,6 +390,19 @@ function TopBar({ t }) {
 }
 
 function Nav({ onQuote, t, lang, setLang }) {
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 12);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const headerSurface = isScrolled ? "bg-white/80 backdrop-blur" : "bg-transparent";
   const items = [
     { label: t("navServices"), href: "#services" },
     { label: t("navGallery"), href: "#galerie" },
@@ -399,13 +412,17 @@ function Nav({ onQuote, t, lang, setLang }) {
   ];
 
   return (
-    <div className="sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur">
+    <div
+      className={`sticky top-0 z-40 border-b ${
+        isScrolled ? "border-zinc-200" : "border-transparent"
+      } ${headerSurface} transition-colors`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="#" className="flex items-center gap-2">
+        <a href="#" className={`flex items-center gap-2 ${headerSurface}`}>
           <img
             src="/brand/mrben-logo.png"
             alt="MrBen logo"
-            className="h-9 w-28 rounded-xl object-contain sm:w-32"
+            className="h-9 w-28 rounded-xl bg-transparent object-contain sm:w-32"
           />
           <div>
             <div className="text-sm text-zinc-500">{t("navSub")}</div>
