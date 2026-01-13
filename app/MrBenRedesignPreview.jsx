@@ -418,11 +418,11 @@ function Nav({ onQuote, t, lang, setLang }) {
       } ${headerSurface} transition-colors`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="#" className={`flex items-center gap-2 ${headerSurface}`}>
+        <a href="#" className="flex items-center gap-2">
           <img
-            src="/brand/mrben-logo.png"
-            alt="MrBen logo"
-            className="h-9 w-28 rounded-xl bg-transparent object-contain sm:w-32"
+            src="/brand/mrben-logo-transparent.png"
+            alt="MrBen.ca"
+            className="h-9 w-auto max-w-[180px] object-contain sm:max-w-[200px]"
           />
           <div>
             <div className="text-sm text-zinc-500">{t("navSub")}</div>
