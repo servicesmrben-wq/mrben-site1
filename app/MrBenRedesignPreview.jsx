@@ -568,7 +568,7 @@ function Services({ t }) {
                   <div className="text-lg font-semibold text-zinc-900">{s.title}</div>
                   <div className="mt-2 text-sm leading-relaxed text-zinc-600">{s.desc}</div>
                 </div>
-                <div className="flex h-[70px] w-[90px] items-center justify-center rounded-2xl bg-zinc-900">
+                <div className="flex h-[70px] w-[90px] items-center justify-center rounded-2xl">
                   <img src={s.iconSrc} alt={s.iconAlt} className="h-[70px] w-[90px] object-contain" />
                 </div>
               </div>
