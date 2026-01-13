@@ -422,7 +422,7 @@ function Nav({ onQuote, t, lang, setLang }) {
           <img
             src="/brand/mrben-logo-transparent.png"
             alt="MrBen.ca"
-            className="h-10 w-auto max-w-[200px] object-contain sm:h-12 sm:max-w-[240px]"
+            className="h-12 w-auto object-contain sm:h-14 md:h-16 lg:h-20"
           />
           <div>
             <div className="text-sm text-zinc-500">{t("navSub")}</div>
