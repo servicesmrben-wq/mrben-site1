@@ -391,7 +391,7 @@ function TopBar({ t }) {
 
 function Nav({ onQuote, t, lang, setLang }) {
   const [isScrolled, setIsScrolled] = React.useState(false);
-  const navSubLines = React.useMemo(() => t("navSub").split(" • "), [t]);
+  const navSubLines = React.useMemo(() => t("navSub").split("    "), [t]);
 
   React.useEffect(() => {
     const handleScroll = () => {
