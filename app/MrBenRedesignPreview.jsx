@@ -84,7 +84,7 @@ const i18n = {
     // Hero
     heroBadgeA: "Résidentiel & commercial",
     heroBadgeB: "Laurentides & environs",
-    heroH1a: "Des vitres impeccables.",
+    heroH1a: "Lavage de vitres",
     heroH1b: "Une maison qui a l’air neuve.",
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
@@ -224,7 +224,7 @@ const i18n = {
     // Hero
     heroBadgeA: "Residential & commercial",
     heroBadgeB: "Laurentians & nearby",
-    heroH1a: "Spotless windows.",
+    heroH1a: "Window cleaning",
     heroH1b: "A home that looks new.",
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
@@ -497,7 +497,9 @@ function Hero({ onQuote, t }) {
 
           <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             {t("heroH1a")}
-            <span className="block text-white/90">{t("heroH1b")}</span>
+            <span className="block text-2xl font-normal text-white/80 sm:text-3xl">
+              {t("heroH1b")}
+            </span>
           </h1>
           <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
 
