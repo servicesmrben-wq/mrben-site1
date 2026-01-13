@@ -162,7 +162,7 @@ const i18n = {
     cities: "Villes desservies",
     nearbyCities: "et les villes avoisinantes",
     areaP:
-      "Pour les secteurs limitrophes, envoyez votre adresse et on vous confirme rapidement.",
+      "Pour les secteurs avoisinants, envoyez votre adresse et on vous confirme rapidement.",
     convTip: "Astuce conversion",
     convTipText:
       "Ajoutez une carte Google + bouton “Itinéraire” et un encadré “Disponibilités” pour réduire les frictions.",
