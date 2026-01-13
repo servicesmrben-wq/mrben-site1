@@ -139,7 +139,7 @@ const i18n = {
     secGalK: "Avant / Après",
     secGalT: "Réalisations",
     secGalS:
-      "Remplacez ces images par vos photos. Une galerie propre augmente fortement les demandes.",
+      "Découvrez nos réalisations en lavage de vitres, vidange de gouttières et nettoyage à pression. Des résultats professionnels pour maisons et commerces dans votre région.",
     tip: "Conseil",
     tipText:
       "Utilisez 12–20 photos maximum, bien cadrées, et ajoutez 3 sections: vitres, gouttières, pression.",
@@ -279,7 +279,7 @@ const i18n = {
     secGalK: "Before / After",
     secGalT: "Work",
     secGalS:
-      "Replace these images with yours. A clean gallery boosts requests significantly.",
+      "Explore our recent window cleaning, gutter cleaning, and pressure washing projects. Professional results for homes and businesses in your area.",
     tip: "Tip",
     tipText:
       "Use 12–20 photos max, well framed, and group them: windows, gutters, pressure.",
