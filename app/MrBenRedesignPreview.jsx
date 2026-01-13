@@ -498,7 +498,7 @@ function Hero({ onQuote, t }) {
 
           <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             {t("heroH1a")}
-            <span className="block text-2xl font-normal text-white/80 sm:text-3xl">
+            <span className="block text-2xl font-normal text-white sm:text-3xl">
               {t("heroH1b")}
             </span>
           </h1>
