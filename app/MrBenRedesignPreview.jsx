@@ -42,7 +42,6 @@ const SERVICE_AREAS = [
   "Blainville",
   "St-Eustache",
   "Laval",
-  "and nearby cities",
 ];
 
 const IMAGE_URLS = [
@@ -161,6 +160,7 @@ const i18n = {
     secAreaS:
       "Si vous êtes dans la région, il y a de fortes chances qu’on puisse vous servir.",
     cities: "Villes desservies",
+    nearbyCities: "et les villes avoisinantes",
     areaP:
       "Pour les secteurs limitrophes, envoyez votre adresse et on vous confirme rapidement.",
     convTip: "Astuce conversion",
@@ -299,6 +299,7 @@ const i18n = {
     secAreaS:
       "If you’re in the region, chances are we can serve you.",
     cities: "Cities served",
+    nearbyCities: "and nearby cities",
     areaP:
       "For nearby sectors, send your address and we’ll confirm quickly.",
     convTip: "Conversion tip",
@@ -808,6 +809,10 @@ function ServiceArea({ t }) {
                   {c}
                 </span>
               ))}
+              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-sm text-zinc-700">
+                <MapPin className="mr-2 h-4 w-4" />
+                {t("nearbyCities")}
+              </span>
             </div>
 
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
