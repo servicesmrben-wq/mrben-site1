@@ -116,22 +116,22 @@ export async function POST(req: Request) {
     const phoneLabel = phone ? phone : "(not provided)";
     const addressLabel = address ? address : "(not provided)";
     const textLines = [
-      `NAME: ${name}`,
-      `EMAIL: ${email}`,
-      `PHONE: ${phoneLabel}`,
-      `ADDRESS: ${addressLabel}`,
-      `SERVICES: ${servicesLabel}`,
+      `NOM : ${name}`,
+      `COURRIEL : ${email}`,
+      `TÉLÉPHONE : ${phoneLabel}`,
+      `ADRESSE : ${addressLabel}`,
+      `SERVICES : ${servicesLabel}`,
       "",
-      "MESSAGE:",
+      "MESSAGE :",
       safeMessage,
     ];
     const htmlLines = [
-      `<p><strong>NAME:</strong> ${escapeHtml(name)}</p>`,
-      `<p><strong>EMAIL:</strong> ${escapeHtml(email)}</p>`,
-      `<p><strong>PHONE:</strong> ${escapeHtml(phoneLabel)}</p>`,
-      `<p><strong>ADDRESS:</strong> ${escapeHtml(addressLabel)}</p>`,
-      `<p><strong>SERVICES:</strong> ${escapeHtml(servicesLabel)}</p>`,
-      `<p><strong>MESSAGE:</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`,
+      `<p><strong>NOM :</strong> ${escapeHtml(name)}</p>`,
+      `<p><strong>COURRIEL :</strong> ${escapeHtml(email)}</p>`,
+      `<p><strong>TÉLÉPHONE :</strong> ${escapeHtml(phoneLabel)}</p>`,
+      `<p><strong>ADRESSE :</strong> ${escapeHtml(addressLabel)}</p>`,
+      `<p><strong>SERVICES :</strong> ${escapeHtml(servicesLabel)}</p>`,
+      `<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`,
     ];
 
     const attachments = await Promise.all(
