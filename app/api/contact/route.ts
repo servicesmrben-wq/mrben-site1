@@ -1,6 +1,6 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-export const runtime = "nodejs"; // Resend requires Node runtime (not Edge)
+export const runtime = "nodejs";
 
 const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -20,44 +20,18 @@ function normalizeMultiLine(value: FormDataEntryValue | null) {
   return (value?.toString() || "").replace(/\0/g, "").replace(/\r\n/g, "\n").trim();
 }
 
-function extractEmail(value: string) {
-  const match = value.match(/<([^>]+)>/);
-  return (match ? match[1] : value).trim();
-}
-
-function isMrBenAddress(value: string) {
-  const email = extractEmail(value);
-  return isEmail(email) && email.toLowerCase().endsWith("@mrben.ca");
-}
-
 export async function POST(req: Request) {
   try {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    const hasResendKey = Boolean(RESEND_API_KEY);
-    let TO = process.env.CONTACT_TO_EMAIL?.trim() || DEFAULT_TO;
-    let FROM = process.env.CONTACT_FROM_EMAIL?.trim() || DEFAULT_FROM;
+    const smtpUser = process.env.SMTP_USER?.trim();
+    const smtpPass = process.env.SMTP_PASS?.trim();
+    const contactTo = process.env.CONTACT_TO?.trim() || DEFAULT_TO;
+    const contactFrom = process.env.CONTACT_FROM?.trim() || DEFAULT_FROM;
 
-    if (!isMrBenAddress(FROM)) {
-      console.warn("[contact] Invalid FROM address configured. Using default.", { FROM });
-      FROM = DEFAULT_FROM;
-    }
-
-    if (!isMrBenAddress(TO)) {
-      console.warn("[contact] Invalid TO address configured. Using default.", { TO });
-      TO = DEFAULT_TO;
-    }
-
-    console.info("[contact] Incoming submission", {
-      hasResendKey,
-      from: FROM,
-      to: TO,
-    });
-
-    if (!RESEND_API_KEY) {
+    if (!smtpUser || !smtpPass || !contactTo || !contactFrom) {
       return new Response(
         JSON.stringify({
           ok: false,
-          error: "Server configuration missing environment variables.",
+          error: "Server configuration is missing required email settings.",
         }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
@@ -126,17 +100,16 @@ export async function POST(req: Request) {
       });
     }
 
-    const resend = new Resend(RESEND_API_KEY);
-
     const subject = `New contact request — ${name}`;
 
+    const fileNames = files.map((file) => file.name || "attachment");
     const textLines = [
       `Name: ${name}`,
       `Email: ${email}`,
       phone ? `Phone: ${phone}` : `Phone: (not provided)`,
       address ? `Address: ${address}` : `Address: (not provided)`,
       `Services: ${services.length ? services.join(", ") : "(none selected)"}`,
-      files.length ? `Images attached: ${files.length}` : "",
+      files.length ? `Attachments: ${fileNames.join(", ")}` : "Attachments: (none)",
       "",
       "Message:",
       message || "(no message)",
@@ -147,41 +120,32 @@ export async function POST(req: Request) {
         const buffer = Buffer.from(await file.arrayBuffer());
         return {
           filename: file.name || "attachment",
-          content: buffer.toString("base64"),
+          content: buffer,
           contentType: file.type || "application/octet-stream",
         };
       })
     );
 
-    const { data, error } = await resend.emails.send({
-      from: FROM,
-      to: TO,
-      // reply_to makes "Reply" go to the customer
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    });
+
+    await transporter.sendMail({
+      from: contactFrom,
+      to: contactTo,
       replyTo: email,
       subject,
       text: textLines.filter(Boolean).join("\n"),
       attachments: attachments.length ? attachments : undefined,
     });
 
-    if (error) {
-      console.error("[contact] Resend error", {
-        statusCode: (error as { statusCode?: number }).statusCode,
-        code: (error as { code?: string }).code,
-        message: error.message,
-      });
-      return new Response(
-        JSON.stringify({
-          ok: false,
-          error: error.message || "Email service returned an error.",
-        }),
-        {
-          status: 502,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    return new Response(JSON.stringify({ ok: true, id: data?.id }), {
+    return new Response(JSON.stringify({ ok: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
