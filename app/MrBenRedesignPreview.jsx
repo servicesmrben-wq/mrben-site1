@@ -842,6 +842,7 @@ function Contact({ t }) {
     address: "",
     message: "",
   });
+  const [company, setCompany] = useState("");
 
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState("");
@@ -854,7 +855,7 @@ function Contact({ t }) {
 
   const MAX_IMAGES = 5;
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const serviceOptions = [
     t("langShort") === "FR" ? "Lavage de vitres intérieures/extérieures" : "Interior/exterior windows",
@@ -916,6 +917,7 @@ async function onSubmit(e) {
     formData.append("address", form.address);
     formData.append("services", JSON.stringify(services));
     formData.append("message", form.message);
+    formData.append("company", company);
     images.forEach((file) => {
       formData.append("images", file);
     });
@@ -948,6 +950,7 @@ async function onSubmit(e) {
     });
 
     setForm({ name: "", phone: "", email: "", address: "", message: "" });
+    setCompany("");
     setServices([]);
     setImages([]);
     setImageError("");
@@ -1030,6 +1033,19 @@ async function onSubmit(e) {
             </div>
 
             <form onSubmit={onSubmit}>
+              <div className="absolute left-[-10000px] top-auto h-0 w-0 overflow-hidden">
+                <label>
+                  Company
+                  <input
+                    type="text"
+                    name="company"
+                    autoComplete="off"
+                    tabIndex={-1}
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </label>
+              </div>
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input
                   label={t("name")}
@@ -1103,7 +1119,7 @@ async function onSubmit(e) {
                   <input
                     id="contactPhotos"
                     type="file"
-                    accept="image/jpeg,image/png"
+                    accept="image/jpeg,image/png,image/webp"
                     multiple
                     className="block w-full text-sm text-zinc-900"
                     onChange={(e) => {
