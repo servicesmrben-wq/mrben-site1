@@ -139,7 +139,7 @@ const i18n = {
     secGalK: "Avant / Après",
     secGalT: "Réalisations",
     secGalS:
-      "Remplacez ces images par vos photos. Une galerie propre augmente fortement les demandes.",
+      "Découvrez nos réalisations en lavage de vitres, vidange de gouttières et nettoyage à pression. Des résultats professionnels pour maisons et commerces dans votre région.",
     tip: "Conseil",
     tipText:
       "Utilisez 12–20 photos maximum, bien cadrées, et ajoutez 3 sections: vitres, gouttières, pression.",
@@ -279,7 +279,7 @@ const i18n = {
     secGalK: "Before / After",
     secGalT: "Work",
     secGalS:
-      "Replace these images with yours. A clean gallery boosts requests significantly.",
+      "Explore our recent window cleaning, gutter cleaning, and pressure washing projects. Professional results for homes and businesses in your area.",
     tip: "Tip",
     tipText:
       "Use 12–20 photos max, well framed, and group them: windows, gutters, pressure.",
@@ -498,7 +498,7 @@ function Hero({ onQuote, t }) {
 
           <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             {t("heroH1a")}
-            <span className="block text-2xl font-normal text-white/80 sm:text-3xl">
+            <span className="block text-2xl font-normal text-white sm:text-3xl">
               {t("heroH1b")}
             </span>
           </h1>
@@ -663,20 +663,22 @@ function Gallery({ t }) {
             </div>
           </div>
           <div className="lg:col-span-2">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-2">
-              {imgs.map((src, i) => (
-                <button
-                  key={src}
-                  onClick={() => setActive(i)}
-                  className={classNames(
-                    "overflow-hidden rounded-2xl border shadow-sm transition",
-                    i === active ? "border-zinc-900 ring-2 ring-zinc-900" : "border-zinc-200 hover:border-zinc-400"
-                  )}
-                  aria-label={`View image ${i + 1}`}
-                >
-                  <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
-                </button>
-              ))}
+            <div className="max-h-none overflow-visible lg:max-h-[420px] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-2">
+                {imgs.map((src, i) => (
+                  <button
+                    key={src}
+                    onClick={() => setActive(i)}
+                    className={classNames(
+                      "overflow-hidden rounded-2xl border shadow-sm transition",
+                      i === active ? "border-zinc-900 ring-2 ring-zinc-900" : "border-zinc-200 hover:border-zinc-400"
+                    )}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
+                  </button>
+                ))}
+              </div>
             </div>
 
 
@@ -840,6 +842,7 @@ function Contact({ t }) {
     address: "",
     message: "",
   });
+  const [company, setCompany] = useState("");
 
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState("");
@@ -852,7 +855,7 @@ function Contact({ t }) {
 
   const MAX_IMAGES = 5;
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const serviceOptions = [
     t("langShort") === "FR" ? "Lavage de vitres intérieures/extérieures" : "Interior/exterior windows",
@@ -914,6 +917,7 @@ async function onSubmit(e) {
     formData.append("address", form.address);
     formData.append("services", JSON.stringify(services));
     formData.append("message", form.message);
+    formData.append("company", company);
     images.forEach((file) => {
       formData.append("images", file);
     });
@@ -946,6 +950,7 @@ async function onSubmit(e) {
     });
 
     setForm({ name: "", phone: "", email: "", address: "", message: "" });
+    setCompany("");
     setServices([]);
     setImages([]);
     setImageError("");
@@ -1028,6 +1033,19 @@ async function onSubmit(e) {
             </div>
 
             <form onSubmit={onSubmit}>
+              <div className="absolute left-[-10000px] top-auto h-0 w-0 overflow-hidden">
+                <label>
+                  Company
+                  <input
+                    type="text"
+                    name="company"
+                    autoComplete="off"
+                    tabIndex={-1}
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </label>
+              </div>
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input
                   label={t("name")}
@@ -1101,7 +1119,7 @@ async function onSubmit(e) {
                   <input
                     id="contactPhotos"
                     type="file"
-                    accept="image/jpeg,image/png"
+                    accept="image/jpeg,image/png,image/webp"
                     multiple
                     className="block w-full text-sm text-zinc-900"
                     onChange={(e) => {
