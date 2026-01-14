@@ -109,7 +109,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const subject = `New contact request — ${name}`;
+    const subject = `Nouvelle demande de contact — ${name}`;
 
     const safeMessage = message || "(no message)";
     const servicesLabel = services.length ? services.join(", ") : "(none selected)";
