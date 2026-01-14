@@ -20,6 +20,15 @@ function normalizeMultiLine(value: FormDataEntryValue | null) {
   return (value?.toString() || "").replace(/\0/g, "").replace(/\r\n/g, "\n").trim();
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function POST(req: Request) {
   try {
     const smtpUser = process.env.SMTP_USER?.trim();
@@ -102,17 +111,27 @@ export async function POST(req: Request) {
 
     const subject = `New contact request — ${name}`;
 
-    const fileNames = files.map((file) => file.name || "attachment");
+    const safeMessage = message || "(no message)";
+    const servicesLabel = services.length ? services.join(", ") : "(none selected)";
+    const phoneLabel = phone ? phone : "(not provided)";
+    const addressLabel = address ? address : "(not provided)";
     const textLines = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      phone ? `Phone: ${phone}` : `Phone: (not provided)`,
-      address ? `Address: ${address}` : `Address: (not provided)`,
-      `Services: ${services.length ? services.join(", ") : "(none selected)"}`,
-      files.length ? `Attachments: ${fileNames.join(", ")}` : "Attachments: (none)",
+      `NAME: ${name}`,
+      `EMAIL: ${email}`,
+      `PHONE: ${phoneLabel}`,
+      `ADDRESS: ${addressLabel}`,
+      `SERVICES: ${servicesLabel}`,
       "",
-      "Message:",
-      message || "(no message)",
+      "MESSAGE:",
+      safeMessage,
+    ];
+    const htmlLines = [
+      `<p><strong>NAME:</strong> ${escapeHtml(name)}</p>`,
+      `<p><strong>EMAIL:</strong> ${escapeHtml(email)}</p>`,
+      `<p><strong>PHONE:</strong> ${escapeHtml(phoneLabel)}</p>`,
+      `<p><strong>ADDRESS:</strong> ${escapeHtml(addressLabel)}</p>`,
+      `<p><strong>SERVICES:</strong> ${escapeHtml(servicesLabel)}</p>`,
+      `<p><strong>MESSAGE:</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`,
     ];
 
     const attachments = await Promise.all(
@@ -142,6 +161,7 @@ export async function POST(req: Request) {
       replyTo: email,
       subject,
       text: textLines.filter(Boolean).join("\n"),
+      html: htmlLines.join("\n"),
       attachments: attachments.length ? attachments : undefined,
     });
 
