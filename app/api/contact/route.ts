@@ -4,19 +4,56 @@ export const runtime = "nodejs"; // Resend requires Node runtime (not Edge)
 
 const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const DEFAULT_FROM = "MrBen <info@mrben.ca>";
+const DEFAULT_TO = "info@mrben.ca";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function normalizeSingleLine(value: FormDataEntryValue | null) {
+  return (value?.toString() || "").replace(/\0/g, "").replace(/[\r\n]+/g, " ").trim();
+}
+
+function normalizeMultiLine(value: FormDataEntryValue | null) {
+  return (value?.toString() || "").replace(/\0/g, "").replace(/\r\n/g, "\n").trim();
+}
+
+function extractEmail(value: string) {
+  const match = value.match(/<([^>]+)>/);
+  return (match ? match[1] : value).trim();
+}
+
+function isMrBenAddress(value: string) {
+  const email = extractEmail(value);
+  return isEmail(email) && email.toLowerCase().endsWith("@mrben.ca");
+}
+
 export async function POST(req: Request) {
   try {
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    const TO = process.env.CONTACT_TO_EMAIL;
-    const FROM = process.env.CONTACT_FROM_EMAIL;
+    const hasResendKey = Boolean(RESEND_API_KEY);
+    let TO = process.env.CONTACT_TO_EMAIL?.trim() || DEFAULT_TO;
+    let FROM = process.env.CONTACT_FROM_EMAIL?.trim() || DEFAULT_FROM;
 
-    if (!RESEND_API_KEY || !TO || !FROM) {
+    if (!isMrBenAddress(FROM)) {
+      console.warn("[contact] Invalid FROM address configured. Using default.", { FROM });
+      FROM = DEFAULT_FROM;
+    }
+
+    if (!isMrBenAddress(TO)) {
+      console.warn("[contact] Invalid TO address configured. Using default.", { TO });
+      TO = DEFAULT_TO;
+    }
+
+    console.info("[contact] Incoming submission", {
+      hasResendKey,
+      from: FROM,
+      to: TO,
+    });
+
+    if (!RESEND_API_KEY) {
       return new Response(
         JSON.stringify({
           ok: false,
@@ -28,17 +65,27 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
 
-    const name = (formData.get("name")?.toString() || "").trim();
-    const phone = (formData.get("phone")?.toString() || "").trim();
-    const email = (formData.get("email")?.toString() || "").trim();
-    const address = (formData.get("address")?.toString() || "").trim();
+    const name = normalizeSingleLine(formData.get("name"));
+    const phone = normalizeSingleLine(formData.get("phone"));
+    const email = normalizeSingleLine(formData.get("email"));
+    const address = normalizeSingleLine(formData.get("address"));
     const servicesRaw = formData.get("services")?.toString() || "[]";
-    const message = (formData.get("message")?.toString() || "").trim();
+    const message = normalizeMultiLine(formData.get("message"));
+    const honeypot = normalizeSingleLine(formData.get("company"));
+
+    if (honeypot) {
+      return new Response(JSON.stringify({ ok: false, error: "Invalid submission." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     let services: string[] = [];
     try {
       const parsed = JSON.parse(servicesRaw);
-      services = Array.isArray(parsed) ? parsed : [];
+      services = Array.isArray(parsed)
+        ? parsed.map((service) => normalizeSingleLine(String(service))).filter(Boolean)
+        : [];
     } catch {
       services = [];
     }
@@ -117,10 +164,21 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      return new Response(JSON.stringify({ ok: false, error: error.message }), {
-        status: 502,
-        headers: { "Content-Type": "application/json" },
+      console.error("[contact] Resend error", {
+        statusCode: (error as { statusCode?: number }).statusCode,
+        code: (error as { code?: string }).code,
+        message: error.message,
       });
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: error.message || "Email service returned an error.",
+        }),
+        {
+          status: 502,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
     return new Response(JSON.stringify({ ok: true, id: data?.id }), {
