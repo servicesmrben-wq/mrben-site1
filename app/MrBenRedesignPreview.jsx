@@ -132,7 +132,7 @@ const i18n = {
 
     fastQuoteT: "Soumission plus rapide",
     fastQuoteP:
-      "Envoyez quelques photos de l’extérieur de votre maison par courriel — cela accélère l’estimation.",
+      "Envoyez quelques photos de l’extérieur de votre maison pour accélérer l’estimation.",
     fastQuoteEmail: "Demande en ligne",
     fastQuoteCall: "Appeler",
 
@@ -272,7 +272,7 @@ const i18n = {
 
     fastQuoteT: "Faster quoting",
     fastQuoteP:
-      "Email a few exterior photos — it helps us estimate faster.",
+      "Send a few photos of the outside of your home to speed up the estimate.",
     fastQuoteEmail: "Online request",
     fastQuoteCall: "Call",
 
