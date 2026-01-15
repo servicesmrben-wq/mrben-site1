@@ -119,12 +119,12 @@ const i18n = {
     serviceGoutB3: "Conseils prévention",
     serviceGoutIconAlt: "Icône vidange de gouttières",
 
-    servicePressT: "Nettoyage à pression",
+    servicePressT: "Nettoyage de revêtement",
     servicePressD:
       "Redonnez une apparence neuve aux surfaces: bois, béton, revêtement.",
     servicePressH: "Avant / Après",
     servicePressB1: "Allées & patios",
-    servicePressB2: "Revêtement extérieur",
+    servicePressB2: "Extérieur de la maison",
     servicePressB3: "Clôtures & terrasses",
     servicePressIconAlt: "Icône nettoyage à pression",
 
@@ -263,12 +263,12 @@ const i18n = {
     serviceGoutB3: "Prevention advice",
     serviceGoutIconAlt: "Gutter cleaning icon",
 
-    servicePressT: "Pressure washing",
+    servicePressT: "Siding cleaning",
     servicePressD:
       "Restore wood, concrete and siding for a like-new look.",
     servicePressH: "Before / After",
     servicePressB1: "Driveways & patios",
-    servicePressB2: "Exterior siding",
+    servicePressB2: "Home exterior",
     servicePressB3: "Fences & decks",
     servicePressIconAlt: "Pressure washing icon",
 
