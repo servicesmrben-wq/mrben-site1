@@ -166,6 +166,7 @@ const i18n = {
     convTip: "Astuce conversion",
     convTipText:
       "Ajoutez une carte Google + bouton “Itinéraire” et un encadré “Disponibilités” pour réduire les frictions.",
+    googleMapsAlt: "Voir notre fiche Google Maps",
 
     contactK: "Estimation gratuite",
     contactT: "Contactez-nous",
@@ -305,6 +306,7 @@ const i18n = {
     convTip: "Conversion tip",
     convTipText:
       "Add a Google map + “Directions” button and an “Availability” box to reduce friction.",
+    googleMapsAlt: "View our Google Maps profile",
 
     contactK: "Free estimate",
     contactT: "Contact us",
@@ -821,14 +823,18 @@ function ServiceArea({ t }) {
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm">
-            <div className="text-sm font-semibold text-zinc-900">
-              {t("convTip")}
-            </div>
-            <p className="mt-2 text-sm text-zinc-600">
-              {t("convTipText")}
-            </p>
-          </div>
+          <a
+            className="flex cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm"
+            href="https://maps.app.goo.gl/tDWmLSud1LPRVFBLA"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="/googlemaps-mrben.png"
+              alt={t("googleMapsAlt")}
+              className="max-h-full max-w-full object-contain"
+            />
+          </a>
         </div>
       </div>
     </section>
