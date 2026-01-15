@@ -78,7 +78,8 @@ const i18n = {
     navContact: "Contact",
     navCall: "Appeler",
     navOnline: "Demande en ligne",
-    navSub: "Vitres • Gouttières • Pression",
+    navSubTitle: "Nettoyage",
+    navSub: "Vitres • Gouttières • Revêtement",
 
     // Hero
     heroBadgeA: "Résidentiel & commercial",
@@ -223,7 +224,8 @@ const i18n = {
     navContact: "Contact",
     navCall: "Call",
     navOnline: "Online request",
-    navSub: "Windows • Gutters • Pressure",
+    navSubTitle: "Cleaning",
+    navSub: "Windows • Gutters • Siding",
 
     // Hero
     heroBadgeA: "Residential & commercial",
@@ -437,6 +439,9 @@ function Nav({ onQuote, t, lang, setLang }) {
           />
           <div>
             <div className="text-xs leading-tight text-zinc-500 sm:text-sm">
+              <span className="block text-xs font-semibold text-zinc-500 sm:text-sm">
+                {t("navSubTitle")}
+              </span>
               {navSubLines.map((line, index) => (
                 <span key={`${line}-${index}`} className="block">
                   {line}
