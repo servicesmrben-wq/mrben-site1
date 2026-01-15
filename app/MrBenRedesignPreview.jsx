@@ -176,7 +176,10 @@ const i18n = {
     email: "Courriel",
     hours: "Heures",
     hoursText: "Lundi–Vendredi • 8h–17h",
-    services: "Services",
+    services: "Nettoyage",
+    servicesMenuVitres: "Vitres",
+    servicesMenuGout: "Gouttières",
+    servicesMenuSiding: "Revêtement",
 
     formT: "Demande en ligne",
     formP:
@@ -317,7 +320,10 @@ const i18n = {
     email: "Email",
     hours: "Hours",
     hoursText: "Mon–Fri • 8am–5pm",
-    services: "Services",
+    services: "Cleaning",
+    servicesMenuVitres: "Windows",
+    servicesMenuGout: "Gutters",
+    servicesMenuSiding: "Siding",
 
     formT: "Online request",
     open: "Open",
@@ -1022,7 +1028,7 @@ async function onSubmit(e) {
               <div className="mt-1 text-sm text-white/75">{t("hoursText")}</div>
               <div className="mt-4 text-sm font-semibold text-white">{t("services")}</div>
               <div className="mt-2 flex flex-wrap gap-2">
-                {[t("serviceVitresT"), t("serviceGoutT"), t("servicePressT")].map((s) => (
+                {[t("servicesMenuVitres"), t("servicesMenuGout"), t("servicesMenuSiding")].map((s) => (
                   <span
                     key={s}
                     className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/80 ring-1 ring-white/10"
