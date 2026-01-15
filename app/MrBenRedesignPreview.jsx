@@ -832,7 +832,7 @@ function ServiceArea({ t }) {
             <img
               src="/googlemaps-mrben.png"
               alt={t("googleMapsAlt")}
-              className="max-h-full max-w-full object-contain"
+              className="max-h-[70%] max-w-[70%] object-contain"
             />
           </a>
         </div>
