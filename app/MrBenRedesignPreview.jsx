@@ -146,8 +146,7 @@ const i18n = {
 
     secRevK: "Confiance",
     secRevT: "Ce que les clients aiment",
-    secRevS:
-      "Ajoutez ici vos vrais avis Google/Facebook (avec autorisation).",
+    secRevS: "Basé sur de vrais avis Google de nos clients.",
     val1T: "Ponctualité",
     val1D: "On respecte votre horaire et on confirme avant d’arriver.",
     val2T: "Professionnalisme",
@@ -287,7 +286,7 @@ const i18n = {
 
     secRevK: "Trust",
     secRevT: "What clients like",
-    secRevS: "Add real Google/Facebook reviews here (with permission).",
+    secRevS: "Based on real Google reviews from our clients.",
     val1T: "Punctual",
     val1D: "We respect your schedule and confirm before arrival.",
     val2T: "Professional",
@@ -696,27 +695,24 @@ function Gallery({ t }) {
 function Reviews({ t }) {
   const reviews = [
     {
-      name: langName(t),
+      name: "Laurie",
+      label: "Residential client",
       quote:
-        t("langShort") === "FR"
-          ? "Service rapide, courtois et le résultat est impeccable. Les vitres n’ont jamais été aussi claires."
-          : "Fast, courteous service and an impeccable result. The windows have never been clearer.",
+        "Very good job cleaning our windows inside and out and cleaning our gutters again this year. Highly recommend!",
       stars: 5,
     },
     {
-      name: t("langShort") === "FR" ? "Client commercial" : "Commercial client",
+      name: "Donna",
+      label: "Residential client",
       quote:
-        t("langShort") === "FR"
-          ? "Ponctuels et professionnels. Très bonne communication et travail propre du début à la fin."
-          : "On time and professional. Great communication and clean work from start to finish.",
+        "Very happy with the service provided by Mr. Ben. He showed up on time and was very thorough in the cleaning provided.",
       stars: 5,
     },
     {
-      name: langName(t),
+      name: "Hadassah",
+      label: "Residential client",
       quote:
-        t("langShort") === "FR"
-          ? "Soumission simple et service efficace. Je recommande pour vitres et gouttières."
-          : "Simple quote and efficient service. I recommend for windows and gutters.",
+        "Efficient, quick and polite team, as well as a reasonably priced service. Recommend this company!",
       stars: 5,
     },
   ];
@@ -742,7 +738,9 @@ function Reviews({ t }) {
                 ))}
               </div>
               <p className="mt-3 text-sm leading-relaxed text-zinc-700">“{r.quote}”</p>
-              <div className="mt-4 text-sm font-semibold text-zinc-900">{r.name}</div>
+              <div className="mt-4 text-sm font-semibold text-zinc-900">
+                {r.name} • {r.label}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -755,10 +753,6 @@ function Reviews({ t }) {
       </div>
     </section>
   );
-}
-
-function langName(t) {
-  return t("langShort") === "FR" ? "Client résidentiel" : "Residential client";
 }
 
 function ValueCard({ icon, title, desc }) {
