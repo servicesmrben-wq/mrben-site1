@@ -147,6 +147,7 @@ const i18n = {
     secRevK: "Confiance",
     secRevT: "Ce que les clients aiment",
     secRevS: "Basé sur de vrais avis Google de nos clients.",
+    reviewLabel: "Client résidentiel",
     val1T: "Ponctualité",
     val1D: "On respecte votre horaire et on confirme avant d’arriver.",
     val2T: "Professionnalisme",
@@ -287,6 +288,7 @@ const i18n = {
     secRevK: "Trust",
     secRevT: "What clients like",
     secRevS: "Based on real Google reviews from our clients.",
+    reviewLabel: "Residential client",
     val1T: "Punctual",
     val1D: "We respect your schedule and confirm before arrival.",
     val2T: "Professional",
@@ -693,26 +695,30 @@ function Gallery({ t }) {
 
 
 function Reviews({ t }) {
+  const isFrench = t("langShort") === "FR";
   const reviews = [
     {
       name: "Laurie",
-      label: "Residential client",
-      quote:
+      textEn:
         "Very good job cleaning our windows inside and out and cleaning our gutters again this year. Highly recommend!",
+      textFr:
+        "Très bon travail : nettoyage des vitres intérieure et extérieure, et nettoyage des gouttières encore cette année. Je recommande fortement !",
       stars: 5,
     },
     {
       name: "Donna",
-      label: "Residential client",
-      quote:
+      textEn:
         "Very happy with the service provided by Mr. Ben. He showed up on time and was very thorough in the cleaning provided.",
+      textFr:
+        "Très satisfaite du service offert par MrBen. Il est arrivé à l’heure et a été très minutieux dans le nettoyage.",
       stars: 5,
     },
     {
       name: "Hadassah",
-      label: "Residential client",
-      quote:
+      textEn:
         "Efficient, quick and polite team, as well as a reasonably priced service. Recommend this company!",
+      textFr:
+        "Équipe efficace, rapide et polie, avec un service à prix raisonnable. Je recommande cette entreprise !",
       stars: 5,
     },
   ];
@@ -737,9 +743,11 @@ function Reviews({ t }) {
                   <Star key={i} className="h-4 w-4" />
                 ))}
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-zinc-700">“{r.quote}”</p>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-700">
+                “{isFrench ? r.textFr : r.textEn}”
+              </p>
               <div className="mt-4 text-sm font-semibold text-zinc-900">
-                {r.name} • {r.label}
+                {r.name} • {t("reviewLabel")}
               </div>
             </motion.div>
           ))}
