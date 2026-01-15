@@ -824,7 +824,7 @@ function ServiceArea({ t }) {
           </div>
 
           <a
-            className="flex cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 p-6 shadow-sm"
+            className="flex cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm"
             href="https://maps.app.goo.gl/tDWmLSud1LPRVFBLA"
             target="_blank"
             rel="noopener noreferrer"
