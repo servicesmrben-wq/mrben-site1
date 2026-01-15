@@ -133,7 +133,7 @@ const i18n = {
     fastQuoteT: "Soumission plus rapide",
     fastQuoteP:
       "Envoyez quelques photos de l’extérieur de votre maison par courriel — cela accélère l’estimation.",
-    fastQuoteEmail: "Envoyer un courriel",
+    fastQuoteEmail: "Demande en ligne",
     fastQuoteCall: "Appeler",
 
     secGalK: "Avant / Après",
@@ -273,7 +273,7 @@ const i18n = {
     fastQuoteT: "Faster quoting",
     fastQuoteP:
       "Email a few exterior photos — it helps us estimate faster.",
-    fastQuoteEmail: "Email us",
+    fastQuoteEmail: "Online request",
     fastQuoteCall: "Call",
 
     secGalK: "Before / After",
@@ -544,7 +544,7 @@ function HeroStat({ icon, title, sub }) {
   );
 }
 
-function Services({ t }) {
+function Services({ onQuote, t }) {
   const services = [
     {
       id: "vitres",
@@ -627,12 +627,13 @@ function Services({ t }) {
               <p className="mt-1 text-sm text-zinc-600">{t("fastQuoteP")}</p>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row md:justify-end">
-              <a
-                href={BRAND.emailHref}
+              <button
+                type="button"
+                onClick={onQuote}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50"
               >
                 <Mail className="h-4 w-4" /> {t("fastQuoteEmail")}
-              </a>
+              </button>
               <a
                 href={BRAND.phoneHref}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
@@ -1359,7 +1360,7 @@ export default function MrBenRedesignPreview() {
       <TopBar t={t} />
       <Nav onQuote={scrollToContact} t={t} lang={lang} setLang={setLang} />
       <Hero onQuote={scrollToContact} t={t} />
-      <Services t={t} />
+      <Services onQuote={scrollToContact} t={t} />
       <Gallery t={t} />
       <Reviews t={t} />
       <ServiceArea t={t} />
