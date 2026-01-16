@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CityPage } from "../CityPage";
 import { CITY_SLUGS, getCityBySlug } from "../city-data";
 import { buildCityMetadata } from "../seo";
+import { getLocaleFromRequest } from "@/app/lib/locale";
 
 type Params = { slug: string };
 
@@ -23,7 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     notFound();
   }
 
-  return buildCityMetadata(city, "fr");
+  const locale = getLocaleFromRequest();
+  return buildCityMetadata(city, locale);
 }
 
 export default async function Page({ params }: PageProps) {
@@ -34,5 +36,6 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  return <CityPage city={city} locale="fr" />;
+  const locale = getLocaleFromRequest();
+  return <CityPage city={city} locale={locale} />;
 }

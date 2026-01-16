@@ -465,7 +465,11 @@ function Nav({ onQuote, t, lang, setLang }) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setLang(lang === "fr" ? "en" : "fr")}
+            onClick={() => {
+              const nextLocale = lang === "fr" ? "en" : "fr";
+              setLang(nextLocale);
+              document.cookie = `mrben_locale=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+            }}
             className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50"
             aria-label={`Switch language to ${t("toggleTo")}`}
           >
