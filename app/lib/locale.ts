@@ -2,8 +2,9 @@ import { cookies, headers } from "next/headers";
 
 export type Locale = "fr" | "en";
 
-export function getLocaleFromRequest(): Locale {
-  const c = cookies().get("mrben_locale")?.value;
+export async function getLocaleFromRequest(): Promise<Locale> {
+  const cookieStore = await cookies();
+  const c = cookieStore.get("mrben_locale")?.value;
   if (c === "en" || c === "fr") return c;
 
   // Fallback: Accept-Language header

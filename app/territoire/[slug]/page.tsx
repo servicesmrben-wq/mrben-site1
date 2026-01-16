@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     notFound();
   }
 
-  const locale = getLocaleFromRequest();
+  const locale = await getLocaleFromRequest();
   return buildCityMetadata(city, locale);
 }
 
@@ -36,6 +36,6 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  const locale = getLocaleFromRequest();
+  const locale = await getLocaleFromRequest();
   return <CityPage city={city} locale={locale} />;
 }
