@@ -848,7 +848,7 @@ function ServiceArea({ t }) {
                 <span key={c.slug}>
                   <a
                     href={`/territoire/${c.slug}`}
-                    className="underline underline-offset-4"
+                    className="no-underline"
                     title={`/territoire/${c.slug}`}
                   >
                     {c.name}
