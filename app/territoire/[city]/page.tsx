@@ -4,8 +4,6 @@ import { CityPage } from "../CityPage";
 import { CITY_SLUGS, getCityBySlug } from "../city-data";
 import { buildCityMetadata } from "../seo";
 
-export const dynamicParams = false;
-
 type PageProps = {
   params: {
     city: string;
