@@ -44,6 +44,14 @@ const SERVICE_AREAS = [
   "Laval",
 ];
 
+const SEO_CITY_LINKS = [
+  { slug: "lachute", label: "Lachute" },
+  { slug: "saint-jerome", label: "Saint-Jérôme" },
+  { slug: "mirabel", label: "Mirabel" },
+  { slug: "blainville", label: "Blainville" },
+  { slug: "laval", label: "Laval" },
+];
+
 const IMAGE_URLS = [
   "/hero.jpg",
 
@@ -164,6 +172,7 @@ const i18n = {
     nearbyCities: "et les villes avoisinantes",
     areaP:
       "Pour les secteurs avoisinants, envoyez votre adresse et on vous confirme rapidement.",
+    zonesServedLabel: "Zones desservies :",
     convTip: "Astuce conversion",
     convTipText:
       "Ajoutez une carte Google + bouton “Itinéraire” et un encadré “Disponibilités” pour réduire les frictions.",
@@ -309,6 +318,7 @@ const i18n = {
     nearbyCities: "and nearby cities",
     areaP:
       "For nearby sectors, send your address and we’ll confirm quickly.",
+    zonesServedLabel: "Service areas:",
     convTip: "Conversion tip",
     convTipText:
       "Add a Google map + “Directions” button and an “Availability” box to reduce friction.",
@@ -788,7 +798,7 @@ function ValueCard({ icon, title, desc }) {
   );
 }
 
-function ServiceArea({ t }) {
+function ServiceArea({ t, lang }) {
   return (
     <section
       id="territoire"
@@ -834,6 +844,20 @@ function ServiceArea({ t }) {
             </div>
 
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
+            <p className="mt-4 text-xs text-zinc-600">
+              {t("zonesServedLabel")}{" "}
+              {SEO_CITY_LINKS.map((city, index) => (
+                <React.Fragment key={city.slug}>
+                  <a
+                    href={`${lang === "en" ? "/en" : ""}/territoire/${city.slug}`}
+                    className="underline decoration-dotted underline-offset-4 hover:text-zinc-900"
+                  >
+                    {city.label}
+                  </a>
+                  {index < SEO_CITY_LINKS.length - 1 ? ", " : "…"}
+                </React.Fragment>
+              ))}
+            </p>
           </div>
 
           <a
@@ -1382,7 +1406,7 @@ export default function MrBenRedesignPreview() {
       <Services onQuote={scrollToContact} t={t} />
       <Gallery t={t} />
       <Reviews t={t} />
-      <ServiceArea t={t} />
+      <ServiceArea t={t} lang={lang} />
       <Contact onQuote={scrollToContact} t={t} />
     </div>
   );
