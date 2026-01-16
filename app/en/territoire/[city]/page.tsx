@@ -4,6 +4,8 @@ import { CityPage } from "../../../territoire/CityPage";
 import { CITY_SLUGS, getCityBySlug } from "../../../territoire/city-data";
 import { buildCityMetadata } from "../../../territoire/seo";
 
+export const dynamicParams = false;
+
 type PageProps = {
   params: {
     city: string;
