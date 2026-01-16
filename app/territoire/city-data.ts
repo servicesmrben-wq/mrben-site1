@@ -162,9 +162,9 @@ export function normalizeCitySlug(slug: string) {
   return decodeURIComponent(slug).trim().toLowerCase();
 }
 
-export const CITY_SLUGS = CITY_PAGES.map((city) => normalizeCitySlug(city.slug));
+export const CITY_SLUGS = CITY_PAGES.map((c) => c.slug);
 
 export function getCityBySlug(slug: string) {
-  const normalizedSlug = normalizeCitySlug(slug);
-  return CITY_PAGES.find((city) => normalizeCitySlug(city.slug) === normalizedSlug);
+  const normalized = normalizeCitySlug(slug);
+  return CITY_PAGES.find((c) => normalizeCitySlug(c.slug) === normalized);
 }
