@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Phone,
@@ -15,6 +16,7 @@ import {
   X,
   Languages,
 } from "lucide-react";
+import { CITY_PAGES } from "@/app/territoire/city-data";
 
 /**
  * MrBenTest.ca — Modernized Website Preview (single-file)
@@ -42,14 +44,6 @@ const SERVICE_AREAS = [
   "Blainville",
   "St-Eustache",
   "Laval",
-];
-
-const SEO_CITY_LINKS = [
-  { slug: "lachute", label: "Lachute" },
-  { slug: "saint-jerome", label: "Saint-Jérôme" },
-  { slug: "mirabel", label: "Mirabel" },
-  { slug: "blainville", label: "Blainville" },
-  { slug: "laval", label: "Laval" },
 ];
 
 const IMAGE_URLS = [
@@ -798,7 +792,9 @@ function ValueCard({ icon, title, desc }) {
   );
 }
 
-function ServiceArea({ t, lang }) {
+function ServiceArea({ t }) {
+  const cityLinks = CITY_PAGES.filter((city) => city.slug);
+
   return (
     <section
       id="territoire"
@@ -846,15 +842,17 @@ function ServiceArea({ t, lang }) {
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
             <p className="mt-4 text-xs text-zinc-600">
               {t("zonesServedLabel")}{" "}
-              {SEO_CITY_LINKS.map((city, index) => (
+              {cityLinks.map((city, index) => (
                 <React.Fragment key={city.slug}>
-                  <a
-                    href={`${lang === "en" ? "/en" : ""}/territoire/${city.slug}`}
-                    className="underline decoration-dotted underline-offset-4 hover:text-zinc-900"
-                  >
-                    {city.label}
-                  </a>
-                  {index < SEO_CITY_LINKS.length - 1 ? ", " : "…"}
+                  {city.slug ? (
+                    <Link
+                      href={`/territoire/${city.slug}`}
+                      className="underline decoration-dotted underline-offset-4 hover:text-zinc-900"
+                    >
+                      {city.name}
+                    </Link>
+                  ) : null}
+                  {index < cityLinks.length - 1 ? ", " : "…"}
                 </React.Fragment>
               ))}
             </p>
@@ -1406,7 +1404,7 @@ export default function MrBenRedesignPreview() {
       <Services onQuote={scrollToContact} t={t} />
       <Gallery t={t} />
       <Reviews t={t} />
-      <ServiceArea t={t} lang={lang} />
+      <ServiceArea t={t} />
       <Contact onQuote={scrollToContact} t={t} />
     </div>
   );
