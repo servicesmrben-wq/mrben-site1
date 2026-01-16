@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Phone,
@@ -794,6 +793,10 @@ function ValueCard({ icon, title, desc }) {
 
 function ServiceArea({ t }) {
   const cityLinks = CITY_PAGES.filter((city) => city.slug);
+  console.log(
+    "CITY_PAGES slugs:",
+    CITY_PAGES.map((city) => city.slug)
+  );
 
   return (
     <section
@@ -845,12 +848,12 @@ function ServiceArea({ t }) {
               {cityLinks.map((city, index) => (
                 <React.Fragment key={city.slug}>
                   {city.slug ? (
-                    <Link
+                    <a
                       href={`/territoire/${city.slug}`}
                       className="underline decoration-dotted underline-offset-4 hover:text-zinc-900"
                     >
                       {city.name}
-                    </Link>
+                    </a>
                   ) : null}
                   {index < cityLinks.length - 1 ? ", " : "…"}
                 </React.Fragment>
