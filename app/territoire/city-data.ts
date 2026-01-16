@@ -158,8 +158,13 @@ export const CITY_PAGES: CityPage[] = [
   },
 ];
 
-export const CITY_SLUGS = CITY_PAGES.map((city) => city.slug);
+export function normalizeCitySlug(slug: string) {
+  return decodeURIComponent(slug).trim().toLowerCase();
+}
+
+export const CITY_SLUGS = CITY_PAGES.map((city) => normalizeCitySlug(city.slug));
 
 export function getCityBySlug(slug: string) {
-  return CITY_PAGES.find((city) => city.slug === slug);
+  const normalizedSlug = normalizeCitySlug(slug);
+  return CITY_PAGES.find((city) => normalizeCitySlug(city.slug) === normalizedSlug);
 }
