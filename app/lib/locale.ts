@@ -8,6 +8,7 @@ export async function getLocaleFromRequest(): Promise<Locale> {
   if (c === "en" || c === "fr") return c;
 
   // Fallback: Accept-Language header
-  const al = headers().get("accept-language") || "";
+  const h = await headers();
+  const al = h.get("accept-language") || "";
   return al.toLowerCase().includes("en") ? "en" : "fr";
 }
