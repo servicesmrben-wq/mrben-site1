@@ -6,16 +6,16 @@ import { buildCityMetadata } from "../seo";
 
 type PageProps = {
   params: {
-    slug: string;
+    city: string;
   };
 };
 
 export function generateStaticParams() {
-  return CITY_SLUGS.map((slug) => ({ slug }));
+  return CITY_SLUGS.map((city) => ({ city }));
 }
 
 export function generateMetadata({ params }: PageProps) {
-  const city = getCityBySlug(params.slug);
+  const city = getCityBySlug(params.city);
   if (!city) {
     return {};
   }
@@ -24,7 +24,7 @@ export function generateMetadata({ params }: PageProps) {
 }
 
 export default function TerritoryCityPage({ params }: PageProps) {
-  const city = getCityBySlug(params.slug);
+  const city = getCityBySlug(params.city);
 
   if (!city) {
     notFound();
