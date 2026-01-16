@@ -10,11 +10,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const cityEntries = CITY_PAGES.flatMap((city) => [
     {
-      url: getCityUrl(city.slug, "fr"),
+      url: getCityUrl(city.slug),
       lastModified: now,
     },
     {
-      url: getCityUrl(city.slug, "en"),
+      url: getCityUrl(city.slug),
       lastModified: now,
     },
   ]);
