@@ -792,11 +792,6 @@ function ValueCard({ icon, title, desc }) {
 }
 
 function ServiceArea({ t }) {
-  const cityLinks = CITY_PAGES.filter((city) => city.slug);
-  console.log(
-    "CITY_PAGES slugs:",
-    CITY_PAGES.map((city) => city.slug)
-  );
 
   return (
     <section
@@ -845,19 +840,19 @@ function ServiceArea({ t }) {
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
             <p className="mt-4 text-xs text-zinc-600">
               {t("zonesServedLabel")}{" "}
-              {cityLinks.map((city, index) => (
-                <React.Fragment key={city.slug}>
-                  {city.slug ? (
-                    <a
-                      href={`/territoire/${city.slug}`}
-                      className="underline decoration-dotted underline-offset-4 hover:text-zinc-900"
-                    >
-                      {city.name}
-                    </a>
-                  ) : null}
-                  {index < cityLinks.length - 1 ? ", " : "…"}
-                </React.Fragment>
+              {CITY_PAGES.slice(0, 6).map((c, idx) => (
+                <span key={c.slug}>
+                  <a
+                    href={`/territoire/${c.slug}`}
+                    className="underline underline-offset-4"
+                    title={`/territoire/${c.slug}`}
+                  >
+                    {c.name}
+                  </a>
+                  {idx < 5 ? ", " : ""}
+                </span>
               ))}
+              <span>…</span>
             </p>
           </div>
 
