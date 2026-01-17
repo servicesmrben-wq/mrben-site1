@@ -13,9 +13,9 @@ import {
   ArrowRight,
   Star,
   X,
-  Languages,
 } from "lucide-react";
 import { CITY_PAGES } from "@/app/territoire/city-data";
+import { useLocale } from "./components/LocaleProvider";
 
 /**
  * MrBenTest.ca — Modernized Website Preview (single-file)
@@ -384,114 +384,6 @@ function SectionTitle({ kicker, title, subtitle }) {
   );
 }
 
-function TopBar({ t }) {
-  return (
-    <div className="hidden border-b border-zinc-200 bg-white/70 backdrop-blur md:block">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2">
-        <div className="flex items-center gap-5 text-sm text-zinc-700">
-          <a className="inline-flex items-center gap-2 hover:text-zinc-900" href={BRAND.phoneHref}>
-            <Phone className="h-4 w-4" />
-            {BRAND.phoneDisplay}
-          </a>
-          <a className="inline-flex items-center gap-2 hover:text-zinc-900" href={BRAND.emailHref}>
-            <Mail className="h-4 w-4" />
-            {BRAND.email}
-          </a>
-        </div>
-        <div className="text-sm text-zinc-600">{t("topTagline")}</div>
-      </div>
-    </div>
-  );
-}
-
-function Nav({ onQuote, t, lang, setLang }) {
-  const [isScrolled, setIsScrolled] = React.useState(false);
-  const navSubLines = React.useMemo(() => t("navSub").split(" • "), [t]);
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 12);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const headerSurface = isScrolled ? "bg-white/80 backdrop-blur" : "bg-transparent";
-  const items = [
-    { label: t("navServices"), href: "#services" },
-    { label: t("navGallery"), href: "#galerie" },
-    { label: t("navReviews"), href: "#avis" },
-    { label: t("navTerritory"), href: "#territoire" },
-    { label: t("navContact"), href: "#contact" },
-  ];
-
-  return (
-    <div
-      className={`sticky top-0 z-40 border-b ${
-        isScrolled ? "border-zinc-200" : "border-transparent"
-      } ${headerSurface} transition-colors`}
-    >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <a href="#" className="flex items-center gap-3">
-          <img
-            src="/brand/mrben-logo-transparent.png"
-            alt="MrBen.ca"
-            className="h-12 w-auto object-contain sm:h-14 md:h-16 lg:h-20"
-          />
-          <div>
-            <div className="text-xs leading-tight text-zinc-500 sm:text-sm">
-              <span className="block text-xs font-semibold text-zinc-500 sm:text-sm">
-                {t("navSubTitle")}
-              </span>
-              {navSubLines.map((line, index) => (
-                <span key={`${line}-${index}`} className="block">
-                  {line}
-                </span>
-              ))}
-            </div>
-          </div>
-        </a>
-
-        <div className="hidden items-center gap-6 md:flex">
-          {items.map((it) => (
-            <a key={it.href} href={it.href} className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
-              {it.label}
-            </a>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              const nextLocale = lang === "fr" ? "en" : "fr";
-              setLang(nextLocale);
-              document.cookie = `mrben_locale=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
-            }}
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50"
-            aria-label={`Switch language to ${t("toggleTo")}`}
-          >
-            <Languages className="h-4 w-4" /> {t("toggleTo")}
-          </button>
-          <a
-            href={BRAND.phoneHref}
-            className="hidden rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50 sm:inline-flex"
-          >
-            {t("navCall")}
-          </a>
-          <button
-            onClick={onQuote}
-            className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
-          >
-            {t("navOnline")} <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Hero({ onQuote, t }) {
   return (
@@ -586,7 +478,7 @@ function Services({ onQuote, t }) {
       bullets: [t("serviceGoutB1"), t("serviceGoutB2"), t("serviceGoutB3")],
     },
     {
-      id: "pression",
+      id: "revetement",
       title: t("servicePressT"),
       desc: t("servicePressD"),
       highlight: t("servicePressH"),
@@ -605,6 +497,7 @@ function Services({ onQuote, t }) {
           {services.map((s, idx) => (
             <motion.div
               key={s.id}
+              id={`service-${s.id}`}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
@@ -1396,8 +1289,8 @@ function QuoteModal({ open, onClose, t }) {
 }
 
 export default function MrBenRedesignPreview() {
-  const [lang, setLang] = useState("fr");
-  const t = useI18n(lang);
+  const { locale } = useLocale();
+  const t = useI18n(locale);
 
   const scrollToContact = React.useCallback(() => {
     const contactSection = document.getElementById("contact");
@@ -1408,8 +1301,6 @@ export default function MrBenRedesignPreview() {
 
   return (
     <div className="min-h-screen bg-white text-zinc-900">
-      <TopBar t={t} />
-      <Nav onQuote={scrollToContact} t={t} lang={lang} setLang={setLang} />
       <Hero onQuote={scrollToContact} t={t} />
       <Services onQuote={scrollToContact} t={t} />
       <Gallery t={t} />
