@@ -10,6 +10,7 @@ import type { Locale } from "../lib/locale";
 
 const LABELS: Record<Locale, {
   cleaning: string;
+  home: string;
   services: string;
   gallery: string;
   reviews: string;
@@ -23,6 +24,7 @@ const LABELS: Record<Locale, {
 }> = {
   fr: {
     cleaning: "Nettoyage",
+    home: "Accueil",
     services: "Services",
     gallery: "Réalisations",
     reviews: "Avis",
@@ -36,6 +38,7 @@ const LABELS: Record<Locale, {
   },
   en: {
     cleaning: "Cleaning",
+    home: "Home",
     services: "Services",
     gallery: "Projects",
     reviews: "Reviews",
@@ -73,6 +76,7 @@ export default function Header() {
   const labels = LABELS[locale];
   const navLinks = useMemo(
     () => [
+      { label: labels.home, href: "/" },
       { label: labels.services, href: "/#services" },
       { label: labels.gallery, href: "/#galerie" },
       { label: labels.reviews, href: "/#avis" },
@@ -126,35 +130,6 @@ export default function Header() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-zinc-700 lg:flex">
-          <div className="relative group">
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 hover:text-zinc-900"
-              aria-haspopup="true"
-            >
-              {labels.cleaning}
-              <span className="text-xs">▾</span>
-            </button>
-            <div className="invisible absolute left-0 top-full z-10 mt-2 w-48 rounded-2xl border border-zinc-200 bg-white p-2 text-sm text-zinc-700 shadow-lg opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-              {cleaningLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block rounded-xl px-3 py-2 hover:bg-zinc-100 hover:text-zinc-900"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          {navLinks.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-zinc-900">
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
         <div className="flex items-center gap-2">
           <div className="hidden items-center rounded-full border border-zinc-200 bg-white p-1 text-xs font-semibold text-zinc-600 sm:flex">
             <button
@@ -200,6 +175,37 @@ export default function Header() {
             <span className="text-lg">☰</span>
           </button>
         </div>
+      </div>
+
+      <div className="border-t border-zinc-200">
+        <nav className="mx-auto hidden max-w-6xl items-center justify-between gap-6 px-4 py-3 text-sm font-medium text-zinc-700 lg:flex">
+          <div className="relative group">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 hover:text-zinc-900"
+              aria-haspopup="true"
+            >
+              {labels.cleaning}
+              <span className="text-xs">▾</span>
+            </button>
+            <div className="invisible absolute left-0 top-full z-10 mt-2 w-48 rounded-2xl border border-zinc-200 bg-white p-2 text-sm text-zinc-700 shadow-lg opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+              {cleaningLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block rounded-xl px-3 py-2 hover:bg-zinc-100 hover:text-zinc-900"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          {navLinks.map((item) => (
+            <Link key={item.href} href={item.href} className="hover:text-zinc-900">
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       {menuOpen ? (
