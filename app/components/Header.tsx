@@ -175,7 +175,7 @@ export default function Header() {
       </div>
 
       <div>
-        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-3 text-sm font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
+        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-3 text-lg font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
           {navLinks.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-zinc-900">
               {item.label}
