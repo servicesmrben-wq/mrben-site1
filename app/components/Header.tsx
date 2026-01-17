@@ -120,14 +120,11 @@ export default function Header() {
           <Image
             src="/brand/mrben-logo-transparent.png"
             alt="MrBen.ca"
-            width={180}
-            height={72}
-            className="h-12 w-auto"
+            width={220}
+            height={88}
+            className="h-14 w-auto"
             priority
           />
-          <div className="hidden text-xs font-semibold uppercase tracking-wide text-zinc-500 sm:block">
-            MrBen.ca
-          </div>
         </Link>
 
         <div className="flex items-center gap-2">
@@ -177,29 +174,8 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="border-t border-zinc-200">
-        <nav className="mx-auto hidden max-w-6xl items-center justify-between gap-6 px-4 py-3 text-sm font-medium text-zinc-700 lg:flex">
-          <div className="relative group">
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 hover:text-zinc-900"
-              aria-haspopup="true"
-            >
-              {labels.cleaning}
-              <span className="text-xs">▾</span>
-            </button>
-            <div className="invisible absolute left-0 top-full z-10 mt-2 w-48 rounded-2xl border border-zinc-200 bg-white p-2 text-sm text-zinc-700 shadow-lg opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-              {cleaningLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block rounded-xl px-3 py-2 hover:bg-zinc-100 hover:text-zinc-900"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+      <div>
+        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-3 text-sm font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
           {navLinks.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-zinc-900">
               {item.label}
