@@ -73,6 +73,30 @@ export const CITY_PAGES: CityPage[] = [
     },
   },
   {
+    slug: "st-sauveur",
+    name: "Saint-Sauveur",
+    fr: {
+      title: "Services de nettoyage extérieur à Saint-Sauveur",
+      description:
+        "Lavage de vitres, nettoyage de gouttières et entretien de revêtement à Saint-Sauveur pour garder votre propriété impeccable.",
+      paragraphs: [
+        "À Saint-Sauveur, les résidences profitent d’un cadre naturel qui apporte charme et tranquillité, mais aussi feuilles, pollen et poussière. Notre équipe propose un entretien extérieur minutieux pour préserver la clarté des fenêtres et l’apparence soignée de votre façade, tout en respectant les matériaux et l’aménagement paysager.",
+        "Nous offrons un service complet qui inclut le lavage de vitres pour un rendu lumineux, le nettoyage de gouttières pour prévenir les débordements, et le nettoyage de revêtement pour raviver les surfaces exposées. Cette combinaison permet de maintenir une allure uniforme et d’éviter l’accumulation de saletés qui peuvent ternir votre maison.",
+        "Les variations saisonnières de Saint-Sauveur rendent l’entretien régulier particulièrement utile. Nous planifions les interventions selon l’état des surfaces et vos priorités, avec un service ponctuel et une communication claire. L’objectif est un résultat durable qui met en valeur votre propriété toute l’année.",
+      ],
+    },
+    en: {
+      title: "Exterior cleaning services in Saint-Sauveur",
+      description:
+        "Window cleaning, gutter cleaning, and exterior siding cleaning in Saint-Sauveur to keep your home looking its best.",
+      paragraphs: [
+        "In Saint-Sauveur, the natural landscape adds beauty and tranquility, but it also brings leaves, pollen, and dust. Our team delivers meticulous exterior care that keeps windows crystal clear and facades looking sharp while respecting the materials and landscaping around your property.",
+        "We provide a complete lineup that includes window cleaning for bright, streak-free glass, gutter cleaning to prevent overflow, and exterior siding cleaning to refresh exposed surfaces. Together, these services maintain a uniform curb appeal and help prevent buildup that can dull your home’s exterior.",
+        "Seasonal shifts in Saint-Sauveur make consistent upkeep especially valuable. We schedule visits based on surface conditions and your priorities, with punctual service and clear communication. The goal is a lasting result that highlights your property year-round.",
+      ],
+    },
+  },
+  {
     slug: "mirabel",
     name: "Mirabel",
     fr: {
