@@ -796,6 +796,7 @@ function ValueCard({ icon, title, desc }) {
 }
 
 function ServiceArea({ t }) {
+  const isFrench = t("langShort") === "FR";
 
   return (
     <section
@@ -856,7 +857,14 @@ function ServiceArea({ t }) {
                   {idx < 5 ? ", " : ""}
                 </span>
               ))}
-              <span>…</span>
+              <span>…</span>{" "}
+              <a
+                href={isFrench ? "/services/lavage-de-vitres" : "/services/window-cleaning"}
+                className="no-underline"
+                title={isFrench ? "/services/lavage-de-vitres" : "/services/window-cleaning"}
+              >
+                {isFrench ? "Lavage de vitres" : "Window cleaning"}
+              </a>
             </p>
           </div>
 

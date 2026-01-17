@@ -24,6 +24,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: BASE_URL,
       lastModified: now,
     },
+    {
+      url: `${BASE_URL}/services/lavage-de-vitres`,
+      lastModified: now,
+    },
+    {
+      url: `${BASE_URL}/services/window-cleaning`,
+      lastModified: now,
+    },
     ...cityEntries,
   ];
 }
