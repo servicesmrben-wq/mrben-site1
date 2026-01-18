@@ -92,6 +92,19 @@ export default function Header() {
     { label: labels.siding, href: "/#service-revetement" },
   ];
 
+  const servicesDropdownLinks = [
+    { label: "Lavage de vitre", href: "/services/lavage-de-vitres" },
+  ];
+
+  const territoryDropdownLinks = [
+    { label: "Lachute", href: "/territoire/lachute" },
+    { label: "Saint-Jerome", href: "/territoire/saint-jerome" },
+    { label: "Saint-Sauveur", href: "/territoire/saint-sauveur" },
+    { label: "Mirabel", href: "/territoire/mirabel" },
+    { label: "Blainville", href: "/territoire/blainville" },
+    { label: "Laval", href: "/territoire/laval" },
+  ];
+
   const handleLocaleChange = (nextLocale: Locale) => {
     if (nextLocale === locale) {
       return;
@@ -176,11 +189,55 @@ export default function Header() {
 
       <div>
         <nav className="mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold text-zinc-700 lg:flex lg:items-center lg:justify-center lg:gap-8">
-          {navLinks.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-zinc-900">
-              {item.label}
-            </Link>
-          ))}
+          {navLinks.map((item) => {
+            if (item.label === labels.services) {
+              return (
+                <div key={item.href} className="relative group">
+                  <Link href={item.href} className="hover:text-zinc-900">
+                    {item.label}
+                  </Link>
+                  <div className="absolute left-0 top-full z-20 hidden min-w-[12rem] flex-col rounded-md border border-zinc-200 bg-white py-2 text-sm text-zinc-700 shadow-lg group-hover:flex">
+                    {servicesDropdownLinks.map((service) => (
+                      <Link
+                        key={service.href}
+                        href={service.href}
+                        className="px-3 py-2 hover:bg-zinc-50 hover:text-zinc-900"
+                      >
+                        {service.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            if (item.label === labels.territory) {
+              return (
+                <div key={item.href} className="relative group">
+                  <Link href={item.href} className="hover:text-zinc-900">
+                    {item.label}
+                  </Link>
+                  <div className="absolute left-0 top-full z-20 hidden min-w-[14rem] flex-col rounded-md border border-zinc-200 bg-white py-2 text-sm text-zinc-700 shadow-lg group-hover:flex">
+                    {territoryDropdownLinks.map((territory) => (
+                      <Link
+                        key={territory.href}
+                        href={territory.href}
+                        className="px-3 py-2 hover:bg-zinc-50 hover:text-zinc-900"
+                      >
+                        {territory.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <Link key={item.href} href={item.href} className="hover:text-zinc-900">
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
