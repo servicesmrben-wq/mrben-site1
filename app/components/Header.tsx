@@ -122,7 +122,7 @@ export default function Header() {
             alt="MrBen.ca"
             width={220}
             height={88}
-            className="h-10 w-auto sm:h-11"
+            className="h-12 w-auto sm:h-14"
             priority
           />
         </Link>
