@@ -114,8 +114,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/brand/mrben-logo-transparent.png"
@@ -175,7 +175,7 @@ export default function Header() {
       </div>
 
       <div>
-        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-3 text-lg font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
+        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-2 text-lg font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
           {navLinks.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-zinc-900">
               {item.label}
