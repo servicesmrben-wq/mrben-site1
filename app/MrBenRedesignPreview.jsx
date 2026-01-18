@@ -85,7 +85,7 @@ const i18n = {
     // Hero
     heroBadgeA: "Résidentiel & commercial",
     heroBadgeB: "Laurentides & environs",
-    heroH1a: "Lavage de vitres",
+    heroH1a: "Nettoyage de vitres professionnel",
     heroH1b: "Des fenêtres qui ont l’air neuves.",
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
@@ -232,8 +232,8 @@ const i18n = {
     // Hero
     heroBadgeA: "Residential & commercial",
     heroBadgeB: "Laurentians & nearby",
-    heroH1a: "Window cleaning",
-    heroH1b: "Windows that look new.",
+    heroH1a: "Professional window cleaning",
+    heroH1b: "Windows that look brand new.",
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
