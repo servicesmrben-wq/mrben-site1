@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { CityPage } from "../CityPage";
 import { CITY_SLUGS, getCityBySlug } from "../city-data";
@@ -9,7 +9,7 @@ import { getLocaleFromRequest } from "@/app/lib/locale";
 type Params = { slug: string };
 
 type PageProps = {
-  params: Promise<Params> | Params;
+  params: Promise<Params>;
 };
 
 export function generateStaticParams() {
@@ -32,6 +32,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function Page({ params }: PageProps) {
   const p = await params;
   const slug = p.slug;
+
+  if (slug === "st-sauveur") {
+    redirect("/territoire/saint-sauveur");
+  }
+
   const city = getCityBySlug(slug);
 
   if (!city) {
