@@ -399,9 +399,9 @@ function Hero({ onQuote, t }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl"
+          className="mx-auto w-full max-w-2xl text-center md:max-w-3xl lg:max-w-4xl"
         >
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
+          <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span>{t("heroBadgeA")}</span>
             <span className="mx-1 text-white/30">•</span>
@@ -417,7 +417,7 @@ function Hero({ onQuote, t }) {
           </h1>
           <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-center">
             <button
               onClick={onQuote}
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
@@ -432,7 +432,7 @@ function Hero({ onQuote, t }) {
             </a>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mt-10 grid place-items-center gap-3 sm:grid-cols-3">
             <HeroStat icon={<Sparkles className="h-4 w-4" />} title={t("heroStat1T")} sub={t("heroStat1S")} />
             <HeroStat icon={<Clock className="h-4 w-4" />} title={t("heroStat2T")} sub={t("heroStat2S")} />
             <HeroStat icon={<Shield className="h-4 w-4" />} title={t("heroStat3T")} sub={t("heroStat3S")} />
