@@ -85,8 +85,8 @@ const i18n = {
     // Hero
     heroBadgeA: "Résidentiel & commercial",
     heroBadgeB: "Laurentides & environs",
-    heroH1a: "Nettoyage de vitres professionnel",
-    heroH1b: "Des fenêtres qui ont l’air neuves.",
+    heroH1a: "Nettoyage de vitres résidentiel et commercial dans les Laurentides",
+    heroH1b: "Lachute, Saint-Jérôme, Mirabel et environs",
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
