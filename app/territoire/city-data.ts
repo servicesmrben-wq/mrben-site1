@@ -73,7 +73,7 @@ export const CITY_PAGES: CityPage[] = [
     },
   },
   {
-    slug: "st-sauveur",
+    slug: "saint-sauveur",
     name: "Saint-Sauveur",
     fr: {
       title: "Services de nettoyage extérieur à Saint-Sauveur",
