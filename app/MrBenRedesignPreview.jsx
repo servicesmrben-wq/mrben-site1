@@ -232,8 +232,8 @@ const i18n = {
     // Hero
     heroBadgeA: "Residential & commercial",
     heroBadgeB: "Laurentians & nearby",
-    heroH1a: "Professional window cleaning",
-    heroH1b: "Windows that look brand new.",
+    heroH1a: "Residential and commercial window cleaning in the Laurentides",
+    heroH1b: "Lachute, Saint-Jérôme, Mirabel and surrounding areas",
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
