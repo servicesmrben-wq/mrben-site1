@@ -114,15 +114,15 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/brand/mrben-logo-transparent.png"
             alt="MrBen.ca"
             width={220}
             height={88}
-            className="h-14 w-auto"
+            className="h-10 w-auto sm:h-11"
             priority
           />
         </Link>
@@ -152,13 +152,13 @@ export default function Header() {
           </div>
           <a
             href={BRAND.phoneHref}
-            className="hidden rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm transition hover:bg-zinc-50 sm:inline-flex"
+            className="hidden rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm transition hover:bg-zinc-50 sm:inline-flex"
           >
             {labels.call}
           </a>
           <Link
             href="/#contact"
-            className="hidden rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 sm:inline-flex"
+            className="hidden rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 sm:inline-flex"
           >
             {labels.quote}
           </Link>
@@ -175,7 +175,7 @@ export default function Header() {
       </div>
 
       <div>
-        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-2 text-lg font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
+        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold text-zinc-700 lg:grid lg:grid-cols-6 lg:place-items-center">
           {navLinks.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-zinc-900">
               {item.label}
