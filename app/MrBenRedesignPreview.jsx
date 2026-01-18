@@ -736,29 +736,7 @@ function ServiceArea({ t }) {
             </div>
 
             <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
-            <p className="mt-4 text-xs text-zinc-600">
-              {t("zonesServedLabel")}{" "}
-              {CITY_PAGES.slice(0, 6).map((c, idx) => (
-                <span key={c.slug}>
-                  <a
-                    href={`/territoire/${c.slug}`}
-                    className="no-underline"
-                    title={`/territoire/${c.slug}`}
-                  >
-                    {c.name}
-                  </a>
-                  {idx < 5 ? ", " : ""}
-                </span>
-              ))}
-              <span>…</span>{" "}
-              <a
-                href={isFrench ? "/services/lavage-de-vitres" : "/services/window-cleaning"}
-                className="no-underline"
-                title={isFrench ? "/services/lavage-de-vitres" : "/services/window-cleaning"}
-              >
-                {isFrench ? "Lavage de vitres" : "Window cleaning"}
-              </a>
-            </p>
+            <p className="mt-4 text-xs text-zinc-600"></p>
           </div>
 
           <a
