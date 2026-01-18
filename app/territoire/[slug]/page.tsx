@@ -18,7 +18,8 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const p = await params;
-  const city = getCityBySlug(p.slug);
+  const slug = p.slug;
+  const city = getCityBySlug(slug);
 
   if (!city) {
     notFound();
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const p = await params;
-  const city = getCityBySlug(p.slug);
+  const slug = p.slug;
+  const city = getCityBySlug(slug);
 
   if (!city) {
     notFound();
