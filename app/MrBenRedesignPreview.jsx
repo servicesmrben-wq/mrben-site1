@@ -8,6 +8,7 @@ import {
   MapPin,
   CheckCircle2,
   Shield,
+  Briefcase,
   Clock,
   Sparkles,
   ArrowRight,
@@ -90,6 +91,10 @@ const i18n = {
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
+    heroTrust1: "⭐⭐⭐⭐⭐ 4.9/5 – clients locaux",
+    heroTrust2: "Entreprise locale des Laurentides",
+    heroTrust3: "Entièrement assuré",
+    heroTrust4: "Résidentiel et commercial",
     heroStat1T: "Finition sans traces",
     heroStat1S: "Détails soignés",
     heroStat2T: "Ponctuel",
@@ -237,6 +242,10 @@ const i18n = {
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
+    heroTrust1: "⭐⭐⭐⭐⭐ 4.9/5 – local clients",
+    heroTrust2: "Local Laurentides business",
+    heroTrust3: "Fully insured",
+    heroTrust4: "Residential and commercial",
     heroStat1T: "Streak-free finish",
     heroStat1S: "Attention to detail",
     heroStat2T: "On time",
@@ -416,6 +425,24 @@ function Hero({ onQuote, t }) {
             </span>
           </h1>
           <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
+          <div className="mt-4 grid place-items-center gap-2 text-xs text-white/80 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-2 sm:text-sm">
+            <div className="flex items-center justify-center gap-2">
+              <Star className="h-3.5 w-3.5 text-white/80" />
+              <span>{t("heroTrust1")}</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <MapPin className="h-3.5 w-3.5 text-white/80" />
+              <span>{t("heroTrust2")}</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <Shield className="h-3.5 w-3.5 text-white/80" />
+              <span>{t("heroTrust3")}</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <Briefcase className="h-3.5 w-3.5 text-white/80" />
+              <span>{t("heroTrust4")}</span>
+            </div>
+          </div>
 
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-center">
             <button
