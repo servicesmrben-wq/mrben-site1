@@ -148,7 +148,7 @@ export default function Header() {
       className={`sticky top-0 z-50 w-full border-b backdrop-blur-md transition-colors duration-200 ${
         headerIsScrolled
           ? "border-black/20 bg-zinc-950/85"
-          : "border-black/20 bg-zinc-950/65"
+          : "border-black/20 bg-zinc-950/85"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5 lg:items-end">
