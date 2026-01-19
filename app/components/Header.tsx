@@ -148,7 +148,7 @@ export default function Header() {
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5 lg:items-end">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/brand/mrben-logo-transparent.png"
@@ -208,7 +208,7 @@ export default function Header() {
       </div>
 
       <div>
-        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold text-zinc-700 lg:flex lg:items-center lg:justify-center lg:gap-8">
+        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold text-zinc-700 lg:flex lg:items-end lg:justify-center lg:gap-8 lg:pb-0.5 lg:pt-0">
           {navLinks.map((item) => {
             if (item.label === labels.services) {
               return (
