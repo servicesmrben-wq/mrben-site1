@@ -425,8 +425,8 @@ function Hero({ onQuote, t }) {
             </span>
           </h1>
           <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
-          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:justify-start">
+          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+            <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
               <div className="flex items-center justify-center gap-2">
                 <Star className="h-3.5 w-3.5 text-white/80" />
                 <span>{t("heroTrust1")}</span>
@@ -445,7 +445,7 @@ function Hero({ onQuote, t }) {
               </div>
             </div>
 
-            <div className="flex flex-col items-stretch gap-3 sm:items-center lg:items-end">
+            <div className="flex flex-col items-stretch gap-3 sm:items-center lg:flex-row lg:items-center lg:justify-end">
               <button
                 onClick={onQuote}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
