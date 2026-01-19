@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useLocale } from "./LocaleProvider";
 import type { Locale } from "../lib/locale";
@@ -72,6 +72,7 @@ export default function Header() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const labels = LABELS[locale];
   const navLinks = useMemo(
@@ -126,8 +127,27 @@ export default function Header() {
     setMenuOpen(false);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white">
+    <header
+      className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
+        scrolled || menuOpen
+          ? "border-zinc-100 bg-white/90 backdrop-blur"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
         <Link href="/" className="flex items-center gap-3">
           <Image
