@@ -140,11 +140,13 @@ export default function Header() {
     };
   }, []);
 
+  const headerIsDark = scrolled || menuOpen;
+
   return (
     <header
       className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
-        scrolled || menuOpen
-          ? "border-zinc-100 bg-white/90 backdrop-blur"
+        headerIsDark
+          ? "border-black/20 bg-black/80 backdrop-blur-md"
           : "border-transparent bg-transparent"
       }`}
     >
@@ -161,12 +163,24 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center gap-2">
-          <div className="hidden items-center rounded-full border border-zinc-200 bg-white p-1 text-xs font-semibold text-zinc-600 sm:flex">
+          <div
+            className={`hidden items-center rounded-full border p-1 text-xs font-semibold sm:flex ${
+              headerIsDark
+                ? "border-white/20 bg-white/10 text-white/80"
+                : "border-zinc-200 bg-white text-zinc-600"
+            }`}
+          >
             <button
               type="button"
               onClick={() => handleLocaleChange("fr")}
               className={`rounded-full px-2 py-1 transition ${
-                locale === "fr" ? "bg-zinc-900 text-white" : "hover:text-zinc-900"
+                locale === "fr"
+                  ? headerIsDark
+                    ? "bg-white text-zinc-900"
+                    : "bg-zinc-900 text-white"
+                  : headerIsDark
+                    ? "hover:text-white"
+                    : "hover:text-zinc-900"
               }`}
               aria-pressed={locale === "fr"}
             >
@@ -176,7 +190,13 @@ export default function Header() {
               type="button"
               onClick={() => handleLocaleChange("en")}
               className={`rounded-full px-2 py-1 transition ${
-                locale === "en" ? "bg-zinc-900 text-white" : "hover:text-zinc-900"
+                locale === "en"
+                  ? headerIsDark
+                    ? "bg-white text-zinc-900"
+                    : "bg-zinc-900 text-white"
+                  : headerIsDark
+                    ? "hover:text-white"
+                    : "hover:text-zinc-900"
               }`}
               aria-pressed={locale === "en"}
             >
@@ -185,19 +205,31 @@ export default function Header() {
           </div>
           <a
             href={BRAND.phoneHref}
-            className="hidden rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-semibold text-zinc-900 shadow-sm transition hover:bg-zinc-50 sm:inline-flex"
+            className={`hidden rounded-full border px-3 py-1.5 text-sm font-semibold shadow-sm transition sm:inline-flex ${
+              headerIsDark
+                ? "border-white/40 text-white hover:bg-white/10"
+                : "border-zinc-300 text-zinc-900 hover:bg-zinc-50"
+            }`}
           >
             {labels.call}
           </a>
           <Link
             href="/#contact"
-            className="hidden rounded-full bg-zinc-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 sm:inline-flex"
+            className={`hidden rounded-full px-3 py-1.5 text-sm font-semibold shadow-sm transition sm:inline-flex ${
+              headerIsDark
+                ? "bg-white text-zinc-900 hover:bg-white/90"
+                : "bg-zinc-900 text-white hover:bg-zinc-800"
+            }`}
           >
             {labels.quote}
           </Link>
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-full border border-zinc-300 p-2 text-zinc-700 shadow-sm transition hover:bg-zinc-50 lg:hidden"
+            className={`inline-flex items-center justify-center rounded-full border p-2 shadow-sm transition lg:hidden ${
+              headerIsDark
+                ? "border-white/40 text-white hover:bg-white/10"
+                : "border-zinc-300 text-zinc-700 hover:bg-zinc-50"
+            }`}
             aria-label="Toggle navigation"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
@@ -208,12 +240,19 @@ export default function Header() {
       </div>
 
       <div>
-        <nav className="mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold text-zinc-700 lg:flex lg:items-end lg:justify-center lg:gap-8 lg:pb-0.5 lg:pt-0">
+        <nav
+          className={`mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold lg:flex lg:items-end lg:justify-center lg:gap-8 lg:pb-0.5 lg:pt-0 ${
+            headerIsDark ? "text-white/80" : "text-zinc-700"
+          }`}
+        >
           {navLinks.map((item) => {
             if (item.label === labels.services) {
               return (
                 <div key={item.href} className="relative group">
-                  <Link href={item.href} className="hover:text-zinc-900">
+                  <Link
+                    href={item.href}
+                    className={headerIsDark ? "hover:text-white" : "hover:text-zinc-900"}
+                  >
                     {item.label}
                   </Link>
                   <div className="absolute left-0 top-full z-20 hidden min-w-[12rem] flex-col rounded-md border border-zinc-200 bg-white py-2 text-sm text-zinc-700 shadow-lg group-hover:flex">
@@ -234,7 +273,10 @@ export default function Header() {
             if (item.label === labels.territory) {
               return (
                 <div key={item.href} className="relative group">
-                  <Link href={item.href} className="hover:text-zinc-900">
+                  <Link
+                    href={item.href}
+                    className={headerIsDark ? "hover:text-white" : "hover:text-zinc-900"}
+                  >
                     {item.label}
                   </Link>
                   <div className="absolute left-0 top-full z-20 hidden min-w-[14rem] flex-col rounded-md border border-zinc-200 bg-white py-2 text-sm text-zinc-700 shadow-lg group-hover:flex">
@@ -253,7 +295,11 @@ export default function Header() {
             }
 
             return (
-              <Link key={item.href} href={item.href} className="hover:text-zinc-900">
+              <Link
+                key={item.href}
+                href={item.href}
+                className={headerIsDark ? "hover:text-white" : "hover:text-zinc-900"}
+              >
                 {item.label}
               </Link>
             );
