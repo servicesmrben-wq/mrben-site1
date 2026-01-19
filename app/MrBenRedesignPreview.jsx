@@ -396,14 +396,14 @@ function SectionTitle({ kicker, title, subtitle }) {
 
 function Hero({ onQuote, t }) {
   return (
-    <div className="relative overflow-hidden bg-zinc-950">
+    <div className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
       <div className="absolute inset-0 opacity-100">
         <img src={IMAGE_URLS[0]} alt="Hero" className="h-full w-full object-cover" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/30 to-zinc-950/70" />
 
       
-      <div className="relative mx-auto max-w-6xl px-4 py-16 sm:py-20">
+      <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1306,7 +1306,6 @@ export default function MrBenRedesignPreview() {
 
   return (
     <div className="relative min-h-screen bg-white text-zinc-900">
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-28 bg-zinc-950" />
       <div className="relative z-10">
         <Hero onQuote={scrollToContact} t={t} />
         <Services onQuote={scrollToContact} t={t} />
