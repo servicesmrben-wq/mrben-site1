@@ -425,38 +425,40 @@ function Hero({ onQuote, t }) {
             </span>
           </h1>
           <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
-          <div className="mt-4 grid place-items-center gap-2 text-xs text-white/80 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-2 sm:text-sm">
-            <div className="flex items-center justify-center gap-2">
-              <Star className="h-3.5 w-3.5 text-white/80" />
-              <span>{t("heroTrust1")}</span>
+          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:justify-start">
+              <div className="flex items-center justify-center gap-2">
+                <Star className="h-3.5 w-3.5 text-white/80" />
+                <span>{t("heroTrust1")}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <MapPin className="h-3.5 w-3.5 text-white/80" />
+                <span>{t("heroTrust2")}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Shield className="h-3.5 w-3.5 text-white/80" />
+                <span>{t("heroTrust3")}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Briefcase className="h-3.5 w-3.5 text-white/80" />
+                <span>{t("heroTrust4")}</span>
+              </div>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <MapPin className="h-3.5 w-3.5 text-white/80" />
-              <span>{t("heroTrust2")}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <Shield className="h-3.5 w-3.5 text-white/80" />
-              <span>{t("heroTrust3")}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <Briefcase className="h-3.5 w-3.5 text-white/80" />
-              <span>{t("heroTrust4")}</span>
-            </div>
-          </div>
 
-          <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:items-center">
-            <button
-              onClick={onQuote}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
-            >
-              {t("heroCTA")} <ArrowRight className="h-4 w-4" />
-            </button>
-            <a
-              href={BRAND.phoneHref}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
-            >
-              <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
-            </a>
+            <div className="flex flex-col items-stretch gap-3 sm:items-center lg:items-end">
+              <button
+                onClick={onQuote}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
+              >
+                {t("heroCTA")} <ArrowRight className="h-4 w-4" />
+              </button>
+              <a
+                href={BRAND.phoneHref}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
+              >
+                <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
+              </a>
+            </div>
           </div>
 
           <div className="mt-10 grid place-items-center gap-3 sm:grid-cols-3">
