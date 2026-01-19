@@ -408,7 +408,7 @@ function Hero({ onQuote, t }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mx-auto w-full max-w-2xl text-center md:max-w-3xl lg:max-w-4xl"
+          className="mx-auto w-full max-w-2xl text-center md:max-w-3xl lg:max-w-5xl xl:max-w-6xl"
         >
           <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
             <CheckCircle2 className="h-3.5 w-3.5" />
