@@ -1305,13 +1305,16 @@ export default function MrBenRedesignPreview() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
-      <Hero onQuote={scrollToContact} t={t} />
-      <Services onQuote={scrollToContact} t={t} />
-      <Gallery t={t} />
-      <Reviews t={t} />
-      <ServiceArea t={t} />
-      <Contact onQuote={scrollToContact} t={t} />
+    <div className="relative min-h-screen bg-white text-zinc-900">
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-0 h-28 bg-zinc-950" />
+      <div className="relative z-10">
+        <Hero onQuote={scrollToContact} t={t} />
+        <Services onQuote={scrollToContact} t={t} />
+        <Gallery t={t} />
+        <Reviews t={t} />
+        <ServiceArea t={t} />
+        <Contact onQuote={scrollToContact} t={t} />
+      </div>
     </div>
   );
 }
