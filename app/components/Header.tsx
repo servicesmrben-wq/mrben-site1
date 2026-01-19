@@ -140,14 +140,15 @@ export default function Header() {
     };
   }, []);
 
-  const headerIsDark = scrolled || menuOpen;
+  const headerIsScrolled = scrolled || menuOpen;
+  const headerIsDark = true;
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
-        headerIsDark
-          ? "border-black/20 bg-black/80 backdrop-blur-md"
-          : "border-transparent bg-transparent"
+      className={`sticky top-0 z-50 w-full border-b transition-colors duration-200 ${
+        headerIsScrolled
+          ? "border-black/20 bg-zinc-950/95 backdrop-blur-md"
+          : "border-black/20 bg-zinc-950/90"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5 lg:items-end">
