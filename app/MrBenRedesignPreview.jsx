@@ -91,7 +91,7 @@ const i18n = {
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
-    heroTrust1: "– clients locaux",
+    heroTrust1: "Google",
     heroTrust2: "Entreprise locale des Laurentides",
     heroTrust3: "Entièrement assuré",
     heroTrust4: "Résidentiel et commercial",
@@ -242,7 +242,7 @@ const i18n = {
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
-    heroTrust1: "– local clients",
+    heroTrust1: "Google",
     heroTrust2: "Local Laurentides business",
     heroTrust3: "Fully insured",
     heroTrust4: "Residential and commercial",
@@ -396,6 +396,7 @@ function SectionTitle({ kicker, title, subtitle }) {
 
 function Hero({ onQuote, t }) {
   const [rating, setRating] = useState(5.0);
+  const [reviewCount, setReviewCount] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -412,6 +413,11 @@ function Hero({ onQuote, t }) {
         }
         if (isMounted) {
           setRating(data.rating);
+          setReviewCount(
+            typeof data?.count === "number" && Number.isFinite(data.count)
+              ? data.count
+              : null
+          );
         }
       } catch {
         // Fail silently and keep fallback rating.
@@ -465,9 +471,18 @@ function Hero({ onQuote, t }) {
             <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
               <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
                 <div className="flex items-center justify-center gap-2">
-                  <Star className="h-3.5 w-3.5 text-white/80" />
-                  <span className="tabular-nums">{rating.toFixed(1)}/5</span>
-                  <span>{t("heroTrust1")}</span>
+                  <span className="tabular-nums">{rating.toFixed(1)}</span>
+                  <span className="flex items-center gap-0.5">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star key={index} className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
+                    ))}
+                  </span>
+                  {reviewCount !== null ? (
+                    <span className="tabular-nums">
+                      ({reviewCount} {t("navReviews").toLowerCase()})
+                    </span>
+                  ) : null}
+                  <span>– {t("heroTrust1")}</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <MapPin className="h-3.5 w-3.5 text-white/80" />
