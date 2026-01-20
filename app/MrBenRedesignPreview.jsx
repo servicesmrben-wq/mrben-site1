@@ -92,6 +92,8 @@ const i18n = {
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
     heroTrust1: "Google",
+    heroVerifiedByGoogle: "Vérifié par Google",
+    heroGoogleReviewsAria: "Voir les avis Google",
     heroTrust2: "Entreprise locale des Laurentides",
     heroTrust3: "Entièrement assuré",
     heroTrust4: "Résidentiel et commercial",
@@ -243,6 +245,8 @@ const i18n = {
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
     heroTrust1: "Google",
+    heroVerifiedByGoogle: "Verified by Google",
+    heroGoogleReviewsAria: "View Google reviews",
     heroTrust2: "Local Laurentides business",
     heroTrust3: "Fully insured",
     heroTrust4: "Residential and commercial",
@@ -397,6 +401,11 @@ function SectionTitle({ kicker, title, subtitle }) {
 function Hero({ onQuote, t }) {
   const [rating, setRating] = useState(5.0);
   const [reviewCount, setReviewCount] = useState(null);
+  const placeId =
+    process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID ?? process.env.GOOGLE_PLACE_ID ?? null;
+  const reviewsHref = placeId
+    ? `https://search.google.com/local/reviews?placeid=${placeId}`
+    : null;
 
   useEffect(() => {
     let isMounted = true;
@@ -430,6 +439,25 @@ function Hero({ onQuote, t }) {
       isMounted = false;
     };
   }, []);
+
+  const ratingContent = (
+    <>
+      <span className="tabular-nums">{rating.toFixed(1)}</span>
+      <span className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Star key={index} className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
+        ))}
+      </span>
+      {reviewCount !== null ? (
+        <span className="tabular-nums">
+          ({reviewCount} {t("navReviews").toLowerCase()})
+        </span>
+      ) : null}
+      <span>
+        – {t("heroTrust1")} · {t("heroVerifiedByGoogle")}
+      </span>
+    </>
+  );
 
   return (
     <div className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
@@ -470,20 +498,21 @@ function Hero({ onQuote, t }) {
             <p className="text-base leading-relaxed text-white/80">{t("heroP")}</p>
             <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
               <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
-                <div className="flex items-center justify-center gap-2">
-                  <span className="tabular-nums">{rating.toFixed(1)}</span>
-                  <span className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
-                    ))}
-                  </span>
-                  {reviewCount !== null ? (
-                    <span className="tabular-nums">
-                      ({reviewCount} {t("navReviews").toLowerCase()})
-                    </span>
-                  ) : null}
-                  <span>– {t("heroTrust1")}</span>
-                </div>
+                {reviewsHref ? (
+                  <a
+                    href={reviewsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("heroGoogleReviewsAria")}
+                    className="flex items-center justify-center gap-2 hover:opacity-90"
+                  >
+                    {ratingContent}
+                  </a>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    {ratingContent}
+                  </div>
+                )}
                 <div className="flex items-center justify-center gap-2">
                   <MapPin className="h-3.5 w-3.5 text-white/80" />
                   <span>{t("heroTrust2")}</span>
