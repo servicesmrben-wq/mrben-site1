@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Phone,
@@ -91,7 +91,7 @@ const i18n = {
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
-    heroTrust1: "⭐⭐⭐⭐⭐ 4.9/5 – clients locaux",
+    heroTrust1: "– clients locaux",
     heroTrust2: "Entreprise locale des Laurentides",
     heroTrust3: "Entièrement assuré",
     heroTrust4: "Résidentiel et commercial",
@@ -242,7 +242,7 @@ const i18n = {
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
-    heroTrust1: "⭐⭐⭐⭐⭐ 4.9/5 – local clients",
+    heroTrust1: "– local clients",
     heroTrust2: "Local Laurentides business",
     heroTrust3: "Fully insured",
     heroTrust4: "Residential and commercial",
@@ -395,6 +395,36 @@ function SectionTitle({ kicker, title, subtitle }) {
 
 
 function Hero({ onQuote, t }) {
+  const [rating, setRating] = useState(5.0);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadRating = async () => {
+      try {
+        const response = await fetch("/api/google-rating");
+        if (!response.ok) {
+          return;
+        }
+        const data = await response.json();
+        if (typeof data?.rating !== "number" || !Number.isFinite(data.rating)) {
+          return;
+        }
+        if (isMounted) {
+          setRating(data.rating);
+        }
+      } catch {
+        // Fail silently and keep fallback rating.
+      }
+    };
+
+    loadRating();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
       <div className="absolute inset-0 opacity-100">
@@ -436,6 +466,7 @@ function Hero({ onQuote, t }) {
               <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
                 <div className="flex items-center justify-center gap-2">
                   <Star className="h-3.5 w-3.5 text-white/80" />
+                  <span className="tabular-nums">{rating.toFixed(1)}/5</span>
                   <span>{t("heroTrust1")}</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
