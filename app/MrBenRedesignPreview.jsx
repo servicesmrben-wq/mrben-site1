@@ -821,16 +821,18 @@ function Reviews({ t, onQuote }) {
           <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm sm:flex-row sm:justify-between sm:text-left">
-          <div className="flex flex-col items-center gap-1 sm:items-start">
-            <button
-              type="button"
-              onClick={onQuote}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
-            >
-              {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
-            </button>
-            <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
+        <div className="mt-10 grid grid-cols-1 place-items-center">
+          <div className="w-full max-w-sm rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm">
+            <div className="flex flex-col items-center gap-1">
+              <button
+                type="button"
+                onClick={onQuote}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+              >
+                {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
+              </button>
+              <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
+            </div>
           </div>
         </div>
       </div>
