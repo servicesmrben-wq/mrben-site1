@@ -165,6 +165,9 @@ const i18n = {
     val2D: "Équipement et méthodes adaptées à chaque surface.",
     val3T: "Résultat",
     val3D: "Détails soignés et nettoyage complet de la zone de travail.",
+    val4T: "Soumission plus rapide",
+    val4D:
+      "Envoyez quelques photos de l’extérieur de votre maison pour accélérer l’estimation.",
 
     secAreaK: "Territoire",
     secAreaT: "On se déplace chez vous",
@@ -319,6 +322,8 @@ const i18n = {
     val2D: "Methods and equipment matched to each surface.",
     val3T: "Results",
     val3D: "Meticulous finish and clean work area.",
+    val4T: "Faster quoting",
+    val4D: "Send a few photos of the outside of your home to speed up the estimate.",
 
     secAreaK: "Service area",
     secAreaT: "We come to you",
@@ -819,6 +824,7 @@ function Reviews({ t, onQuote }) {
           <ValueCard icon={<Clock className="h-5 w-5" />} title={t("val1T")} desc={t("val1D")} />
           <ValueCard icon={<Shield className="h-5 w-5" />} title={t("val2T")} desc={t("val2D")} />
           <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
+          <ValueCard icon={<Mail className="h-5 w-5" />} title={t("val4T")} desc={t("val4D")} />
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm sm:flex-row sm:justify-between sm:text-left">
