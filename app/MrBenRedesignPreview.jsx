@@ -586,12 +586,6 @@ function Hero({ onQuote, t }) {
                   </button>
                   <span className="text-xs text-white/70">{t("ctaReassurance")}</span>
                 </div>
-                <a
-                  href={BRAND.phoneHref}
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
-                >
-                  <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
-                </a>
               </div>
             </div>
 
@@ -711,12 +705,6 @@ function Services({ onQuote, t }) {
                 </button>
                 <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
               </div>
-              <a
-                href={BRAND.phoneHref}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:border-zinc-400"
-              >
-                <Phone className="h-4 w-4" /> {t("fastQuoteCall")}
-              </a>
             </div>
           </div>
         </div>
@@ -844,12 +832,6 @@ function Reviews({ t, onQuote }) {
             </button>
             <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
           </div>
-          <a
-            href={BRAND.phoneHref}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:border-zinc-400"
-          >
-            <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
-          </a>
         </div>
       </div>
     </section>
