@@ -95,6 +95,7 @@ const i18n = {
     heroTrust2: "Entreprise locale des Laurentides",
     heroTrust3: "Entièrement assuré",
     heroTrust4: "Résidentiel et commercial",
+    heroVerifiedByGoogle: "Vérifié par Google",
     heroLeaveReview: "Laisser un avis Google",
     heroStat1T: "Finition sans traces",
     heroStat1S: "Détails soignés",
@@ -247,6 +248,7 @@ const i18n = {
     heroTrust2: "Local Laurentides business",
     heroTrust3: "Fully insured",
     heroTrust4: "Residential and commercial",
+    heroVerifiedByGoogle: "Verified by Google",
     heroLeaveReview: "Leave a Google review",
     heroStat1T: "Streak-free finish",
     heroStat1S: "Attention to detail",
@@ -447,7 +449,9 @@ function Hero({ onQuote, t }) {
           ({reviewCount} {t("navReviews").toLowerCase()})
         </span>
       ) : null}
-      <span>– {t("heroTrust1")}</span>
+      <span aria-hidden="true">·</span>
+      <img src="/google-g.svg" alt="Google" className="h-3.5 w-3.5 opacity-80" />
+      <span>{t("heroVerifiedByGoogle")}</span>
     </>
   );
 
