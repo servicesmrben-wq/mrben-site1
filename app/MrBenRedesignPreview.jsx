@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Phone,
   Mail,
@@ -402,6 +402,24 @@ function Hero({ onQuote, t }) {
   const [rating, setRating] = useState(5.0);
   const [reviewCount, setReviewCount] = useState(null);
   const placeId = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID;
+  const shouldReduceMotion = useReducedMotion();
+
+  const animatedStars = Array.from({ length: 5 }).map((_, index) => (
+    <motion.span
+      key={index}
+      className="inline-flex"
+      variants={{
+        hidden: { opacity: 0, y: 2 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.3, ease: "easeOut" },
+        },
+      }}
+    >
+      <Star className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
+    </motion.span>
+  ));
 
   useEffect(() => {
     let isMounted = true;
@@ -439,11 +457,25 @@ function Hero({ onQuote, t }) {
   const ratingLine = (
     <>
       <span className="tabular-nums">{rating.toFixed(1)}</span>
-      <span className="flex items-center gap-0.5">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Star key={index} className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
-        ))}
-      </span>
+      {shouldReduceMotion ? (
+        <span className="flex items-center gap-0.5">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Star key={index} className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
+          ))}
+        </span>
+      ) : (
+        <motion.span
+          className="flex items-center gap-0.5"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.06 } },
+          }}
+        >
+          {animatedStars}
+        </motion.span>
+      )}
       {reviewCount !== null ? (
         <span className="tabular-nums">
           ({reviewCount} {t("navReviews").toLowerCase()})
