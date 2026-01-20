@@ -21,6 +21,7 @@ const LABELS: Record<Locale, {
   siding: string;
   call: string;
   quote: string;
+  ctaReassurance: string;
 }> = {
   fr: {
     cleaning: "Nettoyage",
@@ -34,7 +35,8 @@ const LABELS: Record<Locale, {
     gutters: "Gouttières",
     siding: "Revêtement",
     call: "Appeler",
-    quote: "Demande en ligne",
+    quote: "Obtenir une estimation gratuite",
+    ctaReassurance: "Réponse rapide • Aucune obligation",
   },
   en: {
     cleaning: "Cleaning",
@@ -48,7 +50,8 @@ const LABELS: Record<Locale, {
     gutters: "Gutters",
     siding: "Siding",
     call: "Call",
-    quote: "Online request",
+    quote: "Get a free estimate",
+    ctaReassurance: "Fast response • No obligation",
   },
 };
 
@@ -280,16 +283,25 @@ export default function Header() {
           >
             {labels.call}
           </a>
-          <Link
-            href="/#contact"
-            className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm transition sm:text-sm ${
-              headerIsDark
-                ? "bg-white text-zinc-900 hover:bg-white/90"
-                : "bg-zinc-900 text-white hover:bg-zinc-800"
-            }`}
-          >
-            {labels.quote}
-          </Link>
+          <div className="flex flex-col items-center gap-1">
+            <Link
+              href="/#contact"
+              className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm transition sm:text-sm ${
+                headerIsDark
+                  ? "bg-white text-zinc-900 hover:bg-white/90"
+                  : "bg-zinc-900 text-white hover:bg-zinc-800"
+              }`}
+            >
+              {labels.quote}
+            </Link>
+            <span
+              className={`text-[10px] font-medium ${
+                headerIsDark ? "text-white/70" : "text-zinc-500"
+              }`}
+            >
+              {labels.ctaReassurance}
+            </span>
+          </div>
           <button
             type="button"
             className={`inline-flex items-center justify-center rounded-full border p-2 shadow-sm transition lg:hidden ${
@@ -365,13 +377,18 @@ export default function Header() {
               >
                 {labels.call}
               </a>
-              <Link
-                href="/#contact"
-                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800"
-                onClick={() => setMenuOpen(false)}
-              >
-                {labels.quote}
-              </Link>
+              <div className="flex flex-col items-center gap-1">
+                <Link
+                  href="/#contact"
+                  className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {labels.quote}
+                </Link>
+                <span className="text-[10px] font-medium text-zinc-500">
+                  {labels.ctaReassurance}
+                </span>
+              </div>
             </div>
             <div className="text-xs text-zinc-500">
               {BRAND.phoneDisplay}

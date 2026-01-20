@@ -79,7 +79,7 @@ const i18n = {
     navTerritory: "Territoire",
     navContact: "Contact",
     navCall: "Appeler",
-    navOnline: "Demande en ligne",
+    navOnline: "Obtenir une estimation gratuite",
     navSubTitle: "Nettoyage",
     navSub: "Vitres • Gouttières • Revêtement",
 
@@ -91,6 +91,8 @@ const i18n = {
     heroP:
       "Équipe attentionnée, courtoise — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     heroCTA: "Obtenir une estimation gratuite",
+    primaryCTA: "Obtenir une estimation gratuite",
+    ctaReassurance: "Réponse rapide • Aucune obligation",
     heroTrust1: "Google",
     heroTrust2: "Entreprise locale des Laurentides",
     heroTrust3: "Entièrement assuré",
@@ -137,12 +139,12 @@ const i18n = {
     servicePressB3: "Clôtures & terrasses",
     servicePressIconAlt: "Icône nettoyage à pression",
 
-    serviceCTA: "Demander une soumission",
+    serviceCTA: "Obtenir une estimation gratuite",
 
     fastQuoteT: "Soumission plus rapide",
     fastQuoteP:
       "Envoyez quelques photos de l’extérieur de votre maison pour accélérer l’estimation.",
-    fastQuoteEmail: "Demande en ligne",
+    fastQuoteEmail: "Obtenir une estimation gratuite",
     fastQuoteCall: "Appeler",
 
     secGalK: "Avant / Après",
@@ -191,7 +193,7 @@ const i18n = {
     servicesMenuGout: "Gouttières",
     servicesMenuSiding: "Revêtement",
 
-    formT: "Demande en ligne",
+    formT: "Obtenir une estimation gratuite",
     formP:
       "Formulaire simplifié (UI). On peut le connecter à votre e-mail, Square, ou un CRM.",
     open: "Ouvrir",
@@ -210,7 +212,7 @@ const i18n = {
     photoErrorSize: "Chaque photo doit faire 5 Mo ou moins.",
     photoRemove: "Retirer",
     send: "Envoyer la demande",
-    modalTitle: "Demande en ligne",
+    modalTitle: "Obtenir une estimation gratuite",
     
     modalStep: "Étape",
     modalOf: "sur",
@@ -232,7 +234,7 @@ const i18n = {
     navTerritory: "Area",
     navContact: "Contact",
     navCall: "Call",
-    navOnline: "Online request",
+    navOnline: "Get a free estimate",
     navSubTitle: "Cleaning",
     navSub: "Windows • Gutters • Siding",
 
@@ -244,6 +246,8 @@ const i18n = {
     heroP:
       "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
     heroCTA: "Get a free estimate",
+    primaryCTA: "Get a free estimate",
+    ctaReassurance: "Fast response • No obligation",
     heroTrust1: "Google",
     heroTrust2: "Local Laurentides business",
     heroTrust3: "Fully insured",
@@ -289,12 +293,12 @@ const i18n = {
     servicePressB3: "Fences & decks",
     servicePressIconAlt: "Pressure washing icon",
 
-    serviceCTA: "Request a quote",
+    serviceCTA: "Get a free estimate",
 
     fastQuoteT: "Faster quoting",
     fastQuoteP:
       "Send a few photos of the outside of your home to speed up the estimate.",
-    fastQuoteEmail: "Online request",
+    fastQuoteEmail: "Get a free estimate",
     fastQuoteCall: "Call",
 
     secGalK: "Before / After",
@@ -343,7 +347,7 @@ const i18n = {
     servicesMenuGout: "Gutters",
     servicesMenuSiding: "Siding",
 
-    formT: "Online request",
+    formT: "Get a free estimate",
     open: "Open",
     name: "Name",
     phoneLabel: "Phone",
@@ -360,7 +364,7 @@ const i18n = {
     photoRemove: "Remove",
     send: "Send request",
 
-    modalTitle: "Online request",
+    modalTitle: "Get a free estimate",
     modalStep: "Step",
     modalOf: "of",
     cancel: "Cancel",
@@ -573,12 +577,15 @@ function Hero({ onQuote, t }) {
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-center lg:col-span-5 lg:mt-0 lg:justify-start">
-                <button
-                  onClick={onQuote}
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
-                >
-                  {t("heroCTA")} <ArrowRight className="h-4 w-4" />
-                </button>
+                <div className="flex flex-col items-center gap-1 lg:items-start">
+                  <button
+                    onClick={onQuote}
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
+                  >
+                    {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
+                  </button>
+                  <span className="text-xs text-white/70">{t("ctaReassurance")}</span>
+                </div>
                 <a
                   href={BRAND.phoneHref}
                   className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
@@ -680,10 +687,6 @@ function Services({ onQuote, t }) {
                 ))}
               </div>
 
-              <a href="#contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 hover:opacity-80">
-                {t("serviceCTA")} <ArrowRight className="h-4 w-4" />
-              </a>
-
               <div className="mt-6 h-1 w-full rounded-full bg-zinc-100">
                 <div className="h-1 w-1/2 rounded-full bg-zinc-900 opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
@@ -698,16 +701,19 @@ function Services({ onQuote, t }) {
               <p className="mt-1 text-sm text-zinc-600">{t("fastQuoteP")}</p>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row md:justify-end">
-              <button
-                type="button"
-                onClick={onQuote}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50"
-              >
-                <Mail className="h-4 w-4" /> {t("fastQuoteEmail")}
-              </button>
+              <div className="flex flex-col items-center gap-1 sm:items-start">
+                <button
+                  type="button"
+                  onClick={onQuote}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+                >
+                  <Mail className="h-4 w-4" /> {t("primaryCTA")}
+                </button>
+                <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
+              </div>
               <a
                 href={BRAND.phoneHref}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:border-zinc-400"
               >
                 <Phone className="h-4 w-4" /> {t("fastQuoteCall")}
               </a>
@@ -762,7 +768,7 @@ function Gallery({ t }) {
 }
 
 
-function Reviews({ t }) {
+function Reviews({ t, onQuote }) {
   const isFrench = t("langShort") === "FR";
   const reviews = [
     {
@@ -825,6 +831,25 @@ function Reviews({ t }) {
           <ValueCard icon={<Clock className="h-5 w-5" />} title={t("val1T")} desc={t("val1D")} />
           <ValueCard icon={<Shield className="h-5 w-5" />} title={t("val2T")} desc={t("val2D")} />
           <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm sm:flex-row sm:justify-between sm:text-left">
+          <div className="flex flex-col items-center gap-1 sm:items-start">
+            <button
+              type="button"
+              onClick={onQuote}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+            >
+              {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
+            </button>
+            <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
+          </div>
+          <a
+            href={BRAND.phoneHref}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:border-zinc-400"
+          >
+            <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
+          </a>
         </div>
       </div>
     </section>
@@ -1440,7 +1465,7 @@ export default function MrBenRedesignPreview() {
         <Hero onQuote={scrollToContact} t={t} />
         <Services onQuote={scrollToContact} t={t} />
         <Gallery t={t} />
-        <Reviews t={t} />
+        <Reviews t={t} onQuote={scrollToContact} />
         <ServiceArea t={t} />
         <Contact onQuote={scrollToContact} t={t} />
       </div>
