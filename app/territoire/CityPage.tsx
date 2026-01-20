@@ -5,17 +5,23 @@ import type { CityPage as CityPageData, Locale } from "./city-data";
 const BRAND = {
   name: "MrBen.ca",
   phoneDisplay: "514-699-7145",
+  phoneHref: "tel:+15146997145",
 };
 
-const LOCALE_LABELS: Record<Locale, { servicesLabel: string; cta: string; napLabel: string }> = {
+const LOCALE_LABELS: Record<
+  Locale,
+  { servicesLabel: string; cta: string; ctaReassurance: string; napLabel: string }
+> = {
   fr: {
     servicesLabel: "Services offerts",
-    cta: "Demande en ligne",
+    cta: "Obtenir une estimation gratuite",
+    ctaReassurance: "Réponse rapide • Aucune obligation",
     napLabel: "Coordonnées",
   },
   en: {
     servicesLabel: "Services offered",
-    cta: "Demande en ligne",
+    cta: "Get a free estimate",
+    ctaReassurance: "Fast response • No obligation",
     napLabel: "Business info",
   },
 };
@@ -48,13 +54,14 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
               Nettoyage de revêtement
             </span>
           </div>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col items-start gap-1">
             <Link
               href="/#contact"
               className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
             >
               {labels.cta}
             </Link>
+            <span className="text-xs text-zinc-500">{labels.ctaReassurance}</span>
           </div>
         </div>
       </section>
@@ -83,6 +90,28 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
               <div>{BRAND.phoneDisplay}</div>
             </div>
           </aside>
+        </div>
+      </section>
+
+      <section className="border-t border-zinc-200 bg-white">
+        <div className="mx-auto max-w-5xl px-4 py-10">
+          <div className="flex flex-col items-center justify-between gap-3 rounded-3xl border border-zinc-200 bg-zinc-50 p-6 text-center sm:flex-row sm:text-left">
+            <div className="flex flex-col items-center gap-1 sm:items-start">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              >
+                {labels.cta}
+              </Link>
+              <span className="text-xs text-zinc-500">{labels.ctaReassurance}</span>
+            </div>
+            <a
+              href={BRAND.phoneHref}
+              className="inline-flex items-center justify-center rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:border-zinc-400"
+            >
+              {BRAND.phoneDisplay}
+            </a>
+          </div>
         </div>
       </section>
 

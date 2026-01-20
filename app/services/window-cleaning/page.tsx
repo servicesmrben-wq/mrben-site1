@@ -37,12 +37,15 @@ export default function WindowCleaningEnPage() {
             tailored for residential and commercial spaces.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/#contact"
-              className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
-            >
-              Request a quote
-            </Link>
+            <div className="flex flex-col items-start gap-1">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              >
+                Get a free estimate
+              </Link>
+              <span className="text-xs text-zinc-500">Fast response • No obligation</span>
+            </div>
             <Link
               href="/territoire"
               className="inline-flex items-center justify-center rounded-full border border-zinc-300 px-6 py-3 text-sm font-semibold text-zinc-800 transition hover:border-zinc-400"

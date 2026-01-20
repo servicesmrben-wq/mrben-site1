@@ -37,12 +37,15 @@ export default function WindowCleaningFrPage() {
             méticuleux, adapté aux surfaces résidentielles et commerciales.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/#contact"
-              className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
-            >
-              Demander une soumission
-            </Link>
+            <div className="flex flex-col items-start gap-1">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              >
+                Obtenir une estimation gratuite
+              </Link>
+              <span className="text-xs text-zinc-500">Réponse rapide • Aucune obligation</span>
+            </div>
             <Link
               href="/territoire"
               className="inline-flex items-center justify-center rounded-full border border-zinc-300 px-6 py-3 text-sm font-semibold text-zinc-800 transition hover:border-zinc-400"
