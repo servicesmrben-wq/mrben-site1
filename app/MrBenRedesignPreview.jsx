@@ -95,7 +95,7 @@ const i18n = {
     heroTrust2: "Entreprise locale des Laurentides",
     heroTrust3: "Entièrement assuré",
     heroTrust4: "Résidentiel et commercial",
-    heroVerifiedByGoogle: "Vérifié par Google",
+    heroVerifiedByGoogle: "Vérifié sur Google",
     heroLeaveReview: "Laisser un avis Google",
     heroStat1T: "Finition sans traces",
     heroStat1S: "Détails soignés",
@@ -248,7 +248,7 @@ const i18n = {
     heroTrust2: "Local Laurentides business",
     heroTrust3: "Fully insured",
     heroTrust4: "Residential and commercial",
-    heroVerifiedByGoogle: "Verified by Google",
+    heroVerifiedByGoogle: "Verified on Google",
     heroLeaveReview: "Leave a Google review",
     heroStat1T: "Streak-free finish",
     heroStat1S: "Attention to detail",
@@ -482,7 +482,22 @@ function Hero({ onQuote, t }) {
         </span>
       ) : null}
       <span aria-hidden="true">·</span>
-      <img src="/google-g.svg" alt="Google" className="h-3.5 w-3.5 opacity-80" />
+      <svg
+        aria-hidden="true"
+        className="h-3.5 w-3.5"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <circle cx="8" cy="8" r="8" fill="#34A853" />
+        <path
+          d="M4.4 8.3 6.9 10.6 11.6 5.6"
+          stroke="#FFFFFF"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
       <span>{t("heroVerifiedByGoogle")}</span>
     </>
   );
