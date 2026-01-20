@@ -82,7 +82,6 @@ export default function Header() {
     () => [
       { label: labels.home, href: "/" },
       { label: labels.services, href: "/#services" },
-      { label: labels.gallery, href: "/#galerie" },
       { label: labels.reviews, href: "/#avis" },
       { label: labels.territory, href: "/#territoire" },
       { label: labels.contact, href: "/#contact" },
