@@ -275,13 +275,13 @@ export default function Header() {
           </div>
           <a
             href={BRAND.phoneHref}
-            className={`hidden rounded-full border px-3 py-1.5 text-xs font-semibold shadow-sm transition sm:inline-flex sm:text-sm ${
+            className={`hidden items-center text-xs font-semibold transition sm:inline-flex sm:text-sm ${
               headerIsDark
-                ? "border-white/40 text-white hover:bg-white/10"
-                : "border-zinc-300 text-zinc-900 hover:bg-zinc-50"
-            }`}
+                ? "text-white/80 hover:text-white hover:underline focus-visible:ring-white/60"
+                : "text-zinc-700 hover:text-zinc-900 hover:underline focus-visible:ring-zinc-300"
+            } rounded underline-offset-4 focus-visible:outline-none focus-visible:ring-2`}
           >
-            {labels.call}
+            {BRAND.phoneDisplay}
           </a>
           <div className="flex flex-col items-center gap-1">
             <Link
@@ -370,12 +370,12 @@ export default function Header() {
                 EN
               </button>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <a
                 href={BRAND.phoneHref}
-                className="inline-flex items-center justify-center rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm transition hover:bg-zinc-50"
+                className="inline-flex items-center text-sm font-semibold text-zinc-700 underline-offset-4 transition hover:text-zinc-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
               >
-                {labels.call}
+                {BRAND.phoneDisplay}
               </a>
               <div className="flex flex-col items-center gap-1">
                 <Link
