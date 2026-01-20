@@ -151,8 +151,8 @@ export default function Header() {
           : "border-black/20 bg-zinc-950/72"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5 lg:items-end">
-        <Link href="/" className="flex items-center gap-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-1.5">
+        <Link href="/" className="flex shrink-0 items-center gap-3">
           <Image
             src="/brand/mrben-logo-transparent.png"
             alt="MrBen.ca"
@@ -163,86 +163,8 @@ export default function Header() {
           />
         </Link>
 
-        <div className="flex items-center gap-2">
-          <div
-            className={`hidden items-center rounded-full border p-1 text-xs font-semibold sm:flex ${
-              headerIsDark
-                ? "border-white/20 bg-white/10 text-white/80"
-                : "border-zinc-200 bg-white text-zinc-600"
-            }`}
-          >
-            <button
-              type="button"
-              onClick={() => handleLocaleChange("fr")}
-              className={`rounded-full px-2 py-1 transition ${
-                locale === "fr"
-                  ? headerIsDark
-                    ? "bg-white text-zinc-900"
-                    : "bg-zinc-900 text-white"
-                  : headerIsDark
-                    ? "hover:text-white"
-                    : "hover:text-zinc-900"
-              }`}
-              aria-pressed={locale === "fr"}
-            >
-              FR
-            </button>
-            <button
-              type="button"
-              onClick={() => handleLocaleChange("en")}
-              className={`rounded-full px-2 py-1 transition ${
-                locale === "en"
-                  ? headerIsDark
-                    ? "bg-white text-zinc-900"
-                    : "bg-zinc-900 text-white"
-                  : headerIsDark
-                    ? "hover:text-white"
-                    : "hover:text-zinc-900"
-              }`}
-              aria-pressed={locale === "en"}
-            >
-              EN
-            </button>
-          </div>
-          <a
-            href={BRAND.phoneHref}
-            className={`hidden rounded-full border px-3 py-1.5 text-sm font-semibold shadow-sm transition sm:inline-flex ${
-              headerIsDark
-                ? "border-white/40 text-white hover:bg-white/10"
-                : "border-zinc-300 text-zinc-900 hover:bg-zinc-50"
-            }`}
-          >
-            {labels.call}
-          </a>
-          <Link
-            href="/#contact"
-            className={`hidden rounded-full px-3 py-1.5 text-sm font-semibold shadow-sm transition sm:inline-flex ${
-              headerIsDark
-                ? "bg-white text-zinc-900 hover:bg-white/90"
-                : "bg-zinc-900 text-white hover:bg-zinc-800"
-            }`}
-          >
-            {labels.quote}
-          </Link>
-          <button
-            type="button"
-            className={`inline-flex items-center justify-center rounded-full border p-2 shadow-sm transition lg:hidden ${
-              headerIsDark
-                ? "border-white/40 text-white hover:bg-white/10"
-                : "border-zinc-300 text-zinc-700 hover:bg-zinc-50"
-            }`}
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span className="text-lg">☰</span>
-          </button>
-        </div>
-      </div>
-
-      <div>
         <nav
-          className={`mx-auto hidden w-full max-w-6xl px-4 py-1.5 text-base font-semibold lg:flex lg:items-end lg:justify-center lg:gap-8 lg:pb-0.5 lg:pt-0 ${
+          className={`hidden flex-1 items-center justify-center gap-6 text-base font-semibold lg:flex ${
             headerIsDark ? "text-white/80" : "text-zinc-700"
           }`}
         >
@@ -306,6 +228,82 @@ export default function Header() {
             );
           })}
         </nav>
+
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div
+            className={`hidden items-center rounded-full border p-0.5 text-xs font-semibold sm:flex ${
+              headerIsDark
+                ? "border-white/20 bg-white/10 text-white/80"
+                : "border-zinc-200 bg-white text-zinc-600"
+            }`}
+          >
+            <button
+              type="button"
+              onClick={() => handleLocaleChange("fr")}
+              className={`rounded-full px-2.5 py-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${
+                locale === "fr"
+                  ? headerIsDark
+                    ? "bg-white text-zinc-900"
+                    : "bg-zinc-900 text-white"
+                  : headerIsDark
+                    ? "text-white/60 hover:text-white"
+                    : "text-zinc-500 hover:text-zinc-900"
+              }`}
+              aria-pressed={locale === "fr"}
+            >
+              FR
+            </button>
+            <button
+              type="button"
+              onClick={() => handleLocaleChange("en")}
+              className={`rounded-full px-2.5 py-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${
+                locale === "en"
+                  ? headerIsDark
+                    ? "bg-white text-zinc-900"
+                    : "bg-zinc-900 text-white"
+                  : headerIsDark
+                    ? "text-white/60 hover:text-white"
+                    : "text-zinc-500 hover:text-zinc-900"
+              }`}
+              aria-pressed={locale === "en"}
+            >
+              EN
+            </button>
+          </div>
+          <a
+            href={BRAND.phoneHref}
+            className={`hidden rounded-full border px-3 py-1.5 text-xs font-semibold shadow-sm transition sm:inline-flex sm:text-sm ${
+              headerIsDark
+                ? "border-white/40 text-white hover:bg-white/10"
+                : "border-zinc-300 text-zinc-900 hover:bg-zinc-50"
+            }`}
+          >
+            {labels.call}
+          </a>
+          <Link
+            href="/#contact"
+            className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm transition sm:text-sm ${
+              headerIsDark
+                ? "bg-white text-zinc-900 hover:bg-white/90"
+                : "bg-zinc-900 text-white hover:bg-zinc-800"
+            }`}
+          >
+            {labels.quote}
+          </Link>
+          <button
+            type="button"
+            className={`inline-flex items-center justify-center rounded-full border p-2 shadow-sm transition lg:hidden ${
+              headerIsDark
+                ? "border-white/40 text-white hover:bg-white/10"
+                : "border-zinc-300 text-zinc-700 hover:bg-zinc-50"
+            }`}
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="text-lg">☰</span>
+          </button>
+        </div>
       </div>
 
       {menuOpen ? (
