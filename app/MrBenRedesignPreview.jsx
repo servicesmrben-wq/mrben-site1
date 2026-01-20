@@ -403,7 +403,7 @@ function Hero({ onQuote, t }) {
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/30 to-zinc-950/70" />
 
       
-      <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:pt-32">
+      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-20 sm:pb-16 sm:pt-24 lg:pt-28">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -418,50 +418,50 @@ function Hero({ onQuote, t }) {
             <span>{t("heroBadgeB")}</span>
           </div>
 
-          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             {t("heroH1a")}
             <span className="block text-2xl font-normal text-white sm:text-3xl">
               {t("heroH1b")}
             </span>
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
-          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
-            <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
-              <div className="flex items-center justify-center gap-2">
+          <p className="mt-3 text-base leading-relaxed text-white/80">{t("heroP")}</p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-4">
+            <div className="flex flex-col items-center justify-center gap-1.5 text-xs text-white/80 sm:gap-2.5 sm:text-sm lg:items-start">
+              <div className="flex items-center justify-center gap-1.5">
                 <Star className="h-3.5 w-3.5 text-white/80" />
                 <span>{t("heroTrust1")}</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-white/80" />
                 <span>{t("heroTrust2")}</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-white/80" />
                 <span>{t("heroTrust3")}</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-1.5">
                 <Briefcase className="h-3.5 w-3.5 text-white/80" />
                 <span>{t("heroTrust4")}</span>
               </div>
             </div>
 
-            <div className="flex flex-col items-stretch gap-3 sm:items-center lg:flex-row lg:items-center lg:justify-end">
+            <div className="flex flex-col items-stretch gap-2 sm:items-center lg:flex-row lg:items-center lg:justify-end">
               <button
                 onClick={onQuote}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
               >
                 {t("heroCTA")} <ArrowRight className="h-4 w-4" />
               </button>
               <a
                 href={BRAND.phoneHref}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
               >
                 <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
               </a>
             </div>
           </div>
 
-          <div className="mt-10 grid place-items-center gap-3 sm:grid-cols-3">
+          <div className="mx-auto mt-6 grid max-w-3xl place-items-center gap-2 sm:mt-8 sm:grid-cols-3 sm:gap-3">
             <HeroStat icon={<Sparkles className="h-4 w-4" />} title={t("heroStat1T")} sub={t("heroStat1S")} />
             <HeroStat icon={<Clock className="h-4 w-4" />} title={t("heroStat2T")} sub={t("heroStat2S")} />
             <HeroStat icon={<Shield className="h-4 w-4" />} title={t("heroStat3T")} sub={t("heroStat3S")} />
@@ -474,7 +474,7 @@ function Hero({ onQuote, t }) {
 
 function HeroStat({ icon, title, sub }) {
   return (
-    <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+    <div className="rounded-2xl bg-white/5 p-3.5 ring-1 ring-white/10">
       <div className="flex items-center gap-2 text-white">
         <div className="grid h-8 w-8 place-items-center rounded-xl bg-white/10">{icon}</div>
         <div>
