@@ -78,7 +78,6 @@ const i18n = {
     navReviews: "Avis",
     navTerritory: "Territoire",
     navContact: "Contact",
-    navCall: "Appeler",
     navOnline: "Obtenir une estimation gratuite",
     navSubTitle: "Nettoyage",
     navSub: "Vitres • Gouttières • Revêtement",
@@ -145,7 +144,6 @@ const i18n = {
     fastQuoteP:
       "Envoyez quelques photos de l’extérieur de votre maison pour accélérer l’estimation.",
     fastQuoteEmail: "Obtenir une estimation gratuite",
-    fastQuoteCall: "Appeler",
 
     secGalK: "Avant / Après",
     secGalT: "Réalisations",
@@ -233,7 +231,6 @@ const i18n = {
     navReviews: "Reviews",
     navTerritory: "Area",
     navContact: "Contact",
-    navCall: "Call",
     navOnline: "Get a free estimate",
     navSubTitle: "Cleaning",
     navSub: "Windows • Gutters • Siding",
@@ -299,7 +296,6 @@ const i18n = {
     fastQuoteP:
       "Send a few photos of the outside of your home to speed up the estimate.",
     fastQuoteEmail: "Get a free estimate",
-    fastQuoteCall: "Call",
 
     secGalK: "Before / After",
     secGalT: "Work",
@@ -576,7 +572,7 @@ function Hero({ onQuote, t }) {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-center lg:col-span-5 lg:mt-0 lg:justify-start">
+              <div className="mt-4 flex flex-col items-center gap-1 sm:justify-center lg:col-span-5 lg:mt-0 lg:items-start">
                 <div className="flex flex-col items-center gap-1 lg:items-start">
                   <button
                     onClick={onQuote}
@@ -586,12 +582,6 @@ function Hero({ onQuote, t }) {
                   </button>
                   <span className="text-xs text-white/70">{t("ctaReassurance")}</span>
                 </div>
-                <a
-                  href={BRAND.phoneHref}
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
-                >
-                  <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
-                </a>
               </div>
             </div>
 
@@ -700,8 +690,8 @@ function Services({ onQuote, t }) {
               <div className="text-lg font-semibold text-zinc-900">{t("fastQuoteT")}</div>
               <p className="mt-1 text-sm text-zinc-600">{t("fastQuoteP")}</p>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row md:justify-end">
-              <div className="flex flex-col items-center gap-1 sm:items-start">
+            <div className="flex flex-col items-center gap-1 md:items-end">
+              <div className="flex flex-col items-center gap-1 md:items-end">
                 <button
                   type="button"
                   onClick={onQuote}
@@ -711,12 +701,6 @@ function Services({ onQuote, t }) {
                 </button>
                 <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
               </div>
-              <a
-                href={BRAND.phoneHref}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:border-zinc-400"
-              >
-                <Phone className="h-4 w-4" /> {t("fastQuoteCall")}
-              </a>
             </div>
           </div>
         </div>
@@ -833,7 +817,7 @@ function Reviews({ t, onQuote }) {
           <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm sm:flex-row sm:justify-between sm:text-left">
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm">
           <div className="flex flex-col items-center gap-1 sm:items-start">
             <button
               type="button"
@@ -844,12 +828,6 @@ function Reviews({ t, onQuote }) {
             </button>
             <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
           </div>
-          <a
-            href={BRAND.phoneHref}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 shadow-sm hover:border-zinc-400"
-          >
-            <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
-          </a>
         </div>
       </div>
     </section>

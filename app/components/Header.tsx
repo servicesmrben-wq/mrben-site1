@@ -19,7 +19,6 @@ const LABELS: Record<Locale, {
   windows: string;
   gutters: string;
   siding: string;
-  call: string;
   quote: string;
   ctaReassurance: string;
 }> = {
@@ -34,7 +33,6 @@ const LABELS: Record<Locale, {
     windows: "Vitres",
     gutters: "Gouttières",
     siding: "Revêtement",
-    call: "Appeler",
     quote: "Obtenir une estimation gratuite",
     ctaReassurance: "Réponse rapide • Aucune obligation",
   },
@@ -49,7 +47,6 @@ const LABELS: Record<Locale, {
     windows: "Windows",
     gutters: "Gutters",
     siding: "Siding",
-    call: "Call",
     quote: "Get a free estimate",
     ctaReassurance: "Fast response • No obligation",
   },
@@ -275,13 +272,13 @@ export default function Header() {
           </div>
           <a
             href={BRAND.phoneHref}
-            className={`hidden rounded-full border px-3 py-1.5 text-xs font-semibold shadow-sm transition sm:inline-flex sm:text-sm ${
+            className={`hidden items-center text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:inline-flex sm:text-sm ${
               headerIsDark
-                ? "border-white/40 text-white hover:bg-white/10"
-                : "border-zinc-300 text-zinc-900 hover:bg-zinc-50"
+                ? "text-white/80 hover:text-white hover:underline hover:underline-offset-4 focus-visible:ring-white/60"
+                : "text-zinc-600 hover:text-zinc-900 hover:underline hover:underline-offset-4 focus-visible:ring-zinc-400"
             }`}
           >
-            {labels.call}
+            {BRAND.phoneDisplay}
           </a>
           <div className="flex flex-col items-center gap-1">
             <Link
@@ -371,12 +368,6 @@ export default function Header() {
               </button>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row">
-              <a
-                href={BRAND.phoneHref}
-                className="inline-flex items-center justify-center rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm transition hover:bg-zinc-50"
-              >
-                {labels.call}
-              </a>
               <div className="flex flex-col items-center gap-1">
                 <Link
                   href="/#contact"
@@ -390,9 +381,12 @@ export default function Header() {
                 </span>
               </div>
             </div>
-            <div className="text-xs text-zinc-500">
+            <a
+              href={BRAND.phoneHref}
+              className="inline-flex items-center text-xs font-semibold text-zinc-600 transition hover:text-zinc-900 hover:underline hover:underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2"
+            >
               {BRAND.phoneDisplay}
-            </div>
+            </a>
           </div>
         </div>
       ) : null}
