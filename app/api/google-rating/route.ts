@@ -4,6 +4,7 @@ const FALLBACK_RESPONSE = {
   source: "fallback" as const,
 };
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const GOOGLE_FIELDS = "rating,user_ratings_total";
@@ -12,21 +13,20 @@ const truncate = (value: string, maxLength = 200) =>
   value.length > maxLength ? `${value.slice(0, maxLength)}…` : value;
 
 export async function GET(request: Request) {
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+  const key = process.env.GOOGLE_PLACES_API_KEY;
   const placeId = process.env.GOOGLE_PLACE_ID;
   const debugEnabled = new URL(request.url).searchParams.get("debug") === "1";
   const debugInfo = debugEnabled
     ? {
-        hasKey: Boolean(apiKey),
+        hasKey: Boolean(key),
         hasPlaceId: Boolean(placeId),
         placeIdPrefix: placeId ? placeId.slice(0, 6) : null,
-        googleUrlFields: GOOGLE_FIELDS,
         httpStatus: null as number | null,
         googleError: null as string | null,
       }
     : null;
 
-  if (!apiKey || !placeId) {
+  if (!key || !placeId) {
     return Response.json({
       ...FALLBACK_RESPONSE,
       ...(debugInfo ? { debug: debugInfo } : {}),
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
   const url = new URL("https://maps.googleapis.com/maps/api/place/details/json");
   url.searchParams.set("place_id", placeId);
   url.searchParams.set("fields", GOOGLE_FIELDS);
-  url.searchParams.set("key", apiKey);
+  url.searchParams.set("key", key);
 
   try {
     const response = await fetch(url.toString(), {
