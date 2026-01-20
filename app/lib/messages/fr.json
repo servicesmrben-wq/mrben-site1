@@ -1,0 +1,127 @@
+{
+  "common": {
+    "getQuote": "Obtenir une estimation gratuite"
+  },
+  "windowCleaning": {
+    "metaTitle": "Lavage de vitres dans le Grand Montréal | Mr. Ben",
+    "metaDescription": "Mr. Ben offre un lavage de vitres résidentiel et commercial dans le Grand Montréal et les Laurentides. Vitres intérieures/extérieures, moustiquaires et cadrages inclus avec une finition sans traces. Demandez votre estimation gratuite!",
+    "heroKicker": "Service de lavage de vitres",
+    "heroTitle": "Lavage de vitres impeccable dans le Grand Montréal et les Laurentides",
+    "heroSubtitle": "Résultats sans traces, équipe fiable et garantie de satisfaction à 100 %.",
+    "heroImageAlt": "Technicien nettoyant une fenêtre résidentielle",
+    "heroCtaNote": "Réponse rapide • Aucune obligation",
+    "heroTrust1": "Note moyenne 5 étoiles",
+    "heroTrust2": "10+ ans d’expérience",
+    "heroTrust3": "Entièrement assuré",
+    "whyUsTitle": "Pourquoi choisir Mr. Ben?",
+    "whyUsSubtitle": "Des experts locaux ponctuels, respectueux et minutieux pour des vitres impeccables.",
+    "whyUs": {
+      "point1": {
+        "title": "Entièrement assuré et cautionné",
+        "desc": "Notre équipe est assurée et cautionnée, pour une tranquillité d’esprit totale à chaque visite."
+      },
+      "point2": {
+        "title": "Garantie de satisfaction 100 %",
+        "desc": "Nous restons disponibles jusqu’à ce que vous soyez pleinement satisfait."
+      },
+      "point3": {
+        "title": "Nettoyage écoresponsable",
+        "desc": "Solutions biodégradables et sans traces, sécuritaires pour la famille, les animaux et le jardin."
+      },
+      "point4": {
+        "title": "Service ponctuel et professionnel",
+        "desc": "Communication claire, zones de travail propres et respect de votre horaire."
+      }
+    },
+    "processTitle": "Notre processus de lavage de vitres",
+    "processSubtitle": "Une méthode éprouvée, étape par étape, pour protéger votre propriété et obtenir un résultat éclatant.",
+    "process": {
+      "step1": {
+        "title": "Inspection et préparation",
+        "desc": "Nous évaluons vos fenêtres, ciblons les zones sensibles et protégeons les surfaces environnantes."
+      },
+      "step2": {
+        "title": "Nettoyage professionnel",
+        "desc": "Chaque vitre est lavée et essuyée avec des techniques sans traces et des produits écoresponsables."
+      },
+      "step3": {
+        "title": "Cadrages et moustiquaires",
+        "desc": "Nous essuyons les cadrages et rebords, et nettoyons les moustiquaires pour enlever poussière et débris."
+      },
+      "step4": {
+        "title": "Vérification finale",
+        "desc": "Nous faisons un dernier tour avec vous pour confirmer un résultat clair et uniforme."
+      },
+      "includedTitle": "Ce qui est inclus",
+      "included1": "Nettoyage intérieur et extérieur des vitres",
+      "included2": "Essuyage des cadrages et rebords",
+      "included3": "Nettoyage et dépoussiérage des moustiquaires",
+      "included4": "Retrait des toiles d’araignées et débris autour des vitres",
+      "included5": "Vérification de qualité après le service"
+    },
+    "stats": {
+      "title": "Notre bilan",
+      "years": {
+        "title": "10+ ans",
+        "desc": "Au service de la communauté depuis 2012."
+      },
+      "windows": {
+        "title": "5 000+ vitres",
+        "desc": "Nettoyées professionnellement par notre équipe."
+      },
+      "rating": {
+        "title": "Note 5 étoiles",
+        "desc": "Moyenne des avis clients."
+      },
+      "guarantee": {
+        "title": "Garantie pluie 48 h",
+        "desc": "S’il pleut dans les 2 jours, nous faisons une retouche gratuite."
+      }
+    },
+    "testimonials": {
+      "title": "Ce que disent nos clients",
+      "quote1": {
+        "text": "L’équipe était fantastique! Arrivée à l’heure, travail impeccable et vitres étincelantes. Je recommande vivement Mr. Ben!",
+        "author": "Jane D., Laval",
+        "photoAlt": "Cliente Jane D."
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "q1": {
+        "question": "Que se passe-t-il s’il pleut après le lavage?",
+        "answer": "Pas d’inquiétude — nous offrons une garantie pluie de 48 h. S’il pleut dans les deux jours et que des marques apparaissent, contactez-nous et nous repasserons."
+      },
+      "q2": {
+        "question": "Dois-je préparer quelque chose avant votre arrivée?",
+        "answer": "Assurez-vous simplement que l’accès aux fenêtres est dégagé et que les barrières sont déverrouillées. Nous déplaçons avec soin les petits objets si nécessaire."
+      },
+      "q3": {
+        "question": "Êtes-vous assurés et cautionnés?",
+        "answer": "Oui. Nous détenons une assurance responsabilité complète et nos employés sont cautionnés. Votre propriété est entre bonnes mains."
+      },
+      "q4": {
+        "question": "Comment obtenir une estimation?",
+        "answer": "Cliquez sur le bouton Obtenir une estimation gratuite ou appelez-nous. Nous offrons des estimations gratuites et sans engagement, souvent rapidement selon vos besoins."
+      }
+    },
+    "serviceAreas": {
+      "title": "Territoire desservi",
+      "lead": "Nous desservons :",
+      "conjunction": "et",
+      "outro": "les communautés avoisinantes au Québec.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Prêt à retrouver des vitres étincelantes?",
+      "subtitle": "Contactez-nous dès aujourd’hui pour votre estimation gratuite et illuminez votre vue!"
+    }
+  }
+}

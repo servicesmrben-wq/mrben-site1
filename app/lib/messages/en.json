@@ -1,0 +1,127 @@
+{
+  "common": {
+    "getQuote": "Get Your Free Quote"
+  },
+  "windowCleaning": {
+    "metaTitle": "Window Cleaning Services in the Greater Montreal Area | Mr. Ben",
+    "metaDescription": "Mr. Ben offers professional residential and commercial window cleaning across the Greater Montreal and Laurentides areas. Interior & exterior panes, screens, and frames included with a streak-free guarantee. Get your free quote today!",
+    "heroKicker": "Window Cleaning Service",
+    "heroTitle": "Crystal-Clear Window Cleaning in the Greater Montreal & Laurentides Area",
+    "heroSubtitle": "Streak-free results, reliable professionals, and a 100% satisfaction guarantee.",
+    "heroImageAlt": "Technician cleaning a home window",
+    "heroCtaNote": "Fast response • No obligation",
+    "heroTrust1": "5-Star Rated",
+    "heroTrust2": "10+ Years in Business",
+    "heroTrust3": "Fully Insured",
+    "whyUsTitle": "Why Choose Mr. Ben?",
+    "whyUsSubtitle": "Local experts who show up on time, respect your property, and deliver spotless results.",
+    "whyUs": {
+      "point1": {
+        "title": "Fully Insured & Bonded",
+        "desc": "Our team is fully insured and bonded, so your home and property are protected at every visit."
+      },
+      "point2": {
+        "title": "100% Satisfaction Guarantee",
+        "desc": "We are not done until you are thrilled. If something is missed, we will make it right."
+      },
+      "point3": {
+        "title": "Eco-Friendly Cleaning",
+        "desc": "We use biodegradable, streak-free solutions that are safe for families, pets, and gardens."
+      },
+      "point4": {
+        "title": "On-Time, Professional Service",
+        "desc": "Clear communication, tidy work areas, and punctual arrivals so your day stays on schedule."
+      }
+    },
+    "processTitle": "Our Window Cleaning Process",
+    "processSubtitle": "A detailed, step-by-step approach to leave every pane sparkling and your space protected.",
+    "process": {
+      "step1": {
+        "title": "Inspect & Prepare",
+        "desc": "We assess your windows, note any problem areas, and protect nearby surfaces before cleaning begins."
+      },
+      "step2": {
+        "title": "Professional Cleaning",
+        "desc": "Each pane is washed and squeegeed using streak-free techniques and eco-friendly products."
+      },
+      "step3": {
+        "title": "Frames & Screens",
+        "desc": "We wipe frames, sills, and clean screens to remove dust, cobwebs, and buildup."
+      },
+      "step4": {
+        "title": "Final Touch & Review",
+        "desc": "A final walk-through ensures every window is crystal clear and meets your expectations."
+      },
+      "includedTitle": "What’s Included",
+      "included1": "Interior & exterior window cleaning",
+      "included2": "Frame and sill wipe-down",
+      "included3": "Screen cleaning and dust removal",
+      "included4": "Cobweb and debris removal around panes",
+      "included5": "Post-service walkthrough for quality"
+    },
+    "stats": {
+      "title": "Our Track Record",
+      "years": {
+        "title": "10+ Years",
+        "desc": "Serving the community since 2012."
+      },
+      "windows": {
+        "title": "5,000+ Windows",
+        "desc": "Professionally cleaned by our team."
+      },
+      "rating": {
+        "title": "5-Star Rated",
+        "desc": "Average customer rating across reviews."
+      },
+      "guarantee": {
+        "title": "48-Hour Rain Guarantee",
+        "desc": "If rain spots appear within 2 days, we will touch up for free."
+      }
+    },
+    "testimonials": {
+      "title": "What Our Customers Are Saying",
+      "quote1": {
+        "text": "The team was fantastic! They arrived on time, did an amazing job, and my windows are sparkling clean. I highly recommend Mr. Ben!",
+        "author": "Jane D., Laval",
+        "photoAlt": "Customer Jane D."
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "What if it rains after my windows are cleaned?",
+        "answer": "Don’t worry — we offer a 48-hour rain guarantee. If it rains within two days of your service and spots your windows, let us know and we’ll touch them up."
+      },
+      "q2": {
+        "question": "Do I need to do any prep before the cleaners arrive?",
+        "answer": "Just make sure we can access your windows by unlocking any gates. We’ll carefully move small items like patio furniture as needed."
+      },
+      "q3": {
+        "question": "Are you insured and bonded?",
+        "answer": "Yes. We carry full liability insurance and all team members are bonded, so your property is in safe hands."
+      },
+      "q4": {
+        "question": "How do I get a quote?",
+        "answer": "Click the Get Your Free Quote button on this page or call us. We provide free, no-obligation estimates, often instantly based on your property details."
+      }
+    },
+    "serviceAreas": {
+      "title": "Service Areas",
+      "lead": "Serving:",
+      "conjunction": "and",
+      "outro": "surrounding communities in Quebec.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Ready to see your windows sparkle?",
+      "subtitle": "Contact us today for your free quote and let us brighten your view!"
+    }
+  }
+}
