@@ -468,14 +468,14 @@ function Hero({ onQuote, t }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mx-auto w-full text-center"
+          className="mx-auto w-full max-w-5xl text-center lg:text-left"
         >
           {/* NOTE: Hero intentionally uses two width bands:
               - Wide: badge + H1 (SEO/impact)
               - Narrow: heroP + trust + CTAs + stats (conversion)
               Avoid merging these wrappers unless redesigning the hero layout. */}
-          <div className="mx-auto w-full max-w-5xl">
-            <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
+          <div className="mx-auto w-full">
+            <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15 lg:justify-start">
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>{t("heroBadgeA")}</span>
               <span className="mx-1 text-white/30">•</span>
@@ -490,56 +490,58 @@ function Hero({ onQuote, t }) {
               </span>
             </h1>
           </div>
-          <div className="mx-auto mt-4 w-full max-w-3xl">
+          <div className="mx-auto mt-4 w-full max-w-3xl lg:mx-0">
             <p className="text-base leading-relaxed text-white/80">{t("heroP")}</p>
-            <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
-              <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
+            <div className="mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
+              <div className="flex flex-col items-center gap-3 text-xs text-white/80 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
                 {placeId ? (
                   <a
                     href={`https://search.google.com/local/writereview?placeid=${placeId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={t("heroLeaveReview")}
-                    className="flex items-center justify-center gap-2 transition-opacity hover:opacity-90"
+                    className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start"
                   >
                     {ratingLine}
                   </a>
                 ) : (
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                     {ratingLine}
                   </div>
                 )}
-                <div className="flex items-center justify-center gap-2">
-                  <MapPin className="h-3.5 w-3.5 text-white/80" />
-                  <span>{t("heroTrust2")}</span>
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  <Shield className="h-3.5 w-3.5 text-white/80" />
-                  <span>{t("heroTrust3")}</span>
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                  <Briefcase className="h-3.5 w-3.5 text-white/80" />
-                  <span>{t("heroTrust4")}</span>
+                <div className="flex flex-col items-center gap-2 lg:items-start">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-white/80" />
+                    <span>{t("heroTrust2")}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-3.5 w-3.5 text-white/80" />
+                    <span>{t("heroTrust3")}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="h-3.5 w-3.5 text-white/80" />
+                    <span>{t("heroTrust4")}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex flex-col items-stretch gap-3 sm:items-center lg:flex-row lg:items-center lg:justify-end">
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:justify-center lg:col-span-5 lg:mt-0 lg:justify-start">
                 <button
                   onClick={onQuote}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
                 >
                   {t("heroCTA")} <ArrowRight className="h-4 w-4" />
                 </button>
                 <a
                   href={BRAND.phoneHref}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white/10 px-5 text-sm font-semibold text-white ring-1 ring-white/15 hover:bg-white/15"
                 >
                   <Phone className="h-4 w-4" /> {BRAND.phoneDisplay}
                 </a>
               </div>
             </div>
 
-            <div className="mt-10 grid place-items-center gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid gap-3 sm:grid-cols-3 lg:mt-10">
               <HeroStat icon={<Sparkles className="h-4 w-4" />} title={t("heroStat1T")} sub={t("heroStat1S")} />
               <HeroStat icon={<Clock className="h-4 w-4" />} title={t("heroStat2T")} sub={t("heroStat2S")} />
               <HeroStat icon={<Shield className="h-4 w-4" />} title={t("heroStat3T")} sub={t("heroStat3S")} />
