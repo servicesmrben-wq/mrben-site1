@@ -410,6 +410,10 @@ function Hero({ onQuote, t }) {
           transition={{ duration: 0.5 }}
           className="mx-auto w-full text-center"
         >
+          {/* NOTE: Hero intentionally uses two width bands:
+              - Wide: badge + H1 (SEO/impact)
+              - Narrow: heroP + trust + CTAs + stats (conversion)
+              Avoid merging these wrappers unless redesigning the hero layout. */}
           <div className="mx-auto w-full max-w-5xl">
             <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
               <CheckCircle2 className="h-3.5 w-3.5" />
