@@ -425,7 +425,7 @@ function Hero({ onQuote, t }) {
             </span>
           </h1>
           <p className="mt-4 text-base leading-relaxed text-white/80">{t("heroP")}</p>
-          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+          <div className="mt-6 grid w-full max-w-2xl gap-5 md:max-w-3xl lg:max-w-5xl lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start xl:max-w-6xl mx-auto">
             <div className="flex flex-col items-center justify-center gap-2 text-xs text-white/80 sm:gap-3 sm:text-sm lg:items-start">
               <div className="flex items-center justify-center gap-2">
                 <Star className="h-3.5 w-3.5 text-white/80" />
@@ -461,7 +461,7 @@ function Hero({ onQuote, t }) {
             </div>
           </div>
 
-          <div className="mt-10 grid place-items-center gap-3 sm:grid-cols-3">
+          <div className="mt-10 grid w-full max-w-2xl place-items-center gap-3 md:max-w-3xl lg:max-w-5xl sm:grid-cols-3 xl:max-w-6xl mx-auto">
             <HeroStat icon={<Sparkles className="h-4 w-4" />} title={t("heroStat1T")} sub={t("heroStat1S")} />
             <HeroStat icon={<Clock className="h-4 w-4" />} title={t("heroStat2T")} sub={t("heroStat2S")} />
             <HeroStat icon={<Shield className="h-4 w-4" />} title={t("heroStat3T")} sub={t("heroStat3S")} />
