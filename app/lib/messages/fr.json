@@ -8,7 +8,7 @@
     "heroKicker": "Service de lavage de vitres",
     "heroTitle": "Lavage de vitres impeccable dans le Grand Montréal et les Laurentides",
     "heroSubtitle": "Résultats sans traces, équipe fiable et garantie de satisfaction à 100 %.",
-    "heroImageAlt": "Technicien nettoyant une fenêtre résidentielle",
+    "heroImageAlt": "Technicien MrBen en lavage de vitres extérieures sur une maison résidentielle",
     "heroCtaNote": "Réponse rapide • Aucune obligation",
     "heroTrust1": "Note moyenne 5 étoiles",
     "heroTrust2": "10+ ans d’expérience",
@@ -122,6 +122,16 @@
     "finalCTA": {
       "title": "Prêt à retrouver des vitres étincelantes?",
       "subtitle": "Contactez-nous dès aujourd’hui pour votre estimation gratuite et illuminez votre vue!"
+    }
+  },
+  "cityPages": {
+    "heroImageAlt": {
+      "lachute": "Lavage de vitres avant/après sur une maison résidentielle à Lachute",
+      "saint-jerome": "Service de lavage de vitres résidentiel à Saint-Jérôme",
+      "saint-sauveur": "Vitres extérieures propres sur une maison à Saint-Sauveur",
+      "mirabel": "Vitres fraîchement lavées sur une maison à Mirabel",
+      "blainville": "Nettoyage de gouttières sur une maison à Blainville",
+      "laval": "Lavage à pression d’une entrée résidentielle à Laval"
     }
   }
 }

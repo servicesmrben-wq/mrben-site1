@@ -59,19 +59,19 @@ const SERVICE_AREAS = [
 const IMAGE_URLS = [
   "/hero.jpg",
 
-  "/gallery/IMG_20160719_112351214_HDR_Easy-Resize.com_gallery.jpg",
-  "/gallery/window_side_by_side_gallery.jpg",
-  "/gallery/20180710_113343_HDR_gallery.jpg",
-  "/gallery/lavage pression beton_gallery.jpg",
-  "/gallery/Cleaning a Rain Gutter_gallery.jpg",
-  "/gallery/20180710_142453_gallery.jpg",
-  "/gallery/20190617_110022_gallery.jpg",
-  "/gallery/20191024_104344_HDR_gallery.jpg",
-  "/gallery/20190902_095350_gallery.jpg",
-  "/gallery/ce03f5d2-8956-4b11-b65c-cf51085e4f4e~1_gallery.jpg",
-  "/gallery/powerwashing-driveway.jpg",
-  "/gallery/gutters-clean.jpg",
-  "/gallery/merged-horizonta-windows.jpg",
+  "/gallery/lavage-vitres-interieur-detail.jpg",
+  "/gallery/lavage-vitres-lachute-avant-apres.jpg",
+  "/gallery/lavage-vitres-saint-jerome-residentiel.jpg",
+  "/gallery/lavage-pression-beton.jpg",
+  "/gallery/nettoyage-gouttieres-maison.jpg",
+  "/gallery/lavage-vitres-saint-sauveur-maison.jpg",
+  "/gallery/lavage-vitres-mirabel-maison.jpg",
+  "/gallery/nettoyage-revetement-exterieur.jpg",
+  "/gallery/lavage-vitres-exterieur-maison.jpg",
+  "/gallery/lavage-vitres-residentiel-detail.jpg",
+  "/gallery/lavage-pression-entree-laval.jpg",
+  "/gallery/nettoyage-gouttieres-blainville.jpg",
+  "/gallery/lavage-vitres-residentiel-avant-apres.jpg",
 ];
 
 const i18n = {

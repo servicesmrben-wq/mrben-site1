@@ -8,7 +8,7 @@
     "heroKicker": "Window Cleaning Service",
     "heroTitle": "Crystal-Clear Window Cleaning in the Greater Montreal & Laurentides Area",
     "heroSubtitle": "Streak-free results, reliable professionals, and a 100% satisfaction guarantee.",
-    "heroImageAlt": "Technician cleaning a home window",
+    "heroImageAlt": "MrBen technician washing exterior windows on a residential home",
     "heroCtaNote": "Fast response • No obligation",
     "heroTrust1": "5-Star Rated",
     "heroTrust2": "10+ Years in Business",
@@ -122,6 +122,16 @@
     "finalCTA": {
       "title": "Ready to see your windows sparkle?",
       "subtitle": "Contact us today for your free quote and let us brighten your view!"
+    }
+  },
+  "cityPages": {
+    "heroImageAlt": {
+      "lachute": "Before-and-after window cleaning on a residential home in Lachute",
+      "saint-jerome": "Residential window cleaning service in Saint-Jérôme",
+      "saint-sauveur": "Clean exterior windows on a home in Saint-Sauveur",
+      "mirabel": "Freshly cleaned windows on a Mirabel home",
+      "blainville": "Gutter cleaning on a home in Blainville",
+      "laval": "Pressure washing a driveway in Laval"
     }
   }
 }

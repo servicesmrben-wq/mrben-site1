@@ -13,7 +13,7 @@ import {
   Users,
 } from "lucide-react";
 
-const HERO_IMAGE = "/gallery/merged-horizonta-windows.jpg";
+const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
 
 const QUOTE_HREF = "/#contact";
 
