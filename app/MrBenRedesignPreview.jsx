@@ -36,6 +36,15 @@ const BRAND = {
   emailHref: "info@mrben.ca",
 };
 
+const toMailto = (href) => {
+  if (!href) return href;
+  const trimmedHref = href.trim();
+  const lowerHref = trimmedHref.toLowerCase();
+  if (lowerHref.startsWith("mailto:") || lowerHref.startsWith("http")) return trimmedHref;
+  if (!trimmedHref.includes("@")) return trimmedHref;
+  return `mailto:${trimmedHref}`;
+};
+
 const SERVICE_AREAS = [
   "Hawkesbury",
   "Lachute",
@@ -1104,7 +1113,7 @@ async function onSubmit(e) {
               </a>
 
               <a
-                href={BRAND.emailHref}
+                href={toMailto(BRAND.emailHref)}
                 className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15"
               >
                 <div className="flex items-center gap-3">
