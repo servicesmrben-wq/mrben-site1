@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Phone,
@@ -71,6 +72,7 @@ const i18n = {
     langLabel: "Français",
     toggleTo: "EN",
     topTagline: "Estimation gratuite • Service courtois & ponctuel",
+    privacyPolicyLink: "Politique de confidentialité",
 
     // Nav
     navServices: "Services",
@@ -226,6 +228,7 @@ const i18n = {
     langLabel: "English",
     toggleTo: "FR",
     topTagline: "Free estimate • Courteous & on-time service",
+    privacyPolicyLink: "Privacy Policy",
 
     // Nav
     navServices: "Services",
@@ -1335,6 +1338,13 @@ async function onSubmit(e) {
 
         <div className="mt-10 border-t border-white/10 pt-8 text-center text-xs text-white/60">
           © {new Date().getFullYear()} {BRAND.name}. All rights reserved.
+          <span className="mx-1 text-zinc-500">·</span>
+          <Link
+            className="text-zinc-500 transition hover:underline"
+            href={t("langShort") === "FR" ? "/confidentialite" : "/privacy-policy"}
+          >
+            {t("privacyPolicyLink")}
+          </Link>
         </div>
       </div>
     </section>
