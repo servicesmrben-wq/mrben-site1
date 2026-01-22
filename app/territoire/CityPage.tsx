@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import type { CityPage as CityPageData, Locale } from "./city-data";
+import { getTranslations } from "@/app/lib/translations";
 
 const BRAND = {
   name: "MrBen.ca",
@@ -26,9 +28,21 @@ const LOCALE_LABELS: Record<
   },
 };
 
+const CITY_HERO_IMAGES: Record<string, string> = {
+  lachute: "/gallery/lavage-vitres-lachute-avant-apres.jpg",
+  "saint-jerome": "/gallery/lavage-vitres-saint-jerome-residentiel.jpg",
+  "saint-sauveur": "/gallery/lavage-vitres-saint-sauveur-maison.jpg",
+  mirabel: "/gallery/lavage-vitres-mirabel-maison.jpg",
+  blainville: "/gallery/nettoyage-gouttieres-blainville.jpg",
+  laval: "/gallery/lavage-pression-entree-laval.jpg",
+};
+
 export function CityPage({ city, locale }: { city: CityPageData; locale: Locale }) {
   const content = city[locale];
   const labels = LOCALE_LABELS[locale];
+  const t = getTranslations(locale);
+  const heroImage = CITY_HERO_IMAGES[city.slug];
+  const heroImageAlt = t(`cityPages.heroImageAlt.${city.slug}`);
 
   return (
     <main className="min-h-screen bg-white text-zinc-900">
@@ -43,6 +57,20 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-600">
             {content.description}
           </p>
+          {heroImage ? (
+            <div className="mt-8 overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+              <div className="relative h-64 w-full sm:h-72">
+                <Image
+                  src={heroImage}
+                  alt={heroImageAlt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 640px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          ) : null}
           <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-zinc-600">
             <span className="rounded-full border border-zinc-200 bg-white px-3 py-1">
               Lavage de vitres
