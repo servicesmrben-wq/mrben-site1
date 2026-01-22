@@ -2,6 +2,9 @@
   "common": {
     "getQuote": "Obtenir une estimation gratuite"
   },
+  "footer": {
+    "privacyPolicy": "Politique de confidentialité"
+  },
   "windowCleaning": {
     "metaTitle": "Lavage de vitres dans le Grand Montréal | Mr. Ben",
     "metaDescription": "Mr. Ben offre un lavage de vitres résidentiel et commercial dans le Grand Montréal et les Laurentides. Vitres intérieures/extérieures, moustiquaires et cadrages inclus avec une finition sans traces. Demandez votre estimation gratuite!",

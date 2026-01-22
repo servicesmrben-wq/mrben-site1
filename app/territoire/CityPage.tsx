@@ -109,11 +109,6 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
         </div>
       </section>
 
-      <footer className="border-t border-zinc-200 bg-zinc-50">
-        <div className="mx-auto max-w-5xl px-4 py-8 text-sm text-zinc-600">
-          <span className="font-semibold text-zinc-900">{BRAND.name}</span> • {BRAND.phoneDisplay}
-        </div>
-      </footer>
     </main>
   );
 }

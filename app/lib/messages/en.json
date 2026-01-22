@@ -2,6 +2,9 @@
   "common": {
     "getQuote": "Get Your Free Quote"
   },
+  "footer": {
+    "privacyPolicy": "Privacy Policy"
+  },
   "windowCleaning": {
     "metaTitle": "Window Cleaning Services in the Greater Montreal Area | Mr. Ben",
     "metaDescription": "Mr. Ben offers professional residential and commercial window cleaning across the Greater Montreal and Laurentides areas. Interior & exterior panes, screens, and frames included with a streak-free guarantee. Get your free quote today!",
