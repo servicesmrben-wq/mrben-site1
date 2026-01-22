@@ -511,7 +511,7 @@ function Hero({ onQuote, t }) {
       <div className="absolute inset-0 opacity-100">
         <img src={IMAGE_URLS[0]} alt="Hero" className="h-full w-full object-cover" />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/30 to-zinc-950/75" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/50 via-zinc-950/40 to-zinc-950/80" />
 
       
       <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:pt-32">
