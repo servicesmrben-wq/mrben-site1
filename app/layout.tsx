@@ -4,6 +4,8 @@ import "./globals.css";
 import { getLocaleFromRequest } from "./lib/locale";
 import Header from "./components/Header";
 import { LocaleProvider } from "./components/LocaleProvider";
+import Footer from "./components/Footer";
+import { getTranslations } from "./lib/translations";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +38,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocaleFromRequest();
+  const t = getTranslations(locale);
+  const privacyHref = locale === "fr" ? "/confidentialite" : "/privacy-policy";
 
   return (
     <html lang={locale}>
@@ -45,6 +49,7 @@ export default async function RootLayout({
         <LocaleProvider initialLocale={locale}>
           <Header />
           {children}
+          <Footer privacyHref={privacyHref} privacyLabel={t("footer.privacyPolicy")} />
         </LocaleProvider>
       </body>
     </html>
