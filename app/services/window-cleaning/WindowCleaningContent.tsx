@@ -140,7 +140,7 @@ export default function WindowCleaningContent({ t }: Props) {
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-zinc-950/80" />
+          <div className="absolute inset-0 bg-zinc-950/70" />
         </div>
         <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:py-20">
           <div className="max-w-3xl">
