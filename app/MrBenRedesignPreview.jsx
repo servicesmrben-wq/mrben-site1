@@ -407,6 +407,7 @@ function Hero({ onQuote, t }) {
   const [reviewCount, setReviewCount] = useState(null);
   const placeId = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID;
   const shouldReduceMotion = useReducedMotion();
+  const heroTextShadow = { textShadow: "0 1px 2px rgba(0,0,0,0.35)" };
 
   const animatedStars = Array.from({ length: 5 }).map((_, index) => (
     <motion.span
@@ -460,7 +461,9 @@ function Hero({ onQuote, t }) {
 
   const ratingLine = (
     <>
-      <span className="tabular-nums">{rating.toFixed(1)}</span>
+      <span className="tabular-nums" style={heroTextShadow}>
+        {rating.toFixed(1)}
+      </span>
       {shouldReduceMotion ? (
         <span className="flex items-center gap-0.5">
           {Array.from({ length: 5 }).map((_, index) => (
@@ -481,11 +484,13 @@ function Hero({ onQuote, t }) {
         </motion.span>
       )}
       {reviewCount !== null ? (
-        <span className="tabular-nums">
+        <span className="tabular-nums" style={heroTextShadow}>
           ({reviewCount} {t("navReviews").toLowerCase()})
         </span>
       ) : null}
-      <span aria-hidden="true">·</span>
+      <span aria-hidden="true" style={heroTextShadow}>
+        ·
+      </span>
       <svg
         aria-hidden="true"
         className="h-3.5 w-3.5"
@@ -502,7 +507,7 @@ function Hero({ onQuote, t }) {
           strokeLinejoin="round"
         />
       </svg>
-      <span>{t("heroVerifiedByGoogle")}</span>
+      <span style={heroTextShadow}>{t("heroVerifiedByGoogle")}</span>
     </>
   );
 
@@ -528,23 +533,30 @@ function Hero({ onQuote, t }) {
           <div className="mx-auto w-full">
             <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15 lg:justify-start">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>{t("heroBadgeA")}</span>
-              <span className="mx-1 text-white/30">•</span>
+              <span style={heroTextShadow}>{t("heroBadgeA")}</span>
+              <span className="mx-1 text-white/30" style={heroTextShadow}>
+                •
+              </span>
               <MapPin className="h-3.5 w-3.5" />
-              <span>{t("heroBadgeB")}</span>
+              <span style={heroTextShadow}>{t("heroBadgeB")}</span>
             </div>
 
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            <h1
+              className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+              style={heroTextShadow}
+            >
               {t("heroH1a")}
-              <span className="block text-2xl font-normal text-white sm:text-3xl">
+              <span className="block text-2xl font-normal text-white sm:text-3xl" style={heroTextShadow}>
                 {t("heroH1b")}
               </span>
             </h1>
           </div>
           <div className="mx-auto mt-4 w-full max-w-3xl lg:mx-0">
-            <p className="text-base leading-relaxed text-white/80">{t("heroP")}</p>
+            <p className="text-base leading-relaxed text-white/95" style={heroTextShadow}>
+              {t("heroP")}
+            </p>
             <div className="mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
-              <div className="flex flex-col items-center gap-3 text-xs text-white/80 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
+              <div className="flex flex-col items-center gap-3 text-xs text-white/90 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
                 {placeId ? (
                   <a
                     href={`https://search.google.com/local/writereview?placeid=${placeId}`}
@@ -563,15 +575,15 @@ function Hero({ onQuote, t }) {
                 <div className="flex flex-col items-center gap-2 lg:items-start">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-white/80" />
-                    <span>{t("heroTrust2")}</span>
+                    <span style={heroTextShadow}>{t("heroTrust2")}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-3.5 w-3.5 text-white/80" />
-                    <span>{t("heroTrust3")}</span>
+                    <span style={heroTextShadow}>{t("heroTrust3")}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Briefcase className="h-3.5 w-3.5 text-white/80" />
-                    <span>{t("heroTrust4")}</span>
+                    <span style={heroTextShadow}>{t("heroTrust4")}</span>
                   </div>
                 </div>
               </div>
@@ -584,7 +596,9 @@ function Hero({ onQuote, t }) {
                   >
                     {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
                   </button>
-                  <span className="text-xs text-white/70">{t("ctaReassurance")}</span>
+                  <span className="text-xs text-white/85" style={heroTextShadow}>
+                    {t("ctaReassurance")}
+                  </span>
                 </div>
               </div>
             </div>
@@ -602,13 +616,19 @@ function Hero({ onQuote, t }) {
 }
 
 function HeroStat({ icon, title, sub }) {
+  const heroTextShadow = { textShadow: "0 1px 2px rgba(0,0,0,0.35)" };
+
   return (
     <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
       <div className="flex items-center gap-2 text-white">
         <div className="grid h-8 w-8 place-items-center rounded-xl bg-white/10">{icon}</div>
         <div>
-          <div className="text-sm font-semibold">{title}</div>
-          <div className="text-xs text-white/70">{sub}</div>
+          <div className="text-sm font-semibold" style={heroTextShadow}>
+            {title}
+          </div>
+          <div className="text-xs text-white/85" style={heroTextShadow}>
+            {sub}
+          </div>
         </div>
       </div>
     </div>
