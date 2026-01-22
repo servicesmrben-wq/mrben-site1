@@ -20,6 +20,7 @@ export function buildCityMetadata(city: CityPage, locale: Locale): Metadata {
       languages: {
         "fr-CA": getCityUrl(city.slug),
         "en-CA": getCityUrl(city.slug),
+        "x-default": getCityUrl(city.slug),
       },
     },
   };
