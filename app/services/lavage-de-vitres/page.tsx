@@ -7,7 +7,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
 export function generateMetadata(): Metadata {
   const canonical = `${BASE_URL}/services/lavage-de-vitres`;
-  const alternate = `${BASE_URL}/services/window-cleaning`;
   const t = getTranslations("fr");
 
   return {
@@ -17,7 +16,8 @@ export function generateMetadata(): Metadata {
       canonical,
       languages: {
         "fr-CA": canonical,
-        "en-CA": alternate,
+        "en-CA": canonical,
+        "x-default": canonical,
       },
     },
   };
