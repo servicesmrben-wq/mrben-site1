@@ -88,21 +88,31 @@
     },
     "faq": {
       "title": "Questions fréquentes",
-      "q1": {
-        "question": "Que se passe-t-il s’il pleut après le lavage?",
-        "answer": "Pas d’inquiétude — nous offrons une garantie pluie de 48 h. S’il pleut dans les deux jours et que des marques apparaissent, contactez-nous et nous repasserons."
-      },
-      "q2": {
-        "question": "Dois-je préparer quelque chose avant votre arrivée?",
-        "answer": "Assurez-vous simplement que l’accès aux fenêtres est dégagé et que les barrières sont déverrouillées. Nous déplaçons avec soin les petits objets si nécessaire."
-      },
-      "q3": {
-        "question": "Êtes-vous assurés et cautionnés?",
-        "answer": "Oui. Nous détenons une assurance responsabilité complète et nos employés sont cautionnés. Votre propriété est entre bonnes mains."
-      },
-      "q4": {
-        "question": "Comment obtenir une estimation?",
-        "answer": "Cliquez sur le bouton Obtenir une estimation gratuite ou appelez-nous. Nous offrons des estimations gratuites et sans engagement, souvent rapidement selon vos besoins."
+      "items": {
+        "0": {
+          "q": "À quelle fréquence faut-il laver les vitres au Québec ?",
+          "a": "Pour la plupart des maisons, 2 à 4 fois par année est idéal. Au printemps on enlève le sel, la poussière et le pollen; à l’automne on prépare la saison froide. Nous pouvons recommander une fréquence selon l’exposition (route, arbres, bord de l’eau)."
+        },
+        "1": {
+          "q": "Est-ce que vous faites l’intérieur et l’extérieur ?",
+          "a": "Oui. Nous offrons le lavage extérieur et intérieur, incluant le cadre et les rebords au besoin. Vous pouvez choisir seulement l’extérieur si c’est ce que vous préférez."
+        },
+        "2": {
+          "q": "Faut-il être présent pendant le service ?",
+          "a": "Pas nécessairement. Pour l’extérieur seulement, nous pouvons souvent intervenir sans votre présence si l’accès est dégagé. Pour l’intérieur, une personne doit être sur place pour l’accès."
+        },
+        "3": {
+          "q": "Travaillez-vous même si la météo est incertaine ?",
+          "a": "Nous surveillons la météo de près. Une pluie légère n’empêche pas toujours un lavage extérieur, mais en cas de conditions défavorables nous replanifions rapidement."
+        },
+        "4": {
+          "q": "Comment estimez-vous le prix ?",
+          "a": "Le prix dépend du nombre et du type de fenêtres, de l’accès, et du niveau d’encrassement. Une estimation rapide est possible à partir de quelques photos de l’extérieur; sinon nous confirmons sur place."
+        },
+        "5": {
+          "q": "Êtes-vous assurés et équipés pour les travaux en hauteur ?",
+          "a": "Oui. Nous sommes assurés et équipés pour intervenir de façon sécuritaire (échelles, perches, méthodes adaptées) selon la configuration de la propriété."
+        }
       }
     },
     "serviceAreas": {

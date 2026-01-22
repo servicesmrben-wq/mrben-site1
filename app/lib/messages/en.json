@@ -87,22 +87,32 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "q1": {
-        "question": "What if it rains after my windows are cleaned?",
-        "answer": "Don’t worry — we offer a 48-hour rain guarantee. If it rains within two days of your service and spots your windows, let us know and we’ll touch them up."
-      },
-      "q2": {
-        "question": "Do I need to do any prep before the cleaners arrive?",
-        "answer": "Just make sure we can access your windows by unlocking any gates. We’ll carefully move small items like patio furniture as needed."
-      },
-      "q3": {
-        "question": "Are you insured and bonded?",
-        "answer": "Yes. We carry full liability insurance and all team members are bonded, so your property is in safe hands."
-      },
-      "q4": {
-        "question": "How do I get a quote?",
-        "answer": "Click the Get Your Free Quote button on this page or call us. We provide free, no-obligation estimates, often instantly based on your property details."
+      "title": "Frequently asked questions",
+      "items": {
+        "0": {
+          "q": "How often should windows be cleaned in Québec?",
+          "a": "For most homes, 2–4 times per year is ideal. Spring removes salt, dust, and pollen; fall prepares for the cold season. We can recommend a frequency based on exposure (busy road, trees, waterfront)."
+        },
+        "1": {
+          "q": "Do you do interior and exterior window cleaning?",
+          "a": "Yes. We offer exterior and interior cleaning, including frames and sills when needed. You can also choose exterior-only if you prefer."
+        },
+        "2": {
+          "q": "Do I need to be home during the service?",
+          "a": "Not always. For exterior-only work, we can often clean without you being home if access is clear. For interior cleaning, someone must be present to provide access."
+        },
+        "3": {
+          "q": "What if the weather is uncertain?",
+          "a": "We monitor the forecast closely. Light rain doesn’t always prevent exterior cleaning, but if conditions are unfavorable we will reschedule quickly."
+        },
+        "4": {
+          "q": "How do you estimate the price?",
+          "a": "Pricing depends on the number and type of windows, access, and how dirty they are. We can often provide a quick estimate from a few exterior photos, then confirm on site if needed."
+        },
+        "5": {
+          "q": "Are you insured and equipped for height work?",
+          "a": "Yes. We are insured and use safe methods and equipment (ladders, poles, and the right approach) based on the property layout."
+        }
       }
     },
     "serviceAreas": {

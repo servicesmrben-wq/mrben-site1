@@ -101,22 +101,43 @@ export default function WindowCleaningContent({ t }: Props) {
 
   const faqItems = [
     {
-      question: t("windowCleaning.faq.q1.question"),
-      answer: t("windowCleaning.faq.q1.answer"),
+      q: t("windowCleaning.faq.items.0.q"),
+      a: t("windowCleaning.faq.items.0.a"),
     },
     {
-      question: t("windowCleaning.faq.q2.question"),
-      answer: t("windowCleaning.faq.q2.answer"),
+      q: t("windowCleaning.faq.items.1.q"),
+      a: t("windowCleaning.faq.items.1.a"),
     },
     {
-      question: t("windowCleaning.faq.q3.question"),
-      answer: t("windowCleaning.faq.q3.answer"),
+      q: t("windowCleaning.faq.items.2.q"),
+      a: t("windowCleaning.faq.items.2.a"),
     },
     {
-      question: t("windowCleaning.faq.q4.question"),
-      answer: t("windowCleaning.faq.q4.answer"),
+      q: t("windowCleaning.faq.items.3.q"),
+      a: t("windowCleaning.faq.items.3.a"),
+    },
+    {
+      q: t("windowCleaning.faq.items.4.q"),
+      a: t("windowCleaning.faq.items.4.a"),
+    },
+    {
+      q: t("windowCleaning.faq.items.5.q"),
+      a: t("windowCleaning.faq.items.5.a"),
     },
   ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
 
   const serviceAreas = [
     { href: "/territoire/lachute", label: t("windowCleaning.serviceAreas.cities.lachute") },
@@ -299,25 +320,26 @@ export default function WindowCleaningContent({ t }: Props) {
       </section>
 
       {/* FAQ Section */}
-      <section className="border-t border-zinc-200 bg-zinc-50">
+      <section className="border-t border-zinc-200 bg-zinc-50" aria-labelledby="faq">
         <div className="mx-auto max-w-6xl px-4 py-16">
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+          <h2 id="faq" className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
             {t("windowCleaning.faq.title")}
           </h2>
           <div className="mt-8 grid gap-4">
             {faqItems.map((item) => (
-              <details
-                key={item.question}
-                className="group rounded-2xl border border-zinc-200 bg-white p-5"
-              >
+              <details key={item.q} className="group rounded-2xl border border-zinc-200 bg-white p-5">
                 <summary className="cursor-pointer list-none text-base font-semibold text-zinc-900">
-                  {item.question}
+                  {item.q}
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-600">{item.answer}</p>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-600">{item.a}</p>
               </details>
             ))}
           </div>
         </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
       </section>
 
       {/* Service Areas Section */}
