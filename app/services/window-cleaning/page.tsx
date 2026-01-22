@@ -6,7 +6,8 @@ import { getTranslations } from "@/app/lib/translations";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
 export function generateMetadata(): Metadata {
-  const canonical = `${BASE_URL}/services/window-cleaning`;
+  const canonical = `${BASE_URL}/services/lavage-de-vitres`;
+  const enUrl = `${BASE_URL}/services/window-cleaning`;
   const t = getTranslations("en");
 
   return {
@@ -16,7 +17,7 @@ export function generateMetadata(): Metadata {
       canonical,
       languages: {
         "fr-CA": canonical,
-        "en-CA": canonical,
+        "en-CA": enUrl,
         "x-default": canonical,
       },
     },
