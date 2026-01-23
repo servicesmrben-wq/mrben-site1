@@ -147,7 +147,7 @@ const i18n = {
     servicePressH: "Avant / Après",
     servicePressB1: "Allées & patios",
     servicePressB2: "Extérieur de la maison",
-    servicePressB3: "Clôtures & terrasses",
+    servicePressB3: "Rampes & terrasses",
     servicePressIconAlt: "Icône nettoyage à pression",
 
     serviceCTA: "Obtenir une estimation gratuite",
@@ -302,7 +302,7 @@ const i18n = {
     servicePressH: "Before / After",
     servicePressB1: "Driveways & patios",
     servicePressB2: "Home exterior",
-    servicePressB3: "Fences & decks",
+    servicePressB3: "Railings & decks",
     servicePressIconAlt: "Pressure washing icon",
 
     serviceCTA: "Get a free estimate",
