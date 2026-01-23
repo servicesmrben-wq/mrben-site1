@@ -1,4 +1,4 @@
-import type { Locale } from "./locale";
+import { DEFAULT_LOCALE, type Locale } from "./locale";
 
 import en from "./messages/en.json";
 import fr from "./messages/fr.json";
@@ -22,6 +22,6 @@ function getMessageValue(messages: Messages, key: string): string {
 }
 
 export function getTranslations(locale: Locale) {
-  const messages = MESSAGES[locale] ?? MESSAGES.fr;
+  const messages = MESSAGES[locale] ?? MESSAGES[DEFAULT_LOCALE];
   return (key: string) => getMessageValue(messages, key);
 }
