@@ -34,6 +34,7 @@ const BRAND = {
   phoneHref: "tel:+15146997145",
   email: "info@mrben.ca",
   emailHref: "info@mrben.ca",
+  googleReviewsUrl: "https://maps.app.goo.gl/tDWmLSud1LPRVFBLA",
 };
 
 const toMailto = (href) => {
@@ -185,6 +186,11 @@ const i18n = {
     nearbyCities: "et les villes avoisinantes",
     areaP:
       "Pour les secteurs avoisinants, envoyez votre adresse et on vous confirme rapidement.",
+    "territory.googleTile.title": "MrBen.ca",
+    "territory.googleTile.ratingValue": "5,0",
+    "territory.googleTile.reviewCount": "(61)",
+    "territory.googleTile.subtitle": "Service de lavage de vitres",
+    "territory.googleTile.aria": "Lire nos avis Google",
     zonesServedLabel: "Zones desservies :",
     convTip: "Astuce conversion",
     convTipText:
@@ -340,6 +346,11 @@ const i18n = {
     nearbyCities: "and nearby cities",
     areaP:
       "For nearby sectors, send your address and we’ll confirm quickly.",
+    "territory.googleTile.title": "MrBen.ca",
+    "territory.googleTile.ratingValue": "5.0",
+    "territory.googleTile.reviewCount": "(61)",
+    "territory.googleTile.subtitle": "Window cleaning service",
+    "territory.googleTile.aria": "Read our Google reviews",
     zonesServedLabel: "Service areas:",
     convTip: "Conversion tip",
     convTipText:
@@ -938,16 +949,27 @@ function ServiceArea({ t }) {
           </div>
 
           <a
-            className="flex cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm"
-            href="https://maps.app.goo.gl/tDWmLSud1LPRVFBLA"
+            className="flex cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 bg-white p-6 text-left shadow-sm"
+            href={BRAND.googleReviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={t("territory.googleTile.aria")}
           >
-            <img
-              src="/googlemaps-mrben.png"
-              alt={t("googleMapsAlt")}
-              className="max-h-[82%] max-w-[82%] object-contain"
-            />
+            <div className="flex w-full max-w-[82%] flex-col gap-2">
+              <div className="text-lg font-semibold text-zinc-900">
+                {t("territory.googleTile.title")}
+              </div>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-700">
+                <span className="font-semibold text-zinc-900">
+                  {t("territory.googleTile.ratingValue")}
+                </span>
+                <span className="text-yellow-500">★★★★★</span>
+                <span>{t("territory.googleTile.reviewCount")}</span>
+              </div>
+              <div className="text-sm text-zinc-600">
+                {t("territory.googleTile.subtitle")}
+              </div>
+            </div>
           </a>
         </div>
       </div>
