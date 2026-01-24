@@ -956,17 +956,17 @@ function ServiceArea({ t }) {
             aria-label={t("territory.googleTile.aria")}
           >
             <div className="flex w-full max-w-[82%] flex-col gap-2">
-              <div className="text-lg font-semibold text-zinc-900">
+              <div className="text-xl font-semibold text-zinc-900">
                 {t("territory.googleTile.title")}
               </div>
-              <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-700">
+              <div className="flex flex-wrap items-center gap-2 text-base text-zinc-700">
                 <span className="font-semibold text-zinc-900">
                   {t("territory.googleTile.ratingValue")}
                 </span>
                 <span className="text-yellow-500">★★★★★</span>
                 <span>{t("territory.googleTile.reviewCount")}</span>
               </div>
-              <div className="text-sm text-zinc-600">
+              <div className="text-base text-zinc-600">
                 {t("territory.googleTile.subtitle")}
               </div>
             </div>
