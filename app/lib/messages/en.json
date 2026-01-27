@@ -3,10 +3,10 @@
     "getQuote": "Get Your Free Quote"
   },
   "windowCleaning": {
-    "metaTitle": "Window Cleaning Services in the Greater Montreal Area | Mr. Ben",
-    "metaDescription": "Mr. Ben offers professional residential and commercial window cleaning across the Greater Montreal and Laurentides areas. Interior & exterior panes, screens, and frames included with a streak-free guarantee. Get your free quote today!",
+    "metaTitle": "Window Cleaning Services in the Laurentians | Mr. Ben",
+    "metaDescription": "Mr. Ben offers professional residential and commercial window cleaning across the Laurentides areas. Interior & exterior panes, screens, and frames included with a streak-free guarantee. Get your free quote today!",
     "heroKicker": "Window Cleaning Service",
-    "heroTitle": "Crystal-Clear Window Cleaning in the Laurentians",
+    "heroTitle": "Super-Clear Window Cleaning in the Laurentians",
     "heroSubtitle": "Streak-free results, reliable professionals, and a 100% satisfaction guarantee.",
     "heroImageAlt": "MrBen technician washing exterior windows on a residential home",
     "heroCtaNote": "Fast response • No obligation",
@@ -90,7 +90,7 @@
       "title": "Frequently asked questions",
       "items": {
         "0": {
-          "q": "How often should windows be cleaned in Québec?",
+          "q": "How often should windows be cleaned?",
           "a": "For most homes, 2–4 times per year is ideal. Spring removes salt, dust, and pollen; fall prepares for the cold season. We can recommend a frequency based on exposure (busy road, trees, waterfront)."
         },
         "1": {
@@ -119,7 +119,7 @@
       "title": "Service Areas",
       "lead": "Serving:",
       "conjunction": "and",
-      "outro": "surrounding communities in Quebec.",
+      "outro": "surrounding communities.",
       "cities": {
         "lachute": "Lachute",
         "saintJerome": "Saint-Jérôme",
