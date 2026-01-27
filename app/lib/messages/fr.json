@@ -42,7 +42,7 @@
       },
       "step2": {
         "title": "Nettoyage professionnel",
-        "desc": "Chaque vitre est lavée et essuyée avec des techniques sans traces et des produits écoresponsables."
+        "desc": "Chaque vitre est lavée avec des techniques sans traces et des produits écoresponsables."
       },
       "step3": {
         "title": "Cadrages et moustiquaires",
@@ -90,7 +90,7 @@
       "title": "Questions fréquentes",
       "items": {
         "0": {
-          "q": "À quelle fréquence faut-il laver les vitres au Québec ?",
+          "q": "À quelle fréquence faut-il laver les vitres ?",
           "a": "Pour la plupart des maisons, 2 à 4 fois par année est idéal. Au printemps on enlève le sel, la poussière et le pollen; à l’automne on prépare la saison froide. Nous pouvons recommander une fréquence selon l’exposition (route, arbres, bord de l’eau)."
         },
         "1": {
@@ -103,11 +103,11 @@
         },
         "3": {
           "q": "Travaillez-vous même si la météo est incertaine ?",
-          "a": "Nous surveillons la météo de près. Une pluie légère n’empêche pas toujours un lavage extérieur, mais en cas de conditions défavorables nous replanifions rapidement."
+          "a": "Nous surveillons la météo de près. Une pluie légère n’empêche pas toujours un lavage extérieur, si nous jugeons les conditions défavorables nous replanifions rapidement."
         },
         "4": {
           "q": "Comment estimez-vous le prix ?",
-          "a": "Le prix dépend du nombre et du type de fenêtres, de l’accès, et du niveau d’encrassement. Une estimation rapide est possible à partir de quelques photos de l’extérieur; sinon nous confirmons sur place."
+          "a": "Le prix dépend du nombre et du type de fenêtres, de l’accès, et du niveau de saleté. Une estimation rapide est possible à partir de quelques photos de l’extérieur; sinon nous confirmons sur place."
         },
         "5": {
           "q": "Êtes-vous assurés et équipés pour les travaux en hauteur ?",
@@ -119,7 +119,7 @@
       "title": "Territoire desservi",
       "lead": "Nous desservons :",
       "conjunction": "et",
-      "outro": "les communautés avoisinantes au Québec.",
+      "outro": "les communautés avoisinantes.",
       "cities": {
         "lachute": "Lachute",
         "saintJerome": "Saint-Jérôme",
