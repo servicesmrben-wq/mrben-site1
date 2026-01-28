@@ -990,6 +990,10 @@ function Contact({ t }) {
   const addressInputRef = useRef(null);
   const autocompleteRef = useRef(null);
   const autocompleteListenerRef = useRef(null);
+  const addressInputProps = {
+    value: addressValue,
+    onChange: (e) => setAddressValue(e.target.value),
+  };
 
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState("");
@@ -1042,6 +1046,10 @@ function Contact({ t }) {
   }, [images]);
 
   useEffect(() => {
+    console.log("[Address] value prop present:", Object.prototype.hasOwnProperty.call(addressInputProps, "value"));
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
 
     loadGooglePlaces().then((google) => {
@@ -1062,7 +1070,7 @@ function Contact({ t }) {
       const handlePlaceChanged = () => {
         const place = autocomplete.getPlace?.();
         const formatted = place?.formatted_address;
-        if (!formatted) return;
+        if (!formatted || !place?.address_components?.length) return;
 
         setAddressValue(formatted);
       };
@@ -1257,9 +1265,8 @@ async function onSubmit(e) {
                 <Input
                   label={t("address")}
                   placeholder={t("address")}
-                  value={addressValue}
                   inputRef={addressInputRef}
-                  onChange={(e) => setAddressValue(e.target.value)}
+                  {...addressInputProps}
                 />
               </div>
 
