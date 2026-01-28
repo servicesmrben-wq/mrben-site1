@@ -1044,11 +1044,12 @@ function Contact({ t }) {
   useEffect(() => {
     let isMounted = true;
 
-    loadGooglePlaces().then((google) => {
-      const googleMaps = /** @type {any} */ (google);
-      if (!isMounted || !googleMaps?.maps?.places || !addressInputRef.current) return;
+    loadGooglePlaces().then(() => {
+      if (!isMounted || !addressInputRef.current) return;
+      if (!window.google?.maps?.places) return;
       if (autocompleteRef.current) return;
 
+      const googleMaps = /** @type {any} */ (window.google);
       const autocomplete = new googleMaps.maps.places.Autocomplete(
         addressInputRef.current,
         {
@@ -1082,74 +1083,90 @@ function Contact({ t }) {
     };
   }, []);
 
-async function onSubmit(e) {
-  e.preventDefault();
+  async function onSubmit(e) {
+    e.preventDefault();
 
-  const validationMessage = validateImages(images);
-  if (validationMessage) {
-    setImageError(validationMessage);
-    setStatus({
-      state: "error",
-      message: validationMessage,
-    });
-    return;
-  }
-
-  setStatus({ state: "sending", message: "" });
-
-  try {
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("phone", form.phone);
-    formData.append("email", form.email);
-    formData.append("address", form.address);
-    formData.append("services", JSON.stringify(services));
-    formData.append("message", form.message);
-    formData.append("company", company);
-    images.forEach((file) => {
-      formData.append("images", file);
-    });
-
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok || !data.ok) {
+    const validationMessage = validateImages(images);
+    if (validationMessage) {
+      setImageError(validationMessage);
       setStatus({
         state: "error",
-        message:
-          data?.error ||
-          (t("langShort") === "FR"
-            ? "Échec de l’envoi. Veuillez réessayer."
-            : "Failed to send. Please try again."),
+        message: validationMessage,
       });
       return;
     }
 
-    setStatus({
-      state: "success",
-      message:
-        t("langShort") === "FR"
-          ? "Message envoyé. Nous vous contacterons sous peu."
-          : "Message sent. We will contact you shortly.",
-    });
+    setStatus({ state: "sending", message: "" });
 
-    setForm({ name: "", phone: "", email: "", message: "" });
-    setAddressValue("");
-    setCompany("");
-    setServices([]);
-    setImages([]);
-    setImageError("");
-  } catch {
-    setStatus({
-      state: "error",
-      message: t("langShort") === "FR" ? "Erreur réseau. Veuillez réessayer." : "Network error. Please try again.",
-    });
+    try {
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("phone", form.phone);
+      formData.append("email", form.email);
+      formData.append("address", String(form.address ?? ""));
+      formData.append("services", JSON.stringify(services));
+      formData.append("message", form.message);
+      formData.append("company", company);
+      images.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      let res;
+      try {
+        res = await fetch("/api/contact", {
+          method: "POST",
+          body: formData,
+        });
+      } catch (error) {
+        console.error("Contact form network error:", error);
+        setStatus({
+          state: "error",
+          message:
+            t("langShort") === "FR"
+              ? "Erreur réseau. Veuillez réessayer."
+              : "Network error. Please try again.",
+        });
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        setStatus({
+          state: "error",
+          message:
+            data?.error ||
+            (t("langShort") === "FR"
+              ? "Échec de l’envoi. Veuillez réessayer."
+              : "Failed to send. Please try again."),
+        });
+        return;
+      }
+
+      setStatus({
+        state: "success",
+        message:
+          t("langShort") === "FR"
+            ? "Message envoyé. Nous vous contacterons sous peu."
+            : "Message sent. We will contact you shortly.",
+      });
+
+      setForm({ name: "", phone: "", email: "", address: "", message: "" });
+      setCompany("");
+      setServices([]);
+      setImages([]);
+      setImageError("");
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setStatus({
+        state: "error",
+        message:
+          t("langShort") === "FR"
+            ? "Erreur réseau. Veuillez réessayer."
+            : "Network error. Please try again.",
+      });
+    }
   }
-}
 
   return (
     <section id="contact" className="bg-zinc-950">
