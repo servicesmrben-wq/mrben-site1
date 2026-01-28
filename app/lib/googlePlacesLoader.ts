@@ -1,34 +1,16 @@
-let googlePlacesPromise: Promise<typeof window.google | null> | null = null;
-
-type GoogleMapsWindow = typeof window & {
-  google?: {
-    maps?: {
-      places?: {
-        Autocomplete: new (
-          input: HTMLInputElement,
-          opts?: {
-            types?: string[];
-            componentRestrictions?: {
-              country?: string | string[];
-            };
-          }
-        ) => {
-          addListener: (eventName: string, handler: () => void) => { remove: () => void };
-          getPlace: () => { formatted_address?: string };
-          setFields?: (fields: string[]) => void;
-        };
-      };
-    };
-  };
-};
+let googlePlacesPromise: Promise<unknown | null> | null = null;
 
 declare global {
   interface Window {
-    google?: GoogleMapsWindow["google"];
+    google?: {
+      maps?: {
+        places?: unknown;
+      };
+    };
   }
 }
 
-export function loadGooglePlaces(): Promise<typeof window.google | null> {
+export function loadGooglePlaces(): Promise<unknown | null> {
   if (typeof window === "undefined") {
     return Promise.resolve(null);
   }

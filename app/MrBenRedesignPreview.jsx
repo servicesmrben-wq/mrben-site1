@@ -1045,10 +1045,11 @@ function Contact({ t }) {
     let isMounted = true;
 
     loadGooglePlaces().then((google) => {
-      if (!isMounted || !google?.maps?.places || !addressInputRef.current) return;
+      const googleMaps = /** @type {any} */ (google);
+      if (!isMounted || !googleMaps?.maps?.places || !addressInputRef.current) return;
       if (autocompleteRef.current) return;
 
-      const autocomplete = new google.maps.places.Autocomplete(
+      const autocomplete = new googleMaps.maps.places.Autocomplete(
         addressInputRef.current,
         {
           types: ["address"],
