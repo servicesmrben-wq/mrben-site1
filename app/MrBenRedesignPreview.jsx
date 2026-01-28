@@ -983,17 +983,13 @@ function Contact({ t }) {
     name: "",
     phone: "",
     email: "",
+    address: "",
     message: "",
   });
-  const [addressValue, setAddressValue] = useState("");
   const [company, setCompany] = useState("");
   const addressInputRef = useRef(null);
   const autocompleteRef = useRef(null);
   const autocompleteListenerRef = useRef(null);
-  const addressInputProps = {
-    value: addressValue,
-    onChange: (e) => setAddressValue(e.target.value),
-  };
 
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState("");
@@ -1046,10 +1042,6 @@ function Contact({ t }) {
   }, [images]);
 
   useEffect(() => {
-    console.log("[Address] value prop present:", Object.prototype.hasOwnProperty.call(addressInputProps, "value"));
-  }, []);
-
-  useEffect(() => {
     let isMounted = true;
 
     loadGooglePlaces().then((google) => {
@@ -1072,7 +1064,7 @@ function Contact({ t }) {
         const formatted = place?.formatted_address;
         if (!formatted || !place?.address_components?.length) return;
 
-        setAddressValue(formatted);
+        setForm((prev) => ({ ...prev, address: formatted }));
       };
 
       const listener = autocomplete.addListener("place_changed", handlePlaceChanged);
@@ -1110,7 +1102,7 @@ async function onSubmit(e) {
     formData.append("name", form.name);
     formData.append("phone", form.phone);
     formData.append("email", form.email);
-    formData.append("address", addressValue);
+    formData.append("address", form.address);
     formData.append("services", JSON.stringify(services));
     formData.append("message", form.message);
     formData.append("company", company);
@@ -1266,7 +1258,8 @@ async function onSubmit(e) {
                   label={t("address")}
                   placeholder={t("address")}
                   inputRef={addressInputRef}
-                  {...addressInputProps}
+                  value={form.address}
+                  onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))}
                 />
               </div>
 
