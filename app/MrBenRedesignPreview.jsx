@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { CITY_PAGES } from "@/app/territoire/city-data";
 import { useLocale } from "./components/LocaleProvider";
+import { loadGooglePlaces } from "./lib/googlePlacesLoader";
 
 /**
  * MrBenTest.ca — Modernized Website Preview (single-file)
@@ -986,6 +987,9 @@ function Contact({ t }) {
     message: "",
   });
   const [company, setCompany] = useState("");
+  const addressInputRef = useRef(null);
+  const autocompleteRef = useRef(null);
+  const autocompleteListenerRef = useRef(null);
 
   const [images, setImages] = useState([]);
   const [imageError, setImageError] = useState("");
@@ -1036,6 +1040,46 @@ function Contact({ t }) {
       nextPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
     };
   }, [images]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    loadGooglePlaces().then((google) => {
+      if (!isMounted || !google?.maps?.places || !addressInputRef.current) return;
+      if (autocompleteRef.current) return;
+
+      const autocomplete = new google.maps.places.Autocomplete(
+        addressInputRef.current,
+        {
+          types: ["address"],
+          componentRestrictions: { country: "ca" },
+        }
+      );
+
+      autocomplete.setFields?.(["address_components", "formatted_address"]);
+
+      const handlePlaceChanged = () => {
+        const place = autocomplete.getPlace?.();
+        const formatted = place?.formatted_address;
+        if (!formatted) return;
+
+        setForm((prev) => ({ ...prev, address: formatted }));
+      };
+
+      const listener = autocomplete.addListener("place_changed", handlePlaceChanged);
+      autocompleteRef.current = autocomplete;
+      autocompleteListenerRef.current = listener;
+    });
+
+    return () => {
+      isMounted = false;
+      if (autocompleteListenerRef.current?.remove) {
+        autocompleteListenerRef.current.remove();
+      }
+      autocompleteListenerRef.current = null;
+      autocompleteRef.current = null;
+    };
+  }, []);
 
 async function onSubmit(e) {
   e.preventDefault();
@@ -1212,6 +1256,7 @@ async function onSubmit(e) {
                   label={t("address")}
                   placeholder={t("address")}
                   value={form.address}
+                  inputRef={addressInputRef}
                   onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))}
                 />
               </div>
@@ -1382,11 +1427,12 @@ async function onSubmit(e) {
   );
 }
 
-function Input({ label, ...inputProps }) {
+function Input({ label, inputRef, ...inputProps }) {
   return (
     <label className="block">
       <div className="text-sm font-semibold text-zinc-900">{label}</div>
       <input
+        ref={inputRef}
         {...inputProps}
         className="mt-2 w-full rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400"
       />
