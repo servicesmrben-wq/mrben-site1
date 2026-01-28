@@ -983,9 +983,9 @@ function Contact({ t }) {
     name: "",
     phone: "",
     email: "",
-    address: "",
     message: "",
   });
+  const [addressValue, setAddressValue] = useState("");
   const [company, setCompany] = useState("");
   const addressInputRef = useRef(null);
   const autocompleteRef = useRef(null);
@@ -1064,7 +1064,7 @@ function Contact({ t }) {
         const formatted = place?.formatted_address;
         if (!formatted) return;
 
-        setForm((prev) => ({ ...prev, address: formatted }));
+        setAddressValue(formatted);
       };
 
       const listener = autocomplete.addListener("place_changed", handlePlaceChanged);
@@ -1102,7 +1102,7 @@ async function onSubmit(e) {
     formData.append("name", form.name);
     formData.append("phone", form.phone);
     formData.append("email", form.email);
-    formData.append("address", form.address);
+    formData.append("address", addressValue);
     formData.append("services", JSON.stringify(services));
     formData.append("message", form.message);
     formData.append("company", company);
@@ -1137,7 +1137,8 @@ async function onSubmit(e) {
           : "Message sent. We will contact you shortly.",
     });
 
-    setForm({ name: "", phone: "", email: "", address: "", message: "" });
+    setForm({ name: "", phone: "", email: "", message: "" });
+    setAddressValue("");
     setCompany("");
     setServices([]);
     setImages([]);
@@ -1256,9 +1257,9 @@ async function onSubmit(e) {
                 <Input
                   label={t("address")}
                   placeholder={t("address")}
-                  value={form.address}
+                  value={addressValue}
                   inputRef={addressInputRef}
-                  onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))}
+                  onChange={(e) => setAddressValue(e.target.value)}
                 />
               </div>
 
