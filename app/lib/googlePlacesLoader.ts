@@ -50,7 +50,7 @@ export function loadGooglePlaces(): Promise<unknown | null> {
     }
 
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async&v=weekly`;
     script.async = true;
     script.defer = true;
     script.dataset.googleMaps = "places";
