@@ -1046,10 +1046,9 @@ function Contact({ t }) {
 
     loadGooglePlaces().then(() => {
       if (!isMounted || !addressInputRef.current) return;
-      if (!window.google?.maps?.places) return;
-      if (autocompleteRef.current) return;
-
       const googleMaps = /** @type {any} */ (window.google);
+      if (!googleMaps?.maps?.places) return;
+      if (autocompleteRef.current) return;
       const autocomplete = new googleMaps.maps.places.Autocomplete(
         addressInputRef.current,
         {
