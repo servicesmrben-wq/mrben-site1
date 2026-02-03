@@ -33,10 +33,17 @@ export async function POST(req: Request) {
   try {
     const smtpUser = process.env.SMTP_USER?.trim();
     const smtpPass = process.env.SMTP_PASS?.trim();
-    const contactTo = process.env.CONTACT_FORM_TO_EMAIL?.trim() || DEFAULT_TO;
-    const contactFrom = process.env.CONTACT_FROM?.trim() || DEFAULT_FROM;
+    const contactTo =
+      process.env.CONTACT_FORM_TO_EMAIL ||
+      process.env.CONTACT_TO_EMAIL ||
+      process.env.CONTACT_TO ||
+      DEFAULT_TO;
+    const contactFrom =
+      process.env.CONTACT_FROM || process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM;
+    const trimmedContactTo = contactTo?.trim();
+    const trimmedContactFrom = contactFrom?.trim();
 
-    if (!smtpUser || !smtpPass || !contactTo || !contactFrom) {
+    if (!smtpUser || !smtpPass || !trimmedContactTo || !trimmedContactFrom) {
       return new Response(
         JSON.stringify({
           ok: false,
@@ -156,8 +163,8 @@ export async function POST(req: Request) {
     });
 
     await transporter.sendMail({
-      from: contactFrom,
-      to: contactTo,
+      from: trimmedContactFrom,
+      to: trimmedContactTo,
       replyTo: email,
       subject,
       text: textLines.filter(Boolean).join("\n"),
@@ -169,9 +176,10 @@ export async function POST(req: Request) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch {
-    return new Response(JSON.stringify({ ok: false, error: "Invalid request." }), {
-      status: 400,
+  } catch (err) {
+    console.error("Contact form email failed:", err);
+    return new Response(JSON.stringify({ ok: false, error: "Email send failed." }), {
+      status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
