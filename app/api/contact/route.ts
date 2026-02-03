@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const DEFAULT_FROM = "MrBen <info@mrben.ca>";
+const DEFAULT_FROM = "MrBen.ca <no-reply@mrben.ca>";
 const DEFAULT_TO = "no-reply@mrben.ca";
 
 function isEmail(value: string) {
