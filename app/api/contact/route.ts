@@ -6,7 +6,7 @@ const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const DEFAULT_FROM = "MrBen <info@mrben.ca>";
-const DEFAULT_TO = "info@mrben.ca";
+const DEFAULT_TO = "no-reply@mrben.ca";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   try {
     const smtpUser = process.env.SMTP_USER?.trim();
     const smtpPass = process.env.SMTP_PASS?.trim();
-    const contactTo = process.env.CONTACT_TO?.trim() || DEFAULT_TO;
+    const contactTo = process.env.CONTACT_FORM_TO_EMAIL?.trim() || DEFAULT_TO;
     const contactFrom = process.env.CONTACT_FROM?.trim() || DEFAULT_FROM;
 
     if (!smtpUser || !smtpPass || !contactTo || !contactFrom) {
