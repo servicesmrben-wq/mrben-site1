@@ -6,7 +6,7 @@ const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const DEFAULT_FROM = "MrBen.ca <no-reply@mrben.ca>";
-const DEFAULT_TO = "no-reply@mrben.ca";
+const DEFAULT_TO = "info@mrben.ca";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
