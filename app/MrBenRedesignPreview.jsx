@@ -1002,6 +1002,7 @@ function Contact({ t }) {
 
   const MAX_IMAGES = 5;
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+  const MAX_COMPRESSED_SIZE = 600 * 1024;
   const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const serviceOptions = [
@@ -1028,6 +1029,64 @@ function Contact({ t }) {
       return t("photoErrorSize");
     }
     return "";
+  }
+
+  async function compressImage(file) {
+    if (!file.type.startsWith("image/")) return file;
+
+    const imageBitmap = await createImageBitmap(file);
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      imageBitmap.close?.();
+      return file;
+    }
+
+    const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
+    const nextName = `${baseName}.jpg`;
+    const qualitySteps = [0.82, 0.72, 0.62, 0.52, 0.45];
+    const dimensionSteps = [2000, 1600, 1280];
+    const longestEdge = Math.max(imageBitmap.width, imageBitmap.height);
+
+    const toBlob = (quality) =>
+      new Promise((resolve) => {
+        canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
+      });
+
+    let finalBlob = null;
+
+    for (const maxEdge of dimensionSteps) {
+      const scale = Math.min(1, maxEdge / longestEdge);
+      const targetWidth = Math.max(1, Math.round(imageBitmap.width * scale));
+      const targetHeight = Math.max(1, Math.round(imageBitmap.height * scale));
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      context.clearRect(0, 0, targetWidth, targetHeight);
+      context.drawImage(imageBitmap, 0, 0, targetWidth, targetHeight);
+
+      for (const quality of qualitySteps) {
+        const blob = await toBlob(quality);
+        if (blob && blob.size <= MAX_COMPRESSED_SIZE) {
+          finalBlob = blob;
+          break;
+        }
+      }
+
+      if (finalBlob) break;
+    }
+
+    imageBitmap.close?.();
+
+    if (!finalBlob) {
+      throw new Error("image_too_large");
+    }
+
+    return new File([finalBlob], nextName, {
+      type: "image/jpeg",
+      lastModified: file.lastModified,
+    });
   }
 
   React.useEffect(() => {
@@ -1328,7 +1387,7 @@ function Contact({ t }) {
                     accept="image/jpeg,image/png,image/webp"
                     multiple
                     className="block w-full text-sm text-zinc-900"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const selected = Array.from(e.target.files || []);
                       if (!selected.length) return;
 
@@ -1342,7 +1401,38 @@ function Contact({ t }) {
                         return;
                       }
 
-                      setImages(nextImages);
+                      const compressionResults = await Promise.allSettled(
+                        selected.map((file) => compressImage(file))
+                      );
+                      const compressedFiles = compressionResults
+                        .filter((result) => result.status === "fulfilled")
+                        .map((result) => result.value);
+                      const failedCompression = compressionResults.some(
+                        (result) => result.status === "rejected"
+                      );
+
+                      if (failedCompression) {
+                        setImageError(
+                          t("langShort") === "FR"
+                            ? "Impossible de compresser une image sous 600 Ko."
+                            : "Unable to compress an image below 600KB."
+                        );
+                        setStatus({ state: "idle", message: "" });
+                        e.target.value = "";
+                        return;
+                      }
+
+                      const compressedImages = [...images, ...compressedFiles];
+                      const compressedValidationMessage = validateImages(compressedImages);
+
+                      if (compressedValidationMessage) {
+                        setImageError(compressedValidationMessage);
+                        setStatus({ state: "idle", message: "" });
+                        e.target.value = "";
+                        return;
+                      }
+
+                      setImages(compressedImages);
                       setImageError("");
                       setStatus({ state: "idle", message: "" });
                       e.target.value = "";
