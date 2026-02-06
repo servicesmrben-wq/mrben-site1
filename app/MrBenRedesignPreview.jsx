@@ -1002,7 +1002,7 @@ function Contact({ t }) {
 
   const MAX_IMAGES = 5;
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-  const MAX_COMPRESSED_SIZE = 2 * 1024 * 1024;
+  const MAX_COMPRESSED_SIZE = 600 * 1024;
   const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const serviceOptions = [
@@ -1414,8 +1414,8 @@ function Contact({ t }) {
                       if (failedCompression) {
                         setImageError(
                           t("langShort") === "FR"
-                            ? "Impossible de compresser une image sous 2 Mo."
-                            : "Unable to compress an image below 2MB."
+                            ? "Impossible de compresser une image sous 600 Ko."
+                            : "Unable to compress an image below 600KB."
                         );
                         setStatus({ state: "idle", message: "" });
                         e.target.value = "";
