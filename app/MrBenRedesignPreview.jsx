@@ -47,6 +47,14 @@ const toMailto = (href) => {
   return `mailto:${trimmedHref}`;
 };
 
+const formatPhoneNumber = (value) => {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+};
+
 const SERVICE_AREAS = [
   "Hawkesbury",
   "Lachute",
@@ -1321,7 +1329,12 @@ function Contact({ t }) {
                   label={t("phoneLabel")}
                   placeholder="450-555-0123"
                   value={form.phone}
-                  onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, phone: formatPhoneNumber(e.target.value) }))
+                  }
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
                 />
                 <Input
                   label={t("emailLabel")}
@@ -1550,6 +1563,7 @@ function Input({ label, inputRef, ...inputProps }) {
 
 function QuoteModal({ open, onClose, t }) {
   const [step, setStep] = useState(1);
+  const [quotePhone, setQuotePhone] = useState("");
 
   return (
     <AnimatePresence>
@@ -1589,7 +1603,15 @@ function QuoteModal({ open, onClose, t }) {
             {step === 1 ? (
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Input label={t("name")} placeholder={t("name")} />
-                <Input label={t("phoneLabel")} placeholder="450-555-0123" />
+                <Input
+                  label={t("phoneLabel")}
+                  placeholder="450-555-0123"
+                  value={quotePhone}
+                  onChange={(e) => setQuotePhone(formatPhoneNumber(e.target.value))}
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                />
                 <Input label={t("emailLabel")} placeholder="you@example.com" />
                 <Input label={t("address")} placeholder={t("address")} />
                 <div className="sm:col-span-2">
