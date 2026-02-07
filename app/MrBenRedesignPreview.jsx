@@ -761,7 +761,7 @@ function Services({ onQuote, t }) {
                 ))}
               </div>
 
-              <div className="mt-6 h-1 w-full rounded-full bg-zinc-100">
+              <div className="mt-6 hidden h-1 w-full rounded-full bg-zinc-100 md:block">
                 <div className="h-1 w-1/2 rounded-full bg-zinc-900 opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
             </motion.div>
