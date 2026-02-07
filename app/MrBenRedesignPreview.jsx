@@ -1379,14 +1379,14 @@ function Contact({ t }) {
 
                 <label
                   htmlFor="contactPhotos"
-                  className="mt-2 block cursor-pointer rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400 focus-within:ring-2 focus-within:ring-zinc-200"
+                  className="mt-2 block cursor-pointer rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400 focus-within:ring-2 focus-within:ring-zinc-200 hover:bg-black/5 active:opacity-90"
                 >
                   <input
                     id="contactPhotos"
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
                     multiple
-                    className="block w-full text-sm text-zinc-900"
+                    className="block w-full cursor-pointer text-sm text-zinc-900"
                     onChange={async (e) => {
                       const selected = Array.from(e.target.files || []);
                       if (!selected.length) return;
@@ -1506,7 +1506,7 @@ function Contact({ t }) {
               <button
                 type="submit"
                 disabled={status.state === "sending"}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 disabled:opacity-60"
+                className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 active:opacity-90 disabled:opacity-60"
               >
                 {status.state === "sending"
                   ? t("langShort") === "FR"
