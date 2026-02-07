@@ -186,6 +186,10 @@ const i18n = {
     val2D: "Équipement et méthodes adaptées à chaque surface.",
     val3T: "Résultat",
     val3D: "Détails soignés et nettoyage complet de la zone de travail.",
+    galleryToggleMore: "Voir plus de réalisations",
+    galleryToggleLess: "Voir moins",
+    trustToggleMore: "Voir plus d’arguments de confiance",
+    trustToggleLess: "Voir moins",
 
     secAreaK: "Territoire",
     secAreaT: "On se déplace chez vous",
@@ -346,6 +350,10 @@ const i18n = {
     val2D: "Methods and equipment matched to each surface.",
     val3T: "Results",
     val3D: "Meticulous finish and clean work area.",
+    galleryToggleMore: "See more work",
+    galleryToggleLess: "See less",
+    trustToggleMore: "See more trust points",
+    trustToggleLess: "See less",
 
     secAreaK: "Service area",
     secAreaT: "We come to you",
@@ -551,7 +559,7 @@ function Hero({ onQuote, t }) {
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/60 via-zinc-950/50 to-zinc-950/80" />
 
       
-      <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-24 sm:pb-20 sm:pt-28 lg:pt-32">
+      <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-20 md:pb-20 md:pt-28 lg:pt-32">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -587,7 +595,7 @@ function Hero({ onQuote, t }) {
             <p className="text-base leading-relaxed text-white/95" style={heroTextShadow}>
               {t("heroP")}
             </p>
-            <div className="mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
+            <div className="mt-4 md:mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
               <div className="flex flex-col items-center gap-3 text-xs text-white/90 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
                 {placeId ? (
                   <a
@@ -635,7 +643,7 @@ function Hero({ onQuote, t }) {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-3 lg:mt-10">
+            <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:mt-10">
               <HeroStat icon={<Sparkles className="h-4 w-4" />} title={t("heroStat1T")} sub={t("heroStat1S")} />
               <HeroStat icon={<Clock className="h-4 w-4" />} title={t("heroStat2T")} sub={t("heroStat2S")} />
               <HeroStat icon={<Shield className="h-4 w-4" />} title={t("heroStat3T")} sub={t("heroStat3S")} />
@@ -700,10 +708,10 @@ function Services({ onQuote, t }) {
 
   return (
     <section id="services" className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <SectionTitle kicker={t("secServicesK")} title={t("secServicesT")} subtitle={t("secServicesS")} />
 
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:grid-cols-3 md:gap-5">
           {services.map((s, idx) => (
             <motion.div
               key={s.id}
@@ -740,7 +748,7 @@ function Services({ onQuote, t }) {
           ))}
         </div>
 
-        <div className="mt-10 rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm">
+        <div className="mt-8 rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm md:mt-10">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:items-center">
             <div className="md:col-span-2">
               <div className="text-lg font-semibold text-zinc-900">{t("fastQuoteT")}</div>
@@ -768,13 +776,25 @@ function Services({ onQuote, t }) {
 function Gallery({ t }) {
   const imgs = useMemo(() => IMAGE_URLS.slice(1), []);
   const [active, setActive] = useState(0);
+  const [showAll, setShowAll] = useState(false);
+  const visibleImages = imgs.slice(0, 6);
+
+  const toggleGallery = () => {
+    setShowAll((prev) => {
+      const next = !prev;
+      if (!next && active > 5) {
+        setActive(0);
+      }
+      return next;
+    });
+  };
 
   return (
     <section id="galerie" className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 pb-14 sm:pb-16">
+      <div className="mx-auto max-w-6xl px-4 pb-10 md:pb-16">
         <SectionTitle kicker={t("secGalK")} title={t("secGalT")} subtitle={t("secGalS")} />
 
-        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-5">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-5 lg:grid-cols-5">
           <div className="lg:col-span-3">
             <div className="overflow-hidden rounded-3xl border border-zinc-200 shadow-sm">
               <img src={imgs[active]} alt="Work" className="h-[320px] w-full object-cover sm:h-[420px]" />
@@ -783,7 +803,7 @@ function Gallery({ t }) {
           <div className="lg:col-span-2">
             <div className="max-h-none overflow-visible lg:max-h-[420px] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-2">
-                {imgs.map((src, i) => (
+                {visibleImages.map((src, i) => (
                   <button
                     key={src}
                     onClick={() => setActive(i)}
@@ -796,11 +816,35 @@ function Gallery({ t }) {
                     <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
                   </button>
                 ))}
+                {imgs.slice(6).map((src, index) => {
+                  const i = index + 6;
+                  return (
+                    <button
+                      key={src}
+                      onClick={() => setActive(i)}
+                      className={classNames(
+                        "overflow-hidden rounded-2xl border shadow-sm transition hidden md:block",
+                        showAll && "block md:block",
+                        i === active ? "border-zinc-900 ring-2 ring-zinc-900" : "border-zinc-200 hover:border-zinc-400"
+                      )}
+                      aria-label={`View image ${i + 1}`}
+                    >
+                      <img src={src} alt="Thumb" className="h-28 w-full object-cover" />
+                    </button>
+                  );
+                })}
               </div>
             </div>
-
-
           </div>
+        </div>
+        <div className="mt-6 flex justify-center md:hidden">
+          <button
+            type="button"
+            onClick={toggleGallery}
+            className="inline-flex items-center justify-center rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm"
+          >
+            {showAll ? t("galleryToggleLess") : t("galleryToggleMore")}
+          </button>
         </div>
       </div>
     </section>
@@ -810,6 +854,7 @@ function Gallery({ t }) {
 
 function Reviews({ t, onQuote }) {
   const isFrench = t("langShort") === "FR";
+  const [showAllTrust, setShowAllTrust] = useState(false);
   const reviews = [
     {
       name: "Laurie",
@@ -839,10 +884,10 @@ function Reviews({ t, onQuote }) {
 
   return (
     <section id="avis" className="bg-zinc-50">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
+      <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <SectionTitle kicker={t("secRevK")} title={t("secRevT")} subtitle={t("secRevS")} />
 
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:grid-cols-3 md:gap-5">
           {reviews.map((r, idx) => (
             <motion.div
               key={idx}
@@ -867,13 +912,27 @@ function Reviews({ t, onQuote }) {
           ))}
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:grid-cols-3 md:gap-5">
           <ValueCard icon={<Clock className="h-5 w-5" />} title={t("val1T")} desc={t("val1D")} />
-          <ValueCard icon={<Shield className="h-5 w-5" />} title={t("val2T")} desc={t("val2D")} />
-          <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
+          <div className={classNames("hidden md:block", showAllTrust && "block md:block")}>
+            <ValueCard icon={<Shield className="h-5 w-5" />} title={t("val2T")} desc={t("val2D")} />
+          </div>
+          <div className={classNames("hidden md:block", showAllTrust && "block md:block")}>
+            <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
+          </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 place-items-center">
+        <div className="mt-6 flex justify-center md:hidden">
+          <button
+            type="button"
+            onClick={() => setShowAllTrust((prev) => !prev)}
+            className="inline-flex items-center justify-center rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm"
+          >
+            {showAllTrust ? t("trustToggleLess") : t("trustToggleMore")}
+          </button>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 place-items-center md:mt-10">
           <div className="w-full max-w-sm rounded-3xl border border-zinc-200 bg-white p-6 text-center shadow-sm">
             <div className="flex flex-col items-center gap-1">
               <button
@@ -924,14 +983,14 @@ function ServiceArea({ t }) {
       <div className="absolute inset-0 bg-white/70" />
 
       {/* Content */}
-      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:py-16">
+      <div className="relative mx-auto max-w-6xl px-4 py-10 md:py-16">
         <SectionTitle
           kicker={t("secAreaK")}
           title={t("secAreaT")}
           subtitle={t("secAreaS")}
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-5 lg:grid-cols-3">
           <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm lg:col-span-2">
             <div className="text-sm font-semibold text-zinc-900">
               {t("cities")}
@@ -1236,8 +1295,8 @@ function Contact({ t }) {
 
   return (
     <section id="contact" className="bg-zinc-950">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
+        <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -1246,7 +1305,7 @@ function Contact({ t }) {
             <h3 className="mt-4 text-3xl font-semibold tracking-tight text-white">{t("contactT")}</h3>
             <p className="mt-3 text-base leading-relaxed text-white/75">{t("contactP")}</p>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-5 space-y-2 md:mt-6 md:space-y-3">
               <a
                 href={BRAND.phoneHref}
                 className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15"
