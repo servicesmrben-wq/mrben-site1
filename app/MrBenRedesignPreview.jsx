@@ -431,7 +431,7 @@ function SectionTitle({ kicker, title, subtitle, subtitleClassName }) {
           <span>{kicker}</span>
         </div>
       ) : null}
-      <h2 className="mt-4 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl md:text-4xl">
+      <h2 className="mt-4 text-xl font-semibold leading-tight tracking-tight text-zinc-900 sm:text-2xl md:text-4xl md:leading-normal">
         {title}
       </h2>
       {subtitle ? (
@@ -584,12 +584,12 @@ function Hero({ onQuote, t, heroRef }) {
             </div>
 
             <h1
-              className="mt-5 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl"
+              className="mt-5 text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl md:text-5xl md:leading-normal"
               style={heroTextShadow}
             >
               {t("heroH1a")}
               <span
-                className="block text-xl font-normal text-white sm:text-2xl md:text-3xl"
+                className="block text-lg font-normal leading-snug text-white sm:text-xl md:text-3xl md:leading-normal"
                 style={heroTextShadow}
               >
                 {t("heroH1b")}
@@ -597,7 +597,7 @@ function Hero({ onQuote, t, heroRef }) {
             </h1>
           </div>
           <div className="mx-auto mt-4 w-full max-w-3xl lg:mx-0">
-            <p className="text-base leading-relaxed text-white/95" style={heroTextShadow}>
+            <p className="hidden text-base leading-relaxed text-white/95 md:block" style={heroTextShadow}>
               {t("heroP")}
             </p>
             <div className="mt-4 md:mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
@@ -648,7 +648,7 @@ function Hero({ onQuote, t, heroRef }) {
               </div>
             </div>
 
-            <div className="mt-4 flex gap-3 overflow-x-auto pb-1 md:mt-6 md:grid md:grid-cols-3 md:gap-3 lg:mt-10">
+            <div className="mt-4 hidden gap-3 overflow-x-auto pb-1 md:mt-6 md:grid md:grid-cols-3 md:gap-3 lg:mt-10">
               <HeroStat
                 className="min-w-[170px] flex-shrink-0 md:min-w-0"
                 icon={<Sparkles className="h-4 w-4" />}
@@ -1049,14 +1049,14 @@ function ServiceArea({ t }) {
               {SERVICE_AREAS.map((c) => (
                 <span
                   key={c}
-                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-700 md:px-3 md:py-1 md:text-sm"
+                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm"
                 >
-                  <MapPin className="mr-2 h-4 w-4" />
+                  <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
                   {c}
                 </span>
               ))}
-              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-700 md:px-3 md:py-1 md:text-sm">
-                <MapPin className="mr-2 h-4 w-4" />
+              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm">
+                <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
                 {t("nearbyCities")}
               </span>
             </div>
@@ -1351,7 +1351,9 @@ function Contact({ t, contactRef }) {
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>{t("contactK")}</span>
             </div>
-            <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white md:text-3xl">{t("contactT")}</h3>
+            <h3 className="mt-4 text-xl font-semibold leading-tight tracking-tight text-white md:text-3xl md:leading-normal">
+              {t("contactT")}
+            </h3>
             <p className="mt-3 text-base leading-relaxed text-white/75">{t("contactP")}</p>
 
             <div className="mt-5 space-y-2 md:mt-6 md:space-y-3">
@@ -1391,8 +1393,8 @@ function Contact({ t, contactRef }) {
             <div className="mt-8 rounded-3xl bg-white/5 p-6 ring-1 ring-white/10">
               <div className="text-sm font-semibold text-white">{t("hours")}</div>
               <div className="mt-1 text-sm text-white/75">{t("hoursText")}</div>
-              <div className="mt-4 text-sm font-semibold text-white">{t("services")}</div>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-4 hidden text-sm font-semibold text-white md:block">{t("services")}</div>
+              <div className="mt-2 hidden flex-wrap gap-2 md:flex">
                 {[t("servicesMenuVitres"), t("servicesMenuGout"), t("servicesMenuSiding")].map((s) => (
                   <span
                     key={s}
