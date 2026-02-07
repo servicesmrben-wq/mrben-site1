@@ -422,7 +422,7 @@ function useI18n(lang) {
   return (k) => dict[k] ?? k;
 }
 
-function SectionTitle({ kicker, title, subtitle }) {
+function SectionTitle({ kicker, title, subtitle, subtitleClassName }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
       {kicker ? (
@@ -431,11 +431,13 @@ function SectionTitle({ kicker, title, subtitle }) {
           <span>{kicker}</span>
         </div>
       ) : null}
-      <h2 className="mt-4 text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+      <h2 className="mt-4 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl md:text-4xl">
         {title}
       </h2>
       {subtitle ? (
-        <p className="mt-3 text-base leading-relaxed text-zinc-600">{subtitle}</p>
+        <p className={classNames("mt-3 text-base leading-relaxed text-zinc-600", subtitleClassName)}>
+          {subtitle}
+        </p>
       ) : null}
     </div>
   );
@@ -571,7 +573,7 @@ function Hero({ onQuote, t, heroRef }) {
               - Narrow: heroP + trust + CTAs + stats (conversion)
               Avoid merging these wrappers unless redesigning the hero layout. */}
           <div className="mx-auto w-full">
-            <div className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15 lg:justify-start">
+            <div className="hidden items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15 md:inline-flex lg:justify-start">
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span style={heroTextShadow}>{t("heroBadgeA")}</span>
               <span className="mx-1 text-white/30" style={heroTextShadow}>
@@ -582,11 +584,14 @@ function Hero({ onQuote, t, heroRef }) {
             </div>
 
             <h1
-              className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+              className="mt-5 text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl"
               style={heroTextShadow}
             >
               {t("heroH1a")}
-              <span className="block text-2xl font-normal text-white sm:text-3xl" style={heroTextShadow}>
+              <span
+                className="block text-xl font-normal text-white sm:text-2xl md:text-3xl"
+                style={heroTextShadow}
+              >
                 {t("heroH1b")}
               </span>
             </h1>
@@ -643,10 +648,25 @@ function Hero({ onQuote, t, heroRef }) {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:mt-10">
-              <HeroStat icon={<Sparkles className="h-4 w-4" />} title={t("heroStat1T")} sub={t("heroStat1S")} />
-              <HeroStat icon={<Clock className="h-4 w-4" />} title={t("heroStat2T")} sub={t("heroStat2S")} />
-              <HeroStat icon={<Shield className="h-4 w-4" />} title={t("heroStat3T")} sub={t("heroStat3S")} />
+            <div className="mt-4 flex gap-3 overflow-x-auto pb-1 md:mt-6 md:grid md:grid-cols-3 md:gap-3 lg:mt-10">
+              <HeroStat
+                className="min-w-[170px] flex-shrink-0 md:min-w-0"
+                icon={<Sparkles className="h-4 w-4" />}
+                title={t("heroStat1T")}
+                sub={t("heroStat1S")}
+              />
+              <HeroStat
+                className="min-w-[170px] flex-shrink-0 md:min-w-0"
+                icon={<Clock className="h-4 w-4" />}
+                title={t("heroStat2T")}
+                sub={t("heroStat2S")}
+              />
+              <HeroStat
+                className="min-w-[170px] flex-shrink-0 md:min-w-0"
+                icon={<Shield className="h-4 w-4" />}
+                title={t("heroStat3T")}
+                sub={t("heroStat3S")}
+              />
             </div>
           </div>
         </motion.div>
@@ -655,18 +675,18 @@ function Hero({ onQuote, t, heroRef }) {
   );
 }
 
-function HeroStat({ icon, title, sub }) {
+function HeroStat({ icon, title, sub, className }) {
   const heroTextShadow = { textShadow: "0 1px 2px rgba(0,0,0,0.35)" };
 
   return (
-    <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+    <div className={classNames("rounded-2xl bg-white/5 p-4 ring-1 ring-white/10", className)}>
       <div className="flex items-center gap-2 text-white">
         <div className="grid h-8 w-8 place-items-center rounded-xl bg-white/10">{icon}</div>
         <div>
           <div className="text-sm font-semibold" style={heroTextShadow}>
             {title}
           </div>
-          <div className="text-xs text-white/85" style={heroTextShadow}>
+          <div className="hidden text-xs text-white/85 md:block" style={heroTextShadow}>
             {sub}
           </div>
         </div>
@@ -732,7 +752,7 @@ function Services({ onQuote, t }) {
                 </div>
               </div>
 
-              <div className="mt-5 space-y-2">
+              <div className="mt-5 hidden space-y-2 md:block">
                 {s.bullets.map((b) => (
                   <div key={b} className="flex items-start gap-2 text-sm text-zinc-700">
                     <CheckCircle2 className="mt-0.5 h-4 w-4" />
@@ -794,7 +814,20 @@ function Gallery({ t }) {
       <div className="mx-auto max-w-6xl px-4 pb-10 md:pb-16">
         <SectionTitle kicker={t("secGalK")} title={t("secGalT")} subtitle={t("secGalS")} />
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-5 lg:grid-cols-5">
+        <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto md:mt-10 md:hidden">
+          {(showAll ? imgs : visibleImages).map((src, i) => (
+            <button
+              key={src}
+              onClick={() => setActive(i)}
+              className="w-[240px] flex-shrink-0 snap-start overflow-hidden rounded-3xl border border-zinc-200 shadow-sm"
+              aria-label={`View image ${i + 1}`}
+            >
+              <img src={src} alt="Work" className="h-[160px] w-full object-cover" />
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-8 hidden grid-cols-1 gap-4 md:mt-10 md:grid md:gap-5 lg:grid-cols-5">
           <div className="lg:col-span-3">
             <div className="overflow-hidden rounded-3xl border border-zinc-200 shadow-sm">
               <img src={imgs[active]} alt="Work" className="h-[320px] w-full object-cover sm:h-[420px]" />
@@ -887,7 +920,32 @@ function Reviews({ t, onQuote }) {
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <SectionTitle kicker={t("secRevK")} title={t("secRevT")} subtitle={t("secRevS")} />
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:grid-cols-3 md:gap-5">
+        <div className="mt-8 flex gap-4 overflow-x-auto md:mt-10 md:hidden">
+          {reviews.map((r, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.35, delay: idx * 0.05 }}
+              className="w-[260px] flex-shrink-0 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm"
+            >
+              <div className="flex items-center gap-1">
+                {Array.from({ length: r.stars }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4" />
+                ))}
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-700">
+                “{isFrench ? r.textFr : r.textEn}”
+              </p>
+              <div className="mt-4 text-sm font-semibold text-zinc-900">
+                {r.name} • {t("reviewLabel")}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-8 hidden grid-cols-1 gap-4 md:mt-10 md:grid md:grid-cols-3 md:gap-5">
           {reviews.map((r, idx) => (
             <motion.div
               key={idx}
@@ -912,7 +970,7 @@ function Reviews({ t, onQuote }) {
           ))}
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:grid-cols-3 md:gap-5">
+        <div className="mt-8 hidden grid-cols-1 gap-4 md:mt-10 md:grid md:grid-cols-3 md:gap-5">
           <ValueCard icon={<Clock className="h-5 w-5" />} title={t("val1T")} desc={t("val1D")} />
           <div className={classNames("hidden md:block", showAllTrust && "block md:block")}>
             <ValueCard icon={<Shield className="h-5 w-5" />} title={t("val2T")} desc={t("val2D")} />
@@ -920,16 +978,6 @@ function Reviews({ t, onQuote }) {
           <div className={classNames("hidden md:block", showAllTrust && "block md:block")}>
             <ValueCard icon={<Sparkles className="h-5 w-5" />} title={t("val3T")} desc={t("val3D")} />
           </div>
-        </div>
-
-        <div className="mt-6 flex justify-center md:hidden">
-          <button
-            type="button"
-            onClick={() => setShowAllTrust((prev) => !prev)}
-            className="inline-flex items-center justify-center rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 shadow-sm"
-          >
-            {showAllTrust ? t("trustToggleLess") : t("trustToggleMore")}
-          </button>
         </div>
 
         <div className="mt-8 grid grid-cols-1 place-items-center md:mt-10">
@@ -988,6 +1036,7 @@ function ServiceArea({ t }) {
           kicker={t("secAreaK")}
           title={t("secAreaT")}
           subtitle={t("secAreaS")}
+          subtitleClassName="hidden md:block"
         />
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:mt-10 md:gap-5 lg:grid-cols-3">
@@ -1000,19 +1049,19 @@ function ServiceArea({ t }) {
               {SERVICE_AREAS.map((c) => (
                 <span
                   key={c}
-                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-sm text-zinc-700"
+                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-700 md:px-3 md:py-1 md:text-sm"
                 >
                   <MapPin className="mr-2 h-4 w-4" />
                   {c}
                 </span>
               ))}
-              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-sm text-zinc-700">
+              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-700 md:px-3 md:py-1 md:text-sm">
                 <MapPin className="mr-2 h-4 w-4" />
                 {t("nearbyCities")}
               </span>
             </div>
 
-            <p className="mt-5 text-sm text-zinc-600">{t("areaP")}</p>
+            <p className="mt-5 hidden text-sm text-zinc-600 md:block">{t("areaP")}</p>
             <p className="mt-4 text-xs text-zinc-600"></p>
           </div>
 
@@ -1302,7 +1351,7 @@ function Contact({ t, contactRef }) {
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>{t("contactK")}</span>
             </div>
-            <h3 className="mt-4 text-3xl font-semibold tracking-tight text-white">{t("contactT")}</h3>
+            <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white md:text-3xl">{t("contactT")}</h3>
             <p className="mt-3 text-base leading-relaxed text-white/75">{t("contactP")}</p>
 
             <div className="mt-5 space-y-2 md:mt-6 md:space-y-3">
