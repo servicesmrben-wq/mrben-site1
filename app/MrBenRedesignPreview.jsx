@@ -33,8 +33,8 @@ const BRAND = {
   name: "MrBen.ca",
   phoneDisplay: "514-699-7145",
   phoneHref: "tel:+15146997145",
-  email: "info@mrben.ca",
-  emailHref: "info@mrben.ca",
+  email: "service@mrben.ca",
+  emailHref: "service@mrben.ca",
   googleReviewsUrl: "https://maps.app.goo.gl/tDWmLSud1LPRVFBLA",
 };
 
