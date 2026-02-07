@@ -442,7 +442,7 @@ function SectionTitle({ kicker, title, subtitle }) {
 }
 
 
-function Hero({ onQuote, t }) {
+function Hero({ onQuote, t, heroRef }) {
   const [rating, setRating] = useState(5.0);
   const [reviewCount, setReviewCount] = useState(null);
   const placeId = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID;
@@ -552,7 +552,7 @@ function Hero({ onQuote, t }) {
   );
 
   return (
-    <div className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
+    <section ref={heroRef} id="hero" className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
       <div className="absolute inset-0 opacity-100">
         <img src={IMAGE_URLS[0]} alt="Hero" className="h-full w-full object-cover" />
       </div>
@@ -651,7 +651,7 @@ function Hero({ onQuote, t }) {
           </div>
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -1045,7 +1045,7 @@ function ServiceArea({ t }) {
   );
 }
 
-function Contact({ t }) {
+function Contact({ t, contactRef }) {
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -1294,7 +1294,7 @@ function Contact({ t }) {
   }
 
   return (
-    <section id="contact" className="bg-zinc-950">
+    <section id="contact" ref={contactRef} className="bg-zinc-950">
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
           <div>
@@ -1731,6 +1731,11 @@ function QuoteModal({ open, onClose, t }) {
 export default function MrBenRedesignPreview() {
   const { locale } = useLocale();
   const t = useI18n(locale);
+  const heroRef = useRef(null);
+  const contactRef = useRef(null);
+  const [isHeroPassed, setIsHeroPassed] = useState(false);
+  const [isContactInView, setIsContactInView] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const scrollToContact = React.useCallback(() => {
     const contactSection = document.getElementById("contact");
@@ -1739,15 +1744,111 @@ export default function MrBenRedesignPreview() {
     }
   }, []);
 
+  useEffect(() => {
+    const heroElement = heroRef.current;
+    if (!heroElement) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroPassed(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(heroElement);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const contactElement = contactRef.current;
+    if (!contactElement) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsContactInView(entry.isIntersecting);
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(contactElement);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleFocusIn = (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const tag = target.tagName.toLowerCase();
+      const isField =
+        ["input", "textarea", "select"].includes(tag) || target.isContentEditable;
+      if (isField) {
+        setIsInputFocused(true);
+      }
+    };
+
+    const handleFocusOut = () => {
+      window.setTimeout(() => {
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement)) {
+          setIsInputFocused(false);
+          return;
+        }
+        const tag = active.tagName.toLowerCase();
+        const isField =
+          ["input", "textarea", "select"].includes(tag) || active.isContentEditable;
+        setIsInputFocused(isField);
+      }, 0);
+    };
+
+    document.addEventListener("focusin", handleFocusIn);
+    document.addEventListener("focusout", handleFocusOut);
+
+    return () => {
+      document.removeEventListener("focusin", handleFocusIn);
+      document.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
+
+  const showStickyCTA = isHeroPassed && !isContactInView && !isInputFocused;
+
   return (
     <div className="relative min-h-screen bg-white text-zinc-900">
       <div className="relative z-10">
-        <Hero onQuote={scrollToContact} t={t} />
+        <Hero onQuote={scrollToContact} t={t} heroRef={heroRef} />
         <Services onQuote={scrollToContact} t={t} />
         <Gallery t={t} />
         <Reviews t={t} onQuote={scrollToContact} />
         <ServiceArea t={t} />
-        <Contact onQuote={scrollToContact} t={t} />
+        <Contact t={t} contactRef={contactRef} />
+      </div>
+      <div
+        className={classNames(
+          "fixed inset-x-0 bottom-0 z-40 md:hidden transition duration-300 ease-out",
+          showStickyCTA ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
+        )}
+        aria-hidden={!showStickyCTA}
+      >
+        <div
+          className="mx-auto flex max-w-6xl items-center justify-center gap-3 border-t border-zinc-200 bg-white/95 px-4 pt-3 backdrop-blur"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.75rem)" }}
+        >
+          <button
+            type="button"
+            onClick={scrollToContact}
+            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+          >
+            {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
+          </button>
+          <a
+            href={BRAND.phoneHref}
+            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50"
+          >
+            <Phone className="h-4 w-4" />
+            {t("fastQuoteCall")}
+          </a>
+        </div>
       </div>
     </div>
   );
