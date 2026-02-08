@@ -1350,7 +1350,8 @@ function Contact({ t, contactRef }) {
   }
 
   return (
-    <section id="contact" ref={contactRef} className="bg-zinc-950">
+    <section id="contact" className="bg-zinc-950">
+      <div ref={contactRef} aria-hidden="true" className="h-0 w-full" />
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
           <div>
@@ -1866,7 +1867,6 @@ export default function MrBenRedesignPreview() {
   const t = useI18n(locale);
   const heroRef = useRef(null);
   const contactRef = useRef(null);
-  const [isHeroPassed, setIsHeroPassed] = useState(false);
   const [isContactInView, setIsContactInView] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
@@ -1878,22 +1878,6 @@ export default function MrBenRedesignPreview() {
   }, []);
 
   useEffect(() => {
-    const heroElement = heroRef.current;
-    if (!heroElement) return undefined;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeroPassed(!entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(heroElement);
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     const contactElement = contactRef.current;
     if (!contactElement) return undefined;
 
@@ -1901,7 +1885,7 @@ export default function MrBenRedesignPreview() {
       ([entry]) => {
         setIsContactInView(entry.isIntersecting);
       },
-      { threshold: 0.2 }
+      { rootMargin: "0px 0px 40% 0px", threshold: 0 }
     );
 
     observer.observe(contactElement);
@@ -1944,7 +1928,7 @@ export default function MrBenRedesignPreview() {
     };
   }, []);
 
-  const showStickyCTA = isHeroPassed && !isContactInView && !isInputFocused;
+  const showStickyCTA = !isContactInView && !isInputFocused;
 
   return (
     <div className="relative min-h-screen bg-white text-zinc-900">
@@ -1955,6 +1939,7 @@ export default function MrBenRedesignPreview() {
         <Reviews t={t} onQuote={scrollToContact} />
         <ServiceArea t={t} />
         <Contact t={t} contactRef={contactRef} />
+        <div aria-hidden="true" className="h-20 md:hidden" />
       </div>
       <div
         className={classNames(
