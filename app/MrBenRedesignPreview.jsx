@@ -232,6 +232,9 @@ const i18n = {
     emailLabel: "Courriel",
     address: "Adresse",
     choose: "Choisissez un ou plusieurs services",
+    servicesRequested: "Services demandés",
+    chooseServices: "Choisir les services",
+    selected: "sélectionné(s)",
     desc: "Description",
     descHint:
       "Astuce : ajouter des photos accélère l’obtention d’un devis.",
@@ -394,6 +397,9 @@ const i18n = {
     emailLabel: "Email",
     address: "Address",
     choose: "Choose one or more services",
+    servicesRequested: "Requested services",
+    chooseServices: "Choose services",
+    selected: "selected",
     desc: "Details",
     descHint: "Tip: adding photos speeds up quoting.",
     photoLabel: "Add a few images of your house here!",
@@ -1462,20 +1468,45 @@ function Contact({ t, contactRef }) {
               </div>
 
               <div className="mt-4">
-                <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
-                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {serviceOptions.map((x) => (
-                    <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                      <input
-                        type="checkbox"
-                        className="mt-1"
-                        checked={services.includes(x)}
-                        onChange={() => toggleService(x)}
-                      />
-                      <span className="text-sm text-zinc-700">{x}</span>
-                    </label>
-                  ))}
-                </div>
+                <details className="group">
+                  <summary className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-zinc-200 px-4 py-3 text-left text-sm font-semibold text-zinc-900 shadow-sm md:hidden">
+                    <span className="flex flex-col">
+                      <span>{t("servicesRequested")}</span>
+                      <span className="text-xs font-medium text-zinc-500">
+                        {t("chooseServices")}
+                        {services.length > 0 ? (
+                          <span className="ml-2 text-[11px] text-zinc-400" aria-live="polite">
+                            ({services.length} {t("selected")})
+                          </span>
+                        ) : null}
+                      </span>
+                    </span>
+                    <span
+                      className="ml-3 text-zinc-400 transition-transform group-open:rotate-180"
+                      aria-hidden="true"
+                    >
+                      ▾
+                    </span>
+                  </summary>
+                  <div className="pt-3 md:pt-0 md:block">
+                    <div className="hidden text-sm font-semibold text-zinc-900 md:block">
+                      {t("choose")}
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {serviceOptions.map((x) => (
+                        <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
+                          <input
+                            type="checkbox"
+                            className="mt-1"
+                            checked={services.includes(x)}
+                            onChange={() => toggleService(x)}
+                          />
+                          <span className="text-sm text-zinc-700">{x}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </details>
               </div>
 
               <div className="mt-4">
@@ -1725,20 +1756,40 @@ function QuoteModal({ open, onClose, t }) {
                 <Input label={t("emailLabel")} placeholder="you@example.com" />
                 <Input label={t("address")} placeholder={t("address")} />
                 <div className="sm:col-span-2">
-                  <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
-                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {[
-                      t("langShort") === "FR" ? "Vitres int./ext." : "Interior/exterior windows",
-                      t("langShort") === "FR" ? "Vitres ext. seulement" : "Exterior only",
-                      t("langShort") === "FR" ? "Vidange gouttières" : "Gutter cleaning",
-                      t("langShort") === "FR" ? "Lavage revêtement" : "Siding wash",
-                    ].map((x) => (
-                      <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                        <input type="checkbox" className="mt-1" />
-                        <span className="text-sm text-zinc-700">{x}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <details className="group">
+                    <summary className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-zinc-200 px-4 py-3 text-left text-sm font-semibold text-zinc-900 shadow-sm md:hidden">
+                      <span className="flex flex-col">
+                        <span>{t("servicesRequested")}</span>
+                        <span className="text-xs font-medium text-zinc-500">
+                          {t("chooseServices")}
+                        </span>
+                      </span>
+                      <span
+                        className="ml-3 text-zinc-400 transition-transform group-open:rotate-180"
+                        aria-hidden="true"
+                      >
+                        ▾
+                      </span>
+                    </summary>
+                    <div className="pt-3 md:pt-0 md:block">
+                      <div className="hidden text-sm font-semibold text-zinc-900 md:block">
+                        {t("choose")}
+                      </div>
+                      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        {[
+                          t("langShort") === "FR" ? "Vitres int./ext." : "Interior/exterior windows",
+                          t("langShort") === "FR" ? "Vitres ext. seulement" : "Exterior only",
+                          t("langShort") === "FR" ? "Vidange gouttières" : "Gutter cleaning",
+                          t("langShort") === "FR" ? "Lavage revêtement" : "Siding wash",
+                        ].map((x) => (
+                          <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
+                            <input type="checkbox" className="mt-1" />
+                            <span className="text-sm text-zinc-700">{x}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </details>
                 </div>
               </div>
             ) : (
