@@ -467,7 +467,7 @@ function SectionTitle({ kicker, title, subtitle, subtitleClassName }) {
           <span>{kicker}</span>
         </div>
       ) : null}
-      <h2 className="mt-4 text-xl font-semibold leading-tight tracking-tight text-zinc-900 sm:text-2xl md:text-4xl md:leading-normal">
+      <h2 className="mt-4 text-lg font-semibold leading-tight tracking-tight text-zinc-900 sm:text-2xl md:text-4xl md:leading-normal">
         {title}
       </h2>
       {subtitle ? (
@@ -590,7 +590,7 @@ function Hero({ onQuote, t, heroRef }) {
   );
 
   return (
-    <section ref={heroRef} id="hero" className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
+    <section ref={heroRef} id="hero" className="relative mt-0 overflow-hidden bg-zinc-950 md:-mt-24 lg:-mt-28">
       <div className="absolute inset-0 opacity-100">
         <img src={IMAGE_URLS[0]} alt="Hero" className="h-full w-full object-cover" />
       </div>
@@ -620,12 +620,12 @@ function Hero({ onQuote, t, heroRef }) {
             </div>
 
             <h1
-              className="mt-5 text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl md:text-5xl md:leading-normal"
+              className="mt-5 text-xl font-semibold leading-tight tracking-tight text-white sm:text-3xl md:text-5xl md:leading-normal"
               style={heroTextShadow}
             >
               {t("heroH1a")}
               <span
-                className="block text-lg font-normal leading-snug text-white sm:text-xl md:text-3xl md:leading-normal"
+                className="block text-base font-normal leading-snug text-white sm:text-xl md:text-3xl md:leading-normal"
                 style={heroTextShadow}
               >
                 {t("heroH1b")}
@@ -855,7 +855,7 @@ function Gallery({ t }) {
             <button
               key={src}
               onClick={() => setActive(i)}
-              className="w-[240px] flex-shrink-0 snap-start overflow-hidden rounded-3xl border border-zinc-200 shadow-sm"
+              className="w-[260px] flex-shrink-0 snap-start overflow-hidden rounded-3xl border border-zinc-200 shadow-sm"
               aria-label={`View image ${i + 1}`}
             >
               <img src={src} alt="Work" className="h-[160px] w-full object-cover" />
@@ -956,7 +956,7 @@ function Reviews({ t, onQuote }) {
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <SectionTitle kicker={t("secRevK")} title={t("secRevT")} subtitle={t("secRevS")} />
 
-        <div className="mt-8 flex gap-4 overflow-x-auto md:mt-10 md:hidden">
+        <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto md:mt-10 md:hidden">
           {reviews.map((r, idx) => (
             <motion.div
               key={idx}
@@ -964,7 +964,7 @@ function Reviews({ t, onQuote }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.35, delay: idx * 0.05 }}
-              className="w-[260px] flex-shrink-0 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm"
+              className="w-[260px] flex-shrink-0 snap-start rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm"
             >
               <div className="flex items-center gap-1">
                 {Array.from({ length: r.stars }).map((_, i) => (
@@ -1085,13 +1085,13 @@ function ServiceArea({ t }) {
               {SERVICE_AREAS.map((c) => (
                 <span
                   key={c}
-                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm"
+                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[9px] text-zinc-700 sm:px-2 sm:text-[10px] md:px-3 md:py-1 md:text-sm"
                 >
                   <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
                   {c}
                 </span>
               ))}
-              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm">
+              <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 text-[9px] text-zinc-700 sm:px-2 sm:text-[10px] md:px-3 md:py-1 md:text-sm">
                 <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
                 {t("nearbyCities")}
               </span>
@@ -1387,7 +1387,7 @@ function Contact({ t, contactRef }) {
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>{t("contactK")}</span>
             </div>
-            <h3 className="mt-4 text-xl font-semibold leading-tight tracking-tight text-white md:text-3xl md:leading-normal">
+            <h3 className="mt-4 text-lg font-semibold leading-tight tracking-tight text-white sm:text-xl md:text-3xl md:leading-normal">
               {t("contactT")}
             </h3>
             <p className="mt-3 text-base leading-relaxed text-white/75">{t("contactP")}</p>
