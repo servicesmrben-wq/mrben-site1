@@ -428,35 +428,6 @@ function useI18n(lang) {
   return (k) => dict[k] ?? k;
 }
 
-function useMediaQuery(query) {
-  const getMatches = () =>
-    typeof window !== "undefined" && window.matchMedia
-      ? window.matchMedia(query).matches
-      : false;
-  const [matches, setMatches] = useState(getMatches);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mediaQueryList = window.matchMedia(query);
-    const handler = (event) => setMatches(event.matches);
-
-    if (mediaQueryList.addEventListener) {
-      mediaQueryList.addEventListener("change", handler);
-    } else {
-      mediaQueryList.addListener(handler);
-    }
-
-    return () => {
-      if (mediaQueryList.removeEventListener) {
-        mediaQueryList.removeEventListener("change", handler);
-      } else {
-        mediaQueryList.removeListener(handler);
-      }
-    };
-  }, [query]);
-
-  return matches;
-}
 
 function SectionTitle({ kicker, title, subtitle, subtitleClassName }) {
   return (
@@ -1498,24 +1469,23 @@ function Contact({ t, contactRef }) {
               </div>
 
               <div className="mt-4">
-                {isDesktop ? (
-                  <>
-                    <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
-                    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {serviceOptions.map((x) => (
-                        <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                          <input
-                            type="checkbox"
-                            className="mt-1"
-                            checked={services.includes(x)}
-                            onChange={() => toggleService(x)}
-                          />
-                          <span className="text-sm text-zinc-700">{x}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </>
-                ) : (
+                <div className="hidden md:block">
+                  <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
+                  <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {serviceOptions.map((x) => (
+                      <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
+                        <input
+                          type="checkbox"
+                          className="mt-1"
+                          checked={services.includes(x)}
+                          onChange={() => toggleService(x)}
+                        />
+                        <span className="text-sm text-zinc-700">{x}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div className="md:hidden">
                   <details className="group">
                     <summary className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-zinc-200 px-4 py-3 text-left text-sm font-semibold text-zinc-900 shadow-sm">
                       <span className="flex flex-col">
@@ -1552,7 +1522,7 @@ function Contact({ t, contactRef }) {
                       </div>
                     </div>
                   </details>
-                )}
+                </div>
               </div>
 
               <div className="mt-4">
@@ -1751,7 +1721,6 @@ function Input({ label, inputRef, ...inputProps }) {
 function QuoteModal({ open, onClose, t }) {
   const [step, setStep] = useState(1);
   const [quotePhone, setQuotePhone] = useState("");
-  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   return (
     <AnimatePresence>
@@ -1803,24 +1772,23 @@ function QuoteModal({ open, onClose, t }) {
                 <Input label={t("emailLabel")} placeholder="you@example.com" />
                 <Input label={t("address")} placeholder={t("address")} />
                 <div className="sm:col-span-2">
-                  {isDesktop ? (
-                    <>
-                      <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
-                      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        {[
-                          t("langShort") === "FR" ? "Vitres int./ext." : "Interior/exterior windows",
-                          t("langShort") === "FR" ? "Vitres ext. seulement" : "Exterior only",
-                          t("langShort") === "FR" ? "Vidange gouttières" : "Gutter cleaning",
-                          t("langShort") === "FR" ? "Lavage revêtement" : "Siding wash",
-                        ].map((x) => (
-                          <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                            <input type="checkbox" className="mt-1" />
-                            <span className="text-sm text-zinc-700">{x}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
+                  <div className="hidden md:block">
+                    <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
+                    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {[
+                        t("langShort") === "FR" ? "Vitres int./ext." : "Interior/exterior windows",
+                        t("langShort") === "FR" ? "Vitres ext. seulement" : "Exterior only",
+                        t("langShort") === "FR" ? "Vidange gouttières" : "Gutter cleaning",
+                        t("langShort") === "FR" ? "Lavage revêtement" : "Siding wash",
+                      ].map((x) => (
+                        <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
+                          <input type="checkbox" className="mt-1" />
+                          <span className="text-sm text-zinc-700">{x}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="md:hidden">
                     <details className="group">
                       <summary className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-zinc-200 px-4 py-3 text-left text-sm font-semibold text-zinc-900 shadow-sm">
                         <span className="flex flex-col">
@@ -1852,7 +1820,7 @@ function QuoteModal({ open, onClose, t }) {
                         </div>
                       </div>
                     </details>
-                  )}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -1896,7 +1864,6 @@ function QuoteModal({ open, onClose, t }) {
 export default function MrBenRedesignPreview() {
   const { locale } = useLocale();
   const t = useI18n(locale);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const heroRef = useRef(null);
   const contactRef = useRef(null);
   const [isHeroPassed, setIsHeroPassed] = useState(false);
