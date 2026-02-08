@@ -815,7 +815,7 @@ function Gallery({ t }) {
         <SectionTitle kicker={t("secGalK")} title={t("secGalT")} subtitle={t("secGalS")} />
 
         <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto md:mt-10 md:hidden">
-          {(showAll ? imgs : visibleImages).map((src, i) => (
+          {imgs.map((src, i) => (
             <button
               key={src}
               onClick={() => setActive(i)}
@@ -870,7 +870,7 @@ function Gallery({ t }) {
             </div>
           </div>
         </div>
-        <div className="mt-6 flex justify-center md:hidden">
+        <div className="mt-6 hidden justify-center md:hidden">
           <button
             type="button"
             onClick={toggleGallery}
