@@ -637,7 +637,7 @@ function Hero({ onQuote, t, heroRef }) {
                 <div className="flex flex-col items-center gap-1 lg:items-start">
                   <button
                     onClick={onQuote}
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-white px-5 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-100 cursor-pointer"
                   >
                     {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
                   </button>
@@ -779,7 +779,7 @@ function Services({ onQuote, t }) {
                 <button
                   type="button"
                   onClick={onQuote}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 cursor-pointer"
                 >
                   <Mail className="h-4 w-4" /> {t("primaryCTA")}
                 </button>
@@ -986,7 +986,7 @@ function Reviews({ t, onQuote }) {
               <button
                 type="button"
                 onClick={onQuote}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 cursor-pointer"
               >
                 {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
               </button>
