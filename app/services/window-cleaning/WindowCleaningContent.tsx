@@ -12,6 +12,7 @@ import {
   Star,
   Users,
 } from "lucide-react";
+import { toJsonLdString } from "@/app/lib/seo/jsonld";
 
 const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
 
@@ -338,7 +339,7 @@ export default function WindowCleaningContent({ t }: Props) {
         </div>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          dangerouslySetInnerHTML={{ __html: toJsonLdString(faqSchema) }}
         />
       </section>
 

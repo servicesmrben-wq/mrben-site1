@@ -143,5 +143,10 @@
       "blainville": "Gutter cleaning on a home in Blainville",
       "laval": "Pressure washing a driveway in Laval"
     }
+  },
+  "jsonld": {
+    "localBusiness": {
+      "description": "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across the Laurentides, including Lachute, Saint-Jérôme, and Mirabel."
+    }
   }
 }
