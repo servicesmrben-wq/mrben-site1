@@ -44,6 +44,7 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
   const content = city[locale];
   const labels = LOCALE_LABELS[locale];
   const t = getTranslations(locale);
+  const citySourceOfTruth = t("territory.city.sourceOfTruth").replace("{city}", city.name);
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`cityPages.heroImageAlt.${city.slug}`);
   const cityServiceSchema = {
@@ -79,6 +80,9 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-600">
             {content.description}
+          </p>
+          <p className="mt-3 max-w-3xl text-base leading-relaxed text-zinc-700">
+            {citySourceOfTruth}
           </p>
           {heroImage ? (
             <div className="mt-8 overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">

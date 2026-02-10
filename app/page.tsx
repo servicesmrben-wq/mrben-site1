@@ -23,17 +23,26 @@ export default async function Page() {
   const locale = await getLocaleFromRequest();
   const t = getTranslations(locale);
   const provider = getLocalBusinessProvider();
+  const homeSourceOfTruth = t("home.sourceOfTruth");
+
+  const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville"].map((city) => ({
+    "@type": "City",
+    name: city,
+    address: {
+      "@type": "PostalAddress",
+      addressRegion: "QC",
+      addressCountry: "CA",
+    },
+  }));
 
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     ...provider,
+    name: "MrBen",
+    url: BASE_URL,
     image: "https://mrben.ca/hero.jpg",
-    areaServed: [
-      "Laurentides, Québec, Canada",
-      "Lachute, Québec, Canada",
-      "Saint-Jérôme, Québec, Canada",
-      "Mirabel, Québec, Canada",
-    ],
+    areaServed: servedCities,
+    serviceType: "Window cleaning",
     description: t("jsonld.localBusiness.description"),
   };
 
@@ -43,7 +52,7 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLdString(localBusinessJsonLd) }}
       />
-      <MrBenRedesignPreview />
+      <MrBenRedesignPreview sourceOfTruth={homeSourceOfTruth} />
     </>
   );
 }
