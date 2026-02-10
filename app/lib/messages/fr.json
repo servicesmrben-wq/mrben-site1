@@ -143,5 +143,10 @@
       "blainville": "Nettoyage de gouttières sur une maison à Blainville",
       "laval": "Lavage à pression d’une entrée résidentielle à Laval"
     }
+  },
+  "jsonld": {
+    "localBusiness": {
+      "description": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur dans les Laurentides, notamment à Lachute, Saint-Jérôme et Mirabel."
+    }
   }
 }
