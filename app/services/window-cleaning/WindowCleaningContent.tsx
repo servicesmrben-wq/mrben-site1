@@ -12,6 +12,7 @@ import {
   Star,
   Users,
 } from "lucide-react";
+import SeoFaq from "@/app/components/SeoFaq";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
 import { getAbsoluteUrl, getLocalBusinessProvider } from "@/app/lib/seo/schema";
 
@@ -146,19 +147,6 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       t("windowCleaning.serviceAreas.cities.laval"),
     ],
     url: getAbsoluteUrl(pagePath),
-  };
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.a,
-      },
-    })),
   };
 
   const serviceAreas = [
@@ -345,27 +333,12 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       </section>
 
       {/* FAQ Section */}
-      <section className="border-t border-zinc-200 bg-zinc-50" aria-labelledby="faq">
-        <div className="mx-auto max-w-6xl px-4 py-16">
-          <h2 id="faq" className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-            {t("windowCleaning.faq.title")}
-          </h2>
-          <div className="mt-8 grid gap-4">
-            {faqItems.map((item) => (
-              <details key={item.q} className="group rounded-2xl border border-zinc-200 bg-white p-5">
-                <summary className="cursor-pointer list-none text-base font-semibold text-zinc-900">
-                  {item.q}
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-600">{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: toJsonLdString([serviceSchema, faqSchema]) }}
-        />
-      </section>
+      <SeoFaq title={t("windowCleaning.faq.title")} items={faqItems} />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLdString(serviceSchema) }}
+      />
 
       {/* Service Areas Section */}
       <section className="mx-auto max-w-6xl px-4 py-12">

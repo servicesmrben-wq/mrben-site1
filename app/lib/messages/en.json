@@ -1,6 +1,31 @@
 {
   "home": {
-    "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Jérôme, Mirabel, and Blainville."
+    "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Jérôme, Mirabel, and Blainville.",
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "0": {
+          "q": "Does MrBen clean interior and exterior windows?",
+          "a": "Yes. MrBen provides interior and exterior window cleaning for houses, condos, and commercial buildings."
+        },
+        "1": {
+          "q": "What areas does MrBen serve?",
+          "a": "MrBen serves the Laurentians in Québec, including Lachute, Saint-Jérôme, Mirabel, and Blainville."
+        },
+        "2": {
+          "q": "Does MrBen offer residential and commercial services?",
+          "a": "Yes. MrBen provides residential and commercial window cleaning services."
+        },
+        "3": {
+          "q": "Does the service include screens?",
+          "a": "Yes. Window cleaning can include screens depending on the selected service."
+        },
+        "4": {
+          "q": "What affects the price of window cleaning?",
+          "a": "Pricing depends on the number of windows, access, soil level, and the type of building."
+        }
+      }
+    }
   },
   "common": {
     "getQuote": "Get Your Free Quote"

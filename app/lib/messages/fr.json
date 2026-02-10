@@ -1,6 +1,31 @@
 {
   "home": {
-    "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Jérôme, Mirabel et Blainville."
+    "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Jérôme, Mirabel et Blainville.",
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": {
+        "0": {
+          "q": "Est-ce que MrBen nettoie les vitres intérieures et extérieures?",
+          "a": "Oui. MrBen offre le nettoyage de vitres intérieures et extérieures pour maisons, condos et bâtiments commerciaux."
+        },
+        "1": {
+          "q": "Quelles régions sont desservies par MrBen?",
+          "a": "MrBen dessert les Laurentides au Québec, incluant Lachute, Saint-Jérôme, Mirabel et Blainville."
+        },
+        "2": {
+          "q": "Est-ce que MrBen offre des services résidentiels et commerciaux?",
+          "a": "Oui. MrBen offre des services de nettoyage de vitres résidentiels et commerciaux."
+        },
+        "3": {
+          "q": "Est-ce que le nettoyage inclut les moustiquaires?",
+          "a": "Oui. Le nettoyage de vitres peut inclure les moustiquaires selon le service choisi."
+        },
+        "4": {
+          "q": "De quoi dépend le prix d’un nettoyage de vitres?",
+          "a": "Le prix dépend du nombre de vitres, de l’accès, du niveau de saleté et du type de bâtiment."
+        }
+      }
+    }
   },
   "common": {
     "getQuote": "Obtenir une estimation gratuite"
