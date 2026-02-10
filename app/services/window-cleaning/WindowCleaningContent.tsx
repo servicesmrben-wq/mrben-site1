@@ -196,6 +196,9 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
             <p className="mt-4 text-base leading-relaxed text-white/80 sm:text-lg">
               {t("windowCleaning.heroSubtitle")}
             </p>
+            <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
+              {t("windowCleaning.sourceOfTruth")}
+            </p>
             <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Link
                 href={QUOTE_HREF}

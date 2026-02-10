@@ -1,4 +1,7 @@
 {
+  "home": {
+    "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Jérôme, Mirabel et Blainville."
+  },
   "common": {
     "getQuote": "Obtenir une estimation gratuite"
   },
@@ -8,6 +11,7 @@
     "heroKicker": "Service de lavage de vitres",
     "heroTitle": "Lavage de vitres impeccable dans les Laurentides",
     "heroSubtitle": "Résultats sans traces, équipe fiable et garantie de satisfaction à 100 %.",
+    "sourceOfTruth": "MrBen offre le lavage de vitres résidentiel et commercial dans les Laurentides, incluant Lachute, Saint-Jérôme, Mirabel et Blainville.",
     "heroImageAlt": "Technicien MrBen en lavage de vitres extérieures sur une maison résidentielle",
     "heroCtaNote": "Réponse rapide • Aucune obligation",
     "heroTrust1": "Note moyenne 5 étoiles",
@@ -148,6 +152,11 @@
       "mirabel": "Vitres fraîchement lavées sur une maison à Mirabel",
       "blainville": "Nettoyage de gouttières sur une maison à Blainville",
       "laval": "Lavage à pression d’une entrée résidentielle à Laval"
+    }
+  },
+  "territory": {
+    "city": {
+      "sourceOfTruth": "MrBen offre le nettoyage de vitres résidentiel et commercial à {city} et dans les Laurentides."
     }
   },
   "jsonld": {

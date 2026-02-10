@@ -451,7 +451,7 @@ function SectionTitle({ kicker, title, subtitle, subtitleClassName }) {
 }
 
 
-function Hero({ onQuote, t, heroRef }) {
+function Hero({ onQuote, t, heroRef, sourceOfTruth }) {
   const [rating, setRating] = useState(5.0);
   const [reviewCount, setReviewCount] = useState(null);
   const placeId = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID;
@@ -602,6 +602,11 @@ function Hero({ onQuote, t, heroRef }) {
                 {t("heroH1b")}
               </span>
             </h1>
+            {sourceOfTruth ? (
+              <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/90 sm:text-base" style={heroTextShadow}>
+                {sourceOfTruth}
+              </p>
+            ) : null}
           </div>
           <div className="mx-auto mt-4 w-full max-w-3xl lg:mx-0">
             <p className="hidden text-base leading-relaxed text-white/95 md:block" style={heroTextShadow}>
@@ -1862,7 +1867,7 @@ function QuoteModal({ open, onClose, t }) {
   );
 }
 
-export default function MrBenRedesignPreview() {
+export default function MrBenRedesignPreview({ sourceOfTruth }) {
   const { locale } = useLocale();
   const t = useI18n(locale);
   const heroRef = useRef(null);
@@ -1933,7 +1938,7 @@ export default function MrBenRedesignPreview() {
   return (
     <div className="relative min-h-screen bg-white text-zinc-900">
       <div className="relative z-10">
-        <Hero onQuote={scrollToContact} t={t} heroRef={heroRef} />
+        <Hero onQuote={scrollToContact} t={t} heroRef={heroRef} sourceOfTruth={sourceOfTruth} />
         <Services onQuote={scrollToContact} t={t} />
         <Gallery t={t} />
         <Reviews t={t} onQuote={scrollToContact} />
