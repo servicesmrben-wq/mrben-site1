@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { CITY_PAGES } from "@/app/territoire/city-data";
+import SeoFaq from "./components/SeoFaq";
 import { useLocale } from "./components/LocaleProvider";
 import { loadGooglePlaces } from "./lib/googlePlacesLoader";
 
@@ -1867,7 +1868,7 @@ function QuoteModal({ open, onClose, t }) {
   );
 }
 
-export default function MrBenRedesignPreview({ sourceOfTruth }) {
+export default function MrBenRedesignPreview({ sourceOfTruth, faqTitle, faqItems }) {
   const { locale } = useLocale();
   const t = useI18n(locale);
   const heroRef = useRef(null);
@@ -1944,6 +1945,7 @@ export default function MrBenRedesignPreview({ sourceOfTruth }) {
         <Reviews t={t} onQuote={scrollToContact} />
         <ServiceArea t={t} />
         <Contact t={t} contactRef={contactRef} />
+        <SeoFaq title={faqTitle} items={faqItems} />
         <div aria-hidden="true" className="h-20 md:hidden" />
       </div>
       <div
