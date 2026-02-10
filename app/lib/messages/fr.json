@@ -132,6 +132,12 @@
     "finalCTA": {
       "title": "Prêt à retrouver des vitres étincelantes?",
       "subtitle": "Contactez-nous dès aujourd’hui pour votre estimation gratuite et illuminez votre vue!"
+    },
+    "jsonld": {
+      "service": {
+        "name": "Lavage de vitres résidentiel et commercial",
+        "description": "Service professionnel de lavage de vitres dans les Laurentides, incluant l’intérieur, l’extérieur, les cadrages et les moustiquaires pour une finition sans traces."
+      }
     }
   },
   "cityPages": {
@@ -147,6 +153,10 @@
   "jsonld": {
     "localBusiness": {
       "description": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur dans les Laurentides, notamment à Lachute, Saint-Jérôme et Mirabel."
+    },
+    "city": {
+      "serviceNamePrefix": "Lavage de vitres à ",
+      "serviceDescriptionPrefix": "Service de lavage de vitres et d’entretien extérieur offert à "
     }
   }
 }

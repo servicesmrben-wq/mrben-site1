@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
+import { getAbsoluteUrl, getLocalBusinessProvider } from "@/app/lib/seo/schema";
 
 const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
 
@@ -20,9 +21,10 @@ const QUOTE_HREF = "/#contact";
 
 type Props = {
   t: (key: string) => string;
+  pagePath: string;
 };
 
-export default function WindowCleaningContent({ t }: Props) {
+export default function WindowCleaningContent({ t, pagePath }: Props) {
   const whyUsItems = [
     {
       icon: ShieldCheck,
@@ -126,6 +128,25 @@ export default function WindowCleaningContent({ t }: Props) {
       a: t("windowCleaning.faq.items.5.a"),
     },
   ];
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: t("windowCleaning.jsonld.service.name"),
+    serviceType: t("windowCleaning.jsonld.service.name"),
+    description: t("windowCleaning.jsonld.service.description"),
+    provider: getLocalBusinessProvider(),
+    areaServed: [
+      "Laurentides, Québec, Canada",
+      t("windowCleaning.serviceAreas.cities.lachute"),
+      t("windowCleaning.serviceAreas.cities.saintJerome"),
+      t("windowCleaning.serviceAreas.cities.saintSauveur"),
+      t("windowCleaning.serviceAreas.cities.mirabel"),
+      t("windowCleaning.serviceAreas.cities.blainville"),
+      t("windowCleaning.serviceAreas.cities.laval"),
+    ],
+    url: getAbsoluteUrl(pagePath),
+  };
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -339,7 +360,7 @@ export default function WindowCleaningContent({ t }: Props) {
         </div>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: toJsonLdString(faqSchema) }}
+          dangerouslySetInnerHTML={{ __html: toJsonLdString([serviceSchema, faqSchema]) }}
         />
       </section>
 
