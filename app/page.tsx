@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import SeoFaq from "./components/SeoFaq";
 import MrBenRedesignPreview from "./MrBenRedesignPreview";
 import { getLocaleFromRequest } from "./lib/locale";
 import { toJsonLdString } from "./lib/seo/jsonld";
@@ -24,6 +25,10 @@ export default async function Page() {
   const t = getTranslations(locale);
   const provider = getLocalBusinessProvider();
   const homeSourceOfTruth = t("home.sourceOfTruth");
+  const homeFaqItems = [0, 1, 2, 3, 4].map((index) => ({
+    q: t(`home.faq.items.${index}.q`),
+    a: t(`home.faq.items.${index}.a`),
+  }));
 
   const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville"].map((city) => ({
     "@type": "City",
@@ -53,6 +58,7 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: toJsonLdString(localBusinessJsonLd) }}
       />
       <MrBenRedesignPreview sourceOfTruth={homeSourceOfTruth} />
+      <SeoFaq title={t("home.faq.title")} items={homeFaqItems} />
     </>
   );
 }

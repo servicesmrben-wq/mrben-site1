@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import type { CityPage as CityPageData, Locale } from "./city-data";
 import { getCityUrl } from "./seo";
+import SeoFaq from "@/app/components/SeoFaq";
 import { getTranslations } from "@/app/lib/translations";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
 import { getLocalBusinessProvider } from "@/app/lib/seo/schema";
@@ -88,8 +89,8 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
     t("territoryCityPage.whyBullets.3"),
   ];
   const faqItems = [0, 1, 2, 3, 4].map((index) => ({
-    question: t(`territoryCityPage.faq.${index}.q`),
-    answer: t(`territoryCityPage.faq.${index}.a`),
+    q: t(`territoryCityPage.faq.${index}.q`),
+    a: t(`territoryCityPage.faq.${index}.a`),
   }));
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`cityPages.heroImageAlt.${city.slug}`);
@@ -228,17 +229,7 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
           </ul>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{faqTitle}</h2>
-          <div className="mt-4 space-y-4">
-            {faqItems.map((item) => (
-              <article key={item.question} className="rounded-2xl border border-zinc-200 bg-white p-4">
-                <h3 className="text-base font-semibold text-zinc-900">{item.question}</h3>
-                <p className="mt-2 text-base leading-relaxed text-zinc-700">{item.answer}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        <SeoFaq title={faqTitle} items={faqItems} />
       </section>
 
       <section className="border-t border-zinc-200 bg-white">
