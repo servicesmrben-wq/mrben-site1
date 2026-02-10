@@ -3,6 +3,8 @@ export type Locale = "fr" | "en";
 export type CityPage = {
   slug: string;
   name: string;
+  priceLow?: number;
+  priceHigh?: number;
   fr: {
     title: string;
     description: string;

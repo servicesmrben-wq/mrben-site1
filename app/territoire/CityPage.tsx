@@ -13,6 +13,16 @@ const BRAND = {
   phoneHref: "tel:+15146997145",
 };
 
+const DEFAULT_PRICE_LOW = 180;
+const DEFAULT_PRICE_HIGH = 450;
+
+function interpolate(template: string, values: Record<string, string>) {
+  return Object.entries(values).reduce(
+    (result, [key, value]) => result.replaceAll(`{${key}}`, value),
+    template,
+  );
+}
+
 const LOCALE_LABELS: Record<
   Locale,
   { servicesLabel: string; cta: string; ctaReassurance: string; napLabel: string }
@@ -45,6 +55,42 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
   const labels = LOCALE_LABELS[locale];
   const t = getTranslations(locale);
   const citySourceOfTruth = t("territory.city.sourceOfTruth").replace("{city}", city.name);
+  const priceLow = city.priceLow ?? DEFAULT_PRICE_LOW;
+  const priceHigh = city.priceHigh ?? DEFAULT_PRICE_HIGH;
+  const pageH1 = interpolate(t("territoryCityPage.h1"), { CITY: city.name });
+  const servicesTitle = interpolate(t("territoryCityPage.servicesTitle"), { CITY: city.name });
+  const buildingsTitle = t("territoryCityPage.buildingsTitle");
+  const pricingTitle = t("territoryCityPage.pricingTitle");
+  const whyTitle = interpolate(t("territoryCityPage.whyTitle"), { CITY: city.name });
+  const faqTitle = t("territoryCityPage.faqTitle");
+  const pricingSentence = interpolate(t("territoryCityPage.pricingSentence"), {
+    CITY: city.name,
+    LOW: String(priceLow),
+    HIGH: String(priceHigh),
+  });
+  const servicesBullets = [
+    t("territoryCityPage.servicesBullets.0"),
+    t("territoryCityPage.servicesBullets.1"),
+    t("territoryCityPage.servicesBullets.2"),
+    t("territoryCityPage.servicesBullets.3"),
+  ];
+  const buildingsBullets = [
+    t("territoryCityPage.buildingsBullets.0"),
+    t("territoryCityPage.buildingsBullets.1"),
+    t("territoryCityPage.buildingsBullets.2"),
+    t("territoryCityPage.buildingsBullets.3"),
+  ];
+  const whyParagraph = interpolate(t("territoryCityPage.whyParagraph"), { CITY: city.name });
+  const whyBullets = [
+    t("territoryCityPage.whyBullets.0"),
+    t("territoryCityPage.whyBullets.1"),
+    t("territoryCityPage.whyBullets.2"),
+    t("territoryCityPage.whyBullets.3"),
+  ];
+  const faqItems = [0, 1, 2, 3, 4].map((index) => ({
+    question: t(`territoryCityPage.faq.${index}.q`),
+    answer: t(`territoryCityPage.faq.${index}.a`),
+  }));
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`cityPages.heroImageAlt.${city.slug}`);
   const cityServiceSchema = {
@@ -76,7 +122,7 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
             {city.name}
           </p>
           <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-            {content.title}
+            {pageH1}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-600">
             {content.description}
@@ -146,6 +192,53 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
             </div>
           </aside>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl space-y-10 px-4 pb-12">
+        <section>
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{servicesTitle}</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-6 text-base leading-relaxed text-zinc-700">
+            {servicesBullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{buildingsTitle}</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-6 text-base leading-relaxed text-zinc-700">
+            {buildingsBullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{pricingTitle}</h2>
+          <p className="mt-4 text-base leading-relaxed text-zinc-700">{pricingSentence}</p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{whyTitle}</h2>
+          <p className="mt-4 text-base leading-relaxed text-zinc-700">{whyParagraph}</p>
+          <ul className="mt-4 list-disc space-y-2 pl-6 text-base leading-relaxed text-zinc-700">
+            {whyBullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">{faqTitle}</h2>
+          <div className="mt-4 space-y-4">
+            {faqItems.map((item) => (
+              <article key={item.question} className="rounded-2xl border border-zinc-200 bg-white p-4">
+                <h3 className="text-base font-semibold text-zinc-900">{item.question}</h3>
+                <p className="mt-2 text-base leading-relaxed text-zinc-700">{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       </section>
 
       <section className="border-t border-zinc-200 bg-white">

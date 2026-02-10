@@ -167,5 +167,55 @@
       "serviceNamePrefix": "Lavage de vitres à ",
       "serviceDescriptionPrefix": "Service de lavage de vitres et d’entretien extérieur offert à "
     }
+  },
+  "territoryCityPage": {
+    "h1": "Nettoyage de vitres à {CITY}",
+    "servicesTitle": "Services offerts à {CITY}",
+    "buildingsTitle": "Types de bâtiments desservis",
+    "pricingTitle": "Prix estimatifs pour le nettoyage de vitres",
+    "whyTitle": "Pourquoi choisir MrBen à {CITY}",
+    "faqTitle": "Questions fréquentes",
+    "pricingSentence": "Le prix du nettoyage de vitres à {CITY} varie généralement entre {LOW} $ et {HIGH} $, selon le nombre de fenêtres, le nombre d’étages, l’accessibilité et si le nettoyage est intérieur et extérieur.",
+    "servicesBullets": [
+      "Nettoyage de vitres (intérieur + extérieur)",
+      "Nettoyage de vitres extérieures",
+      "Cadres et rails",
+      "Verrières et solariums (si applicable)"
+    ],
+    "buildingsBullets": [
+      "Maison unifamiliale / bungalow",
+      "Maison à 2 étages",
+      "Plex / condo / appartement",
+      "Petit commerce / bureau"
+    ],
+    "whyParagraph": "Notre équipe dessert {CITY} et la région avec une approche pratique, ponctuelle et respectueuse de votre propriété.",
+    "whyBullets": [
+      "Équipe locale habituée aux propriétés de la région",
+      "Assurance responsabilité pour intervenir en toute sécurité",
+      "Équipement professionnel adapté aux accès en hauteur",
+      "Service fiable avec suivi orienté satisfaction"
+    ],
+    "faq": [
+      {
+        "q": "Est-ce que vous faites intérieur + extérieur ?",
+        "a": "Oui. Nous proposons le nettoyage intérieur et extérieur des vitres, ou l’extérieur seulement selon vos besoins."
+      },
+      {
+        "q": "Combien de temps ça prend ?",
+        "a": "La durée dépend du nombre de fenêtres et de l’accès. Pour une maison typique, le service prend souvent quelques heures."
+      },
+      {
+        "q": "Nettoyez-vous au 2e/3e étage ?",
+        "a": "Oui, nous avons l’équipement adapté pour nettoyer les fenêtres en hauteur de façon sécuritaire."
+      },
+      {
+        "q": "À quelle fréquence nettoyer ?",
+        "a": "La plupart des clients planifient 2 à 4 nettoyages par année, selon l’exposition à la poussière, au pollen et aux intempéries."
+      },
+      {
+        "q": "Êtes-vous assurés ?",
+        "a": "Oui, notre équipe est couverte par une assurance responsabilité pour les travaux réalisés sur votre propriété."
+      }
+    ]
   }
 }
