@@ -2,7 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { CityPage as CityPageData, Locale } from "./city-data";
+import { getCityUrl } from "./seo";
 import { getTranslations } from "@/app/lib/translations";
+import { toJsonLdString } from "@/app/lib/seo/jsonld";
+import { getLocalBusinessProvider } from "@/app/lib/seo/schema";
 
 const BRAND = {
   name: "MrBen.ca",
@@ -43,9 +46,29 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
   const t = getTranslations(locale);
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`cityPages.heroImageAlt.${city.slug}`);
+  const cityServiceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: t("jsonld.city.serviceNamePrefix") + city.name,
+    description: t("jsonld.city.serviceDescriptionPrefix") + city.name,
+    provider: getLocalBusinessProvider(),
+    areaServed: {
+      "@type": "City",
+      name: city.name,
+      containedInPlace: {
+        "@type": "AdministrativeArea",
+        name: locale === "fr" ? "Québec" : "Quebec",
+      },
+    },
+    url: getCityUrl(city.slug),
+  };
 
   return (
     <main className="min-h-screen bg-white text-zinc-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLdString(cityServiceSchema) }}
+      />
       <section className="border-b border-zinc-200 bg-zinc-50">
         <div className="mx-auto max-w-5xl px-4 py-14 sm:py-16">
           <p className="text-sm font-semibold uppercase tracking-wide text-zinc-500">

@@ -27,5 +27,5 @@ export function generateMetadata(): Metadata {
 export default function WindowCleaningEnPage() {
   const t = getTranslations("en");
 
-  return <WindowCleaningContent t={t} />;
+  return <WindowCleaningContent t={t} pagePath="/services/window-cleaning" />;
 }

@@ -26,5 +26,5 @@ export function generateMetadata(): Metadata {
 export default function WindowCleaningFrPage() {
   const t = getTranslations("fr");
 
-  return <WindowCleaningContent t={t} />;
+  return <WindowCleaningContent t={t} pagePath="/services/lavage-de-vitres" />;
 }

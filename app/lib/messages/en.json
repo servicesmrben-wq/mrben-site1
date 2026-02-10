@@ -132,6 +132,12 @@
     "finalCTA": {
       "title": "Ready to see your windows sparkle?",
       "subtitle": "Contact us today for your free quote and let us brighten your view!"
+    },
+    "jsonld": {
+      "service": {
+        "name": "Residential and commercial window cleaning",
+        "description": "Professional window cleaning service across the Laurentians, including interior and exterior glass, frames, and screens for a streak-free finish."
+      }
     }
   },
   "cityPages": {
@@ -147,6 +153,10 @@
   "jsonld": {
     "localBusiness": {
       "description": "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across the Laurentides, including Lachute, Saint-Jérôme, and Mirabel."
+    },
+    "city": {
+      "serviceNamePrefix": "Window cleaning in ",
+      "serviceDescriptionPrefix": "Window cleaning and exterior maintenance service offered in "
     }
   }
 }
