@@ -17,8 +17,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const p = await params;
-  const slug = p.slug;
+  const { slug } = await params;
   const city = getCityBySlug(slug);
 
   if (!city) {
@@ -30,8 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function Page({ params }: PageProps) {
-  const p = await params;
-  const slug = p.slug;
+  const { slug } = await params;
 
   if (slug === "st-sauveur") {
     redirect("/territoire/saint-sauveur");

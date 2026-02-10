@@ -167,5 +167,55 @@
     "city": {
       "sourceOfTruth": "MrBen provides residential and commercial window cleaning in {city} and across the Laurentians."
     }
+  },
+  "territoryCityPage": {
+    "h1": "Window cleaning in {CITY}",
+    "servicesTitle": "Services offered in {CITY}",
+    "buildingsTitle": "Building types we serve",
+    "pricingTitle": "Estimated window cleaning prices",
+    "whyTitle": "Why choose MrBen in {CITY}",
+    "faqTitle": "Frequently asked questions",
+    "pricingSentence": "Window cleaning in {CITY} typically ranges from ${LOW} to ${HIGH}, depending on window count, number of storeys, accessibility, and whether it’s inside + outside.",
+    "servicesBullets": [
+      "Window cleaning (inside + outside)",
+      "Exterior-only window cleaning",
+      "Frames and tracks",
+      "Sunrooms and solariums (when applicable)"
+    ],
+    "buildingsBullets": [
+      "Single-family home / bungalow",
+      "Two-storey home",
+      "Plex / condo / apartment",
+      "Small storefront / office"
+    ],
+    "whyParagraph": "Our team serves {CITY} and nearby areas with practical, punctual service that respects your property.",
+    "whyBullets": [
+      "Local team familiar with homes in the area",
+      "Liability insurance for safe, compliant service",
+      "Professional equipment for higher and hard-to-reach windows",
+      "Reliable service with satisfaction-focused follow-up"
+    ],
+    "faq": [
+      {
+        "q": "Do you clean both inside and outside windows?",
+        "a": "Yes. We offer interior + exterior cleaning, or exterior-only service based on your preference."
+      },
+      {
+        "q": "How long does the service take?",
+        "a": "Timing depends on window count and access. For a typical home, service often takes a few hours."
+      },
+      {
+        "q": "Do you clean 2nd/3rd-storey windows?",
+        "a": "Yes, we use the proper equipment to clean higher windows safely."
+      },
+      {
+        "q": "How often should windows be cleaned?",
+        "a": "Most clients schedule 2 to 4 cleanings per year, depending on dust, pollen, and weather exposure."
+      },
+      {
+        "q": "Are you insured?",
+        "a": "Yes, our team carries liability insurance for work performed on your property."
+      }
+    ]
   }
 }
