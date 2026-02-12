@@ -132,17 +132,16 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
             {citySourceOfTruth}
           </p>
           {heroImage ? (
-            <div className="mt-8 overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
-              <div className="relative h-64 w-full sm:h-72">
+            <div className="relative mt-8 h-[260px] w-full overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-sm sm:h-[320px] lg:h-[380px]">
                 <Image
                   src={heroImage}
                   alt={heroImageAlt}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 640px"
-                  className="object-cover"
+                  sizes="(max-width: 768px) 92vw, (max-width: 1280px) 900px, 1100px"
+                  quality={90}
+                  className="object-contain"
                   priority
                 />
-              </div>
             </div>
           ) : null}
           <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-zinc-600">
