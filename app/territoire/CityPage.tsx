@@ -43,12 +43,12 @@ const LOCALE_LABELS: Record<
 };
 
 const CITY_HERO_IMAGES: Record<string, string> = {
-  lachute: "/gallery/lavage-vitres-lachute-avant-apres.jpg",
-  "saint-jerome": "/gallery/lavage-vitres-saint-jerome-residentiel.jpg",
-  "saint-sauveur": "/gallery/lavage-vitres-saint-sauveur-maison.jpg",
-  mirabel: "/gallery/lavage-vitres-mirabel-maison.jpg",
-  blainville: "/gallery/nettoyage-gouttieres-blainville.jpg",
-  laval: "/gallery/lavage-pression-entree-laval.jpg",
+  lachute: "/nettoyage-vitres-maison-lachute-laurentides-mrben.jpg",
+  "saint-jerome": "/nettoyage-vitres-maison-saint-jerome-laurentides-mrben.jpg",
+  "saint-sauveur": "/nettoyage-vitres-maison-saint-sauveur-laurentides-mrben.jpg",
+  mirabel: "/nettoyage-vitres-maison-mirabel-laurentides-mrben.jpg",
+  blainville: "/nettoyage-vitres-maison-blainville-laurentides-mrben.jpg",
+  laval: "/nettoyage-vitres-maison-laval-laurentides-mrben.jpg",
 };
 
 export function CityPage({ city, locale }: { city: CityPageData; locale: Locale }) {
