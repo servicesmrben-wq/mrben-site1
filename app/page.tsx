@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import SeoFaq from "./components/SeoFaq";
 import MrBenRedesignPreview from "./MrBenRedesignPreview";
 import { getLocaleFromRequest } from "./lib/locale";
 import { toJsonLdString } from "./lib/seo/jsonld";
@@ -57,8 +56,11 @@ export default async function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLdString(localBusinessJsonLd) }}
       />
-      <MrBenRedesignPreview sourceOfTruth={homeSourceOfTruth} />
-      <SeoFaq title={t("home.faq.title")} items={homeFaqItems} />
+      <MrBenRedesignPreview
+        sourceOfTruth={homeSourceOfTruth}
+        faqTitle={t("home.faq.title")}
+        faqItems={homeFaqItems}
+      />
     </>
   );
 }

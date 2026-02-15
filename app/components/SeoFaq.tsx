@@ -32,10 +32,26 @@ export default function SeoFaq({ title, items }: SeoFaqProps) {
         </h2>
         <div className="mt-8 grid gap-4">
           {items.map((item) => (
-            <article key={item.q} className="rounded-2xl border border-zinc-200 bg-white p-5">
-              <h3 className="text-base font-semibold text-zinc-900">{item.q}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-zinc-600">{item.a}</p>
-            </article>
+            <details key={item.q} className="group rounded-2xl border border-zinc-200 bg-white p-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-zinc-900 marker:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400">
+                <span>{item.q}</span>
+                <svg
+                  className="h-5 w-5 shrink-0 text-zinc-500 transition-transform duration-200 group-open:rotate-180"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 8l5 5 5-5"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </summary>
+              <div className="mt-3 text-sm leading-relaxed text-zinc-600">{item.a}</div>
+            </details>
           ))}
         </div>
       </div>
