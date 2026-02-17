@@ -390,7 +390,14 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
               </div>
             </div>
 
-            <form onSubmit={onSubmit}>
+            <form 
+              onSubmit={onSubmit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && (e.target as HTMLElement).tagName !== "TEXTAREA") {
+                  e.preventDefault();
+                }
+              }}
+            >
               <div className="absolute left-[-10000px] top-auto h-0 w-0 overflow-hidden">
                 <label>
                   Company
