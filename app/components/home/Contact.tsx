@@ -153,7 +153,7 @@ export default function Contact({ t, contactRef }: { t: (key: string) => string,
       const googleMaps = /** @type {any} */ (window.google);
       if (!googleMaps?.maps?.places) return;
       if (autocompleteRef.current) return;
-      const autocomplete = new googleMaps.maps.places.Autocomplete(
+      const autocomplete = new (googleMaps.maps.places as any).Autocomplete(
         addressInputRef.current,
         {
           types: ["address"],
