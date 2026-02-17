@@ -7,6 +7,7 @@ import { useLocale } from "next-intl";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import { BRAND } from "@/app/lib/constants";
 import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
+import confetti from "canvas-confetti";
 
 function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: React.RefObject<HTMLInputElement | null>, [key: string]: any }) {
   return (
@@ -263,6 +264,43 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
       setStatus({
         state: "success",
         message: t("sendSuccess"),
+      });
+
+      // Fire confetti
+      const count = 200;
+      const defaults = {
+        origin: { y: 0.7 }
+      };
+
+      function fire(particleRatio: number, opts: any) {
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio)
+        });
+      }
+
+      fire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+      });
+      fire(0.2, {
+        spread: 60,
+      });
+      fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 45,
       });
 
       setForm({ name: "", phone: "", email: "", address: "", message: "" });
