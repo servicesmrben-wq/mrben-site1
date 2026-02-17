@@ -1,9 +1,10 @@
+import { google } from "googleapis";
 import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
 const MAX_IMAGES = 5;
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 15 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const DEFAULT_FROM = "MrBen.ca <no-reply@mrben.ca>";
 const DEFAULT_TO = "info@mrben.ca";
@@ -32,7 +33,9 @@ function escapeHtml(value: string) {
 export async function POST(req: Request) {
   try {
     const smtpUser = process.env.SMTP_USER?.trim();
-    const smtpPass = process.env.SMTP_PASS?.trim();
+    const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim();
+    const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
+    const googleRefreshToken = process.env.GOOGLE_REFRESH_TOKEN?.trim();
     const contactTo =
       process.env.CONTACT_FORM_TO_EMAIL ||
       process.env.CONTACT_TO_EMAIL ||
@@ -43,7 +46,14 @@ export async function POST(req: Request) {
     const trimmedContactTo = contactTo?.trim();
     const trimmedContactFrom = contactFrom?.trim();
 
-    if (!smtpUser || !smtpPass || !trimmedContactTo || !trimmedContactFrom) {
+    if (
+      !smtpUser ||
+      !googleClientId ||
+      !googleClientSecret ||
+      !googleRefreshToken ||
+      !trimmedContactTo ||
+      !trimmedContactFrom
+    ) {
       return new Response(
         JSON.stringify({
           ok: false,
@@ -60,6 +70,7 @@ export async function POST(req: Request) {
     const email = normalizeSingleLine(formData.get("email"));
     const address = normalizeSingleLine(formData.get("address"));
     const servicesRaw = formData.get("services")?.toString() || "[]";
+    const imageUrlsRaw = formData.get("imageUrls")?.toString() || "[]";
     const message = normalizeMultiLine(formData.get("message"));
     const honeypot = normalizeSingleLine(formData.get("company"));
 
@@ -78,6 +89,14 @@ export async function POST(req: Request) {
         : [];
     } catch {
       services = [];
+    }
+
+    let imageUrls: string[] = [];
+    try {
+      const parsed = JSON.parse(imageUrlsRaw);
+      imageUrls = Array.isArray(parsed) ? parsed.filter((u) => typeof u === "string") : [];
+    } catch {
+      imageUrls = [];
     }
 
     const files = formData
@@ -129,6 +148,9 @@ export async function POST(req: Request) {
       `ADRESSE : ${addressLabel}`,
       `SERVICES : ${servicesLabel}`,
       "",
+      imageUrls.length > 0 ? "PHOTOS (LIENS) :" : "",
+      ...imageUrls,
+      "",
       "MESSAGE :",
       safeMessage,
     ];
@@ -138,8 +160,17 @@ export async function POST(req: Request) {
       `<p><strong>TÉLÉPHONE :</strong> ${escapeHtml(phoneLabel)}</p>`,
       `<p><strong>ADRESSE :</strong> ${escapeHtml(addressLabel)}</p>`,
       `<p><strong>SERVICES :</strong> ${escapeHtml(servicesLabel)}</p>`,
-      `<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`,
     ];
+
+    if (imageUrls.length > 0) {
+      htmlLines.push(`<p><strong>PHOTOS (LIENS) :</strong></p><ul>`);
+      imageUrls.forEach((url) => {
+        htmlLines.push(`<li><a href="${url}">${url}</a></li>`);
+      });
+      htmlLines.push(`</ul>`);
+    }
+
+    htmlLines.push(`<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`);
 
     const attachments = await Promise.all(
       files.map(async (file) => {
@@ -152,13 +183,27 @@ export async function POST(req: Request) {
       })
     );
 
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_REDIRECT_URI
+    );
+
+    oauth2Client.setCredentials({
+      refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+    });
+
+    const accessToken = await oauth2Client.getAccessToken();
+
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
+      service: "gmail",
       auth: {
+        type: "OAuth2",
         user: smtpUser,
-        pass: smtpPass,
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+        accessToken: accessToken.token as string,
       },
     });
 

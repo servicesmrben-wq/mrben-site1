@@ -1,15 +1,16 @@
 const FALLBACK_RESPONSE = {
   rating: 5.0,
   count: null,
+  reviews: [],
   source: "fallback" as const,
 };
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const GOOGLE_FIELDS = "rating,user_ratings_total";
+const GOOGLE_FIELDS = "rating,user_ratings_total,reviews";
 
-export async function GET(request: Request) {
+export async function GET() {
   const key = process.env.GOOGLE_PLACES_API_KEY;
   const placeId = process.env.GOOGLE_PLACE_ID;
 
@@ -23,10 +24,11 @@ export async function GET(request: Request) {
   url.searchParams.set("place_id", placeId);
   url.searchParams.set("fields", GOOGLE_FIELDS);
   url.searchParams.set("key", key);
+  url.searchParams.set("language", "fr"); // Prefer French reviews/dates if available
 
   try {
     const response = await fetch(url.toString(), {
-      next: { revalidate: 43200 },
+      next: { revalidate: 86400 }, // Cache for 24 hours
     });
 
     if (!response.ok) {
@@ -35,20 +37,29 @@ export async function GET(request: Request) {
       });
     }
 
-    let data: {
-      result?: { rating?: number; user_ratings_total?: number };
-    } | null = null;
+    let data: any = null;
     try {
-      data = (await response.json()) as {
-        result?: { rating?: number; user_ratings_total?: number };
-      };
-    } catch (error) {
+      data = await response.json();
+    } catch {
       return Response.json({
         ...FALLBACK_RESPONSE,
       });
     }
-    const rating = data?.result?.rating;
-    const totalRatings = data?.result?.user_ratings_total;
+    
+    const result = data?.result;
+    const rating = result?.rating;
+    const totalRatings = result?.user_ratings_total;
+    // Get top 5 reviews, ensuring they have text
+    const reviews = (result?.reviews || [])
+      .filter((r: any) => r.text && r.text.length > 10)
+      .slice(0, 3)
+      .map((r: any) => ({
+        author_name: r.author_name,
+        profile_photo_url: r.profile_photo_url,
+        rating: r.rating,
+        relative_time_description: r.relative_time_description,
+        text: r.text,
+      }));
 
     if (typeof rating !== "number" || !Number.isFinite(rating)) {
       return Response.json({
@@ -64,6 +75,7 @@ export async function GET(request: Request) {
     return Response.json({
       rating,
       count,
+      reviews,
       source: "google" as const,
     });
   } catch {

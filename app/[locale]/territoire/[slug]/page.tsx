@@ -2,18 +2,21 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { CityPage } from "../CityPage";
-import { CITY_SLUGS, getCityBySlug } from "../city-data";
+import { CITY_SLUGS, getCityBySlug, type Locale } from "../../../territoire/city-data";
 import { buildCityMetadata } from "../seo";
-import { getLocaleFromRequest } from "@/app/lib/locale";
+import { getLocale } from "next-intl/server";
+import { locales } from "@/navigation";
 
-type Params = { slug: string };
+type Params = { locale: string; slug: string };
 
 type PageProps = {
   params: Promise<Params>;
 };
 
 export function generateStaticParams() {
-  return CITY_SLUGS.map((slug) => ({ slug }));
+  return locales.flatMap((locale) =>
+    CITY_SLUGS.map((slug) => ({ locale, slug }))
+  );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -24,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     notFound();
   }
 
-  const locale = await getLocaleFromRequest();
+  const locale = (await getLocale()) as Locale;
   return buildCityMetadata(city, locale);
 }
 
@@ -32,7 +35,8 @@ export default async function Page({ params }: PageProps) {
   const { slug } = await params;
 
   if (slug === "st-sauveur") {
-    redirect("/territoire/saint-sauveur");
+    const locale = await getLocale();
+    redirect(`/${locale}/territoire/saint-sauveur`);
   }
 
   const city = getCityBySlug(slug);
@@ -41,6 +45,5 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  const locale = await getLocaleFromRequest();
-  return <CityPage city={city} locale={locale} />;
+  return <CityPage city={city} />;
 }

@@ -25,6 +25,11 @@
           "a": "Le prix dépend du nombre de vitres, de l’accès, du niveau de saleté et du type de bâtiment."
         }
       }
+    },
+    "jsonld": {
+      "localBusiness": {
+        "description": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur dans les Laurentides, notamment à Lachute, Saint-Jérôme et Mirabel."
+      }
     }
   },
   "common": {
@@ -36,6 +41,7 @@
     "heroKicker": "Service de lavage de vitres",
     "heroTitle": "Lavage de vitres impeccable dans les Laurentides",
     "heroSubtitle": "Résultats sans traces, équipe fiable et garantie de satisfaction à 100 %.",
+    "heroCTA": "Obtenir une estimation gratuite",
     "sourceOfTruth": "MrBen offre le lavage de vitres résidentiel et commercial dans les Laurentides, incluant Lachute, Saint-Jérôme, Mirabel et Blainville.",
     "heroImageAlt": "Technicien MrBen en lavage de vitres extérieures sur une maison résidentielle",
     "heroCtaNote": "Réponse rapide • Aucune obligation",
@@ -147,7 +153,7 @@
     "serviceAreas": {
       "title": "Territoire desservi",
       "lead": "Nous desservons :",
-      "conjunction": "et",
+      "conjunction": "and",
       "outro": "les communautés avoisinantes.",
       "cities": {
         "lachute": "Lachute",
@@ -169,31 +175,329 @@
       }
     }
   },
-  "cityPages": {
-    "heroImageAlt": {
-      "lachute": "Lavage de vitres avant/après sur une maison résidentielle à Lachute",
-      "saint-jerome": "Service de lavage de vitres résidentiel à Saint-Jérôme",
-      "saint-sauveur": "Vitres extérieures propres sur une maison à Saint-Sauveur",
-      "mirabel": "Vitres fraîchement lavées sur une maison à Mirabel",
-      "blainville": "Nettoyage de gouttières sur une maison à Blainville",
-      "laval": "Lavage à pression d’une entrée résidentielle à Laval"
-    }
-  },
-  "territory": {
-    "city": {
-      "sourceOfTruth": "MrBen offre le nettoyage de vitres résidentiel et commercial à {city} et dans les Laurentides."
-    }
-  },
-  "jsonld": {
-    "localBusiness": {
-      "description": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur dans les Laurentides, notamment à Lachute, Saint-Jérôme et Mirabel."
+  "gutterCleaning": {
+    "metaTitle": "Nettoyage de gouttières dans les Laurentides | Mr. Ben",
+    "metaDescription": "Service professionnel de vidange de gouttières à Lachute, Saint-Jérôme et Mirabel. Retrait des débris, débouchage de descentes et protection. Estimation gratuite!",
+    "heroKicker": "Service de nettoyage de gouttières",
+    "heroTitle": "Protégez votre maison des infiltrations",
+    "heroSubtitle": "Retrait complet des débris et vérification des descentes pour un drainage optimal.",
+    "heroCTA": "Obtenir une estimation gratuite",
+    "sourceOfTruth": "MrBen offre un service complet de nettoyage de gouttières dans les Laurentides pour prévenir les dégâts d'eau et protéger vos fondations.",
+    "heroImageAlt": "Technicien enlevant les feuilles des gouttières sur une maison résidentielle",
+    "heroCtaNote": "Réponse rapide • Aucune obligation",
+    "heroTrust1": "Retrait des débris",
+    "heroTrust2": "Test d'écoulement",
+    "heroTrust3": "Entièrement assuré",
+    "whyUsTitle": "Pourquoi choisir Mr. Ben pour vos gouttières?",
+    "whyUsSubtitle": "Nous faisons le travail dangereux à votre place. Sécuritaire, propre et efficace.",
+    "whyUs": {
+      "point1": {
+        "title": "Sécurité avant tout",
+        "desc": "Nous utilisons des stabilisateurs et de l'équipement de sécurité pour accéder aux hauteurs sans risque."
+      },
+      "point2": {
+        "title": "Aucun dégât laissé",
+        "desc": "Nous mettons les débris en sac. Votre terrain sera plus propre qu'à notre arrivée."
+      },
+      "point3": {
+        "title": "Descentes débouchées",
+        "desc": "Nettoyer la gouttière ne suffit pas; nous nous assurons que l'eau s'évacue loin de la maison."
+      },
+      "point4": {
+        "title": "Inspection préventive",
+        "desc": "Nous vous signalons les clous lâches, la rouille ou les problèmes de toiture visibles."
+      }
     },
-    "city": {
-      "serviceNamePrefix": "Lavage de vitres à ",
-      "serviceDescriptionPrefix": "Service de lavage de vitres et d’entretien extérieur offert à "
+    "processTitle": "Notre processus de nettoyage",
+    "processSubtitle": "Une approche systématique pour garantir que votre système de drainage fonctionne parfaitement.",
+    "process": {
+      "step1": {
+        "title": "Retrait des débris",
+        "desc": "Nous enlevons manuellement les feuilles, branches et la boue des gouttières."
+      },
+      "step2": {
+        "title": "Débouchage des descentes",
+        "desc": "Nous vérifions et rinçons les descentes pluviales pour éliminer les bouchons cachés."
+      },
+      "step3": {
+        "title": "Test d'écoulement",
+        "desc": "Nous faisons couler de l'eau pour vérifier que le drainage se fait correctement."
+      },
+      "step4": {
+        "title": "Nettoyage du site",
+        "desc": "Nous ramassons tous les déchets et rinçons les éclaboussures sur le revêtement ou le sol."
+      },
+      "includedTitle": "Ce qui est inclus",
+      "included1": "Retrait de tous les débris des gouttières",
+      "included2": "Rinçage des descentes et débouchage",
+      "included3": "Mise en sac et disposition des déchets",
+      "included4": "Inspection visuelle de l'état des gouttières",
+      "included5": "Nettoyage de la zone au sol"
+    },
+    "stats": {
+      "title": "Pourquoi c'est important",
+      "years": {
+        "title": "Éviter les fuites",
+        "desc": "Les gouttières bouchées causent des infiltrations au toit."
+      },
+      "windows": {
+        "title": "Sécurité fondations",
+        "desc": "Les débordements endommagent vos fondations."
+      },
+      "rating": {
+        "title": "Contrôle nuisibles",
+        "desc": "Les feuilles humides attirent les moustiques."
+      },
+      "guarantee": {
+        "title": "Prévention glace",
+        "desc": "Des gouttières propres réduisent les barrages de glace."
+      }
+    },
+    "testimonials": {
+      "title": "Clients satisfaits",
+      "quote1": {
+        "text": "Mes gouttières débordaient comme des chutes. Mr. Ben a tout nettoyé et maintenant tout s'écoule parfaitement. Travail super propre!",
+        "author": "Mark S., Saint-Sauveur",
+        "photoAlt": "Client Mark S."
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": {
+        "0": {
+          "q": "À quelle fréquence nettoyer les gouttières?",
+          "a": "Au moins deux fois par an: fin printemps (après les semences) et fin automne (après les feuilles)."
+        },
+        "1": {
+          "q": "Nettoyez-vous les descentes?",
+          "a": "Oui! Une gouttière propre est inutile si le tuyau est bouché. Nous les rinçons pour assurer l'écoulement."
+        },
+        "2": {
+          "q": "Dois-je être présent?",
+          "a": "Non, tant que nous avons accès au robinet d'eau et au périmètre de la maison."
+        },
+        "3": {
+          "q": "Réparez-vous les gouttières brisées?",
+          "a": "Nous pouvons refixer des clous lâches, mais nous nous concentrons sur le nettoyage. Pour des réparations majeures, nous pouvons référer un spécialiste."
+        },
+        "4": {
+          "q": "Est-ce salissant?",
+          "a": "Non. Nous ramassons les débris à la main dans des sacs. Nous ne soufflons pas les feuilles partout sur votre terrain."
+        },
+        "5": {
+          "q": "Et si j'ai des protège-gouttières?",
+          "a": "Si vous avez des grilles, nous pouvons brosser le dessus. S'il faut les démonter pour nettoyer l'intérieur, des frais supplémentaires peuvent s'appliquer."
+        }
+      }
+    },
+    "serviceAreas": {
+      "title": "Territoire desservi",
+      "lead": "Nous desservons :",
+      "conjunction": "et",
+      "outro": "les communautés avoisinantes.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Prêt pour la pluie?",
+      "subtitle": "Réservez votre nettoyage de gouttières aujourd'hui et protégez votre maison."
+    },
+    "jsonld": {
+      "service": {
+        "name": "Nettoyage de gouttières résidentiel",
+        "description": "Service professionnel de nettoyage de gouttières incluant le retrait des débris, le rinçage des descentes et le nettoyage du site."
+      }
     }
+  },
+  "sidingCleaning": {
+    "metaTitle": "Nettoyage de revêtement extérieur | Mr. Ben",
+    "metaDescription": "Lavage de revêtement sécuritaire dans les Laurentides. Éliminez la moisissure et la saleté du vinyle, de l'aluminium et du bois. Estimation gratuite!",
+    "heroKicker": "Nettoyage de revêtement",
+    "heroTitle": "Révélez la vraie couleur de votre maison",
+    "heroSubtitle": "Nettoyage doux et efficace pour éliminer la saleté, les algues et les années d'accumulation.",
+    "heroCTA": "Obtenir une estimation gratuite",
+    "sourceOfTruth": "MrBen offre des services de nettoyage de revêtement pour restaurer l'apparence des maisons à Lachute, Mirabel et Saint-Jérôme.",
+    "heroImageAlt": "Technicien lavant le revêtement en vinyle d'une maison blanche",
+    "heroCtaNote": "Réponse rapide • Aucune obligation",
+    "heroTrust1": "Méthodes douces",
+    "heroTrust2": "Valeur ajoutée",
+    "heroTrust3": "Entièrement assuré",
+    "whyUsTitle": "Pourquoi laver votre revêtement?",
+    "whyUsSubtitle": "Ce n'est pas juste esthétique; c'est une protection contre les dommages à long terme.",
+    "whyUs": {
+      "point1": {
+        "title": "Prévenir les dommages",
+        "desc": "La moisissure et les algues peuvent dégrader les surfaces. Le nettoyage prolonge la durée de vie de votre revêtement."
+      },
+      "point2": {
+        "title": "Coup d'éclat instantané",
+        "desc": "Un extérieur propre rajeunit l'apparence de votre maison de 5 à 10 ans."
+      },
+      "point3": {
+        "title": "Techniques sécuritaires",
+        "desc": "Nous ajustons la pression et les produits selon votre matériau (vinyle, aluminium ou bois)."
+      },
+      "point4": {
+        "title": "Béton et terrasses",
+        "desc": "Nous pouvons aussi rafraîchir vos entrées, trottoirs et patios lors de notre visite."
+      }
+    },
+    "processTitle": "Notre approche de nettoyage",
+    "processSubtitle": "Nous traitons votre maison comme la nôtre, avec des méthodes sûres et efficaces.",
+    "process": {
+      "step1": {
+        "title": "Évaluation",
+        "desc": "Nous identifions le type de matériau et la nature des taches (organiques vs routières)."
+      },
+      "step2": {
+        "title": "Préparation",
+        "desc": "Nous protégeons les plantes délicates et nous assurons que les fenêtres sont bien fermées."
+      },
+      "step3": {
+        "title": "Application",
+        "desc": "Nous appliquons une solution nettoyante spécialisée pour déloger la saleté."
+      },
+      "step4": {
+        "title": "Rinçage et finition",
+        "desc": "Un rinçage minutieux laisse votre maison fraîche et sans résidus."
+      },
+      "includedTitle": "Surfaces que nous nettoyons",
+      "included1": "Revêtement Vinyle & Aluminium",
+      "included2": "Terrasses en bois & composite",
+      "included3": "Entrées en béton & pavé",
+      "included4": "Patios & trottoirs",
+      "included5": "Clôtures & rampes"
+    },
+    "stats": {
+      "title": "Les bénéfices",
+      "years": {
+        "title": "Meilleure valeur",
+        "desc": "Une maison propre vaut plus cher."
+      },
+      "windows": {
+        "title": "Maison saine",
+        "desc": "Éliminez spores et pollen."
+      },
+      "rating": {
+        "title": "Durabilité",
+        "desc": "Protégez peinture et matériaux."
+      },
+      "guarantee": {
+        "title": "Satisfaction",
+        "desc": "Nous garantissons nos résultats."
+      }
+    },
+    "testimonials": {
+      "title": "Clients satisfaits",
+      "quote1": {
+        "text": "Je pensais devoir repeindre ma maison, mais Mr. Ben l'a lavée et elle a l'air neuve! Ça m'a fait économiser des milliers de dollars.",
+        "author": "Pierre L., Mirabel",
+        "photoAlt": "Client Pierre L."
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": {
+        "0": {
+          "q": "La haute pression va-t-elle abîmer mon revêtement?",
+          "a": "Nous ajustons la pression. Pour la plupart des revêtements, nous utilisons une technique de « lavage doux » qui mise sur les produits nettoyants plutôt que la force brute."
+        },
+        "1": {
+          "q": "Est-ce que ça inclut les vitres?",
+          "a": "Le lavage extérieur éclabousse souvent les vitres. Nous recommandons fortement de combiner avec un lavage de vitres pour une finition parfaite."
+        },
+        "2": {
+          "q": "Pouvez-vous enlever les taches d'huile?",
+          "a": "Nous pouvons les atténuer significativement, mais les vieilles taches profondes sont parfois permanentes. Nous serons honnêtes lors de l'évaluation."
+        },
+        "3": {
+          "q": "Dois-je être présent?",
+          "a": "Non, tant que nous avons accès à l'eau et que toutes les fenêtres sont fermées."
+        },
+        "4": {
+          "q": "Vos produits sont-ils sûrs pour les plantes?",
+          "a": "Oui. Nous arrosons les plantes avant et après pour diluer toute éclaboussure."
+        },
+        "5": {
+          "q": "À quelle fréquence laver ma maison?",
+          "a": "Généralement tous les 1 à 2 ans, selon la présence d'arbres et l'humidité."
+        }
+      }
+    },
+    "serviceAreas": {
+      "title": "Territoire desservi",
+      "lead": "Nous desservons :",
+      "conjunction": "et",
+      "outro": "les communautés avoisinantes.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Redonnez un aspect neuf à votre maison",
+      "subtitle": "Demandez votre estimation gratuite pour le nettoyage extérieur dès aujourd'hui."
+    },
+    "jsonld": {
+      "service": {
+        "name": "Nettoyage de revêtement extérieur",
+        "description": "Service professionnel de lavage de maison et nettoyage de revêtement."
+      }
+    }
+  },
+  "pricing": {
+    "kicker": "Prix Transparents",
+    "title": "Estimations Simples et Claires",
+    "subtitle": "Pas de frais cachés. Juste un prix honnête pour un travail de qualité.",
+    "card1": {
+      "title": "Plain-Pied",
+      "price": "165$+",
+      "desc": "Parfait pour les maisons d'un étage.",
+      "features": [
+        "Intérieur et Extérieur",
+        "Moustiquaires Essuyés",
+        "Cadres et Rebords"
+      ]
+    },
+    "card2": {
+      "title": "Maison à Étages",
+      "price": "245$+",
+      "desc": "Nettoyage complet pour grandes maisons.",
+      "features": [
+        "Intérieur et Extérieur",
+        "Vitres en Hauteur",
+        "Rails Aspirés"
+      ]
+    },
+    "card3": {
+      "title": "Nettoyage Gouttières",
+      "price": "145$+",
+      "desc": "Protégez votre maison des dégâts d'eau.",
+      "features": [
+        "Retrait des Débris",
+        "Descentes Vérifiées",
+        "Photos sur Demande"
+      ]
+    },
+    "note": "Les prix varient selon le nombre de fenêtres et l'accessibilité. Contactez-nous pour un devis précis."
   },
   "territoryCityPage": {
+    "jsonld": {
+      "city": {
+        "serviceNamePrefix": "Lavage de vitres à ",
+        "serviceDescriptionPrefix": "Service de lavage de vitres et d’entretien extérieur offert à "
+      }
+    },
     "h1": "Nettoyage de vitres à {CITY}",
     "servicesTitle": "Services offerts à {CITY}",
     "buildingsTitle": "Types de bâtiments desservis",
@@ -241,6 +545,267 @@
         "q": "Êtes-vous assurés ?",
         "a": "Oui, notre équipe est couverte par une assurance responsabilité pour les travaux réalisés sur votre propriété."
       }
-    ]
+    ],
+    "servicesLabel": "Services offerts",
+    "cta": "Obtenir une estimation gratuite",
+    "ctaReassurance": "Réponse rapide • Aucune obligation",
+    "napLabel": "Coordonnées",
+    "heroImageAlt": {
+      "lachute": "Lavage de vitres avant/après sur une maison résidentielle à Lachute",
+      "saint-jerome": "Service de lavage de vitres résidentiel à Saint-Jérôme",
+      "saint-sauveur": "Vitres extérieures propres sur une maison à Saint-Sauveur",
+      "mirabel": "Vitres fraîchement lavées sur une maison à Mirabel",
+      "blainville": "Nettoyage de gouttières sur une maison à Blainville",
+      "laval": "Lavage à pression d’une entrée résidentielle à Laval"
+    },
+    "services": {
+      "windowCleaning": "Lavage de vitres",
+      "gutterCleaning": "Vidange de gouttières",
+      "sidingCleaning": "Nettoyage de revêtement"
+    }
+  },
+  "blog": {
+    "title": "Blogue",
+    "description": "Conseils, tutoriels et études de cas de l'équipe de MrBen.ca.",
+    "readMore": "Lire la suite"
+  },
+  "Header": {
+    "nav": {
+      "home": "Accueil",
+      "services": "Services",
+      "reviews": "Avis",
+      "territory": "Territoire",
+      "blog": "Blog",
+      "contact": "Contact",
+      "windows": "Vitres",
+      "gutters": "Gouttières",
+      "siding": "Revêtement"
+    },
+    "servicesDropdown": {
+      "windowCleaning": "Lavage de vitres"
+    },
+    "territoryDropdown": {
+      "lachute": "Lachute",
+      "saintJerome": "Saint-Jérôme",
+      "saintSauveur": "Saint-Sauveur",
+      "mirabel": "Mirabel",
+      "blainville": "Blainville",
+      "laval": "Laval"
+    },
+    "quote": "Obtenir une estimation gratuite",
+    "ctaReassurance": "Réponse rapide • Aucune obligation",
+    "cleaning": "Nettoyage",
+    "locale": {
+      "fr_short": "FR",
+      "en_short": "EN"
+    }
+  },
+  "Footer": {
+    "description": "Nettoyage de vitres, gouttières et revêtement extérieur dans les Laurentides.",
+    "company": "Entreprise",
+    "home": "Accueil",
+    "nav": {
+      "blog": "Blog",
+      "services": "Services",
+      "territory": "Territoire"
+    },
+    "services": {
+      "vitres": "Lavage de vitres",
+      "gouttieres": "Vidange de gouttières",
+      "pression": "Nettoyage à pression"
+    },
+    "territories": {
+      "lachute": "Lachute",
+      "stJerome": "Saint-Jérôme",
+      "mirabel": "Mirabel",
+      "blainville": "Blainville"
+    },
+    "contact": "Contact",
+    "reviewLink": "Voir nos avis",
+    "rights": "Tous droits réservés.",
+    "privacyPolicy": "Politique de confidentialité",
+    "review1Name": "Laurie",
+    "review1Text": "Très bon travail : nettoyage des vitres intérieure et extérieure, et nettoyage des gouttières encore cette année. Je recommande fortement !",
+    "review2Name": "Donna",
+    "review2Text": "Très satisfaite du service offert par MrBen. Il est arrivé à l’heure et a été très minutieux dans le nettoyage.",
+    "review3Name": "Hadassah",
+    "review3Text": "Équipe efficace, rapide et polie, avec un service à prix raisonnable. Je recommande cette entreprise !"
+  },
+  "MrBenRedesignPreview": {
+    "langShort": "FR",
+    "langLabel": "Français",
+    "toggleTo": "EN",
+    "topTagline": "Estimation gratuite • Service courtois et ponctuel",
+    "privacyPolicyLink": "Politique de confidentialité",
+    "navServices": "Services",
+    "navGallery": "Réalisations",
+    "navReviews": "Avis",
+    "navTerritory": "Territoire",
+    "navContact": "Contact",
+    "navCall": "Appeler",
+    "navOnline": "Obtenir une estimation gratuite",
+    "navSubTitle": "Nettoyage",
+    "navSub": "Vitres • Gouttières • Revêtement",
+    "heroBadgeA": "Résidentiel et commercial",
+    "heroBadgeB": "Laurentides et environs",
+    "heroH1a": "Lavage de vitres résidentiel et commercial dans les Laurentides",
+    "heroH1b": "Lachute, Saint-Jérôme, Mirabel et environs",
+    "heroP": "Équipe attentionnée, courtoise et ponctuelle — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
+    "heroCTA": "Obtenir une estimation gratuite",
+    "primaryCTA": "Obtenir une estimation gratuite",
+    "ctaReassurance": "Réponse rapide • Aucune obligation",
+    "heroTrust1": "Google",
+    "heroTrust2": "Entreprise locale des Laurentides",
+    "heroTrust3": "Entièrement assuré",
+    "heroTrust4": "Résidentiel et commercial",
+    "heroVerifiedByGoogle": "Vérifié sur Google",
+    "heroLeaveReview": "Laisser un avis Google",
+    "heroStat1T": "10+ ans",
+    "heroStat1S": "Au service de la communauté depuis 2007.",
+    "heroStat2T": "Ponctuel",
+    "heroStat2S": "Communication claire",
+    "heroStat3T": "Professionnel",
+    "heroStat3S": "Équipement adapté",
+    "secServicesK": "Ce qu’on fait",
+    "secServicesT": "Services principaux",
+    "secServicesS": "Trois services, un standard: travail propre, rapide et adapté à vos besoins.",
+    "serviceVitresT": "Lavage de vitres",
+    "serviceVitresD": "Intérieur/extérieur, cadrages, moustiquaires — pour maison plain-pied ou plusieurs étages.",
+    "serviceVitresH": "À partir de 165$ (plain-pied)",
+    "serviceVitresB1": "Résidentiel et commercial",
+    "serviceVitresB2": "Équipement pour hauteurs",
+    "serviceVitresB3": "Finition sans traces",
+    "serviceVitresIconAlt": "Icône lavage de vitres",
+    "serviceGoutT": "Vidange de gouttières",
+    "serviceGoutD": "Prévenez débordements et dommages en gardant vos gouttières dégagées.",
+    "serviceGoutH": "Inspection + nettoyage",
+    "serviceGoutB1": "Retrait des débris",
+    "serviceGoutB2": "Vérification d’écoulement",
+    "serviceGoutB3": "Conseils prévention",
+    "serviceGoutIconAlt": "Icône vidange de gouttières",
+    "servicePressT": "Nettoyage de revêtement",
+    "servicePressD": "Redonnez une apparence neuve aux surfaces: bois, béton, revêtement.",
+    "servicePressH": "Avant / Après",
+    "servicePressB1": "Allées et patios",
+    "servicePressB2": "Extérieur de la maison",
+    "servicePressB3": "Rampes et terrasses",
+    "servicePressIconAlt": "Icône nettoyage à pression",
+    "serviceCTA": "Obtenir une estimation gratuite",
+    "fastQuoteT": "Soumission plus rapide",
+    "fastQuoteP": "Envoyez quelques photos de l’extérieur de votre maison pour accélérer l’estimation.",
+    "fastQuoteEmail": "Obtenir une estimation gratuite",
+    "fastQuoteCall": "Appeler",
+    "secGalK": "Avant / Après",
+    "secGalT": "Réalisations",
+    "secGalS": "Découvrez nos réalisations en lavage de vitres, vidange de gouttières et nettoyage à pression. Des résultats professionnels pour maisons et commerces dans votre région.",
+    "tip": "Conseil",
+    "tipText": "Utilisez 12–20 photos maximum, bien cadrées, et ajoutez 3 sections: vitres, gouttières, pression.",
+    "secRevK": "Confiance",
+    "secRevT": "Ce que les clients aiment",
+    "secRevS": "Basé sur de vrais avis Google de nos clients.",
+    "reviewLabel": "Client résidentiel",
+    "val1T": "Ponctualité",
+    "val1D": "On respecte votre horaire et votre temps.",
+    "val2T": "Professionnalisme",
+    "val2D": "Équipement et méthodes adaptées à chaque surface.",
+    "val3T": "Résultat",
+    "val3D": "Détails soignés et nettoyage complet de la zone de travail.",
+    "galleryToggleMore": "Voir plus de réalisations",
+    "galleryToggleLess": "Voir moins",
+    "trustToggleMore": "Voir plus d’arguments de confiance",
+    "trustToggleLess": "Voir moins",
+    "secAreaK": "Territoire",
+    "secAreaT": "On se déplace chez vous",
+    "secAreaS": "Si vous êtes dans la région, il y a de fortes chances qu’on puisse vous servir.",
+    "cities": "Villes desservies",
+    "nearbyCities": "et les villes avoisinantes",
+    "areaP": "Pour les secteurs avoisinants, envoyez votre adresse et on vous confirme rapidement.",
+    "territory": {
+      "googleTile": {
+        "title": "MrBen.ca",
+        "ratingValue": "5,0",
+        "reviewCount": "(61)",
+        "subtitle": "Service de lavage de vitres",
+        "aria": "Lire nos avis Google"
+      }
+    },
+    "zonesServedLabel": "Zones desservies :",
+    "convTip": "Astuce conversion",
+    "convTipText": "Ajoutez une carte Google + bouton “Itinéraire” et un encadré “Disponibilités” pour réduire les frictions.",
+    "googleMapsAlt": "Voir notre fiche Google Maps",
+    "contactK": "Estimation gratuite",
+    "contactT": "Contactez-nous",
+    "contactP": "Décrivez votre besoin et on vous répond rapidement. Pour accélérer, ajoutez des photos.",
+    "phone": "Téléphone",
+    "email": "Courriel",
+    "hours": "Heures",
+    "hoursText": "Lundi–Vendredi • 8h–17h",
+    "services": "Nettoyage",
+    "servicesMenuVitres": "Vitres",
+    "servicesMenuGout": "Gouttières",
+    "servicesMenuSiding": "Revêtement",
+    "formT": "Obtenir une estimation gratuite",
+    "open": "Ouvrir",
+    "name": "Nom",
+    "phoneLabel": "Téléphone",
+    "emailLabel": "Courriel",
+    "address": "Adresse",
+    "choose": "Choisissez un ou plusieurs services",
+    "servicesRequested": "Services demandés",
+    "chooseServices": "Choisir les services",
+    "selected": "sélectionné(s)",
+    "desc": "Description",
+    "descHint": "Astuce : ajouter des photos accélère l’obtention d’un devis.",
+    "photoLabel": "Ajoutez quelques images de votre maison ici !",
+    "photoSelectButton": "Sélectionner des images",
+    "photoHelper": "JPG/PNG • 15 Mo max par photo • 1 à 5 photos",
+    "photoErrorMax": "Maximum 5 photos.",
+    "photoErrorType": "Formats acceptés : JPG/JPEG et PNG.",
+    "photoErrorSize": "Chaque photo doit faire 5 Mo ou moins.",
+    "photoRemove": "Retirer",
+    "photoSelected": "{count} sur {max} sélectionnées",
+    "send": "Envoyer la demande",
+    "modalTitle": "Obtenir une estimation gratuite",
+    "modalStep": "Étape",
+    "modalOf": "sur",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "continue": "Continuer",
+    "citiesList": "Hawkesbury, Lachute, Saint-Sauveur, Saint-Jérôme, Mirabel, Blainville, Saint-Eustache, Laval",
+    "serviceOption1": "Lavage de vitres intérieures/extérieures",
+    "serviceOption2": "Lavage de vitres extérieures seulement",
+    "serviceOption3": "Vidange de gouttières",
+    "serviceOption4": "Lavage de revêtement",
+    "descPlaceholder": "Ex.: maison plain-pied, 12 fenêtres, besoin vitres + gouttières...",
+    "networkError": "Erreur réseau. Veuillez réessayer.",
+    "sendSuccess": "Message envoyé. Nous vous contacterons sous peu.",
+    "sendError": "Échec de l’envoi. Veuillez réessayer.",
+    "sending": "Envoi en cours...",
+    "workAlt": "Réalisation",
+    "thumbAlt": "Miniature",
+    "pricing": {
+      "kicker": "Prix Transparents",
+      "title": "Estimations Simples et Claires",
+      "subtitle": "Pas de frais cachés. Juste un prix honnête pour un travail de qualité.",
+      "card1": {
+        "title": "Plain-Pied",
+        "price": "165$+",
+        "desc": "Parfait pour les maisons d'un étage.",
+        "features": ["Intérieur et Extérieur", "Moustiquaires Essuyés", "Cadres et Rebords"]
+      },
+      "card2": {
+        "title": "Maison à Étages",
+        "price": "245$+",
+        "desc": "Nettoyage complet pour grandes maisons.",
+        "features": ["Intérieur et Extérieur", "Vitres en Hauteur", "Rails Aspirés"]
+      },
+      "card3": {
+        "title": "Nettoyage Gouttières",
+        "price": "145$+",
+        "desc": "Protégez votre maison des dégâts d'eau.",
+        "features": ["Retrait des Débris", "Descentes Vérifiées", "Photos sur Demande"]
+      },
+      "note": "Les prix varient selon le nombre de fenêtres et l'accessibilité. Contactez-nous pour un devis précis."
+    }
   }
 }

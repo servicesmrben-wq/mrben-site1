@@ -1,12 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
-import type { CityPage as CityPageData, Locale } from "./city-data";
+import type { CityPage as CityPageData, Locale } from "../../territoire/city-data";
 import { getCityUrl } from "./seo";
 import SeoFaq from "@/app/components/SeoFaq";
-import { getTranslations } from "@/app/lib/translations";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
 import { getLocalBusinessProvider } from "@/app/lib/seo/schema";
+import { useLocale, useTranslations } from "next-intl";
 
 const BRAND = {
   name: "MrBen.ca",
@@ -17,31 +19,6 @@ const BRAND = {
 const DEFAULT_PRICE_LOW = 180;
 const DEFAULT_PRICE_HIGH = 450;
 
-function interpolate(template: string, values: Record<string, string>) {
-  return Object.entries(values).reduce(
-    (result, [key, value]) => result.replaceAll(`{${key}}`, value),
-    template,
-  );
-}
-
-const LOCALE_LABELS: Record<
-  Locale,
-  { servicesLabel: string; cta: string; ctaReassurance: string; napLabel: string }
-> = {
-  fr: {
-    servicesLabel: "Services offerts",
-    cta: "Obtenir une estimation gratuite",
-    ctaReassurance: "Réponse rapide • Aucune obligation",
-    napLabel: "Coordonnées",
-  },
-  en: {
-    servicesLabel: "Services offered",
-    cta: "Get a free estimate",
-    ctaReassurance: "Fast response • No obligation",
-    napLabel: "Business info",
-  },
-};
-
 const CITY_HERO_IMAGES: Record<string, string> = {
   lachute: "/nettoyage-vitres-maison-lachute-laurentides-mrben.jpg",
   "saint-jerome": "/nettoyage-vitres-maison-saint-jerome-laurentides-mrben.jpg",
@@ -51,49 +28,50 @@ const CITY_HERO_IMAGES: Record<string, string> = {
   laval: "/nettoyage-vitres-maison-laval-laurentides-mrben.jpg",
 };
 
-export function CityPage({ city, locale }: { city: CityPageData; locale: Locale }) {
+export function CityPage({ city }: { city: CityPageData }) {
+  const locale = useLocale() as Locale;
   const content = city[locale];
-  const labels = LOCALE_LABELS[locale];
-  const t = getTranslations(locale);
-  const citySourceOfTruth = t("territory.city.sourceOfTruth").replace("{city}", city.name);
+  const t = useTranslations('territoryCityPage');
+  const tCommon = useTranslations('territory.city');
+  const citySourceOfTruth = tCommon("sourceOfTruth", { city: city.name });
   const priceLow = city.priceLow ?? DEFAULT_PRICE_LOW;
   const priceHigh = city.priceHigh ?? DEFAULT_PRICE_HIGH;
-  const pageH1 = interpolate(t("territoryCityPage.h1"), { CITY: city.name });
-  const servicesTitle = interpolate(t("territoryCityPage.servicesTitle"), { CITY: city.name });
-  const buildingsTitle = t("territoryCityPage.buildingsTitle");
-  const pricingTitle = t("territoryCityPage.pricingTitle");
-  const whyTitle = interpolate(t("territoryCityPage.whyTitle"), { CITY: city.name });
-  const faqTitle = t("territoryCityPage.faqTitle");
-  const pricingSentence = interpolate(t("territoryCityPage.pricingSentence"), {
+  const pageH1 = t("h1", { CITY: city.name });
+  const servicesTitle = t("servicesTitle", { CITY: city.name });
+  const buildingsTitle = t("buildingsTitle");
+  const pricingTitle = t("pricingTitle");
+  const whyTitle = t("whyTitle", { CITY: city.name });
+  const faqTitle = t("faqTitle");
+  const pricingSentence = t("pricingSentence", {
     CITY: city.name,
     LOW: String(priceLow),
     HIGH: String(priceHigh),
   });
   const servicesBullets = [
-    t("territoryCityPage.servicesBullets.0"),
-    t("territoryCityPage.servicesBullets.1"),
-    t("territoryCityPage.servicesBullets.2"),
-    t("territoryCityPage.servicesBullets.3"),
+    t("servicesBullets.0"),
+    t("servicesBullets.1"),
+    t("servicesBullets.2"),
+    t("servicesBullets.3"),
   ];
   const buildingsBullets = [
-    t("territoryCityPage.buildingsBullets.0"),
-    t("territoryCityPage.buildingsBullets.1"),
-    t("territoryCityPage.buildingsBullets.2"),
-    t("territoryCityPage.buildingsBullets.3"),
+    t("buildingsBullets.0"),
+    t("buildingsBullets.1"),
+    t("buildingsBullets.2"),
+    t("buildingsBullets.3"),
   ];
-  const whyParagraph = interpolate(t("territoryCityPage.whyParagraph"), { CITY: city.name });
+  const whyParagraph = t("whyParagraph", { CITY: city.name });
   const whyBullets = [
-    t("territoryCityPage.whyBullets.0"),
-    t("territoryCityPage.whyBullets.1"),
-    t("territoryCityPage.whyBullets.2"),
-    t("territoryCityPage.whyBullets.3"),
+    t("whyBullets.0"),
+    t("whyBullets.1"),
+    t("whyBullets.2"),
+    t("whyBullets.3"),
   ];
   const faqItems = [0, 1, 2, 3, 4].map((index) => ({
-    q: t(`territoryCityPage.faq.${index}.q`),
-    a: t(`territoryCityPage.faq.${index}.a`),
+    q: t(`faq.${index}.q`),
+    a: t(`faq.${index}.a`),
   }));
   const heroImage = CITY_HERO_IMAGES[city.slug];
-  const heroImageAlt = t(`cityPages.heroImageAlt.${city.slug}`);
+  const heroImageAlt = t(`heroImageAlt.${city.slug}`);
   const cityServiceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -108,7 +86,7 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
         name: locale === "fr" ? "Québec" : "Quebec",
       },
     },
-    url: getCityUrl(city.slug),
+    url: getCityUrl(city.slug, locale),
   };
 
   return (
@@ -146,13 +124,13 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
           ) : null}
           <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-zinc-600">
             <span className="rounded-full border border-zinc-200 bg-white px-3 py-1">
-              Lavage de vitres
+              {t("services.windowCleaning")}
             </span>
             <span className="rounded-full border border-zinc-200 bg-white px-3 py-1">
-              Vidange de gouttières
+              {t("services.gutterCleaning")}
             </span>
             <span className="rounded-full border border-zinc-200 bg-white px-3 py-1">
-              Nettoyage de revêtement
+              {t("services.sidingCleaning")}
             </span>
           </div>
           <div className="mt-8 flex flex-col items-start gap-1">
@@ -160,9 +138,9 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
               href="/#contact"
               className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
             >
-              {labels.cta}
+              {t("cta")}
             </Link>
-            <span className="text-xs text-zinc-500">{labels.ctaReassurance}</span>
+            <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
           </div>
         </div>
       </section>
@@ -176,15 +154,15 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
           </div>
           <aside className="rounded-3xl border border-zinc-200 bg-white p-6 text-sm text-zinc-600 shadow-sm">
             <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-              {labels.servicesLabel}
+              {t("servicesLabel")}
             </div>
             <ul className="mt-4 space-y-2">
-              <li>Lavage de vitres</li>
-              <li>Vidange de gouttières</li>
-              <li>Nettoyage de revêtement</li>
+              <li>{t("services.windowCleaning")}</li>
+              <li>{t("services.gutterCleaning")}</li>
+              <li>{t("services.sidingCleaning")}</li>
             </ul>
             <div className="mt-6 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-              {labels.napLabel}
+              {t("napLabel")}
             </div>
             <div className="mt-3">
               <div className="font-semibold text-zinc-900">{BRAND.name}</div>
@@ -239,19 +217,15 @@ export function CityPage({ city, locale }: { city: CityPageData; locale: Locale 
                 href="/#contact"
                 className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
               >
-                {labels.cta}
+                {t("cta")}
               </Link>
-              <span className="text-xs text-zinc-500">{labels.ctaReassurance}</span>
+              <span className="text-xs text-zinc-500">{t("ctaReassurance")}</span>
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-zinc-200 bg-zinc-50">
-        <div className="mx-auto max-w-5xl px-4 py-8 text-sm text-zinc-600">
-          <span className="font-semibold text-zinc-900">{BRAND.name}</span> • {BRAND.phoneDisplay}
-        </div>
-      </footer>
+
     </main>
   );
 }

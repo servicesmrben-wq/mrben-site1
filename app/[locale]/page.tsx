@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 
-import SeoFaq from "./components/SeoFaq";
-import MrBenRedesignPreview from "./MrBenRedesignPreview";
-import { getLocaleFromRequest } from "./lib/locale";
-import { toJsonLdString } from "./lib/seo/jsonld";
-import { getLocalBusinessProvider } from "./lib/seo/schema";
-import { getTranslations } from "./lib/translations";
+import SeoFaq from "../components/SeoFaq";
+import MrBenRedesignPreview from "../MrBenRedesignPreview";
+import { toJsonLdString } from "../lib/seo/jsonld";
+import { getLocalBusinessProvider } from "../lib/seo/schema";
+import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
@@ -20,14 +19,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Page() {
-  const locale = await getLocaleFromRequest();
-  const t = getTranslations(locale);
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'home' });
   const provider = getLocalBusinessProvider();
-  const homeSourceOfTruth = t("home.sourceOfTruth");
+  const homeSourceOfTruth = t("sourceOfTruth"); // Renamed key
   const homeFaqItems = [0, 1, 2, 3, 4].map((index) => ({
-    q: t(`home.faq.items.${index}.q`),
-    a: t(`home.faq.items.${index}.a`),
+    q: t(`faq.items.${index}.q`), // Renamed key
+    a: t(`faq.items.${index}.a`), // Renamed key
   }));
 
   const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville"].map((city) => ({
@@ -47,8 +46,8 @@ export default async function Page() {
     url: BASE_URL,
     image: "https://mrben.ca/hero.jpg",
     areaServed: servedCities,
-    serviceType: "Window cleaning",
-    description: t("jsonld.localBusiness.description"),
+    serviceType: locale === "fr" ? "Lavage de vitres" : "Window cleaning",
+    description: t("jsonld.localBusiness.description"), // Renamed key
   };
 
   return (
@@ -58,7 +57,7 @@ export default async function Page() {
         dangerouslySetInnerHTML={{ __html: toJsonLdString(localBusinessJsonLd) }}
       />
       <MrBenRedesignPreview sourceOfTruth={homeSourceOfTruth} />
-      <SeoFaq title={t("home.faq.title")} items={homeFaqItems} />
+      <SeoFaq title={t("faq.title")} items={homeFaqItems} />
     </>
   );
 }

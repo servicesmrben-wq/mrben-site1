@@ -1,68 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-
-import { useLocale } from "./LocaleProvider";
-import type { Locale } from "../lib/locale";
-
-const LABELS: Record<Locale, {
-  cleaning: string;
-  home: string;
-  services: string;
-  gallery: string;
-  reviews: string;
-  territory: string;
-  contact: string;
-  windows: string;
-  gutters: string;
-  siding: string;
-  call: string;
-  quote: string;
-  ctaReassurance: string;
-}> = {
-  fr: {
-    cleaning: "Nettoyage",
-    home: "Accueil",
-    services: "Services",
-    gallery: "Réalisations",
-    reviews: "Avis",
-    territory: "Territoire",
-    contact: "Contact",
-    windows: "Vitres",
-    gutters: "Gouttières",
-    siding: "Revêtement",
-    call: "Appeler",
-    quote: "Obtenir une estimation gratuite",
-    ctaReassurance: "Réponse rapide • Aucune obligation",
-  },
-  en: {
-    cleaning: "Cleaning",
-    home: "Home",
-    services: "Services",
-    gallery: "Projects",
-    reviews: "Reviews",
-    territory: "Service area",
-    contact: "Contact",
-    windows: "Windows",
-    gutters: "Gutters",
-    siding: "Siding",
-    call: "Call",
-    quote: "Get a free estimate",
-    ctaReassurance: "Fast response • No obligation",
-  },
-};
-
-const LOCALE_ROUTE_MAP: Record<Locale, Record<string, string>> = {
-  fr: {
-    "/services/window-cleaning": "/services/lavage-de-vitres",
-  },
-  en: {
-    "/services/lavage-de-vitres": "/services/window-cleaning",
-  },
-};
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/navigation"; // Use custom navigation hooks
 
 const BRAND = {
   phoneHref: "tel:+15146997145",
@@ -70,62 +11,69 @@ const BRAND = {
 };
 
 export default function Header() {
-  const { locale, setLocale } = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const locale = useLocale();
+  const t = useTranslations('Header'); // Assuming 'Header' namespace in your translation files
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const labels = LABELS[locale];
   const navLinks = useMemo(
     () => [
-      { label: labels.home, href: "/" },
-      { label: labels.services, href: "/#services" },
-      { label: labels.reviews, href: "/#avis" },
-      { label: labels.territory, href: "/#territoire" },
-      { label: labels.contact, href: "/#contact" },
+      { label: t('nav.home'), href: "/" },
+      { label: t('nav.services'), href: "/#services" },
+      { label: t('nav.reviews'), href: "/#avis" },
+      { label: t('nav.territory'), href: "/#territoire" },
+      { label: t('nav.blog'), href: "/blog" },
+      { label: t('nav.contact'), href: "/#contact" },
     ],
-    [labels]
+    [t]
   );
 
   const cleaningLinks = [
-    { label: labels.windows, href: "/#service-vitres" },
-    { label: labels.gutters, href: "/#service-gouttieres" },
-    { label: labels.siding, href: "/#service-revetement" },
+    { label: t('nav.windows'), href: "/#service-vitres" },
+    { label: t('nav.gutters'), href: "/#service-gouttieres" },
+    { label: t('nav.siding'), href: "/#service-revetement" },
   ];
 
   const servicesDropdownLinks = [
-    { label: "Lavage de vitre", href: "/services/lavage-de-vitres" },
+    {
+      label: t('servicesDropdown.windowCleaning'),
+      href: locale === "fr" ? "/services/lavage-de-vitres" : "/services/window-cleaning"
+    },
+    {
+      label: t('nav.gutters'),
+      href: locale === "fr" ? "/services/nettoyage-de-gouttieres" : "/services/gutter-cleaning"
+    },
+    {
+      label: t('nav.siding'),
+      href: locale === "fr" ? "/services/nettoyage-de-revetement" : "/services/siding-cleaning"
+    },
   ];
 
   const territoryDropdownLinks = [
-    { label: "Lachute", href: "/territoire/lachute" },
-    { label: "Saint-Jerome", href: "/territoire/saint-jerome" },
-    { label: "Saint-Sauveur", href: "/territoire/saint-sauveur" },
-    { label: "Mirabel", href: "/territoire/mirabel" },
-    { label: "Blainville", href: "/territoire/blainville" },
-    { label: "Laval", href: "/territoire/laval" },
+    { label: t('territoryDropdown.lachute'), href: "/territoire/lachute" },
+    { label: t('territoryDropdown.saintJerome'), href: "/territoire/saint-jerome" },
+    { label: t('territoryDropdown.saintSauveur'), href: "/territoire/saint-sauveur" },
+    { label: t('territoryDropdown.mirabel'), href: "/territoire/mirabel" },
+    { label: t('territoryDropdown.blainville'), href: "/territoire/blainville" },
+    { label: t('territoryDropdown.laval'), href: "/territoire/laval" },
   ];
 
-  const handleLocaleChange = (nextLocale: Locale) => {
+  const handleLocaleChange = (nextLocale: "en" | "fr") => {
     if (nextLocale === locale) {
       return;
     }
-
-    setLocale(nextLocale);
-
-    const search = searchParams?.toString();
-    const hash = typeof window !== "undefined" ? window.location.hash : "";
-    const mappedPath = LOCALE_ROUTE_MAP[nextLocale][pathname] ?? pathname;
-    const nextUrl = `${mappedPath}${search ? `?${search}` : ""}${hash}`;
-
-    if (mappedPath !== pathname || search || hash) {
-      router.push(nextUrl);
-    } else if (pathname.startsWith("/territoire")) {
-      router.refresh();
+    
+    // For specialized service pages, we should redirect to the correct slug
+    if (pathname === '/services/lavage-de-vitres' && nextLocale === 'en') {
+      router.replace('/services/window-cleaning', { locale: 'en' });
+    } else if (pathname === '/services/window-cleaning' && nextLocale === 'fr') {
+      router.replace('/services/lavage-de-vitres', { locale: 'fr' });
+    } else {
+      router.replace(pathname, { locale: nextLocale });
     }
-
+    
     setMenuOpen(false);
   };
 
@@ -171,7 +119,7 @@ export default function Header() {
           }`}
         >
           {navLinks.map((item) => {
-            if (item.label === labels.services) {
+            if (item.href === "/#services") {
               return (
                 <div key={item.href} className="relative group">
                   <Link
@@ -195,7 +143,7 @@ export default function Header() {
               );
             }
 
-            if (item.label === labels.territory) {
+            if (item.href === "/#territoire") {
               return (
                 <div key={item.href} className="relative group">
                   <Link
@@ -253,7 +201,7 @@ export default function Header() {
               }`}
               aria-pressed={locale === "fr"}
             >
-              FR
+              {t('locale.fr_short')}
             </button>
             <button
               type="button"
@@ -269,7 +217,7 @@ export default function Header() {
               }`}
               aria-pressed={locale === "en"}
             >
-              EN
+              {t('locale.en_short')}
             </button>
           </div>
           <a
@@ -291,14 +239,14 @@ export default function Header() {
                   : "bg-zinc-900 text-white hover:bg-zinc-800"
               }`}
             >
-              {labels.quote}
+              {t('quote')}
             </Link>
             <span
               className={`text-[10px] font-medium ${
                 headerIsDark ? "text-white/70" : "text-zinc-500"
               }`}
             >
-              {labels.ctaReassurance}
+              {t('ctaReassurance')}
             </span>
           </div>
           <button
@@ -322,7 +270,7 @@ export default function Header() {
           <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 text-sm text-zinc-700">
             <div>
               <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                {labels.cleaning}
+                {t('cleaning')}
               </div>
               <div className="mt-2 flex flex-col gap-2">
                 {cleaningLinks.map((item) => (
@@ -357,7 +305,7 @@ export default function Header() {
                   locale === "fr" ? "bg-zinc-900 text-white" : "text-zinc-700"
                 }`}
               >
-                FR
+                {t('locale.fr_short')}
               </button>
               <button
                 type="button"
@@ -366,7 +314,7 @@ export default function Header() {
                   locale === "en" ? "bg-zinc-900 text-white" : "text-zinc-700"
                 }`}
               >
-                EN
+                {t('locale.en_short')}
               </button>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -382,10 +330,10 @@ export default function Header() {
                   className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {labels.quote}
+                  {t('quote')}
                 </Link>
                 <span className="text-[10px] font-medium text-zinc-500">
-                  {labels.ctaReassurance}
+                  {t('ctaReassurance')}
                 </span>
               </div>
             </div>

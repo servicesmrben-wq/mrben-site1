@@ -1,23 +1,21 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/navigation";
 import {
   ArrowRight,
-  BadgeCheck,
-  CheckCircle2,
-  Clock,
-  Droplets,
-  Leaf,
   ShieldCheck,
-  Sparkles,
+  Leaf,
+  Droplets,
+  HardHat,
+  CheckCircle2,
   Star,
   Users,
+  Home,
 } from "lucide-react";
 import SeoFaq from "@/app/components/SeoFaq";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
 import { getAbsoluteUrl, getLocalBusinessProvider } from "@/app/lib/seo/schema";
 
-const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
-
+const HERO_IMAGE = "/gallery/nettoyage-revetement-exterieur.jpg";
 const QUOTE_HREF = "/#contact";
 
 type Props = {
@@ -25,137 +23,137 @@ type Props = {
   pagePath: string;
 };
 
-export default function WindowCleaningContent({ t, pagePath }: Props) {
+export default function SidingCleaningContent({ t, pagePath }: Props) {
   const whyUsItems = [
     {
       icon: ShieldCheck,
-      title: t("windowCleaning.whyUs.point1.title"),
-      desc: t("windowCleaning.whyUs.point1.desc"),
+      title: t("whyUs.point1.title"),
+      desc: t("whyUs.point1.desc"),
     },
     {
-      icon: BadgeCheck,
-      title: t("windowCleaning.whyUs.point2.title"),
-      desc: t("windowCleaning.whyUs.point2.desc"),
+      icon: Home,
+      title: t("whyUs.point2.title"),
+      desc: t("whyUs.point2.desc"),
     },
     {
       icon: Leaf,
-      title: t("windowCleaning.whyUs.point3.title"),
-      desc: t("windowCleaning.whyUs.point3.desc"),
+      title: t("whyUs.point3.title"),
+      desc: t("whyUs.point3.desc"),
     },
     {
-      icon: Clock,
-      title: t("windowCleaning.whyUs.point4.title"),
-      desc: t("windowCleaning.whyUs.point4.desc"),
+      icon: HardHat,
+      title: t("whyUs.point4.title"),
+      desc: t("whyUs.point4.desc"),
     },
   ];
 
   const processSteps = [
     {
-      icon: Sparkles,
-      title: t("windowCleaning.process.step1.title"),
-      desc: t("windowCleaning.process.step1.desc"),
+      icon: CheckCircle2,
+      title: t("process.step1.title"),
+      desc: t("process.step1.desc"),
+    },
+    {
+      icon: ShieldCheck,
+      title: t("process.step2.title"),
+      desc: t("process.step2.desc"),
     },
     {
       icon: Droplets,
-      title: t("windowCleaning.process.step2.title"),
-      desc: t("windowCleaning.process.step2.desc"),
-    },
-    {
-      icon: CheckCircle2,
-      title: t("windowCleaning.process.step3.title"),
-      desc: t("windowCleaning.process.step3.desc"),
+      title: t("process.step3.title"),
+      desc: t("process.step3.desc"),
     },
     {
       icon: Star,
-      title: t("windowCleaning.process.step4.title"),
-      desc: t("windowCleaning.process.step4.desc"),
+      title: t("process.step4.title"),
+      desc: t("process.step4.desc"),
     },
   ];
 
   const includedItems = [
-    t("windowCleaning.process.included1"),
-    t("windowCleaning.process.included2"),
-    t("windowCleaning.process.included3"),
-    t("windowCleaning.process.included4"),
-    t("windowCleaning.process.included5"),
+    t("process.included1"),
+    t("process.included2"),
+    t("process.included3"),
+    t("process.included4"),
+    t("process.included5"),
   ];
 
   const stats = [
     {
-      icon: Sparkles,
-      title: t("windowCleaning.stats.years.title"),
-      desc: t("windowCleaning.stats.years.desc"),
+      icon: Home,
+      title: t("stats.years.title"),
+      desc: t("stats.years.desc"),
     },
     {
-      icon: Droplets,
-      title: t("windowCleaning.stats.windows.title"),
-      desc: t("windowCleaning.stats.windows.desc"),
-    },
-    {
-      icon: Star,
-      title: t("windowCleaning.stats.rating.title"),
-      desc: t("windowCleaning.stats.rating.desc"),
+      icon: Leaf,
+      title: t("stats.windows.title"),
+      desc: t("stats.windows.desc"),
     },
     {
       icon: ShieldCheck,
-      title: t("windowCleaning.stats.guarantee.title"),
-      desc: t("windowCleaning.stats.guarantee.desc"),
+      title: t("stats.rating.title"),
+      desc: t("stats.rating.desc"),
+    },
+    {
+      icon: Star,
+      title: t("stats.guarantee.title"),
+      desc: t("stats.guarantee.desc"),
     },
   ];
 
   const faqItems = [
     {
-      q: t("windowCleaning.faq.items.0.q"),
-      a: t("windowCleaning.faq.items.0.a"),
+      q: t("faq.items.0.q"),
+      a: t("faq.items.0.a"),
     },
     {
-      q: t("windowCleaning.faq.items.1.q"),
-      a: t("windowCleaning.faq.items.1.a"),
+      q: t("faq.items.1.q"),
+      a: t("faq.items.1.a"),
     },
     {
-      q: t("windowCleaning.faq.items.2.q"),
-      a: t("windowCleaning.faq.items.2.a"),
+      q: t("faq.items.2.q"),
+      a: t("faq.items.2.a"),
     },
     {
-      q: t("windowCleaning.faq.items.3.q"),
-      a: t("windowCleaning.faq.items.3.a"),
+      q: t("faq.items.3.q"),
+      a: t("faq.items.3.a"),
     },
     {
-      q: t("windowCleaning.faq.items.4.q"),
-      a: t("windowCleaning.faq.items.4.a"),
+      q: t("faq.items.4.q"),
+      a: t("faq.items.4.a"),
     },
     {
-      q: t("windowCleaning.faq.items.5.q"),
-      a: t("windowCleaning.faq.items.5.a"),
+      q: t("faq.items.5.q"),
+      a: t("faq.items.5.a"),
     },
   ];
 
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: t("windowCleaning.jsonld.service.name"),
-    serviceType: t("windowCleaning.jsonld.service.name"),
-    description: t("windowCleaning.jsonld.service.description"),
+    name: t("jsonld.service.name"),
+    serviceType: t("jsonld.service.name"),
+    description: t("jsonld.service.description"),
     provider: getLocalBusinessProvider(),
     areaServed: [
       "Laurentides, Québec, Canada",
-      t("windowCleaning.serviceAreas.cities.lachute"),
-      t("windowCleaning.serviceAreas.cities.saintJerome"),
-      t("windowCleaning.serviceAreas.cities.saintSauveur"),
-      t("windowCleaning.serviceAreas.cities.mirabel"),
-      t("windowCleaning.serviceAreas.cities.blainville"),
-      t("windowCleaning.serviceAreas.cities.laval"),
+      t("serviceAreas.cities.lachute"),
+      t("serviceAreas.cities.saintJerome"),
+      t("serviceAreas.cities.saintSauveur"),
+      t("serviceAreas.cities.mirabel"),
+      t("serviceAreas.cities.blainville"),
+      t("serviceAreas.cities.laval"),
     ],
     url: getAbsoluteUrl(pagePath),
   };
 
   const serviceAreas = [
-    { href: "/territoire/lachute", label: t("windowCleaning.serviceAreas.cities.lachute") },
-    { href: "/territoire/saint-jerome", label: t("windowCleaning.serviceAreas.cities.saintJerome") },
-    { href: "/territoire/saint-sauveur", label: t("windowCleaning.serviceAreas.cities.saintSauveur") },
-    { href: "/territoire/mirabel", label: t("windowCleaning.serviceAreas.cities.mirabel") },
-    { href: "/territoire/blainville", label: t("windowCleaning.serviceAreas.cities.blainville") },
-    { href: "/territoire/laval", label: t("windowCleaning.serviceAreas.cities.laval") },
+    { href: "/territoire/lachute", label: t("serviceAreas.cities.lachute") },
+    { href: "/territoire/saint-jerome", label: t("serviceAreas.cities.saintJerome") },
+    { href: "/territoire/saint-sauveur", label: t("serviceAreas.cities.saintSauveur") },
+    { href: "/territoire/mirabel", label: t("serviceAreas.cities.mirabel") },
+    { href: "/territoire/blainville", label: t("serviceAreas.cities.blainville") },
+    { href: "/territoire/laval", label: t("serviceAreas.cities.laval") },
   ];
 
   return (
@@ -165,7 +163,7 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
         <div className="absolute inset-0">
           <Image
             src={HERO_IMAGE}
-            alt={t("windowCleaning.heroImageAlt")}
+            alt={t("heroImageAlt")}
             fill
             priority
             className="object-cover"
@@ -176,32 +174,32 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
         <div className="relative mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:py-20">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-wide text-white/70">
-              {t("windowCleaning.heroKicker")}
+              {t("heroKicker")}
             </p>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
-              {t("windowCleaning.heroTitle")}
+              {t("heroTitle")}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-white/80 sm:text-lg">
-              {t("windowCleaning.heroSubtitle")}
+              {t("heroSubtitle")}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
-              {t("windowCleaning.sourceOfTruth")}
+              {t("sourceOfTruth")}
             </p>
             <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Link
                 href={QUOTE_HREF}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-amber-300 sm:w-auto"
               >
-                {t("common.getQuote")}
+                {t("heroCTA")}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <span className="text-sm text-white/70">{t("windowCleaning.heroCtaNote")}</span>
+              <span className="text-sm text-white/70">{t("heroCtaNote")}</span>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-semibold text-white/80">
               {[
-                t("windowCleaning.heroTrust1"),
-                t("windowCleaning.heroTrust2"),
-                t("windowCleaning.heroTrust3"),
+                t("heroTrust1"),
+                t("heroTrust2"),
+                t("heroTrust3"),
               ].map((item) => (
                 <span key={item} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1">
                   <Star className="h-3.5 w-3.5 text-amber-300" aria-hidden="true" />
@@ -217,10 +215,10 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="max-w-3xl">
           <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-            {t("windowCleaning.whyUsTitle")}
+            {t("whyUsTitle")}
           </h2>
           <p className="mt-3 text-base leading-relaxed text-zinc-600">
-            {t("windowCleaning.whyUsSubtitle")}
+            {t("whyUsSubtitle")}
           </p>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -246,10 +244,10 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-              {t("windowCleaning.processTitle")}
+              {t("processTitle")}
             </h2>
             <p className="mt-3 text-base leading-relaxed text-zinc-600">
-              {t("windowCleaning.processSubtitle")}
+              {t("processSubtitle")}
             </p>
           </div>
           <div className="mt-10 grid gap-6 lg:grid-cols-4">
@@ -273,7 +271,7 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
           </div>
           <div className="mt-10 rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
             <h3 className="text-lg font-semibold text-zinc-900">
-              {t("windowCleaning.process.includedTitle")}
+              {t("process.includedTitle")}
             </h3>
             <ul className="mt-4 grid gap-3 text-sm text-zinc-600 sm:grid-cols-2" role="list">
               {includedItems.map((item) => (
@@ -291,7 +289,7 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       <section className="bg-zinc-900">
         <div className="mx-auto max-w-6xl px-4 py-14 text-white">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            {t("windowCleaning.stats.title")}
+            {t("stats.title")}
           </h2>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat) => (
@@ -313,7 +311,7 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       {/* Testimonial Section */}
       <section className="mx-auto max-w-6xl px-4 py-16">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-          {t("windowCleaning.testimonials.title")}
+          {t("testimonials.title")}
         </h2>
         <div className="mt-8 rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
@@ -322,10 +320,10 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
             </div>
             <div>
               <blockquote className="text-lg italic text-zinc-700">
-                “{t("windowCleaning.testimonials.quote1.text")}”
+                “{t("testimonials.quote1.text")}”
               </blockquote>
               <p className="mt-3 text-sm font-semibold text-zinc-900">
-                {t("windowCleaning.testimonials.quote1.author")}
+                {t("testimonials.quote1.author")}
               </p>
             </div>
           </div>
@@ -333,7 +331,7 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       </section>
 
       {/* FAQ Section */}
-      <SeoFaq title={t("windowCleaning.faq.title")} items={faqItems} />
+      <SeoFaq title={t("faq.title")} items={faqItems} />
 
       <script
         type="application/ld+json"
@@ -343,10 +341,10 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
       {/* Service Areas Section */}
       <section className="mx-auto max-w-6xl px-4 py-12">
         <h2 className="text-2xl font-semibold text-zinc-900">
-          {t("windowCleaning.serviceAreas.title")}
+          {t("serviceAreas.title")}
         </h2>
         <p className="mt-3 text-sm text-zinc-600">
-          {t("windowCleaning.serviceAreas.lead")} {" "}
+          {t("serviceAreas.lead")} {" "}
           {serviceAreas.map((area, index) => (
             <span key={area.href}>
               <Link href={area.href} className="font-semibold text-zinc-900 hover:text-zinc-700">
@@ -354,11 +352,11 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
               </Link>
               {index < serviceAreas.length - 2 ? ", " : ""}
               {index === serviceAreas.length - 2
-                ? ` ${t("windowCleaning.serviceAreas.conjunction")} `
+                ? ` ${t("serviceAreas.conjunction")} `
                 : ""}
             </span>
           ))}
-          {" "}{t("windowCleaning.serviceAreas.outro")}
+          {" "}{t("serviceAreas.outro")}
         </p>
       </section>
 
@@ -367,17 +365,17 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-16 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-semibold tracking-tight text-zinc-900">
-              {t("windowCleaning.finalCTA.title")}
+              {t("finalCTA.title")}
             </h2>
             <p className="mt-3 text-base text-zinc-600">
-              {t("windowCleaning.finalCTA.subtitle")}
+              {t("finalCTA.subtitle")}
             </p>
           </div>
           <Link
             href={QUOTE_HREF}
             className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 sm:w-auto"
           >
-            {t("common.getQuote")}
+            {t("heroCTA")}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

@@ -1,37 +1,28 @@
 import type { MetadataRoute } from "next";
 
 import { CITY_PAGES } from "./territoire/city-data";
-import { getCityUrl } from "./territoire/seo";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const cityEntries = CITY_PAGES.flatMap((city) => [
-    {
-      url: getCityUrl(city.slug),
-      lastModified: now,
-    },
-    {
-      url: getCityUrl(city.slug),
-      lastModified: now,
-    },
-  ]);
+  const locales = ["en", "fr"];
+  const routes = ["", "/services/lavage-de-vitres", "/services/window-cleaning", "/blog"];
 
-  return [
-    {
-      url: BASE_URL,
+  const staticEntries = routes.flatMap((route) =>
+    locales.map((locale) => ({
+      url: `${BASE_URL}/${locale}${route}`,
       lastModified: now,
-    },
-    {
-      url: `${BASE_URL}/services/lavage-de-vitres`,
+    }))
+  );
+
+  const cityEntries = CITY_PAGES.flatMap((city) =>
+    locales.map((locale) => ({
+      url: `${BASE_URL}/${locale}/territoire/${city.slug}`,
       lastModified: now,
-    },
-    {
-      url: `${BASE_URL}/services/window-cleaning`,
-      lastModified: now,
-    },
-    ...cityEntries,
-  ];
+    }))
+  );
+
+  return [...staticEntries, ...cityEntries];
 }

@@ -22,8 +22,8 @@ export async function POST(req: Request) {
       });
     }
 
-    // Optional: enforce a size limit (e.g., 8 MB)
-    const MAX_BYTES = 8 * 1024 * 1024;
+    // Optional: enforce a size limit (e.g., 15 MB)
+    const MAX_BYTES = 15 * 1024 * 1024;
     if (file.size > MAX_BYTES) {
       return new Response(JSON.stringify({ error: "File too large (max 8MB)" }), {
         status: 413,
