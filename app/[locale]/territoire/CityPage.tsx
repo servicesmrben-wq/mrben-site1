@@ -32,8 +32,8 @@ export function CityPage({ city }: { city: CityPageData }) {
   const locale = useLocale() as Locale;
   const content = city[locale];
   const t = useTranslations('territoryCityPage');
-  const tCommon = useTranslations('territory.city');
-  const citySourceOfTruth = tCommon("sourceOfTruth", { city: city.name });
+  const tCommon = useTranslations('territory');
+  const citySourceOfTruth = tCommon("city.sourceOfTruth", { city: city.name });
   const priceLow = city.priceLow ?? DEFAULT_PRICE_LOW;
   const priceHigh = city.priceHigh ?? DEFAULT_PRICE_HIGH;
   const pageH1 = t("h1", { CITY: city.name });
