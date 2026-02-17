@@ -46,7 +46,7 @@ export default function Hero({
   googleProfile 
 }: { 
   onQuote: () => void, 
-  t: (key: string) => string, 
+  t: (key: string, options?: any) => string, 
   heroRef: RefObject<HTMLElement | null>, 
   sourceOfTruth?: string,
   googleProfile: GoogleBusinessProfile

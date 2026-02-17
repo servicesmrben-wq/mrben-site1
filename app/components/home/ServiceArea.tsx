@@ -6,7 +6,7 @@ import SectionTitle from "./SectionTitle";
 import { BRAND } from "@/app/lib/constants";
 import { GoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
 
-export default function ServiceArea({ t, googleProfile }: { t: (key: string) => string, googleProfile: GoogleBusinessProfile }) {
+export default function ServiceArea({ t, googleProfile }: { t: (key: string, options?: any) => string, googleProfile: GoogleBusinessProfile }) {
   const cities = useMemo(() => t("citiesList").split(", ").filter(Boolean), [t]);
 
   const rating = googleProfile.rating;

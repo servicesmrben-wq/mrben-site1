@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowRight } from "lucide-react";
 import SectionTitle from "./SectionTitle";
 
-export default function Services({ onQuote, t }: { onQuote: () => void, t: (key: string) => string }) {
+export default function Services({ onQuote, t }: { onQuote: () => void, t: (key: string, options?: any) => string }) {
   const services = [
     {
       id: "vitres",

@@ -3,7 +3,7 @@
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import SectionTitle from "./SectionTitle";
 
-export default function Pricing({ onQuote, t }: { onQuote: () => void, t: (key: string) => string }) {
+export default function Pricing({ onQuote, t }: { onQuote: () => void, t: (key: string, options?: any) => string }) {
   const cards = [
     {
       key: "card1",

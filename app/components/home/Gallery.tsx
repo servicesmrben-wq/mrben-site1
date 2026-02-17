@@ -7,7 +7,7 @@ import { IMAGE_URLS } from "@/app/lib/constants";
 import { classNames } from "@/app/lib/utils";
 import SectionTitle from "./SectionTitle";
 
-export default function Gallery({ t }: { t: (key: string) => string }) {
+export default function Gallery({ t }: { t: (key: string, options?: any) => string }) {
   const locale = useLocale();
   const imgs = useMemo(() => IMAGE_URLS.slice(1), []);
   const [active, setActive] = useState(0);

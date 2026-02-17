@@ -21,7 +21,7 @@ function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: R
   );
 }
 
-export default function Contact({ t, contactRef }: { t: (key: string) => string, contactRef: RefObject<HTMLDivElement | null> }) {
+export default function Contact({ t, contactRef }: { t: (key: string, options?: any) => string, contactRef: RefObject<HTMLDivElement | null> }) {
   const locale = useLocale();
   const [form, setForm] = useState({
     name: "",

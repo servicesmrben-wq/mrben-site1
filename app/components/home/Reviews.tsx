@@ -23,7 +23,7 @@ function ValueCard({ icon, title, desc }: { icon: React.ReactNode, title: string
   );
 }
 
-export default function Reviews({ t, onQuote, googleProfile }: { t: (key: string) => string, onQuote: () => void, googleProfile: GoogleBusinessProfile }) {
+export default function Reviews({ t, onQuote, googleProfile }: { t: (key: string, options?: any) => string, onQuote: () => void, googleProfile: GoogleBusinessProfile }) {
   const tFooter = useTranslations('Footer');
   const [showAllTrust] = useState(false);
 
