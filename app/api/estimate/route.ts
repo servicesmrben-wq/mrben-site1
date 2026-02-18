@@ -42,6 +42,7 @@ export async function POST(req: Request) {
 1. Count the TOTAL windows visible across ALL photos. Be careful not to double-count if the same window appears in multiple overlapping photos, but try to be comprehensive.
 2. Categorize them by these specific keys:
    - std_hung (Standard vertical sliding)
+   - window_slider_standard (Standard Slider: horizontal sliding sash, often 2-panel, common in bedrooms and kitchens. Count these as 'window_slider_standard'.)
    - std_fixed (Casement or fixed/non-opening)
    - alum_double_slider (Old aluminum style with 2 sets of glass/tracks)
    - patio_door_2panel (Standard sliding glass door with tracks. Identify by looking for floor-level tracks, handles, and large glass panels. Count as 'patio_door_2panel' INSTEAD of 2 separate picture windows.)
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
 { 
   "window_counts": { 
     "std_hung": 0, 
+    "window_slider_standard": 0,
     "std_fixed": 0, 
     "alum_double_slider": 0, 
     "patio_door_2panel": 0,
