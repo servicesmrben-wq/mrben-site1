@@ -44,7 +44,8 @@ export async function POST(req: Request) {
    - std_hung (Standard vertical sliding)
    - std_fixed (Casement or fixed/non-opening)
    - alum_double_slider (Old aluminum style with 2 sets of glass/tracks)
-   - patio_door_2panel (Standard sliding glass door with tracks. IMPORTANT: Identify 'Sliding Patio Doors' by looking for floor-level tracks, handles, and large glass panels. Count these as 'patio_door_2panel' INSTEAD of counting them as 2 separate picture windows.)
+   - patio_door_2panel (Standard sliding glass door with tracks. Identify by looking for floor-level tracks, handles, and large glass panels. Count as 'patio_door_2panel' INSTEAD of 2 separate picture windows.)
+   - entry_door_glass (Glass pane inside a front or side door. Look for decorative or clear glass surrounded by a solid door frame, often with a lockset or handle nearby. Count this as 'entry_door_glass' instead of a standard window.)
    - small_french (Individual small panes)
    - large_picture (Large floor-to-ceiling glass)
    - arch_special (Round, triangular, or architectural shapes)
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
     "std_fixed": 0, 
     "alum_double_slider": 0, 
     "patio_door_2panel": 0,
+    "entry_door_glass": 0,
     "small_french": 0, 
     "large_picture": 0, 
     "arch_special": 0 

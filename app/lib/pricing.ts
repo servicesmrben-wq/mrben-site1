@@ -5,6 +5,12 @@ export const PRICING_DATA = {
     price_in_out: 9.00,
     desc: "Common vertical sliding windows" 
   },
+  window_slider_standard: {
+    label: "Standard Slider",
+    price_ext: 5.00,
+    price_in_out: 10.00,
+    desc: "Horizontal sliding sash window"
+  },
   std_fixed: { 
     label: "Casement / Fixed", 
     price_ext: 4.50, 
@@ -22,6 +28,12 @@ export const PRICING_DATA = {
     price_ext: 12.00,
     price_in_out: 22.00,
     desc: "Standard sliding glass door with tracks"
+  },
+  entry_door_glass: {
+    label: "Entry Door (Glass Insert)",
+    price_ext: 6.00,
+    price_in_out: 10.00,
+    desc: "Glass pane inside a front or side door"
   },
   small_french: { 
     label: "Small French Pane", 
