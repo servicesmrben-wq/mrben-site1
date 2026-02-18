@@ -39,6 +39,51 @@ export default function EstimatorPage() {
 
   const BASE_FEE = 60.00;
 
+  const handleCalculate = async () => {
+    if (files.length === 0) return;
+
+    setIsProcessing(true);
+    setError(null);
+
+    try {
+      // 1. Compress all images
+      const compressedFiles = await Promise.all(
+        files.map(async (f) => {
+          try {
+            return await compressImage(f);
+          } catch {
+            return f; // Fallback to original if compression fails
+          }
+        })
+      );
+
+      // 2. Prepare FormData
+      const formData = new FormData();
+      compressedFiles.forEach((file) => {
+        formData.append("files", file); // Append multiple files with same key
+      });
+
+      // 3. Send to API
+      const res = await fetch("/api/estimate", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Estimation failed");
+      }
+
+      const data = await res.json();
+      setResult(data);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "An error occurred. Please try fewer images.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const calculateTotal = () => {
     if (!result || !result.window_counts) return 0;
     
