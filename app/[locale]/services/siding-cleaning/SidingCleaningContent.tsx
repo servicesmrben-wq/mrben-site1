@@ -15,7 +15,7 @@ import SeoFaq from "@/app/components/SeoFaq";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
 import { getAbsoluteUrl, getLocalBusinessProvider } from "@/app/lib/seo/schema";
 
-const HERO_IMAGE = "/gallery/nettoyage-revetement-exterieur.jpg";
+const HERO_IMAGE = "/gallery/nettoyage-exterieur-laurentides.jpg";
 const QUOTE_HREF = "/#contact";
 
 type Props = {
