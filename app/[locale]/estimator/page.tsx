@@ -1,34 +1,66 @@
 "use client";
 
 import { useState } from "react";
-import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X } from "lucide-react";
 import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
+import { compressImage } from "@/app/lib/imageCompression";
 
 export default function EstimatorPage() {
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [mode, setMode] = useState<"ext" | "in_out">("ext");
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files);
+      
+      // Basic validation
+      const validFiles = newFiles.filter(f => f.type.startsWith("image/"));
+      if (validFiles.length !== newFiles.length) {
+        alert("Only image files (JPG, PNG) are supported right now.");
+      }
+
+      setFiles(prev => [...prev, ...validFiles]);
       setResult(null);
       setError(null);
+      
+      // Reset input
+      e.target.value = "";
     }
   };
 
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleCalculate = async () => {
-    if (!file) return;
+    if (files.length === 0) return;
 
     setIsProcessing(true);
     setError(null);
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
+      // 1. Compress all images
+      const compressedFiles = await Promise.all(
+        files.map(async (f) => {
+          try {
+            return await compressImage(f);
+          } catch {
+            return f; // Fallback to original if compression fails
+          }
+        })
+      );
+
+      // 2. Prepare FormData
+      const formData = new FormData();
+      compressedFiles.forEach((file) => {
+        formData.append("files", file); // Append multiple files with same key
+      });
+
+      // 3. Send to API
       const res = await fetch("/api/estimate", {
         method: "POST",
         body: formData,
@@ -43,7 +75,7 @@ export default function EstimatorPage() {
       setResult(data);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An error occurred");
+      setError(err.message || "An error occurred. Please try fewer images.");
     } finally {
       setIsProcessing(false);
     }
@@ -77,7 +109,7 @@ export default function EstimatorPage() {
             AI Window Cleaning Estimator
           </h1>
           <p className="mt-3 text-lg text-zinc-600">
-            Upload a video or photo of your home. Our AI will count your windows and give you an instant price estimate.
+            Upload photos of your home (all sides). Our AI will count your windows and give you an instant price estimate.
           </p>
         </div>
 
@@ -86,29 +118,45 @@ export default function EstimatorPage() {
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
-              1. Upload Video or Photo
+              1. Upload Photos
             </label>
             <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50 transition hover:border-zinc-400 hover:bg-zinc-100">
               <input 
                 type="file" 
-                accept="video/*,image/*" 
+                accept="image/*" 
+                multiple
                 onChange={handleFileChange}
                 className="absolute inset-0 cursor-pointer opacity-0"
               />
-              {file ? (
-                <div className="flex flex-col items-center gap-2 text-emerald-600">
-                  <CheckCircle2 className="h-8 w-8" />
-                  <span className="font-medium">{file.name}</span>
-                  <span className="text-xs text-zinc-500">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center gap-2 text-zinc-500">
-                  <Upload className="h-8 w-8" />
-                  <span className="text-sm font-medium">Click to select or drag file here</span>
-                  <span className="text-xs text-zinc-400">MP4, MOV, JPG, PNG accepted</span>
-                </div>
-              )}
+              <div className="flex flex-col items-center gap-2 text-zinc-500">
+                <Upload className="h-8 w-8" />
+                <span className="text-sm font-medium">Click to select photos</span>
+                <span className="text-xs text-zinc-400">JPG, PNG (Max 10MB per file before compression)</span>
+              </div>
             </div>
+
+            {/* Gallery Preview */}
+            {files.length > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+                {files.map((f, i) => (
+                  <div key={i} className="relative aspect-square overflow-hidden rounded-lg border border-zinc-200">
+                    <Image 
+                      src={URL.createObjectURL(f)} 
+                      alt="preview" 
+                      fill 
+                      className="object-cover" 
+                      onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
+                    />
+                    <button 
+                      onClick={() => removeFile(i)}
+                      className="absolute right-1 top-1 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Pricing Toggle */}
@@ -143,13 +191,13 @@ export default function EstimatorPage() {
           {/* Calculate Button */}
           <button
             onClick={handleCalculate}
-            disabled={!file || isProcessing}
+            disabled={files.length === 0 || isProcessing}
             className="flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isProcessing ? (
               <>
                 <Loader2 className="h-5 w-5 animate-spin" />
-                Analyzing media...
+                Processing {files.length} images...
               </>
             ) : (
               <>
@@ -180,7 +228,7 @@ export default function EstimatorPage() {
 
               {result.audio_summary && result.audio_summary !== "None" && (
                 <div className="mb-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-                  <div className="text-xs font-semibold uppercase text-zinc-500 mb-2">Audio Notes Detected</div>
+                  <div className="text-xs font-semibold uppercase text-zinc-500 mb-2">Notes Detected</div>
                   <p className="text-sm text-zinc-700 italic">"{result.audio_summary}"</p>
                 </div>
               )}
