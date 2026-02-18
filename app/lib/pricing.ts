@@ -11,6 +11,12 @@ export const PRICING_DATA = {
     price_in_out: 10.00,
     desc: "Horizontal sliding sash window"
   },
+  slider_double_set: {
+    label: "Double Slider Set (Storms)",
+    price_ext: 10.00,
+    price_in_out: 20.00,
+    desc: "Two full sets of sliding windows (inner + outer) for insulation."
+  },
   std_fixed: { 
     label: "Casement / Fixed", 
     price_ext: 4.50, 

@@ -43,6 +43,7 @@ export async function POST(req: Request) {
 2. Categorize them by these specific keys:
    - std_hung (Standard vertical sliding)
    - window_slider_standard (Standard Slider: horizontal sliding sash, often 2-panel, common in bedrooms and kitchens. Count these as 'window_slider_standard'.)
+   - slider_double_set (Double Slider Set/Storms. CRITICAL: Distinguish between 'Standard Sliders' and 'Double Slider Sets'. Look closely at the bottom track. If the track is very wide (appearing to hold 4 separate glass panels depth-wise), it is a 'slider_double_set'. Look for a second set of window frames or handles visible *behind* the first set. If unsure but the frame looks unusually deep, default to 'slider_double_set'.)
    - std_fixed (Casement or fixed/non-opening)
    - alum_double_slider (Old aluminum style with 2 sets of glass/tracks)
    - patio_door_2panel (Standard sliding glass door with tracks. Identify by looking for floor-level tracks, handles, and large glass panels. Count as 'patio_door_2panel' INSTEAD of 2 separate picture windows.)
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
   "window_counts": { 
     "std_hung": 0, 
     "window_slider_standard": 0,
+    "slider_double_set": 0,
     "std_fixed": 0, 
     "alum_double_slider": 0, 
     "patio_door_2panel": 0,
