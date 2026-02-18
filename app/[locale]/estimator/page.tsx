@@ -90,9 +90,10 @@ export default function EstimatorPage() {
     let total = BASE_FEE;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
-      const price = mode === "ext" ? PRICING_DATA[k]?.price_ext : PRICING_DATA[k]?.price_in_out;
-      if (price && typeof count === "number") {
-        total += price * count;
+      const item = PRICING_DATA[k];
+      if (item && typeof count === "number") {
+        const unitPrice = mode === "ext" ? item.price : item.price * 2;
+        total += unitPrice * count;
       }
     });
     return total.toFixed(2);
@@ -267,7 +268,7 @@ export default function EstimatorPage() {
                       <div className="flex items-center gap-4">
                         <div className="text-sm text-zinc-600">{c}x</div>
                         <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
-                          ${(c * (mode === "ext" ? item.price_ext : item.price_in_out)).toFixed(2)}
+                          ${(c * (mode === "ext" ? item.price : item.price * 2)).toFixed(2)}
                         </div>
                       </div>
                     </div>
