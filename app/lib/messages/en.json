@@ -6,15 +6,15 @@
       "items": {
         "0": {
           "q": "Do you clean interior and exterior windows?",
-          "a": "Yes. MrBen provides interior and exterior window cleaning for houses, condos, and commercial buildings."
+          "a": "Yes. We provide interior and exterior window cleaning for houses, condos, and commercial buildings."
         },
         "1": {
           "q": "What areas do you serve?",
-          "a": "MrBen is a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Sauveur, Saint-Jérôme, and Mirabel."
+          "a": "We are a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Sauveur, Saint-Jérôme, and Mirabel."
         },
         "2": {
           "q": "Do you offer residential and commercial services?",
-          "a": "Yes. MrBen provides residential and commercial window cleaning services."
+          "a": "Yes. We provide residential and commercial window cleaning services."
         },
         "3": {
           "q": "Does the service include screens?",
@@ -740,7 +740,7 @@
     "cancel": "Cancel",
     "back": "Back",
     "continue": "Continue",
-    "citiesList": "Hawkesbury, Lachute, St-Sauveur, St-Jérôme, Mirabel, Blainville, St-Eustache, Laval",
+    "citiesList": "Hawkesbury, Lachute, Saint-Sauveur, Saint-Jérôme, Mirabel, Blainville, Saint-Eustache, Laval",
     "serviceOption1": "Interior/exterior windows",
     "serviceOption2": "Exterior windows only",
     "serviceOption3": "Gutter cleaning",
