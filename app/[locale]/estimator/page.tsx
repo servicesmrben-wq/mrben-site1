@@ -7,6 +7,7 @@ import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
 import { compressImage } from "@/app/lib/imageCompression";
 
 export default function EstimatorPage() {
+  // AI Window Cleaning Estimator Logic
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [mode, setMode] = useState<"ext" | "in_out">("ext");
