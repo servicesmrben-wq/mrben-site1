@@ -17,6 +17,12 @@ export const PRICING_DATA = {
     price_in_out: 18.00,
     desc: "Old aluminum style with 2 sets of glass/tracks" 
   },
+  patio_door_2panel: {
+    label: "Sliding Patio Door (2 Panel)",
+    price_ext: 12.00,
+    price_in_out: 22.00,
+    desc: "Standard sliding glass door with tracks"
+  },
   small_french: { 
     label: "Small French Pane", 
     price_ext: 1.50, 

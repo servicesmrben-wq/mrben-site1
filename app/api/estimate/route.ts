@@ -44,6 +44,7 @@ export async function POST(req: Request) {
    - std_hung (Standard vertical sliding)
    - std_fixed (Casement or fixed/non-opening)
    - alum_double_slider (Old aluminum style with 2 sets of glass/tracks)
+   - patio_door_2panel (Standard sliding glass door with tracks. IMPORTANT: Identify 'Sliding Patio Doors' by looking for floor-level tracks, handles, and large glass panels. Count these as 'patio_door_2panel' INSTEAD of counting them as 2 separate picture windows.)
    - small_french (Individual small panes)
    - large_picture (Large floor-to-ceiling glass)
    - arch_special (Round, triangular, or architectural shapes)
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
     "std_hung": 0, 
     "std_fixed": 0, 
     "alum_double_slider": 0, 
+    "patio_door_2panel": 0,
     "small_french": 0, 
     "large_picture": 0, 
     "arch_special": 0 
@@ -61,9 +63,6 @@ export async function POST(req: Request) {
   "stories": 1, 
   "audio_summary": "None" 
 }`;
-
-    // Note: audio_summary will be "None" since we are using images, but keeping the schema consistent
-    // allows the frontend to handle it gracefully.
 
     const result = await model.generateContent([
       prompt,
