@@ -197,7 +197,7 @@ export default function EstimatorPage() {
                 <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
                   <div>
                     <div className="text-sm font-medium text-zinc-900">Service & Travel Fee</div>
-                    <div className="text-xs text-zinc-500">Base cost for all appointments</div>
+                    <div className="text-xs text-zinc-500">Standard service fee</div>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
