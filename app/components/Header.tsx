@@ -268,77 +268,121 @@ export default function Header() {
       {menuOpen ? (
         <div className="border-t border-zinc-200 bg-white lg:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 text-sm text-zinc-700">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                {t('cleaning')}
-              </div>
-              <div className="mt-2 flex flex-col gap-2">
-                {cleaningLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-xl px-3 py-2 hover:bg-zinc-100 hover:text-zinc-900"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
+            <div className="flex flex-col gap-1">
+              <Link
+                href="/"
+                className="rounded-xl px-3 py-2.5 font-medium hover:bg-zinc-100 hover:text-zinc-900"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t('nav.home')}
+              </Link>
+
+              {/* Services Dropdown */}
+              <details className="group">
+                <summary className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 font-medium hover:bg-zinc-100 hover:text-zinc-900">
+                  {t('nav.services')}
+                  <span className="text-zinc-400 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <div className="ml-4 mt-1 flex flex-col border-l border-zinc-200 pl-3">
+                  {servicesDropdownLinks.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="py-2 text-zinc-600 hover:text-zinc-900"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+
+              <Link
+                href="/#avis"
+                className="rounded-xl px-3 py-2.5 font-medium hover:bg-zinc-100 hover:text-zinc-900"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t('nav.reviews')}
+              </Link>
+
+              {/* Territory Dropdown */}
+              <details className="group">
+                <summary className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 font-medium hover:bg-zinc-100 hover:text-zinc-900">
+                  {t('nav.territory')}
+                  <span className="text-zinc-400 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <div className="ml-4 mt-1 flex flex-col border-l border-zinc-200 pl-3">
+                  {territoryDropdownLinks.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="py-2 text-zinc-600 hover:text-zinc-900"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+
+              <Link
+                href="/blog"
+                className="rounded-xl px-3 py-2.5 font-medium hover:bg-zinc-100 hover:text-zinc-900"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t('nav.blog')}
+              </Link>
+
+              <Link
+                href="/#contact"
+                className="rounded-xl px-3 py-2.5 font-medium hover:bg-zinc-100 hover:text-zinc-900"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t('nav.contact')}
+              </Link>
             </div>
-            <div className="flex flex-col gap-2">
-              {navLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-xl px-3 py-2 hover:bg-zinc-100 hover:text-zinc-900"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
+
+            <hr className="border-zinc-100 my-2" />
+
+            <div className="flex items-center gap-3 justify-center">
               <button
                 type="button"
                 onClick={() => handleLocaleChange("fr")}
-                className={`rounded-full border border-zinc-200 px-3 py-2 text-xs font-semibold ${
-                  locale === "fr" ? "bg-zinc-900 text-white" : "text-zinc-700"
+                className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
+                  locale === "fr" 
+                    ? "bg-zinc-900 text-white border-zinc-900" 
+                    : "bg-white text-zinc-600 border-zinc-200"
                 }`}
               >
-                {t('locale.fr_short')}
+                Français
               </button>
               <button
                 type="button"
                 onClick={() => handleLocaleChange("en")}
-                className={`rounded-full border border-zinc-200 px-3 py-2 text-xs font-semibold ${
-                  locale === "en" ? "bg-zinc-900 text-white" : "text-zinc-700"
+                className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
+                  locale === "en" 
+                    ? "bg-zinc-900 text-white border-zinc-900" 
+                    : "bg-white text-zinc-600 border-zinc-200"
                 }`}
               >
-                {t('locale.en_short')}
+                English
               </button>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+
+            <div className="mt-2 flex flex-col items-center gap-4">
               <a
                 href={BRAND.phoneHref}
-                className="inline-flex items-center text-sm font-semibold text-zinc-700 underline-offset-4 transition hover:text-zinc-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+                className="text-lg font-semibold text-zinc-900"
               >
                 {BRAND.phoneDisplay}
               </a>
-              <div className="flex flex-col items-center gap-1">
-                <Link
-                  href="/#contact"
-                  className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {t('quote')}
-                </Link>
-                <span className="text-[10px] font-medium text-zinc-500">
-                  {t('ctaReassurance')}
-                </span>
-              </div>
-            </div>
-            <div className="text-xs text-zinc-500">
-              {BRAND.phoneDisplay}
+              <Link
+                href="/#contact"
+                className="w-full text-center rounded-xl bg-zinc-900 py-3 text-sm font-semibold text-white shadow-sm active:bg-zinc-800"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t('quote')}
+              </Link>
             </div>
           </div>
         </div>
