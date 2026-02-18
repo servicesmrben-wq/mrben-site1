@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     );
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 1. Count the TOTAL windows visible across ALL photos. Be careful not to double-count if the same window appears in multiple overlapping photos, but try to be comprehensive.
