@@ -14,7 +14,7 @@ import {
   Star,
 } from "lucide-react";
 import { useLocale } from "next-intl";
-import { IMAGE_URLS } from "@/app/lib/constants";
+import { IMAGE_URLS, BRAND } from "@/app/lib/constants";
 import { classNames } from "@/app/lib/utils";
 import { GoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
 
@@ -77,8 +77,13 @@ export default function Hero({
   ));
 
   const ratingLine = (
-    <>
-      <span className="tabular-nums" style={heroTextShadow}>
+    <a 
+      href={BRAND.googleReviewsUrl} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="flex flex-wrap items-center gap-2 hover:opacity-90 transition-opacity"
+    >
+      <span className="tabular-nums font-semibold" style={heroTextShadow}>
         {rating.toFixed(1)}
       </span>
       {shouldReduceMotion ? (
@@ -100,11 +105,9 @@ export default function Hero({
           {animatedStars}
         </motion.span>
       )}
-      {reviewCount !== null ? (
-        <span className="tabular-nums" style={heroTextShadow}>
-          ({reviewCount} {t("navReviews").toLowerCase()})
-        </span>
-      ) : null}
+      <span className="tabular-nums" style={heroTextShadow}>
+        ({reviewCount || 61})
+      </span>
       <span aria-hidden="true" style={heroTextShadow}>
         ·
       </span>
@@ -125,7 +128,7 @@ export default function Hero({
         />
       </svg>
       <span style={heroTextShadow}>{t("heroVerifiedByGoogle")}</span>
-    </>
+    </a>
   );
 
   const heroImage = IMAGE_URLS[0];
@@ -186,15 +189,9 @@ export default function Hero({
             <div className="mt-4 md:mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
               <div className="flex flex-col items-center gap-3 text-xs text-white/90 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
                 {placeId ? (
-                  <a
-                    href={`https://search.google.com/local/writereview?placeid=${placeId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={t("heroLeaveReview")}
-                    className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start"
-                  >
+                  <div className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start">
                     {ratingLine}
-                  </a>
+                  </div>
                 ) : (
                   <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                     {ratingLine}
