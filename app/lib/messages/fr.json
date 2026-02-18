@@ -6,15 +6,15 @@
       "items": {
         "0": {
           "q": "Nettoyez-vous les vitres intérieures et extérieures?",
-          "a": "Oui. MrBen offre le nettoyage de vitres intérieures et extérieures pour maisons, condos et bâtiments commerciaux."
+          "a": "Oui. Nous offrons le nettoyage de vitres intérieures et extérieures pour maisons, condos et bâtiments commerciaux."
         },
         "1": {
           "q": "Quelles régions desservez-vous?",
-          "a": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Sauveur, Saint-Jérôme et Mirabel."
+          "a": "Nous sommes une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Sauveur, Saint-Jérôme et Mirabel."
         },
         "2": {
           "q": "Offrez-vous des services résidentiels et commerciaux?",
-          "a": "Oui. MrBen offre des services de nettoyage de vitres résidentiels et commerciaux."
+          "a": "Oui. Nous offrons des services de nettoyage de vitres résidentiels et commerciaux."
         },
         "3": {
           "q": "Est-ce que le nettoyage inclut les moustiquaires?",
@@ -153,7 +153,7 @@
     "serviceAreas": {
       "title": "Territoire desservi",
       "lead": "Nous desservons :",
-      "conjunction": "and",
+      "conjunction": "et",
       "outro": "les communautés avoisinantes.",
       "cities": {
         "lachute": "Lachute",
@@ -455,41 +455,10 @@
       }
     }
   },
-  "pricing": {
-    "kicker": "Prix Transparents",
-    "title": "Estimations Simples et Claires",
-    "subtitle": "Pas de frais cachés. Juste un prix honnête pour un travail de qualité.",
-    "card1": {
-      "title": "Plain-Pied",
-      "price": "165$+",
-      "desc": "Parfait pour les maisons d'un étage.",
-      "features": [
-        "Intérieur et Extérieur",
-        "Moustiquaires Essuyés",
-        "Cadres et Rebords"
-      ]
-    },
-    "card2": {
-      "title": "Maison à Étages",
-      "price": "245$+",
-      "desc": "Nettoyage complet pour grandes maisons.",
-      "features": [
-        "Intérieur et Extérieur",
-        "Vitres en Hauteur",
-        "Rails Aspirés"
-      ]
-    },
-    "card3": {
-      "title": "Nettoyage Gouttières",
-      "price": "145$+",
-      "desc": "Protégez votre maison des dégâts d'eau.",
-      "features": [
-        "Retrait des Débris",
-        "Descentes Vérifiées",
-        "Photos sur Demande"
-      ]
-    },
-    "note": "Les prix varient selon le nombre de fenêtres et l'accessibilité. Contactez-nous pour un devis précis."
+  "territory": {
+    "city": {
+      "sourceOfTruth": "MrBen offre le nettoyage de vitres résidentiel et commercial à {city} et dans les Laurentides."
+    }
   },
   "territoryCityPage": {
     "jsonld": {
