@@ -36,55 +36,12 @@ export default function EstimatorPage() {
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleCalculate = async () => {
-    if (files.length === 0) return;
-
-    setIsProcessing(true);
-    setError(null);
-
-    try {
-      // 1. Compress all images
-      const compressedFiles = await Promise.all(
-        files.map(async (f) => {
-          try {
-            return await compressImage(f);
-          } catch {
-            return f; // Fallback to original if compression fails
-          }
-        })
-      );
-
-      // 2. Prepare FormData
-      const formData = new FormData();
-      compressedFiles.forEach((file) => {
-        formData.append("files", file); // Append multiple files with same key
-      });
-
-      // 3. Send to API
-      const res = await fetch("/api/estimate", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Estimation failed");
-      }
-
-      const data = await res.json();
-      setResult(data);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "An error occurred. Please try fewer images.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  const BASE_FEE = 60.00;
 
   const calculateTotal = () => {
     if (!result || !result.window_counts) return 0;
     
-    let total = 0;
+    let total = BASE_FEE;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
       const price = mode === "ext" ? PRICING_DATA[k]?.price_ext : PRICING_DATA[k]?.price_in_out;
@@ -235,6 +192,20 @@ export default function EstimatorPage() {
 
               <div className="space-y-3">
                 <div className="text-sm font-semibold text-zinc-900">Breakdown:</div>
+                
+                {/* Base Fee Line */}
+                <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+                  <div>
+                    <div className="text-sm font-medium text-zinc-900">Service & Travel Fee</div>
+                    <div className="text-xs text-zinc-500">Base cost for all appointments</div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
+                      ${BASE_FEE.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+
                 {Object.entries(result.window_counts).map(([key, count]) => {
                   const c = count as number;
                   if (c === 0) return null;
