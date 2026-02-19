@@ -40,41 +40,29 @@ export async function POST(req: Request) {
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
-COUNTING RULES (CRITICAL):
-**COUNT EVERY INDIVIDUAL PANE OF GLASS.**
-- A standard 2-panel slider = **2 counts**.
-- A 3-panel window = **3 counts**.
-- A standard double-hung (top/bottom) = **2 counts**.
-- A patio door (2 glass panels) = **2 counts**.
-- A patio door (3 glass panels) = **3 counts**.
-- EXCEPTION: **French Panes (small_french)**: Count each tiny square individually.
+CRITICAL DEFINITION OF A "PANE" (standard_pane):
+- A "Pane" is a single sheet of glass surrounded by a **structural frame** (vinyl, wood, aluminum).
+- **DO NOT COUNT** decorative grids, lead lines, muntins, or internal dividers as separate panes.
+  - Example: A window with a 2x3 grid pattern is ONE pane if it is a single sheet of glass.
+  - Example: A window with true divided lites (separate glass pieces) counts as multiple panes, but this is rare in modern windows. Assume grids are decorative unless obvious otherwise.
+- **Entry Doors:** Count a decorative glass insert (leaded/stained/frosted) as **ONE pane**, regardless of the pattern inside.
+- **Sliding Windows:**
+  - A standard slider has **2 Panes** (one fixed, one sliding).
+  - A double (storm) slider has **4 Panes** (2 inner + 2 outer).
+- **Hung Windows:** A standard single-hung or double-hung has **2 Panes** (top sash + bottom sash).
 
-CATEGORIES (Assign each pane to its type):
-- **std_hung:** Pane part of a vertical sliding window.
-- **window_slider_standard:** Pane part of a horizontal sliding sash.
-- **slider_double_set:** Pane part of a double/storm slider assembly (inner or outer glass).
-- **std_fixed:** Single fixed pane (casement or picture).
-- **alum_double_slider:** Pane part of a vintage aluminum slider.
-- **patio_door_2panel:** Large glass door panel.
-- **entry_door_glass:** Glass pane inside a front door.
-- **small_french:** Individual small square pane.
-- **large_picture:** Oversized floor-to-ceiling fixed glass.
-- **arch_special:** Custom shape pane.
+CATEGORIES:
+1. **standard_pane:** Count every distinct structural pane according to the rules above.
+2. **patio_door_2panel:** Count standard sliding glass door assemblies (count the *door set*, not the individual glass panels). 
+   - Note: If counting the door set as '1' is confusing, just count its glass panels as 'standard_pane' (2 panes per door). 
+   - **PREFERENCE:** Count Patio Doors as 'patio_door_2panel' (1 count per door assembly).
 
 OUTPUT FORMAT:
 Return JSON ONLY with no markdown:
 { 
   "window_counts": { 
-    "std_hung": 0, 
-    "window_slider_standard": 0,
-    "slider_double_set": 0,
-    "std_fixed": 0, 
-    "alum_double_slider": 0, 
-    "patio_door_2panel": 0,
-    "entry_door_glass": 0,
-    "small_french": 0, 
-    "large_picture": 0, 
-    "arch_special": 0 
+    "standard_pane": 0, 
+    "patio_door_2panel": 0
   }, 
   "stories": 1, 
   "audio_summary": "None" 
