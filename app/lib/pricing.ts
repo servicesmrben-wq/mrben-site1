@@ -1,18 +1,23 @@
 export const PRICING_DATA = {
-  standard_pane: { 
-    label: "Window Pane", 
-    price: 3.00, 
-    desc: "Single distinct piece of glass" 
+  window_slider: {
+    label: "Standard Slider",
+    price: 10.00,  // 2 panes * $5
+    desc: "2-panel horizontal sliding window"
+  },
+  window_casement: {
+    label: "Casement / Picture",
+    price: 5.00,  // 1 pane * $5
+    desc: "Single crank-out or fixed pane"
+  },
+  entry_door_glass: {
+    label: "Entry Door Glass",
+    price: 5.00, // 1 pane * $5
+    desc: "Glass insert in exterior door"
   },
   patio_door_2panel: {
     label: "Sliding Patio Door",
-    price: 12.00,
+    price: 10.00, // 2 panes * $5
     desc: "Standard 2-panel sliding door assembly"
-  },
-  screen_cleaning: {
-    label: "Screen Cleaning",
-    price: 3.00,
-    desc: "Per screen"
   }
 };
 

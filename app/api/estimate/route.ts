@@ -40,28 +40,19 @@ export async function POST(req: Request) {
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
-CRITICAL DEFINITION OF A "PANE" (standard_pane):
-- A "Pane" is a single sheet of glass surrounded by a **structural frame** (vinyl, wood, aluminum).
-- **DO NOT COUNT** decorative grids, lead lines, muntins, or internal dividers as separate panes.
-  - Example: A window with a 2x3 grid pattern is ONE pane if it is a single sheet of glass.
-  - Example: A window with true divided lites (separate glass pieces) counts as multiple panes, but this is rare in modern windows. Assume grids are decorative unless obvious otherwise.
-- **Entry Doors:** Count a decorative glass insert (leaded/stained/frosted) as **ONE pane**, regardless of the pattern inside.
-- **Sliding Windows:**
-  - A standard slider has **2 Panes** (one fixed, one sliding).
-  - A double (storm) slider has **4 Panes** (2 inner + 2 outer).
-- **Hung Windows:** A standard single-hung or double-hung has **2 Panes** (top sash + bottom sash).
-
-CATEGORIES:
-1. **standard_pane:** Count every distinct structural pane according to the rules above.
-2. **patio_door_2panel:** Count standard sliding glass door assemblies (count the *door set*, not the individual glass panels). 
-   - Note: If counting the door set as '1' is confusing, just count its glass panels as 'standard_pane' (2 panes per door). 
-   - **PREFERENCE:** Count Patio Doors as 'patio_door_2panel' (1 count per door assembly).
+COUNTING RULES:
+1. **Standard Slider (window_slider):** Identify horizontal sliding windows. They typically have 2 sashes (one fixed, one sliding). Count the entire window unit as **1**.
+2. **Casement / Picture (window_casement):** Identify single-pane crank-out windows or non-opening picture windows. Count each distinct pane as **1**.
+3. **Entry Door Glass (entry_door_glass):** Identify glass inserts in front/side doors. Count the entire insert as **1**.
+4. **Sliding Patio Door (patio_door_2panel):** Identify standard 2-panel sliding glass doors. Count the entire door assembly as **1**.
 
 OUTPUT FORMAT:
 Return JSON ONLY with no markdown:
 { 
   "window_counts": { 
-    "standard_pane": 0, 
+    "window_slider": 0, 
+    "window_casement": 0,
+    "entry_door_glass": 0,
     "patio_door_2panel": 0
   }, 
   "stories": 1, 
