@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     );
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-001" });
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
