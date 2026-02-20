@@ -41,13 +41,19 @@ export async function POST(req: Request) {
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
 CRITICAL INSTRUCTION - STEP-BY-STEP SPATIAL ANALYSIS:
-Before providing the final counts, you MUST conduct a floor-by-floor, left-to-right visual scan of the property to ensure nothing is missed or merged.
+Before providing the final counts, you MUST conduct a floor-by-floor, left-to-right visual scan of the property.
+
+**SCANNING PROTOCOL:**
 1. **Start at the Top Floor**, scanning Left to Right.
 2. **Move to the Main Floor**, scanning Left to Right.
 3. **End at the Basement/Ground Level**, scanning Left to Right.
-4. **Dissect Assemblies:** For EVERY large window assembly you encounter, explicitly state how many structural dividers (mullions) you see and calculate the individual panes.
-   - Example: "Main floor, far left: 1 large assembly split by mullions into 3 top panes and 3 bottom panes = 6 'window_casement' panes."
-   - Example: "Center: 1 large picture window flanked by 2 narrow casements = 3 'window_casement' panes."
+
+**MANDATORY CHECKS:**
+When conducting your scan, you MUST execute these specific checks:
+1. **THE HORIZONTAL CHECK:** After counting vertical mullions in a large assembly, explicitly check for horizontal structural frames. If a unit is split into top and bottom sections, multiply your count. 
+   - *Example:* "Main floor left: 3 vertical sections, split horizontally into top and bottom = 6 panes."
+2. **THE TRANSOM CHECK:** Whenever you identify a 'patio_door_2panel' or entry door, you must explicitly look directly ABOVE the door frame for transom windows and count them separately as 'window_casement'.
+3. **THE SHADOW CHECK:** Pay extreme attention to the dark foundation/basement level to spot small basement windows (often partly obscured by grass).
 
 CATEGORIES & COUNTING:
 1. **Standard Slider (window_slider):** Horizontal sliding window (usually 2 sashes). Count the unit as **1** (which covers 2 panes).
