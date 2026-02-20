@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X } from "lucide-react";
 import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
@@ -11,7 +11,7 @@ const compressImage = async (file: File): Promise<File> => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (event) => {
-      const img = document.createElement("img"); // Fixed: 'new Image()' works too but this is explicit
+      const img = document.createElement("img");
       img.src = event.target?.result as string;
       img.onload = () => {
         const canvas = document.createElement("canvas");
@@ -50,9 +50,9 @@ const compressImage = async (file: File): Promise<File> => {
 };
 
 export default function EstimatorPage() {
-  // AI Window Cleaning Estimator Logic
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [mode, setMode] = useState<"ext" | "in_out">("ext");
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -60,18 +60,13 @@ export default function EstimatorPage() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files);
-      
-      // Basic validation
       const validFiles = newFiles.filter(f => f.type.startsWith("image/"));
       if (validFiles.length !== newFiles.length) {
         alert("Only image files (JPG, PNG) are supported right now.");
       }
-
       setFiles(prev => [...prev, ...validFiles]);
       setResult(null);
       setError(null);
-      
-      // Reset input
       e.target.value = "";
     }
   };
@@ -85,58 +80,96 @@ export default function EstimatorPage() {
   const handleCalculate = async () => {
     if (files.length === 0) return;
 
+    // 1. Validation: Max 8 Images
+    if (files.length > 8) {
+      alert("Maximum 8 images allowed per request. Please remove some images.");
+      return;
+    }
+
     setIsProcessing(true);
+    setProgress(0);
     setError(null);
 
+    // Smart Progress Logic (Slightly faster per chunk)
+    const estimatedWaitTimeMs = files.length * 5000 + 2000; 
+    const startTime = Date.now();
+    
+    const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const calculatedProgress = Math.min((elapsed / estimatedWaitTimeMs) * 100, 95); 
+      setProgress(calculatedProgress);
+    }, 200);
+
     try {
-      // 1. Compress all images
-      const compressedFiles = await Promise.all(
-        files.map(async (f) => {
-          try {
-            return await compressImage(f);
-          } catch {
-            return f; // Fallback to original if compression fails
-          }
-        })
-      );
-
-      // 2. Prepare FormData
-      const formData = new FormData();
-      compressedFiles.forEach((file) => {
-        formData.append("files", file); // Append multiple files with same key
-      });
-
-      // 3. Send to API
-      const res = await fetch("/api/estimate", {
-        method: "POST",
-        body: formData,
-      });
-
-      let data;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error("Non-JSON API Response:", text);
-        throw new Error("Server error: The analysis timed out or failed. Please try fewer images.");
+      // 2. Chunking Logic
+      const CHUNK_SIZE = 4;
+      const chunks: File[][] = [];
+      for (let i = 0; i < files.length; i += CHUNK_SIZE) {
+        chunks.push(files.slice(i, i + CHUNK_SIZE));
       }
 
-      if (!res.ok) {
-        throw new Error(data.error || "Estimation failed");
-      }
+      // 3. Process Chunks in Parallel
+      const fetchPromises = chunks.map(async (chunk, index) => {
+        // Compress chunk
+        const compressedChunk = await Promise.all(
+          chunk.map(async (f) => {
+            try { return await compressImage(f); } catch { return f; }
+          })
+        );
 
-      setResult(data);
+        const formData = new FormData();
+        compressedChunk.forEach((file) => {
+          formData.append("files", file); 
+        });
+
+        const res = await fetch("/api/estimate", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          throw new Error(`Batch ${index + 1} failed`);
+        }
+        return res.json();
+      });
+
+      const results = await Promise.all(fetchPromises);
+
+      // 4. Merge Results
+      const mergedResult = {
+        analysis: "",
+        window_counts: {
+          pane_3rd_story: 0,
+          pane_2nd_story: 0,
+          pane_1st_base: 0,
+          patio_door_panel: 0
+        },
+        stories: 1
+      };
+
+      results.forEach((res, i) => {
+        mergedResult.analysis += `Batch ${i + 1}: ` + res.analysis + "\n";
+        
+        Object.keys(mergedResult.window_counts).forEach((key) => {
+          const k = key as keyof typeof mergedResult.window_counts;
+          mergedResult.window_counts[k] += (res.window_counts[k] || 0);
+        });
+      });
+
+      setResult(mergedResult);
+      setProgress(100); 
     } catch (err: any) {
       console.error(err);
       setError(err.message || "An error occurred. Please try fewer images.");
+      setProgress(0);
     } finally {
+      clearInterval(progressInterval);
       setIsProcessing(false);
     }
   };
 
   const calculateTotal = () => {
-    if (!result || !result.window_counts) return 0;
+    if (!result || !result.window_counts) return "0.00";
     
     let windowSum = 0;
     Object.entries(result.window_counts).forEach(([key, count]) => {
@@ -152,6 +185,11 @@ export default function EstimatorPage() {
     const total = (windowSum * SAFETY_BUFFER) + BASE_FEE;
     
     return total.toFixed(2);
+  };
+
+  const getTotalPanes = () => {
+    if (!result || !result.window_counts) return 0;
+    return Object.values(result.window_counts).reduce((sum: any, count: any) => sum + Number(count), 0);
   };
 
   return (
@@ -177,7 +215,7 @@ export default function EstimatorPage() {
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
-              1. Upload Photos
+              1. Upload Photos (Max 8)
             </label>
             <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50 transition hover:border-zinc-400 hover:bg-zinc-100">
               <input 
@@ -190,7 +228,7 @@ export default function EstimatorPage() {
               <div className="flex flex-col items-center gap-2 text-zinc-500">
                 <Upload className="h-8 w-8" />
                 <span className="text-sm font-medium">Click to select photos</span>
-                <span className="text-xs text-zinc-400">JPG, PNG (Max 10MB per file before compression)</span>
+                <span className="text-xs text-zinc-400">JPG, PNG (Max 10MB per file)</span>
               </div>
             </div>
 
@@ -254,10 +292,19 @@ export default function EstimatorPage() {
             className="flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isProcessing ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Processing {files.length} images...
-              </>
+              <div className="flex flex-col items-center w-full">
+                <div className="flex items-center gap-2 mb-2">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span>Processing {files.length} images...</span>
+                </div>
+                {/* Progress Bar */}
+                <div className="h-1.5 w-full max-w-[200px] bg-zinc-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-emerald-400 transition-all duration-300 ease-out" 
+                    style={{ width: `${progress}%` }} 
+                  />
+                </div>
+              </div>
             ) : (
               <>
                 <Calculator className="h-5 w-5" />
@@ -280,8 +327,13 @@ export default function EstimatorPage() {
                 <div className="mt-1 text-4xl font-bold text-emerald-900">
                   ${calculateTotal()}
                 </div>
-                <div className="mt-2 text-xs text-emerald-700">
-                  *Based on detected windows. Final price may vary upon onsite inspection.
+                {/* Total Panes Count */}
+                <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Total Panes Counted: {getTotalPanes()}
+                </div>
+                <div className="mt-3 text-xs text-emerald-700">
+                  *Includes 15% safety buffer & base fee. Final price may vary upon onsite inspection.
                 </div>
               </div>
 
@@ -289,13 +341,6 @@ export default function EstimatorPage() {
                 <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4">
                   <div className="text-xs font-semibold uppercase text-blue-700 mb-2">AI Analysis Log</div>
                   <p className="text-sm text-blue-900 whitespace-pre-wrap leading-relaxed">{result.analysis}</p>
-                </div>
-              )}
-
-              {result.audio_summary && result.audio_summary !== "None" && (
-                <div className="mb-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-                  <div className="text-xs font-semibold uppercase text-zinc-500 mb-2">Notes Detected</div>
-                  <p className="text-sm text-zinc-700 italic">"{result.audio_summary}"</p>
                 </div>
               )}
 
@@ -337,16 +382,6 @@ export default function EstimatorPage() {
                   );
                 })}
               </div>
-
-              {/* Safety Warning for Vintage Sliders */}
-              {(result.window_counts.alum_double_slider > 0) && (
-                <div className="mt-6 flex items-start gap-3 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
-                  <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold">Note:</span> We detected vintage double-slider windows. These often require disassembly to clean properly, which takes extra time and care.
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
