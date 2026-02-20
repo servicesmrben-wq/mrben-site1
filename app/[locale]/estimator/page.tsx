@@ -344,43 +344,37 @@ export default function EstimatorPage() {
                 </div>
               )}
 
-              <div className="space-y-3">
-                <div className="text-sm font-semibold text-zinc-900">Breakdown:</div>
-                
-                {/* Base Fee Line */}
-                <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-                  <div>
-                    <div className="text-sm font-medium text-zinc-900">Service & Travel Fee</div>
-                    <div className="text-xs text-zinc-500">Standard service fee</div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
-                      ${BASE_FEE.toFixed(2)}
-                    </div>
-                  </div>
-                </div>
+import Link from "next/link";
+// ... imports
 
-                {Object.entries(result.window_counts).map(([key, count]) => {
-                  const c = count as number;
-                  if (c === 0) return null;
-                  const k = key as PricingKey;
-                  const item = PRICING_DATA[k];
-                  
-                  return (
-                    <div key={key} className="flex items-center justify-between border-b border-zinc-100 pb-2 last:border-0">
-                      <div>
-                        <div className="text-sm font-medium text-zinc-900">{item.label}</div>
-                        <div className="text-xs text-zinc-500">{item.desc}</div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-sm text-zinc-600">{c}x</div>
-                        <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
-                          ${(c * (mode === "ext" ? item.price : item.price * 2)).toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+// ... inside component ...
+
+              <div className="space-y-3">
+                {/* ... existing breakdown ... */}
+                
+                {/* Book Button */}
+                <div className="mt-8 border-t border-zinc-100 pt-6">
+                  <Link
+                    href={{
+                      pathname: "/contact", // Assuming /contact redirects to localized path or is handled by middleware
+                      query: {
+                        quote: calculateTotal(),
+                        panes: getTotalPanes(),
+                        s3: result.window_counts.pane_3rd_story,
+                        s2: result.window_counts.pane_2nd_story,
+                        s1: result.window_counts.pane_1st_base,
+                        doors: result.window_counts.patio_door_panel,
+                      }
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
+                  >
+                    Book This Estimate
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <p className="mt-3 text-center text-xs text-zinc-500">
+                    Sends your estimate directly to our team.
+                  </p>
+                </div>
               </div>
             </div>
           )}

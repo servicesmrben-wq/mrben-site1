@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect, RefObject } from "react";
+import React, { useState, useRef, useEffect, RefObject, Suspense } from "react";
 import Image from "next/image";
-import { CheckCircle2, Phone, Mail, ArrowRight, Upload } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { CheckCircle2, Phone, Mail, ArrowRight, Upload, Calculator } from "lucide-react";
 import { useLocale } from "next-intl";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import { BRAND } from "@/app/lib/constants";
@@ -22,8 +23,9 @@ function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: R
   );
 }
 
-export default function Contact({ t, contactRef }: { t: (key: string, options?: any) => string, contactRef: RefObject<HTMLDivElement | null> }) {
+function ContactContent({ t, contactRef }: { t: (key: string, options?: any) => string, contactRef: RefObject<HTMLDivElement | null> }) {
   const locale = useLocale();
+  const searchParams = useSearchParams();
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -43,7 +45,21 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
   const [services, setServices] = useState<string[]>([]);
 
   const [status, setStatus] = useState({ state: "idle", message: "" });
-  // state: "idle" | "sending" | "success" | "error"
+
+  // Extract Estimate Params
+  const estimateQuote = searchParams.get("quote");
+  const estimatePanes = searchParams.get("panes");
+  const estimateS3 = searchParams.get("s3");
+  const estimateS2 = searchParams.get("s2");
+  const estimateS1 = searchParams.get("s1");
+  const estimateDoors = searchParams.get("doors");
+
+  useEffect(() => {
+    if (estimateQuote) {
+      // Pre-fill message or handle logic if needed
+      // setForm(p => ({ ...p, message: "I'm interested in the estimate I just generated." }));
+    }
+  }, [estimateQuote]);
 
   const MAX_IMAGES = 5;
   const MAX_IMAGE_SIZE = 15 * 1024 * 1024;
@@ -208,7 +224,6 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
       
       let uploadedUrls: string[] = [];
       if (useBlobBackup) {
-        // Upload to blob storage first
         for (const file of images) {
           const upData = new FormData();
           upData.append("file", file);
@@ -227,6 +242,13 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
       formData.append("services", JSON.stringify(services));
       formData.append("message", form.message);
       formData.append("company", company);
+      
+      // Inject Estimate Data if present
+      if (estimateQuote) {
+        formData.append("estimateQuote", estimateQuote);
+        formData.append("estimatePanes", estimatePanes || "0");
+        formData.append("estimateDetails", `3rd: ${estimateS3}, 2nd: ${estimateS2}, 1st: ${estimateS1}, Doors: ${estimateDoors}`);
+      }
       
       if (useBlobBackup) {
         formData.append("imageUrls", JSON.stringify(uploadedUrls));
@@ -266,7 +288,6 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
         message: t("sendSuccess"),
       });
 
-      // Fire confetti
       const count = 200;
       const defaults = {
         origin: { y: 0.7 }
@@ -280,28 +301,11 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
         });
       }
 
-      fire(0.25, {
-        spread: 26,
-        startVelocity: 55,
-      });
-      fire(0.2, {
-        spread: 60,
-      });
-      fire(0.35, {
-        spread: 100,
-        decay: 0.91,
-        scalar: 0.8
-      });
-      fire(0.1, {
-        spread: 120,
-        startVelocity: 25,
-        decay: 0.92,
-        scalar: 1.2
-      });
-      fire(0.1, {
-        spread: 120,
-        startVelocity: 45,
-      });
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
 
       setForm({ name: "", phone: "", email: "", address: "", message: "" });
       setCompany("");
@@ -322,6 +326,7 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
       <div ref={contactRef} aria-hidden="true" className="h-0 w-full" />
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
         <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
+          {/* Left Column (Info) */}
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white ring-1 ring-white/15">
               <CheckCircle2 className="h-3.5 w-3.5" />
@@ -333,10 +338,7 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
             <p className="mt-3 text-base leading-relaxed text-white/75">{t("contactP")}</p>
 
             <div className="mt-5 space-y-2 md:mt-6 md:space-y-3">
-              <a
-                href={BRAND.phoneHref}
-                className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15"
-              >
+              <a href={BRAND.phoneHref} className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15">
                 <div className="flex items-center gap-3">
                   <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/10">
                     <Phone className="h-5 w-5" />
@@ -349,10 +351,7 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
                 <ArrowRight className="h-5 w-5 text-white/60" />
               </a>
 
-              <a
-                href={toMailto(BRAND.emailHref)}
-                className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15"
-              >
+              <a href={toMailto(BRAND.emailHref)} className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15">
                 <div className="flex items-center gap-3">
                   <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/10">
                     <Mail className="h-5 w-5" />
@@ -372,10 +371,7 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
               <div className="mt-4 hidden text-sm font-semibold text-white md:block">{t("services")}</div>
               <div className="mt-2 hidden flex-wrap gap-2 md:flex">
                 {[t("servicesMenuVitres"), t("servicesMenuGout"), t("servicesMenuSiding")].map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/80 ring-1 ring-white/10"
-                  >
+                  <span key={s} className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/80 ring-1 ring-white/10">
                     {s}
                   </span>
                 ))}
@@ -383,12 +379,26 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
             </div>
           </div>
 
+          {/* Right Column (Form) */}
           <div className="rounded-3xl bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-zinc-900">{t("formT")}</div>
               </div>
             </div>
+
+            {/* Estimate Display Block */}
+            {estimateQuote && (
+              <div className="mt-4 mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                <div className="flex items-center gap-2 text-emerald-800">
+                  <Calculator className="h-5 w-5" />
+                  <span className="text-sm font-bold">AI Estimated Total: ${estimateQuote}</span>
+                </div>
+                <div className="mt-1 text-xs text-emerald-600">
+                  Includes {estimatePanes} panes + $60 base fee.
+                </div>
+              </div>
+            )}
 
             <form 
               onSubmit={onSubmit}
@@ -401,47 +411,14 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
               <div className="absolute left-[-10000px] top-auto h-0 w-0 overflow-hidden">
                 <label>
                   Company
-                  <input
-                    type="text"
-                    name="company"
-                    autoComplete="off"
-                    tabIndex={-1}
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                  />
+                  <input type="text" name="company" autoComplete="off" tabIndex={-1} value={company} onChange={(e) => setCompany(e.target.value)} />
                 </label>
               </div>
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input
-                  label={t("name")}
-                  placeholder={t("name")}
-                  value={form.name}
-                  onChange={(e: any) => setForm((p) => ({ ...p, name: e.target.value }))}
-                />
-                <Input
-                  label={t("phoneLabel")}
-                  placeholder="450-555-0123"
-                  value={form.phone}
-                  onChange={(e: any) =>
-                    setForm((p) => ({ ...p, phone: formatPhoneNumber(e.target.value) }))
-                  }
-                  type="tel"
-                  inputMode="numeric"
-                  autoComplete="tel"
-                />
-                <Input
-                  label={t("emailLabel")}
-                  placeholder="you@example.com"
-                  value={form.email}
-                  onChange={(e: any) => setForm((p) => ({ ...p, email: e.target.value }))}
-                />
-                <Input
-                  label={t("address")}
-                  placeholder={t("address")}
-                  inputRef={addressInputRef}
-                  value={form.address}
-                  onChange={(e: any) => setForm((p) => ({ ...p, address: e.target.value }))}
-                />
+                <Input label={t("name")} placeholder={t("name")} value={form.name} onChange={(e: any) => setForm((p) => ({ ...p, name: e.target.value }))} />
+                <Input label={t("phoneLabel")} placeholder="450-555-0123" value={form.phone} onChange={(e: any) => setForm((p) => ({ ...p, phone: formatPhoneNumber(e.target.value) }))} type="tel" inputMode="numeric" autoComplete="tel" />
+                <Input label={t("emailLabel")} placeholder="you@example.com" value={form.email} onChange={(e: any) => setForm((p) => ({ ...p, email: e.target.value }))} />
+                <Input label={t("address")} placeholder={t("address")} inputRef={addressInputRef} value={form.address} onChange={(e: any) => setForm((p) => ({ ...p, address: e.target.value }))} />
               </div>
 
               <div className="mt-4">
@@ -450,12 +427,7 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {serviceOptions.map((x) => (
                       <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                        <input
-                          type="checkbox"
-                          className="mt-1"
-                          checked={services.includes(x)}
-                          onChange={() => toggleService(x)}
-                        />
+                        <input type="checkbox" className="mt-1" checked={services.includes(x)} onChange={() => toggleService(x)} />
                         <span className="text-sm text-zinc-700">{x}</span>
                       </label>
                     ))}
@@ -467,31 +439,16 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
                       <span className="flex flex-col">
                         <span>{t("servicesRequested")}</span>
                         <span className="text-xs font-medium text-zinc-500">
-                          {t("chooseServices")}
-                          {services.length > 0 ? (
-                            <span className="ml-2 text-[11px] text-zinc-400" aria-live="polite">
-                              ({services.length} {t("selected")})
-                            </span>
-                          ) : null}
+                          {t("chooseServices")} {services.length > 0 ? <span className="ml-2 text-[11px] text-zinc-400" aria-live="polite">({services.length} {t("selected")})</span> : null}
                         </span>
                       </span>
-                      <span
-                        className="ml-3 text-zinc-400 transition-transform group-open:rotate-180"
-                        aria-hidden="true"
-                      >
-                        ▾
-                      </span>
+                      <span className="ml-3 text-zinc-400 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
                     </summary>
                     <div className="pt-3">
                       <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                         {serviceOptions.map((x) => (
                           <label key={x} className="flex items-start gap-2 rounded-2xl border border-zinc-200 p-3">
-                            <input
-                              type="checkbox"
-                              className="mt-1"
-                              checked={services.includes(x)}
-                              onChange={() => toggleService(x)}
-                            />
+                            <input type="checkbox" className="mt-1" checked={services.includes(x)} onChange={() => toggleService(x)} />
                             <span className="text-sm text-zinc-700">{x}</span>
                           </label>
                         ))}
@@ -503,26 +460,14 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
 
               <div className="mt-4">
                 <div className="text-sm font-semibold text-zinc-900">{t("desc")}</div>
-                <textarea
-                  rows={4}
-                  className="mt-2 w-full rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400"
-                  placeholder={t("descPlaceholder")}
-                  value={form.message}
-                  onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
-                />
+                <textarea rows={4} className="mt-2 w-full rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400" placeholder={t("descPlaceholder")} value={form.message} onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))} />
                 <p className="mt-2 text-xs text-zinc-500">{t("descHint")}</p>
               </div>
 
               {/* Image upload */}
               <div className="mt-4">
-                <div className="text-sm font-semibold text-zinc-900">
-                  {t("photoLabel")}
-                </div>
-
-                <label
-                  htmlFor="contactPhotos"
-                  className="mt-2 block cursor-pointer rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400 focus-within:ring-2 focus-within:ring-zinc-200 hover:bg-black/5 active:opacity-90"
-                >
+                <div className="text-sm font-semibold text-zinc-900">{t("photoLabel")}</div>
+                <label htmlFor="contactPhotos" className="mt-2 block cursor-pointer rounded-2xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus-within:border-zinc-400 focus-within:ring-2 focus-within:ring-zinc-200 hover:bg-black/5 active:opacity-90">
                   <div className="flex items-center gap-2 font-semibold">
                     <Upload className="h-4 w-4" />
                     <span>{t("photoSelectButton")}</span>
@@ -536,132 +481,76 @@ export default function Contact({ t, contactRef }: { t: (key: string, options?: 
                     onChange={async (e) => {
                       const selected = Array.from(e.target.files || []);
                       if (!selected.length) return;
-
                       const nextImages = [...images, ...selected];
                       const validationMessage = validateImages(nextImages);
-
                       if (validationMessage) {
                         setImageError(validationMessage);
                         setStatus({ state: "idle", message: "" });
                         e.target.value = "";
                         return;
                       }
-
-                      const compressionResults = await Promise.allSettled(
-                        selected.map((file) => compressImage(file))
-                      );
-                      const compressedFiles = compressionResults
-                        .filter((result) => result.status === "fulfilled")
-                        .map((result) => (result as PromiseFulfilledResult<File>).value);
-                      const failedCompression = compressionResults.some(
-                        (result) => result.status === "rejected"
-                      );
-
-                      if (failedCompression) {
-                        setImageError(
-                          locale === "fr"
-                            ? "Impossible de compresser une image sous 1 Mo."
-                            : "Unable to compress an image below 1MB."
-                        );
+                      const compressionResults = await Promise.allSettled(selected.map((file) => compressImage(file)));
+                      const compressedFiles = compressionResults.filter((result) => result.status === "fulfilled").map((result) => (result as PromiseFulfilledResult<File>).value);
+                      if (compressionResults.some((result) => result.status === "rejected")) {
+                        setImageError(locale === "fr" ? "Impossible de compresser une image sous 1 Mo." : "Unable to compress an image below 1MB.");
                         setStatus({ state: "idle", message: "" });
                         e.target.value = "";
                         return;
                       }
-
                       const compressedImages = [...images, ...compressedFiles];
                       const compressedValidationMessage = validateImages(compressedImages);
-
                       if (compressedValidationMessage) {
                         setImageError(compressedValidationMessage);
                         setStatus({ state: "idle", message: "" });
                         e.target.value = "";
                         return;
                       }
-
                       setImages(compressedImages);
                       setImageError("");
                       setStatus({ state: "idle", message: "" });
                       e.target.value = "";
                     }}
                   />
-
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
                     <span>{t("photoHelper")}</span>
                     <span className="hidden text-zinc-300 sm:inline">•</span>
-                    <span>
-                      {t("photoSelected", { count: images.length, max: MAX_IMAGES })}
-                    </span>
+                    <span>{t("photoSelected", { count: images.length, max: MAX_IMAGES })}</span>
                   </div>
                 </label>
-
-                {imageError && (
-                  <p className="mt-2 text-xs text-red-600">{imageError}</p>
-                )}
-
+                {imageError && <p className="mt-2 text-xs text-red-600">{imageError}</p>}
                 {previews.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-3">
                     {previews.map((preview, index) => (
-                      <div
-                        key={`${preview.url}-${preview.file.name}`}
-                        className="relative h-20 w-20 overflow-hidden rounded-2xl border border-zinc-200"
-                      >
-                        <Image
-                          src={preview.url}
-                          alt={preview.file.name}
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
-                        <button
-                          type="button"
-                          aria-label={t("photoRemove")}
-                          className="absolute right-1 top-1 rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold text-zinc-700 shadow-sm"
-                          onClick={() => {
-                            const next = images.filter((_, i) => i !== index);
-                            setImages(next);
-                            setImageError(validateImages(next));
-                          }}
-                        >
-                          {t("photoRemove")}
-                        </button>
+                      <div key={`${preview.url}-${preview.file.name}`} className="relative h-20 w-20 overflow-hidden rounded-2xl border border-zinc-200">
+                        <Image src={preview.url} alt={preview.file.name} fill className="object-cover" unoptimized />
+                        <button type="button" aria-label={t("photoRemove")} className="absolute right-1 top-1 rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold text-zinc-700 shadow-sm" onClick={() => { const next = images.filter((_, i) => i !== index); setImages(next); setImageError(validateImages(next)); }}>{t("photoRemove")}</button>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-
               {status.state !== "idle" && (
-                <div
-                  className={`mt-4 rounded-2xl p-3 text-sm ${
-                    status.state === "success"
-                      ? "bg-emerald-50 text-emerald-900"
-                      : status.state === "error"
-                      ? "bg-red-50 text-red-900"
-                      : "bg-zinc-50 text-zinc-900"
-                  }`}
-                >
-                  {status.state === "sending"
-                    ? t("sending")
-                    : status.message}
+                <div className={`mt-4 rounded-2xl p-3 text-sm ${status.state === "success" ? "bg-emerald-50 text-emerald-900" : status.state === "error" ? "bg-red-50 text-red-900" : "bg-zinc-50 text-zinc-900"}`}>
+                  {status.state === "sending" ? t("sending") : status.message}
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={status.state === "sending"}
-                className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 active:opacity-90 disabled:opacity-60"
-              >
-                {status.state === "sending"
-                  ? t("sending")
-                  : t("send")}{" "}
-                <ArrowRight className="h-4 w-4" />
+              <button type="submit" disabled={status.state === "sending"} className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 active:opacity-90 disabled:opacity-60">
+                {status.state === "sending" ? t("sending") : t("send")} <ArrowRight className="h-4 w-4" />
               </button>
             </form>
-
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+export default function Contact(props: { t: (key: string, options?: any) => string, contactRef: RefObject<HTMLDivElement | null> }) {
+  return (
+    <Suspense fallback={<div>Loading form...</div>}>
+      <ContactContent {...props} />
+    </Suspense>
   );
 }
