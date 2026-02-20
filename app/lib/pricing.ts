@@ -1,23 +1,23 @@
 export const PRICING_DATA = {
-  window_slider: {
-    label: "Standard Slider",
-    price: 10.00,  // 2 panes * $5
-    desc: "2-panel horizontal sliding window"
+  pane_1st_base: {
+    label: "1st Story / Basement Pane",
+    price: 2.50,
+    desc: "Ground-level and foundation windows"
   },
-  window_casement: {
-    label: "Casement / Picture",
-    price: 5.00,  // 1 pane * $5
-    desc: "Single crank-out or fixed pane"
+  pane_2nd_story: {
+    label: "2nd Story Pane",
+    price: 3.00,
+    desc: "Windows requiring extended reach"
   },
-  entry_door_glass: {
-    label: "Entry Door Glass",
-    price: 5.00, // 1 pane * $5
-    desc: "Glass insert in exterior door"
+  pane_3rd_story: {
+    label: "3rd Story Pane",
+    price: 4.00,
+    desc: "High-reach upper floor windows"
   },
   patio_door_panel: {
-    label: "Patio Door Panel",
-    price: 5.00, // Per panel
-    desc: "Large glass panel (sliding or fixed) in a patio door assembly"
+    label: "Patio Door / Entry Glass",
+    price: 5.00,
+    desc: "Large glass doors or entry inserts"
   }
 };
 

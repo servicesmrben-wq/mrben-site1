@@ -38,33 +38,34 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
       model: "gemini-3-flash-preview",
-      // Removed codeExecution to reduce latency
+      // Removed codeExecution
     });
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
-SPATIAL SCAN: You must still scan floor-by-floor (Top, Main, Basement), but keep the 'analysis' output field extremely brief using math shorthand. DO NOT write full sentences.
-Example format: 'Top: 3(comp)+2+3(comp)=8. Main: 6(split)+3(transom)+6(split)=15. Base: 2(sliders x2)=4. Door: 1(3-panel). Total panes: 27.'
+SPATIAL SCAN (ELEVATION BASED):
+You must scan floor-by-floor (Top-Down) and map your pane counts to their elevation. Keep the 'analysis' output field extremely brief using math shorthand.
+- **3rd Story** (if present): Map counts to 'pane_3rd_story'.
+- **2nd Story**: Map counts to 'pane_2nd_story'.
+- **Main Floor & Basement**: Combine these pane counts and map to 'pane_1st_base'.
+- **Doors**: Keep all patio doors and entry door glass mapped to 'patio_door_panel'.
 
-Apply these visual rules silently:
-- MULLIONS & HORIZONTAL SPLITS: Count every distinct glass pane separated by a thick frame.
-- TRANSOMS: Windows above patio/entry doors count separately.
-- BASEMENT SHADOWS: Most basement windows are sliders. Count 2 panes per sliding unit.
+Example Analysis: "3rd: 0. 2nd: 8. Main+Base: 15+2=17. Doors: 3. Total: 28."
 
 COUNTING RULES:
-1. **Standard Slider (window_slider):** Identify horizontal sliding windows. They typically have 2 sashes (one fixed, one sliding). Count the entire window unit as **1** (accounting for 2 panes).
-2. **Casement / Picture (window_casement):** Identify single-pane crank-out windows or non-opening picture windows. Count each distinct pane as **1**.
-3. **Entry Door Glass (entry_door_glass):** Identify glass inserts in front/side doors. Count the entire insert as **1**.
-4. **Sliding Patio Door Panels (patio_door_panel):** Identify sliding patio door assemblies. You MUST count EACH large glass panel (both the sliding panels and the fixed panels) within the assembly as 1 'patio_door_panel'. For example, a wide sliding door with 3 distinct glass panels = 3 'patio_door_panel'.
+1. **MULLIONS & HORIZONTAL SPLITS:** Count every distinct glass pane separated by a thick frame. A standard slider = 2 panes. A standard hung = 2 panes.
+2. **TRANSOMS:** Windows above patio/entry doors count separately (map them to their floor elevation, usually 1st).
+3. **BASEMENT SHADOWS:** Count 2 panes per sliding basement unit. Map these to 'pane_1st_base'.
+4. **DOORS:** Count each panel of a sliding door or glass insert in an entry door as 'patio_door_panel'.
 
 OUTPUT FORMAT:
-Return JSON ONLY with no markdown. The "analysis" field is mandatory but must be concise.
+Return JSON ONLY with no markdown.
 { 
-  "analysis": "Top: 2+2=4. Main: 3(comp)=3. Base: 2. Total: 9.",
+  "analysis": "2nd: 6. Main: 8+2=10. Base: 4. Doors: 2.",
   "window_counts": { 
-    "window_slider": 0, 
-    "window_casement": 0,
-    "entry_door_glass": 0,
+    "pane_3rd_story": 0,
+    "pane_2nd_story": 0,
+    "pane_1st_base": 0,
     "patio_door_panel": 0
   }, 
   "stories": 1, 
