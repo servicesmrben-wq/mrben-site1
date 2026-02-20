@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 60;
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
