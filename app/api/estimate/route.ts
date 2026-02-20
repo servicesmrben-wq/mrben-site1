@@ -40,11 +40,21 @@ export async function POST(req: Request) {
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
-COUNTING RULES:
-1. **Standard Slider (window_slider):** Identify horizontal sliding windows. They typically have 2 sashes (one fixed, one sliding). Count the entire window unit as **1**.
-2. **Casement / Picture (window_casement):** Identify single-pane crank-out windows or non-opening picture windows. Count each distinct pane as **1**.
-3. **Entry Door Glass (entry_door_glass):** Identify glass inserts in front/side doors. Count the entire insert as **1**.
-4. **Sliding Patio Door (patio_door_2panel):** Identify standard 2-panel sliding glass doors. Count the entire door assembly as **1**.
+ENHANCED VISUAL COUNTING RULES:
+
+**CRITICAL RULE: Composite/Multi-Pane Assemblies (Mullions)**
+* **The Problem:** Modern homes often group several windows together in one large structural opening (e.g., a large center picture window with two smaller side windows).
+* **The Rule:** Do NOT count the entire large assembly as "1". You MUST look inside the large outer frame. Every time a thick structural frame (mullion) divides the glass, count each resulting rectangular piece of glass as a separate pane.
+* **Examples:**
+  - A large living room unit with 1 big center pane and 2 side panes = Count as **3** 'window_casement' panes.
+  - A large unit with 3 tall windows on top and 3 smaller awning windows on the bottom = Count as **6** 'window_casement' panes.
+  - A transom window (narrow glass) sitting directly above a patio door = Count the transom separately as a 'window_casement' (do not merge it into the door count).
+
+CATEGORIES & COUNTING:
+1. **Standard Slider (window_slider):** Horizontal sliding window (usually 2 sashes). Count the unit as **1** (which covers 2 panes).
+2. **Casement / Picture (window_casement):** Any single fixed or crank-out pane. Use this category for *every* individual pane found in a composite/mullion assembly.
+3. **Entry Door Glass (entry_door_glass):** Glass insert in a door. Count the insert as **1**.
+4. **Sliding Patio Door (patio_door_2panel):** Standard sliding door assembly. Count the assembly as **1** (covers 2 panels).
 
 OUTPUT FORMAT:
 Return JSON ONLY with no markdown:
