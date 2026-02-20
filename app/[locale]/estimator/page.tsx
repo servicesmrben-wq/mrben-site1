@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X } from "lucide-react";
+import Link from "next/link"; // Ensure Link is imported
+import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
 import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
 
 // Client-side compression utility
@@ -90,7 +91,7 @@ export default function EstimatorPage() {
     setProgress(0);
     setError(null);
 
-    // Smart Progress Logic (Slightly faster per chunk)
+    // Smart Progress Logic
     const estimatedWaitTimeMs = files.length * 5000 + 2000; 
     const startTime = Date.now();
     
@@ -110,7 +111,6 @@ export default function EstimatorPage() {
 
       // 3. Process Chunks in Parallel
       const fetchPromises = chunks.map(async (chunk, index) => {
-        // Compress chunk
         const compressedChunk = await Promise.all(
           chunk.map(async (f) => {
             try { return await compressImage(f); } catch { return f; }
@@ -181,7 +181,7 @@ export default function EstimatorPage() {
       }
     });
 
-    const SAFETY_BUFFER = 1.15; // 15% Markup for AI undercounting
+    const SAFETY_BUFFER = 1.15; // 15% Markup
     const total = (windowSum * SAFETY_BUFFER) + BASE_FEE;
     
     return total.toFixed(2);
@@ -196,7 +196,7 @@ export default function EstimatorPage() {
     <main className="min-h-screen bg-zinc-50 px-4 py-12">
       <div className="mx-auto max-w-3xl">
         
-        {/* Header with Beta Badge */}
+        {/* Header */}
         <div className="mb-8 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
             <AlertTriangle className="h-3.5 w-3.5" />
@@ -344,37 +344,67 @@ export default function EstimatorPage() {
                 </div>
               )}
 
-import Link from "next/link";
-// ... imports
-
-// ... inside component ...
-
               <div className="space-y-3">
-                {/* ... existing breakdown ... */}
+                <div className="text-sm font-semibold text-zinc-900">Breakdown:</div>
                 
-                {/* Book Button */}
-                <div className="mt-8 border-t border-zinc-100 pt-6">
-                  <Link
-                    href={{
-                      pathname: "/contact", // Assuming /contact redirects to localized path or is handled by middleware
-                      query: {
-                        quote: calculateTotal(),
-                        panes: getTotalPanes(),
-                        s3: result.window_counts.pane_3rd_story,
-                        s2: result.window_counts.pane_2nd_story,
-                        s1: result.window_counts.pane_1st_base,
-                        doors: result.window_counts.patio_door_panel,
-                      }
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
-                  >
-                    Book This Estimate
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <p className="mt-3 text-center text-xs text-zinc-500">
-                    Sends your estimate directly to our team.
-                  </p>
+                {/* Base Fee Line */}
+                <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+                  <div>
+                    <div className="text-sm font-medium text-zinc-900">Service & Travel Fee</div>
+                    <div className="text-xs text-zinc-500">Standard service fee</div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
+                      ${BASE_FEE.toFixed(2)}
+                    </div>
+                  </div>
                 </div>
+
+                {Object.entries(result.window_counts).map(([key, count]) => {
+                  const c = count as number;
+                  if (c === 0) return null;
+                  const k = key as PricingKey;
+                  const item = PRICING_DATA[k];
+                  
+                  return (
+                    <div key={key} className="flex items-center justify-between border-b border-zinc-100 pb-2 last:border-0">
+                      <div>
+                        <div className="text-sm font-medium text-zinc-900">{item.label}</div>
+                        <div className="text-xs text-zinc-500">{item.desc}</div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-sm text-zinc-600">{c}x</div>
+                        <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
+                          ${(c * (mode === "ext" ? item.price : item.price * 2)).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Book Button */}
+              <div className="mt-8 border-t border-zinc-100 pt-6">
+                <Link
+                  href={{
+                    pathname: "/contact",
+                    query: {
+                      quote: calculateTotal(),
+                      panes: getTotalPanes(),
+                      s3: result.window_counts.pane_3rd_story,
+                      s2: result.window_counts.pane_2nd_story,
+                      s1: result.window_counts.pane_1st_base,
+                      doors: result.window_counts.patio_door_panel,
+                    }
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
+                >
+                  Book This Estimate
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <p className="mt-3 text-center text-xs text-zinc-500">
+                  Sends your estimate directly to our team.
+                </p>
               </div>
             </div>
           )}
