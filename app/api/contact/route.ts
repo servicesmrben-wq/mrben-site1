@@ -74,6 +74,11 @@ export async function POST(req: Request) {
     const message = normalizeMultiLine(formData.get("message"));
     const honeypot = normalizeSingleLine(formData.get("company"));
 
+    // Estimate Data
+    const estimateQuote = normalizeSingleLine(formData.get("estimateQuote"));
+    const estimatePanes = normalizeSingleLine(formData.get("estimatePanes"));
+    const estimateDetails = normalizeSingleLine(formData.get("estimateDetails"));
+
     if (honeypot) {
       return new Response(JSON.stringify({ ok: false, error: "Invalid submission." }), {
         status: 400,
@@ -141,19 +146,35 @@ export async function POST(req: Request) {
     const servicesLabel = services.length ? services.join(", ") : "(none selected)";
     const phoneLabel = phone ? phone : "(not provided)";
     const addressLabel = address ? address : "(not provided)";
+    
+    // Construct Text Body
     const textLines = [
       `NOM : ${name}`,
       `COURRIEL : ${email}`,
       `TÉLÉPHONE : ${phoneLabel}`,
       `ADRESSE : ${addressLabel}`,
-      `SERVICES : ${servicesLabel}`,
-      "",
-      imageUrls.length > 0 ? "PHOTOS (LIENS) :" : "",
-      ...imageUrls,
-      "",
-      "MESSAGE :",
-      safeMessage,
+      `SERVICES : ${servicesLabel}`
     ];
+
+    if (estimateQuote) {
+      textLines.push("");
+      textLines.push("--- AI ESTIMATE SUMMARY ---");
+      textLines.push(`Estimated Total: $${estimateQuote}`);
+      textLines.push(`Total Panes: ${estimatePanes}`);
+      textLines.push(`Breakdown: ${estimateDetails}`);
+      textLines.push("---------------------------");
+    }
+
+    textLines.push("");
+    if (imageUrls.length > 0) {
+      textLines.push("PHOTOS (LIENS) :");
+      textLines.push(...imageUrls);
+      textLines.push("");
+    }
+    textLines.push("MESSAGE :");
+    textLines.push(safeMessage);
+
+    // Construct HTML Body
     const htmlLines = [
       `<p><strong>NOM :</strong> ${escapeHtml(name)}</p>`,
       `<p><strong>COURRIEL :</strong> ${escapeHtml(email)}</p>`,
@@ -161,6 +182,17 @@ export async function POST(req: Request) {
       `<p><strong>ADRESSE :</strong> ${escapeHtml(addressLabel)}</p>`,
       `<p><strong>SERVICES :</strong> ${escapeHtml(servicesLabel)}</p>`,
     ];
+
+    if (estimateQuote) {
+      htmlLines.push(`
+        <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h3 style="margin: 0 0 10px 0; color: #166534;">AI Estimate Summary</h3>
+          <p style="margin: 5px 0;"><strong>Estimated Total:</strong> $${escapeHtml(estimateQuote)}</p>
+          <p style="margin: 5px 0;"><strong>Total Panes:</strong> ${escapeHtml(estimatePanes)}</p>
+          <p style="margin: 5px 0; font-size: 0.9em; color: #555;">${escapeHtml(estimateDetails)}</p>
+        </div>
+      `);
+    }
 
     if (imageUrls.length > 0) {
       htmlLines.push(`<p><strong>PHOTOS (LIENS) :</strong></p><ul>`);

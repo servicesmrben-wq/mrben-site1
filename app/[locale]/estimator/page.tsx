@@ -383,30 +383,30 @@ export default function EstimatorPage() {
                 })}
               </div>
 
-              {/* Book Button */}
-              <div className="mt-8 border-t border-zinc-100 pt-6">
-                <Link
-                  href={{
-                    pathname: "/contact",
-                    query: {
-                      quote: calculateTotal(),
-                      panes: getTotalPanes(),
-                      s3: result.window_counts.pane_3rd_story,
-                      s2: result.window_counts.pane_2nd_story,
-                      s1: result.window_counts.pane_1st_base,
-                      doors: result.window_counts.patio_door_panel,
-                    }
-                  }}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
-                >
-                  Book This Estimate
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <p className="mt-3 text-center text-xs text-zinc-500">
-                  Sends your estimate directly to our team.
-                </p>
-              </div>
-            </div>
+                              {/* Book Button */}
+                              <div className="mt-8 border-t border-zinc-100 pt-6">
+                                <Link
+                                  href={{
+                                    pathname: "/", // Link to home page
+                                    query: {
+                                      quote: calculateTotal(),
+                                      panes: getTotalPanes(),
+                                      s3: result.window_counts.pane_3rd_story,
+                                      s2: result.window_counts.pane_2nd_story,
+                                      s1: result.window_counts.pane_1st_base,
+                                      doors: result.window_counts.patio_door_panel,
+                                    },
+                                    hash: "contact" // Scroll to #contact
+                                  }}
+                                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
+                                >
+                                  Book This Estimate
+                                  <ArrowRight className="h-4 w-4" />
+                                </Link>
+                                <p className="mt-3 text-center text-xs text-zinc-500">
+                                  Sends your estimate directly to our team.
+                                </p>
+                              </div>            </div>
           )}
 
         </div>
