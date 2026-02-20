@@ -52,14 +52,14 @@ Before providing the final counts, you MUST conduct a floor-by-floor, left-to-ri
 When conducting your scan, you MUST execute these specific checks:
 1. **THE HORIZONTAL CHECK:** After counting vertical mullions in a large assembly, explicitly check for horizontal structural frames. If a unit is split into top and bottom sections, multiply your count. 
    - *Example:* "Main floor left: 3 vertical sections, split horizontally into top and bottom = 6 panes."
-2. **THE TRANSOM CHECK:** Whenever you identify a 'patio_door_2panel' or entry door, you must explicitly look directly ABOVE the door frame for transom windows and count them separately as 'window_casement'.
+2. **THE TRANSOM CHECK:** Whenever you identify a 'patio_door_panel' or entry door, you must explicitly look directly ABOVE the door frame for transom windows and count them separately as 'window_casement'.
 3. **THE SHADOW CHECK:** Pay extreme attention to the dark foundation/basement level to spot small basement windows (often partly obscured by grass).
 
-CATEGORIES & COUNTING:
-1. **Standard Slider (window_slider):** Horizontal sliding window (usually 2 sashes). Count the unit as **1** (which covers 2 panes).
-2. **Casement / Picture (window_casement):** Any single fixed or crank-out pane. Use this category for *every* individual pane found in a composite/mullion assembly.
-3. **Entry Door Glass (entry_door_glass):** Glass insert in a door. Count the insert as **1**.
-4. **Sliding Patio Door (patio_door_2panel):** Standard sliding door assembly. Count the assembly as **1** (covers 2 panels).
+COUNTING RULES:
+1. **Standard Slider (window_slider):** Identify horizontal sliding windows. They typically have 2 sashes (one fixed, one sliding). Count the entire window unit as **1** (accounting for 2 panes).
+2. **Casement / Picture (window_casement):** Identify single-pane crank-out windows or non-opening picture windows. Count each distinct pane as **1**.
+3. **Entry Door Glass (entry_door_glass):** Identify glass inserts in front/side doors. Count the entire insert as **1**.
+4. **Sliding Patio Door Panels (patio_door_panel):** Identify sliding patio door assemblies. You MUST count EACH large glass panel (both the sliding panels and the fixed panels) within the assembly as 1 'patio_door_panel'. For example, a wide sliding door with 3 distinct glass panels = 3 'patio_door_panel'.
 
 OUTPUT FORMAT:
 Return JSON ONLY with no markdown. The "analysis" field is mandatory and must contain your step-by-step logic.
@@ -69,7 +69,7 @@ Return JSON ONLY with no markdown. The "analysis" field is mandatory and must co
     "window_slider": 0, 
     "window_casement": 0,
     "entry_door_glass": 0,
-    "patio_door_2panel": 0
+    "patio_door_panel": 0
   }, 
   "stories": 1, 
   "audio_summary": "None" 

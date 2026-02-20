@@ -14,10 +14,10 @@ export const PRICING_DATA = {
     price: 5.00, // 1 pane * $5
     desc: "Glass insert in exterior door"
   },
-  patio_door_2panel: {
-    label: "Sliding Patio Door",
-    price: 10.00, // 2 panes * $5
-    desc: "Standard 2-panel sliding door assembly"
+  patio_door_panel: {
+    label: "Patio Door Panel",
+    price: 5.00, // Per panel
+    desc: "Large glass panel (sliding or fixed) in a patio door assembly"
   }
 };
 
