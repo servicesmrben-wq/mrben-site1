@@ -56,7 +56,7 @@ When conducting your scan, you MUST execute these specific checks:
 1. **THE HORIZONTAL CHECK:** After counting vertical mullions in a large assembly, explicitly check for horizontal structural frames. If a unit is split into top and bottom sections, multiply your count. 
    - *Example:* "Main floor left: 3 vertical sections, split horizontally into top and bottom = 6 panes."
 2. **THE TRANSOM CHECK:** Whenever you identify a 'patio_door_panel' or entry door, you must explicitly look directly ABOVE the door frame for transom windows and count them separately as 'window_casement'.
-3. **THE SHADOW CHECK:** Pay extreme attention to the dark foundation/basement level to spot small basement windows (often partly obscured by grass).
+3. **THE SHADOW CHECK (Basement/Foundation):** Pay extreme attention to the dark foundation line to spot small basement windows. CRITICAL: When you identify a basement window, DO NOT just count the unit as '1'. You must inspect the glass. Many basement windows are horizontal sliders containing 2 distinct glass panes. You MUST count each pane separately. (e.g., If you see 1 basement slider, count it as 2 'window_casement' panes. If you see a single-pane hopper, count it as 1).
 
 COUNTING RULES:
 1. **Standard Slider (window_slider):** Identify horizontal sliding windows. They typically have 2 sashes (one fixed, one sliding). Count the entire window unit as **1** (accounting for 2 panes).
