@@ -36,10 +36,10 @@ export async function POST(req: Request) {
       })
     );
 
-    // OPTIMIZATION: Use 'gemini-1.5-flash' for sub-5s latency
+    // OPTIMIZATION: Use 'gemini-2.0-flash' for sub-5s latency
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash", 
+      model: "gemini-2.0-flash", 
     });
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
