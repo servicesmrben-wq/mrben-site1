@@ -36,53 +36,42 @@ export async function POST(req: Request) {
       })
     );
 
-    // OPTIMIZATION: Use 'gemini-2.0-flash' for sub-5s latency
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash", 
-    });
+      model: "gemini-3-flash-preview",
+      systemInstruction: `You are an expert estimator. Analyze these photos.
+SPATIAL SCAN (ELEVATION BASED): Scan top-down. 
+- 3rd Story (if present) -> 'pane_3rd_story'
+- 2nd Story -> 'pane_2nd_story'
+- Main/Basement -> 'pane_1st_base'
+- Doors -> 'patio_door_panel'
 
-    const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
-
-SPATIAL SCAN (ELEVATION BASED):
-Scan floor-by-floor (Top-Down). Map pane counts to elevation.
-- **3rd Story** (if present) -> 'pane_3rd_story'
-- **2nd Story** -> 'pane_2nd_story'
-- **Main/Basement** -> 'pane_1st_base'
-- **Doors** -> 'patio_door_panel'
-
-COUNTING RULES:
-1. **MULLIONS:** Count every distinct glass pane. Slider = 2 panes. Hung = 2 panes.
-2. **TRANSOMS:** Windows above doors count separately (map to 1st floor).
-3. **BASEMENT:** Count 2 panes per sliding basement unit.
-4. **DOORS:** Count each panel of sliding/entry doors as 'patio_door_panel'.
+RULES:
+1. MULLIONS: Count every distinct glass pane separated by a frame. A standard Slider = 2 panes. A standard Hung = 2 panes.
+2. TRANSOMS: Windows above doors count separately (map to 1st floor).
+3. BASEMENT: Count 2 panes per sliding basement unit.
+4. DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
 
 OUTPUT FORMAT:
-Return JSON ONLY. Keep 'analysis' VERY short (max 20 words).
+Return JSON ONLY. Keep 'analysis' brief using math shorthand (e.g., '2nd: 8. Main: 12.').
 { 
-  "analysis": "2nd: 6. Main: 10. Base: 4. Doors: 2.",
-  "window_counts": { 
-    "pane_3rd_story": 0,
-    "pane_2nd_story": 0,
-    "pane_1st_base": 0,
-    "patio_door_panel": 0
-  }, 
-  "stories": 1, 
-  "audio_summary": "None" 
-}`;
+  "analysis": "...", 
+  "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+  "stories": 1,
+  "audio_summary": "None"
+}`
+    });
 
     const result = await model.generateContent({
       contents: [
         {
           role: "user",
-          parts: [
-            { text: prompt },
-            ...imageParts
-          ]
+          parts: imageParts // Only images in the user prompt now
         }
       ],
       generationConfig: {
         responseMimeType: "application/json",
+        temperature: 0.0, // Strict deterministic output
       },
     });
 
