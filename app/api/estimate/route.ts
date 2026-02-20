@@ -78,21 +78,31 @@ Return JSON ONLY with no markdown. The "analysis" field is mandatory and must co
   "audio_summary": "None" 
 }`;
 
-    const result = await model.generateContent([
-      prompt,
-      ...imageParts
-    ]);
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: prompt },
+            ...imageParts
+          ]
+        }
+      ],
+      generationConfig: {
+        responseMimeType: "application/json",
+      },
+    });
 
-    const responseText = result.response.text();
+    const rawText = result.response.text();
     
-    // Clean up potential markdown formatting
-    const cleanedText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+    // Aggressively strip markdown backticks just in case
+    const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
     try {
-      parsedData = JSON.parse(cleanedText);
+      parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("Failed to parse AI response:", responseText);
+      console.error("Failed to parse AI response:", rawText);
       return NextResponse.json({ error: "Failed to parse estimation data" }, { status: 500 });
     }
 
