@@ -95,15 +95,19 @@ export default function EstimatorPage() {
   const calculateTotal = () => {
     if (!result || !result.window_counts) return 0;
     
-    let total = BASE_FEE;
+    let windowSum = 0;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
       const item = PRICING_DATA[k];
       if (item && typeof count === "number") {
         const unitPrice = mode === "ext" ? item.price : item.price * 2;
-        total += unitPrice * count;
+        windowSum += unitPrice * count;
       }
     });
+
+    const SAFETY_BUFFER = 1.15; // 15% Markup for AI undercounting
+    const total = (windowSum * SAFETY_BUFFER) + BASE_FEE;
+    
     return total.toFixed(2);
   };
 
