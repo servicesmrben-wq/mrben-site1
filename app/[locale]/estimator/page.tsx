@@ -189,7 +189,7 @@ export default function EstimatorPage() {
 
   const getTotalPanes = () => {
     if (!result || !result.window_counts) return 0;
-    return Object.values(result.window_counts).reduce((sum: any, count: any) => sum + Number(count), 0);
+    return Object.values(result.window_counts).reduce((sum: number, count: any) => sum + Number(count), 0);
   };
 
   return (
