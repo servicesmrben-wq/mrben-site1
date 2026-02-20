@@ -38,25 +38,18 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
       model: "gemini-3-flash-preview",
-      tools: [{ codeExecution: {} }] 
+      // Removed codeExecution to reduce latency
     });
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
-CRITICAL INSTRUCTION - STEP-BY-STEP SPATIAL ANALYSIS:
-Before providing the final counts, you MUST conduct a floor-by-floor, left-to-right visual scan of the property.
+SPATIAL SCAN: You must still scan floor-by-floor (Top, Main, Basement), but keep the 'analysis' output field extremely brief using math shorthand. DO NOT write full sentences.
+Example format: 'Top: 3(comp)+2+3(comp)=8. Main: 6(split)+3(transom)+6(split)=15. Base: 2(sliders x2)=4. Door: 1(3-panel). Total panes: 27.'
 
-**SCANNING PROTOCOL:**
-1. **Start at the Top Floor**, scanning Left to Right.
-2. **Move to the Main Floor**, scanning Left to Right.
-3. **End at the Basement/Ground Level**, scanning Left to Right.
-
-**MANDATORY CHECKS:**
-When conducting your scan, you MUST execute these specific checks:
-1. **THE HORIZONTAL CHECK:** After counting vertical mullions in a large assembly, explicitly check for horizontal structural frames. If a unit is split into top and bottom sections, multiply your count. 
-   - *Example:* "Main floor left: 3 vertical sections, split horizontally into top and bottom = 6 panes."
-2. **THE TRANSOM CHECK:** Whenever you identify a 'patio_door_panel' or entry door, you must explicitly look directly ABOVE the door frame for transom windows and count them separately as 'window_casement'.
-3. **THE SHADOW CHECK (Basement/Foundation):** Pay extreme attention to the dark foundation line to spot small basement windows. CRITICAL: When you identify a basement window, DO NOT just count the unit as '1'. You must inspect the glass. Many basement windows are horizontal sliders containing 2 distinct glass panes. You MUST count each pane separately. (e.g., If you see 1 basement slider, count it as 2 'window_casement' panes. If you see a single-pane hopper, count it as 1).
+Apply these visual rules silently:
+- MULLIONS & HORIZONTAL SPLITS: Count every distinct glass pane separated by a thick frame.
+- TRANSOMS: Windows above patio/entry doors count separately.
+- BASEMENT SHADOWS: Most basement windows are sliders. Count 2 panes per sliding unit.
 
 COUNTING RULES:
 1. **Standard Slider (window_slider):** Identify horizontal sliding windows. They typically have 2 sashes (one fixed, one sliding). Count the entire window unit as **1** (accounting for 2 panes).
@@ -65,9 +58,9 @@ COUNTING RULES:
 4. **Sliding Patio Door Panels (patio_door_panel):** Identify sliding patio door assemblies. You MUST count EACH large glass panel (both the sliding panels and the fixed panels) within the assembly as 1 'patio_door_panel'. For example, a wide sliding door with 3 distinct glass panels = 3 'patio_door_panel'.
 
 OUTPUT FORMAT:
-Return JSON ONLY with no markdown. The "analysis" field is mandatory and must contain your step-by-step logic.
+Return JSON ONLY with no markdown. The "analysis" field is mandatory but must be concise.
 { 
-  "analysis": "Top floor left: 1 picture, 2 side panes (3 total). Top floor middle: 2 casements (2 total)... Total calculated: 25 panes.",
+  "analysis": "Top: 2+2=4. Main: 3(comp)=3. Base: 2. Total: 9.",
   "window_counts": { 
     "window_slider": 0, 
     "window_casement": 0,
