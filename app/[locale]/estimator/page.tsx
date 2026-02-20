@@ -69,12 +69,20 @@ export default function EstimatorPage() {
         body: formData,
       });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Estimation failed");
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error("Non-JSON API Response:", text);
+        throw new Error("Server error: The analysis timed out or failed. Please try fewer images.");
       }
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Estimation failed");
+      }
+
       setResult(data);
     } catch (err: any) {
       console.error(err);

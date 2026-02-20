@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 60;
+export const maxDuration = 60; // Attempt to increase timeout (Pro plan only)
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
@@ -38,8 +38,7 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-flash-preview",
-      // Removed codeExecution
+      model: "gemini-3-flash-preview", 
     });
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
@@ -97,16 +96,17 @@ Return JSON ONLY with no markdown.
     try {
       parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("Failed to parse AI response:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data" }, { status: 500 });
+      console.error("AI Response Parsing Error. Raw Text:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data from AI." }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
 
   } catch (error: any) {
-    console.error("Estimation error:", error);
+    console.error("Critical Estimation Error:", error);
+    // Return a safe JSON error so the frontend doesn't choke on "Unexpected token"
     return NextResponse.json(
-      { error: error.message || "An error occurred during estimation" },
+      { error: error.message || "An unexpected error occurred during processing." },
       { status: 500 }
     );
   }
