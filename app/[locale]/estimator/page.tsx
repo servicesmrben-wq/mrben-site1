@@ -230,6 +230,13 @@ export default function EstimatorPage() {
                 </div>
               </div>
 
+              {result.analysis && (
+                <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4">
+                  <div className="text-xs font-semibold uppercase text-blue-700 mb-2">AI Analysis Log</div>
+                  <p className="text-sm text-blue-900 whitespace-pre-wrap leading-relaxed">{result.analysis}</p>
+                </div>
+              )}
+
               {result.audio_summary && result.audio_summary !== "None" && (
                 <div className="mb-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                   <div className="text-xs font-semibold uppercase text-zinc-500 mb-2">Notes Detected</div>

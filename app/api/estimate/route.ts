@@ -40,15 +40,14 @@ export async function POST(req: Request) {
 
     const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
-ENHANCED VISUAL COUNTING RULES:
-
-**CRITICAL RULE: Composite/Multi-Pane Assemblies (Mullions)**
-* **The Problem:** Modern homes often group several windows together in one large structural opening (e.g., a large center picture window with two smaller side windows).
-* **The Rule:** Do NOT count the entire large assembly as "1". You MUST look inside the large outer frame. Every time a thick structural frame (mullion) divides the glass, count each resulting rectangular piece of glass as a separate pane.
-* **Examples:**
-  - A large living room unit with 1 big center pane and 2 side panes = Count as **3** 'window_casement' panes.
-  - A large unit with 3 tall windows on top and 3 smaller awning windows on the bottom = Count as **6** 'window_casement' panes.
-  - A transom window (narrow glass) sitting directly above a patio door = Count the transom separately as a 'window_casement' (do not merge it into the door count).
+CRITICAL INSTRUCTION - STEP-BY-STEP SPATIAL ANALYSIS:
+Before providing the final counts, you MUST conduct a floor-by-floor, left-to-right visual scan of the property to ensure nothing is missed or merged.
+1. **Start at the Top Floor**, scanning Left to Right.
+2. **Move to the Main Floor**, scanning Left to Right.
+3. **End at the Basement/Ground Level**, scanning Left to Right.
+4. **Dissect Assemblies:** For EVERY large window assembly you encounter, explicitly state how many structural dividers (mullions) you see and calculate the individual panes.
+   - Example: "Main floor, far left: 1 large assembly split by mullions into 3 top panes and 3 bottom panes = 6 'window_casement' panes."
+   - Example: "Center: 1 large picture window flanked by 2 narrow casements = 3 'window_casement' panes."
 
 CATEGORIES & COUNTING:
 1. **Standard Slider (window_slider):** Horizontal sliding window (usually 2 sashes). Count the unit as **1** (which covers 2 panes).
@@ -57,8 +56,9 @@ CATEGORIES & COUNTING:
 4. **Sliding Patio Door (patio_door_2panel):** Standard sliding door assembly. Count the assembly as **1** (covers 2 panels).
 
 OUTPUT FORMAT:
-Return JSON ONLY with no markdown:
+Return JSON ONLY with no markdown. The "analysis" field is mandatory and must contain your step-by-step logic.
 { 
+  "analysis": "Top floor left: 1 picture, 2 side panes (3 total). Top floor middle: 2 casements (2 total)... Total calculated: 25 panes.",
   "window_counts": { 
     "window_slider": 0, 
     "window_casement": 0,
