@@ -9,7 +9,10 @@ export async function POST(req: Request) {
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY;
     
     if (!apiKey) {
-      return NextResponse.json({ error: "Server configuration error: Missing AI API Key" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Server configuration error: Missing AI API Key" },
+        { status: 500 }
+      );
     }
 
     const formData = await req.formData();
@@ -33,52 +36,53 @@ export async function POST(req: Request) {
       })
     );
 
+    // OPTIMIZATION: Use 'gemini-1.5-flash' for sub-5s latency
     const genAI = new GoogleGenerativeAI(apiKey);
-    
-    // OPTIMIZATION 1: Move rules to the System Instruction level for faster processing
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-flash-preview", 
-      systemInstruction: `You are an expert window cleaning estimator. Analyze these photos of a house.
+      model: "gemini-1.5-flash", 
+    });
+
+    const prompt = `You are an expert window cleaning estimator. Analyze these photos of a house.
 
 SPATIAL SCAN (ELEVATION BASED):
-Scan floor-by-floor (Top-Down) and map your pane counts to their elevation. Keep the 'analysis' output extremely brief using math shorthand.
-- 3rd Story (if present): Map counts to 'pane_3rd_story'.
-- 2nd Story: Map counts to 'pane_2nd_story'.
-- Main Floor & Basement: Combine and map to 'pane_1st_base'.
-- Doors: Patio doors and entry door glass mapped to 'patio_door_panel'.
-
-Example Analysis: "3rd: 0. 2nd: 8. Main+Base: 15+2=17. Doors: 3. Total: 28."
+Scan floor-by-floor (Top-Down). Map pane counts to elevation.
+- **3rd Story** (if present) -> 'pane_3rd_story'
+- **2nd Story** -> 'pane_2nd_story'
+- **Main/Basement** -> 'pane_1st_base'
+- **Doors** -> 'patio_door_panel'
 
 COUNTING RULES:
-1. MULLIONS & SPLITS: Count every distinct glass pane separated by a thick frame. A standard slider = 2 panes. A standard hung = 2 panes.
-2. TRANSOMS: Windows above patio/entry doors count separately (usually 1st).
-3. BASEMENT SHADOWS: Count 2 panes per sliding basement unit. Map these to 'pane_1st_base'.
-4. DOORS: Count each panel of a sliding door or glass insert in an entry door as 'patio_door_panel'.
+1. **MULLIONS:** Count every distinct glass pane. Slider = 2 panes. Hung = 2 panes.
+2. **TRANSOMS:** Windows above doors count separately (map to 1st floor).
+3. **BASEMENT:** Count 2 panes per sliding basement unit.
+4. **DOORS:** Count each panel of sliding/entry doors as 'patio_door_panel'.
 
 OUTPUT FORMAT:
-Return JSON ONLY with no markdown.
+Return JSON ONLY. Keep 'analysis' VERY short (max 20 words).
 { 
-  "analysis": "2nd: 6. Main: 8+2=10. Base: 4. Doors: 2.",
+  "analysis": "2nd: 6. Main: 10. Base: 4. Doors: 2.",
   "window_counts": { 
-    "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0
+    "pane_3rd_story": 0,
+    "pane_2nd_story": 0,
+    "pane_1st_base": 0,
+    "patio_door_panel": 0
   }, 
   "stories": 1, 
   "audio_summary": "None" 
-}`
-    });
+}`;
 
-    // OPTIMIZATION 2: Clamp temperature and topK for absolute max generation speed
     const result = await model.generateContent({
       contents: [
         {
           role: "user",
-          parts: [...imageParts] // The user prompt is now just the images
+          parts: [
+            { text: prompt },
+            ...imageParts
+          ]
         }
       ],
       generationConfig: {
         responseMimeType: "application/json",
-        temperature: 0.0, 
-        topK: 1,
       },
     });
 
@@ -89,16 +93,16 @@ Return JSON ONLY with no markdown.
     try {
       parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("AI Response Parsing Error. Raw Text:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data from AI." }, { status: 500 });
+      console.error("AI Parsing Error:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
 
   } catch (error: any) {
-    console.error("Critical Estimation Error:", error);
+    console.error("Estimation Error:", error);
     return NextResponse.json(
-      { error: error.message || "An unexpected error occurred during processing." },
+      { error: error.message || "An unexpected error occurred." },
       { status: 500 }
     );
   }
