@@ -9,17 +9,17 @@ export const PRICING_DATA = {
   },
   pane_2nd_story: {
     label: "2nd Story Pane",
-    minutes: 1.50,
+    minutes: 1.57,
     desc: "Windows requiring extended reach"
   },
   pane_3rd_story: {
     label: "3rd Story Pane",
-    minutes: 2.00,
+    minutes: 2.10,
     desc: "High-reach upper floor windows"
   },
   patio_door_panel: {
     label: "Patio Door / Entry Glass",
-    minutes: 2.50,
+    minutes: 2.0,
     desc: "Large glass doors or entry inserts"
   }
 };
