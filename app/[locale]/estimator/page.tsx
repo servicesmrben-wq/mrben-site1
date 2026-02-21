@@ -272,8 +272,11 @@ export default function EstimatorPage() {
 
     const windowCost = totalMinutes * RATE_PER_MINUTE;
     const SAFETY_BUFFER = 1.15; 
-    const total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
+    let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
     
+    // Round to nearest $5
+    total = Math.round(total / 5) * 5;
+
     return total.toFixed(2);
   };
 
@@ -448,15 +451,16 @@ export default function EstimatorPage() {
               </div>
 
               <div className="mt-8 border-t border-zinc-100 pt-6">
-                {result.analysis && (
-                  <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4">
-                    <div className="text-xs font-semibold uppercase text-blue-700 mb-2">AI Analysis Log</div>
-                    <p className="text-sm text-blue-900 whitespace-pre-wrap leading-relaxed">{result.analysis}</p>
-                  </div>
-                )}
-
-                <div className="space-y-3">
-                  <div className="text-sm font-semibold text-zinc-900">Breakdown:</div>
+                              {/* 
+                              {result.analysis && (
+                                <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4">
+                                  <div className="text-xs font-semibold uppercase text-blue-700 mb-2">AI Analysis Log</div>
+                                  <p className="text-sm text-blue-900 whitespace-pre-wrap leading-relaxed">{result.analysis}</p>
+                                </div>
+                              )} 
+                              */}
+                
+                              <div className="space-y-3">                  <div className="text-sm font-semibold text-zinc-900">Breakdown:</div>
                   
                   <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
                     <div>
