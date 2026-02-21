@@ -4,12 +4,12 @@ export const RATE_PER_MINUTE = BASE_HOURLY_RATE / 60;
 export const PRICING_DATA = {
   pane_1st_base: {
     label: "1st Story / Basement Pane",
-    minutes: 1.25, // Time per pane (exterior)
+    minutes: 1.57, // Time per pane (exterior)
     desc: "Ground-level and foundation windows"
   },
   pane_2nd_story: {
     label: "2nd Story Pane",
-    minutes: 1.57,
+    minutes: 1.8,
     desc: "Windows requiring extended reach"
   },
   pane_3rd_story: {
