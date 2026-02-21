@@ -163,6 +163,45 @@ export default function EstimatorPage() {
 
       setResult(mergedResult);
       setProgress(100); 
+
+      // --- BACKGROUND BACKUP TO GOOGLE DRIVE ---
+      // We chunk this into batches of 2 to strictly respect Vercel's 4.5MB limit
+      // even with compressed images.
+      const DRIVE_CHUNK_SIZE = 2;
+      const driveChunks: File[][] = [];
+      for (let i = 0; i < files.length; i += DRIVE_CHUNK_SIZE) {
+        driveChunks.push(files.slice(i, i + DRIVE_CHUNK_SIZE));
+      }
+
+      // Process sequentially in background to avoid flooding network
+      (async () => {
+        for (let i = 0; i < driveChunks.length; i++) {
+          try {
+            const chunk = driveChunks[i];
+            const driveData = new FormData();
+
+            // Append metadata only to the first chunk
+            if (i === 0) {
+              driveData.append("metadata", JSON.stringify(mergedResult, null, 2));
+            }
+
+            // Compress files
+            await Promise.all(chunk.map(async (file) => {
+              try {
+                const compressed = await compressImage(file);
+                driveData.append("files", compressed);
+              } catch { /* ignore */ }
+            }));
+
+            // Send to Drive API (Non-blocking for UI)
+            await fetch("/api/save-to-drive", { method: "POST", body: driveData });
+          } catch (e) {
+            console.warn("Background backup failed:", e);
+          }
+        }
+      })();
+      // -----------------------------------------
+
     } catch (err: any) {
       console.error(err);
       setError(err.message || "An error occurred. Please try fewer images.");
