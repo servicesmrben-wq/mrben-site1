@@ -308,7 +308,7 @@ export default function EstimatorPage() {
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
-              1. Upload Photos (Max 8)
+              1. Upload 4 Photos of the exterior of your house (Max 8)
             </label>
             <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50 transition hover:border-zinc-400 hover:bg-zinc-100">
               <input 
