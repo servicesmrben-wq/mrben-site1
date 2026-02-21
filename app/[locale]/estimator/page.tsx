@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link"; // Ensure Link is imported
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
-import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
+import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 
 // Client-side compression utility
 const compressImage = async (file: File): Promise<File> => {
@@ -260,18 +260,19 @@ export default function EstimatorPage() {
   const calculateTotal = () => {
     if (!result || !result.window_counts) return "0.00";
     
-    let windowSum = 0;
+    let totalMinutes = 0;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
       const item = PRICING_DATA[k];
       if (item && typeof count === "number") {
-        const unitPrice = mode === "ext" ? item.price : item.price * 2;
-        windowSum += unitPrice * count;
+        const unitMinutes = mode === "ext" ? item.minutes : item.minutes * 2;
+        totalMinutes += unitMinutes * count;
       }
     });
 
+    const windowCost = totalMinutes * RATE_PER_MINUTE;
     const SAFETY_BUFFER = 1.15; 
-    const total = (windowSum * SAFETY_BUFFER) + BASE_FEE;
+    const total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
     
     return total.toFixed(2);
   };
@@ -481,13 +482,12 @@ export default function EstimatorPage() {
                           <div className="text-sm font-medium text-zinc-900">{item.label}</div>
                           <div className="text-xs text-zinc-500">{item.desc}</div>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-sm text-zinc-600">{c}x</div>
-                          <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
-                            ${(c * (mode === "ext" ? item.price : item.price * 2)).toFixed(2)}
-                          </div>
-                        </div>
-                      </div>
+                                              <div className="flex items-center gap-4">
+                                                <div className="text-sm text-zinc-600">{c}x</div>
+                                                <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
+                                                  ${(c * (mode === "ext" ? item.minutes : item.minutes * 2) * RATE_PER_MINUTE).toFixed(2)}
+                                                </div>
+                                              </div>                      </div>
                     );
                   })}
                 </div>
