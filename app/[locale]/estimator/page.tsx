@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight, User, Phone, Mail } from "lucide-react";
+import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
 import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
 
 // Client-side compression utility
@@ -60,10 +60,8 @@ export default function EstimatorPage() {
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   
-  // Tracking & Lead Form
+  // Tracking
   const [referenceId, setReferenceId] = useState("");
-  const [leadForm, setLeadForm] = useState({ name: "", email: "", phone: "" });
-  const [leadStatus, setLeadStatus] = useState("idle");
 
   // Clean up object URLs
   useEffect(() => {
@@ -279,38 +277,6 @@ export default function EstimatorPage() {
     return Object.values(result.window_counts).reduce((sum: number, count: any) => sum + Number(count), 0);
   };
 
-  const handleLeadSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLeadStatus("sending");
-    
-    try {
-      const formData = new FormData();
-      formData.append("name", leadForm.name);
-      formData.append("email", leadForm.email);
-      formData.append("phone", leadForm.phone);
-      formData.append("message", `New Lead from Estimator. Ref: ${referenceId}. Price: $${calculateTotal()}`);
-      formData.append("estimateQuote", calculateTotal());
-      formData.append("estimatePanes", getTotalPanes().toString());
-      
-      fetch("/api/contact", { method: "POST", body: formData }).catch(() => {});
-
-      await fetch("/api/save-lead-to-drive", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: leadForm.name,
-          email: leadForm.email,
-          phone: leadForm.phone,
-          referenceId: referenceId
-        })
-      });
-
-      setLeadStatus("success");
-    } catch {
-      setLeadStatus("error");
-    }
-  };
-
   return (
     <main className="min-h-screen bg-zinc-50 px-4 py-12">
       <div className="mx-auto max-w-3xl">
@@ -476,62 +442,6 @@ export default function EstimatorPage() {
                   Ref: <span className="font-mono font-bold">{referenceId}</span> • *Includes 15% safety buffer & base fee.
                 </div>
               </div>
-
-              {/* MINI LEAD FORM */}
-              {leadStatus !== "success" ? (
-                <div className="mt-6 rounded-2xl bg-zinc-50 border border-zinc-200 p-5">
-                  <h3 className="text-sm font-bold text-zinc-900">Lock in this price</h3>
-                  <p className="text-xs text-zinc-500 mb-4">Enter your info to book your ground-level cleaning.</p>
-                  <form onSubmit={handleLeadSubmit} className="space-y-3">
-                    <div className="relative">
-                      <User className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
-                      <input 
-                        required
-                        type="text" 
-                        placeholder="Name" 
-                        value={leadForm.name}
-                        onChange={e => setLeadForm({...leadForm, name: e.target.value})}
-                        className="w-full rounded-xl border border-zinc-300 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-zinc-500"
-                      />
-                    </div>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
-                      <input 
-                        required
-                        type="email" 
-                        placeholder="Email" 
-                        value={leadForm.email}
-                        onChange={e => setLeadForm({...leadForm, email: e.target.value})}
-                        className="w-full rounded-xl border border-zinc-300 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-zinc-500"
-                      />
-                    </div>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
-                      <input 
-                        required
-                        type="tel" 
-                        placeholder="Phone" 
-                        value={leadForm.phone}
-                        onChange={e => setLeadForm({...leadForm, phone: e.target.value})}
-                        className="w-full rounded-xl border border-zinc-300 bg-white pl-9 pr-3 py-2 text-sm outline-none focus:border-zinc-500"
-                      />
-                    </div>
-                    <button 
-                      type="submit"
-                      disabled={leadStatus === "sending"}
-                      className="w-full rounded-xl bg-zinc-900 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-50"
-                    >
-                      {leadStatus === "sending" ? "Booking..." : "Book Estimate"}
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-center">
-                  <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-600 mb-2" />
-                  <h3 className="text-sm font-bold text-emerald-900">Request Received!</h3>
-                  <p className="text-xs text-emerald-700">We will contact you shortly to confirm.</p>
-                </div>
-              )}
 
               <div className="mt-8 border-t border-zinc-100 pt-6">
                 {result.analysis && (
