@@ -27,10 +27,12 @@ export async function POST(req: Request) {
 
     // 1. Handle Metadata (Estimate Breakdown)
     const metadata = formData.get("metadata");
+    const referenceId = formData.get("referenceId")?.toString() || "NoRef";
+    
     if (metadata && typeof metadata === "string") {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const fileMetadata = {
-        name: `Estimate_${timestamp}.json`,
+        name: `Estimate_${referenceId}_${timestamp}.json`,
         parents: [folderId],
       };
       const media = {
