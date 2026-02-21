@@ -446,7 +446,7 @@ export default function EstimatorPage() {
                 </div>
                 
                 <div className="mt-3 text-xs text-emerald-700">
-                  Ref: <span className="font-mono font-bold">{referenceId}</span> • This AI🤖 estimator is still in testing and will be reviewed by a human.
+                  Ref: <span className="font-mono font-bold">{referenceId}</span> • This AI🤖 estimator is still learning and will be reviewed by a human.
                 </div>
               </div>
 
