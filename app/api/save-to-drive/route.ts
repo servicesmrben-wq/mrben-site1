@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
     const rawKey = process.env.DRIVE_PRIVATE_KEY || "";
-    const privateKey = rawKey.split(String.raw`\n`).join("\n"); 
+    const privateKey = rawKey.replace(/\\n/g, "\n");
     const folderId = process.env.DRIVE_FOLDER_ID;
 
     if (!clientEmail || !privateKey || !folderId) {
@@ -25,14 +25,15 @@ export async function POST(req: Request) {
     const drive = google.drive({ version: "v3", auth });
     const formData = await req.formData();
 
+    // Get Reference ID (Default to "NoRef" if missing)
+    const referenceId = formData.get("referenceId")?.toString() || "NoRef";
+
     // 1. Handle Metadata (Estimate Breakdown)
     const metadata = formData.get("metadata");
-    const referenceId = formData.get("referenceId")?.toString() || "NoRef";
-    
     if (metadata && typeof metadata === "string") {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const fileMetadata = {
-        name: `Estimate_${referenceId}_${timestamp}.json`,
+        name: `${referenceId}_Estimate_${timestamp}.json`,
         parents: [folderId],
       };
       const media = {
@@ -45,7 +46,8 @@ export async function POST(req: Request) {
           requestBody: fileMetadata,
           media: media,
           fields: "id",
-          supportsAllDrives: true, // Fix for shared/quota errors
+          supportsAllDrives: true,
+          supportsTeamDrives: true,
         });
       } catch (e) {
         console.error("Failed to upload metadata to Drive:", e);
@@ -60,8 +62,9 @@ export async function POST(req: Request) {
       stream.push(buffer);
       stream.push(null);
 
+      // Prepend Reference ID to filename
       const fileMetadata = {
-        name: file.name,
+        name: `${referenceId}_${file.name}`,
         parents: [folderId],
       };
       const media = {
@@ -73,7 +76,8 @@ export async function POST(req: Request) {
         requestBody: fileMetadata,
         media: media,
         fields: "id",
-        supportsAllDrives: true, // Fix for shared/quota errors
+        supportsAllDrives: true,
+        supportsTeamDrives: true,
       });
     });
 
