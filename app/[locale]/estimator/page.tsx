@@ -52,6 +52,8 @@ const compressImage = async (file: File): Promise<File> => {
 
 export default function EstimatorPage() {
   const [files, setFiles] = useState<File[]>([]);
+  const [compressedFiles, setCompressedFiles] = useState<File[]>([]); // Store ready-to-upload files
+  const [previews, setPreviews] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [mode, setMode] = useState<"ext" | "in_out">("ext");
@@ -63,30 +65,59 @@ export default function EstimatorPage() {
   const [leadForm, setLeadForm] = useState({ name: "", email: "", phone: "" });
   const [leadStatus, setLeadStatus] = useState("idle");
 
+  // Clean up object URLs
+  useEffect(() => {
+    return () => {
+      previews.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [previews]);
+
+  // Warm up
+  useEffect(() => {
+    fetch("/api/estimate", { method: "GET" }).catch(() => {});
+  }, []);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files);
       const validFiles = newFiles.filter(f => f.type.startsWith("image/"));
+      
       if (validFiles.length !== newFiles.length) {
         alert("Only image files (JPG, PNG) are supported right now.");
       }
+
+      // Generate stable URLs for new files
+      const newPreviews = validFiles.map(f => URL.createObjectURL(f));
+
       setFiles(prev => [...prev, ...validFiles]);
+      setPreviews(prev => [...prev, ...newPreviews]);
       setResult(null);
       setError(null);
       e.target.value = "";
+
+      // Background Compression
+      validFiles.forEach(async (file) => {
+        try {
+          const compressed = await compressImage(file);
+          setCompressedFiles(prev => [...prev, compressed]);
+        } catch {
+          setCompressedFiles(prev => [...prev, file]); // Fallback
+        }
+      });
     }
   };
 
   const removeFile = (index: number) => {
     setFiles(prev => prev.filter((_, i) => i !== index));
+    setCompressedFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviews(prev => {
+      const urlToRemove = prev[index];
+      URL.revokeObjectURL(urlToRemove);
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const BASE_FEE = 60.00;
-
-  // Warm up the serverless function on mount
-  useEffect(() => {
-    fetch("/api/estimate", { method: "GET" }).catch(() => {});
-  }, []);
 
   const handleCalculate = async () => {
     if (files.length === 0) return;
@@ -121,15 +152,14 @@ export default function EstimatorPage() {
         chunks.push(files.slice(i, i + CHUNK_SIZE));
       }
 
-      const fetchPromises = chunks.map(async (chunk, index) => {
-        const compressedChunk = await Promise.all(
-          chunk.map(async (f) => {
-            try { return await compressImage(f); } catch { return f; }
-          })
-        );
+      const fetchPromises = chunks.map(async (chunk) => {
+        // Use pre-compressed files
+        const chunkStartIndex = files.indexOf(chunk[0]);
+        // Safe mapping ensuring we don't go out of bounds if compressedFiles isn't fully ready
+        const finalChunk = chunk.map((file, i) => compressedFiles[chunkStartIndex + i] || file);
 
         const formData = new FormData();
-        compressedChunk.forEach((file) => {
+        finalChunk.forEach((file) => {
           formData.append("files", file); 
         });
 
@@ -138,10 +168,20 @@ export default function EstimatorPage() {
           body: formData,
         });
 
-        if (!res.ok) {
-          throw new Error(`Batch ${index + 1} failed`);
+        let data;
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          data = await res.json();
+        } else {
+          const text = await res.text();
+          console.error("Non-JSON API Response:", text);
+          throw new Error("Server error: The analysis timed out or failed.");
         }
-        return res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Estimation failed");
+        }
+        return data;
       });
 
       const results = await Promise.all(fetchPromises);
@@ -158,7 +198,7 @@ export default function EstimatorPage() {
       };
 
       results.forEach((res, i) => {
-        mergedResult.analysis += `Batch ${i + 1}: ` + res.analysis + "\n";
+        mergedResult.analysis += `Batch ${i + 1}: ` + (res.analysis || "") + "\n";
         
         Object.keys(mergedResult.window_counts).forEach((key) => {
           const k = key as keyof typeof mergedResult.window_counts;
@@ -184,15 +224,18 @@ export default function EstimatorPage() {
 
             if (i === 0) {
               driveData.append("metadata", JSON.stringify(mergedResult, null, 2));
-              driveData.append("referenceId", newRefId); // Send ID
+              driveData.append("referenceId", newRefId);
             }
 
-            await Promise.all(chunk.map(async (file) => {
-              try {
-                const compressed = await compressImage(file);
-                driveData.append("files", compressed);
-              } catch { /* ignore */ }
-            }));
+            // Use pre-compressed files here too
+            const chunkStartIndex = files.indexOf(chunk[0]);
+            const finalChunk = chunk.map((file, idx) => compressedFiles[chunkStartIndex + idx] || file);
+
+            finalChunk.forEach((file) => {
+              driveData.append("files", file);
+            });
+            
+            driveData.append("referenceId", newRefId);
 
             await fetch("/api/save-to-drive", { method: "POST", body: driveData });
           } catch (e) {
@@ -241,7 +284,6 @@ export default function EstimatorPage() {
     setLeadStatus("sending");
     
     try {
-      // 1. Send email via main contact route (optional, but good for immediate notification)
       const formData = new FormData();
       formData.append("name", leadForm.name);
       formData.append("email", leadForm.email);
@@ -250,10 +292,8 @@ export default function EstimatorPage() {
       formData.append("estimateQuote", calculateTotal());
       formData.append("estimatePanes", getTotalPanes().toString());
       
-      // Fire and forget email (or await it if you want strict confirmation)
       fetch("/api/contact", { method: "POST", body: formData }).catch(() => {});
 
-      // 2. Save Lead Metadata to Google Drive
       await fetch("/api/save-lead-to-drive", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -317,11 +357,11 @@ export default function EstimatorPage() {
                 {files.map((f, i) => (
                   <div key={i} className="relative aspect-square overflow-hidden rounded-lg border border-zinc-200">
                     <Image 
-                      src={URL.createObjectURL(f)} 
+                      src={previews[i]} 
                       alt="preview" 
                       fill 
                       className="object-cover" 
-                      onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
+                      unoptimized 
                     />
                     <button 
                       onClick={() => removeFile(i)}
@@ -538,6 +578,31 @@ export default function EstimatorPage() {
                     );
                   })}
                 </div>
+              </div>
+
+              {/* Book Button */}
+              <div className="mt-8 border-t border-zinc-100 pt-6">
+                <Link
+                  href={{
+                    pathname: "/", // Link to home page
+                    query: {
+                      quote: calculateTotal(),
+                      panes: getTotalPanes(),
+                      s3: result.window_counts.pane_3rd_story,
+                      s2: result.window_counts.pane_2nd_story,
+                      s1: result.window_counts.pane_1st_base,
+                      doors: result.window_counts.patio_door_panel,
+                    },
+                    hash: "contact" // Scroll to #contact
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
+                >
+                  Book This Estimate
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <p className="mt-3 text-center text-xs text-zinc-500">
+                  Sends your estimate directly to our team.
+                </p>
               </div>
             </div>
           )}
