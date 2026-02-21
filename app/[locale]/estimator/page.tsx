@@ -398,7 +398,7 @@ export default function EstimatorPage() {
           </button>
 
           {/* Powered by Gemini Badge */}
-          <div className="flex items-center justify-center gap-1.5 mt-4 pb-2 opacity-75 hover:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center justify-center gap-1.5 mt-4 pb-2">
             <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase">Powered by</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" fill="url(#gemini-gradient)"/>
@@ -411,7 +411,7 @@ export default function EstimatorPage() {
               </defs>
             </svg>
             <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-gray-800">
-              Gemini
+              Gemini 3
             </span>
           </div>
 
