@@ -9,9 +9,7 @@ export async function POST(req: Request) {
 
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
     const rawKey = process.env.DRIVE_PRIVATE_KEY || "";
-    const privateKey = rawKey.split(String.raw`
-`).join("
-"); 
+    const privateKey = rawKey.replace(/\\n/g, "\n");
     const folderId = process.env.DRIVE_FOLDER_ID;
 
     if (!clientEmail || !privateKey || !folderId) {
@@ -50,14 +48,14 @@ Phone: ${phone}
       requestBody: fileMetadata,
       media: media,
       fields: "id",
-      supportsAllDrives: true, // Required for Shared Drives
+      supportsAllDrives: true,
+      supportsTeamDrives: true,
     });
 
     return NextResponse.json({ success: true });
 
   } catch (error) {
     console.error("Lead save error:", error);
-    // Return true anyway so the user sees success (we can log the failure internally)
     return NextResponse.json({ success: true, error: "Silent failure" }, { status: 200 }); 
   }
 }
