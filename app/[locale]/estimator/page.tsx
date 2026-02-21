@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "next/link"; // Ensure Link is imported
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
 import { PRICING_DATA, PricingKey } from "@/app/lib/pricing";
 
@@ -120,6 +120,7 @@ export default function EstimatorPage() {
   const handleCalculate = async () => {
     if (files.length === 0) return;
 
+    // 1. Validation: Max 8 Images
     if (files.length > 8) {
       alert("Maximum 8 images allowed per request. Please remove some images.");
       return;
@@ -133,7 +134,11 @@ export default function EstimatorPage() {
     const newRefId = 'EST-' + Math.random().toString(36).substring(2, 8).toUpperCase();
     setReferenceId(newRefId);
 
-    const estimatedWaitTimeMs = files.length * 5000 + 2000; 
+    // Smart Progress Logic
+    // Parallel batches of 4 mean 8 images take the same time as 4.
+    // 10s per image in the largest batch.
+    const effectiveCount = Math.min(files.length, 4);
+    const estimatedWaitTimeMs = effectiveCount * 10000 + 2000; 
     const startTime = Date.now();
     
     const progressInterval = setInterval(() => {
