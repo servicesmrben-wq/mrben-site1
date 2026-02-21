@@ -17,12 +17,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Configuration error" }, { status: 500 });
     }
 
-    const auth = new google.auth.JWT(
-      clientEmail,
-      undefined,
-      privateKey,
-      ["https://www.googleapis.com/auth/drive.file"]
-    );
+    const auth = new google.auth.JWT({
+      email: clientEmail,
+      key: privateKey,
+      scopes: ["https://www.googleapis.com/auth/drive.file"],
+    });
 
     const drive = google.drive({ version: "v3", auth });
     const formData = await req.formData();
