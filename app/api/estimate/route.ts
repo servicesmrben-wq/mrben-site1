@@ -4,6 +4,11 @@ import { NextResponse } from "next/server";
 export const maxDuration = 60; 
 export const runtime = "nodejs";
 
+// WARM-UP HANDLER
+export async function GET() {
+  return NextResponse.json({ status: "Server is awake and ready." }, { status: 200 });
+}
+
 export async function POST(req: Request) {
   try {
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY;
@@ -66,12 +71,12 @@ Return JSON ONLY. Keep 'analysis' brief using math shorthand (e.g., '2nd: 8. Mai
       contents: [
         {
           role: "user",
-          parts: imageParts // Only images in the user prompt now
+          parts: imageParts
         }
       ],
       generationConfig: {
         responseMimeType: "application/json",
-        temperature: 0.0, // Strict deterministic output
+        temperature: 0.0,
       },
     });
 

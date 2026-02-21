@@ -78,6 +78,11 @@ export default function EstimatorPage() {
 
   const BASE_FEE = 60.00;
 
+  // Warm up the serverless function on mount
+  useEffect(() => {
+    fetch("/api/estimate", { method: "GET" }).catch(() => {});
+  }, []);
+
   const handleCalculate = async () => {
     if (files.length === 0) return;
 
