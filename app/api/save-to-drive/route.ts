@@ -7,7 +7,6 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   try {
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
-    // Fix: Use string replace for newline handling to avoid regex parsing issues
     const rawKey = process.env.DRIVE_PRIVATE_KEY || "";
     const privateKey = rawKey.split(String.raw`\n`).join("\n"); 
     const folderId = process.env.DRIVE_FOLDER_ID;
@@ -44,6 +43,7 @@ export async function POST(req: Request) {
           requestBody: fileMetadata,
           media: media,
           fields: "id",
+          supportsAllDrives: true, // Fix for shared/quota errors
         });
       } catch (e) {
         console.error("Failed to upload metadata to Drive:", e);
@@ -71,6 +71,7 @@ export async function POST(req: Request) {
         requestBody: fileMetadata,
         media: media,
         fields: "id",
+        supportsAllDrives: true, // Fix for shared/quota errors
       });
     });
 
