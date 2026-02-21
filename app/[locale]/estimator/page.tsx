@@ -399,22 +399,21 @@ export default function EstimatorPage() {
           </button>
 
           {/* Powered by Gemini Badge */}
-          <div className="mt-4 flex items-center justify-center gap-1.5 opacity-60 grayscale transition-opacity hover:opacity-100 hover:grayscale-0">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">Powered by</span>
-            <div className="flex items-center gap-1">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-blue-500">
-                <path d="M16 3L19.5 10.5L23 14L15.5 17.5L12 21L8.5 13.5L1 10L8.5 6.5L12 3Z" fill="url(#gemini-gradient)" />
-                <defs>
-                  <linearGradient id="gemini-gradient" x1="1" y1="3" x2="23" y2="21" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#4E8CF7" />
-                    <stop offset="1" stopColor="#D460F7" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-sm font-bold text-transparent">
-                Gemini
-              </span>
-            </div>
+          <div className="flex items-center justify-center gap-1.5 mt-4 pb-2 opacity-75 hover:opacity-100 transition-opacity duration-300">
+            <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase">Powered by</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" fill="url(#gemini-gradient)"/>
+              <defs>
+                <linearGradient id="gemini-gradient" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#4285F4"/>
+                  <stop offset="50%" stopColor="#9B72CB"/>
+                  <stop offset="100%" stopColor="#D96570"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-gray-800">
+              Gemini
+            </span>
           </div>
 
           {error && (
