@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-pro-preview",
+      model: "gemini-3-flash-preview",
       systemInstruction: `You are an expert estimator. Analyze these photos.
 SPATIAL SCAN (ELEVATION BASED): Scan top-down. 
 - 3rd Story (if present) -> 'pane_3rd_story'
