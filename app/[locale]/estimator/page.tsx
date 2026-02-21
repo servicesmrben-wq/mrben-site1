@@ -128,7 +128,6 @@ export default function EstimatorPage() {
     setIsProcessing(true);
     setProgress(0);
     setError(null);
-    setLeadStatus("idle");
 
     // Generate unique reference ID
     const newRefId = 'EST-' + Math.random().toString(36).substring(2, 8).toUpperCase();
