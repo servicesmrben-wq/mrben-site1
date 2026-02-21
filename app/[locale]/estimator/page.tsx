@@ -271,7 +271,7 @@ export default function EstimatorPage() {
     });
 
     const windowCost = totalMinutes * RATE_PER_MINUTE;
-    const SAFETY_BUFFER = 1.15; 
+    const SAFETY_BUFFER = 1.075; // 7.5% Markup
     let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
     
     // Round to nearest $5
