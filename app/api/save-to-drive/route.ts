@@ -2,14 +2,14 @@ import { google } from "googleapis";
 import { NextResponse } from "next/server";
 import { Readable } from "stream";
 
-export const runtime = "nodejs"; // Required for googleapis
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
-    const privateKey = process.env.DRIVE_PRIVATE_KEY?.replace(/
-/g, "
-"); // Handle formatting
+    // Fix: Use string replace for newline handling to avoid regex parsing issues
+    const rawKey = process.env.DRIVE_PRIVATE_KEY || "";
+    const privateKey = rawKey.split(String.raw`\n`).join("\n"); 
     const folderId = process.env.DRIVE_FOLDER_ID;
 
     if (!clientEmail || !privateKey || !folderId) {
@@ -81,7 +81,6 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Drive upload error:", error);
-    // Always return success to frontend to avoid UI disruption
     return NextResponse.json({ success: false, error: "Silent failure" }, { status: 200 }); 
   }
 }
