@@ -1,5 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { NextResponse } from "next/server";
+import * as fs from "fs/promises";
+import * as os from "os";
+import * as path from "path";
 
 export const maxDuration = 60; 
 export const runtime = "nodejs";
@@ -27,17 +31,39 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
     }
 
-    // Convert all files to base64 parts
-    const imageParts = await Promise.all(
+    const fileManager = new GoogleAIFileManager(apiKey);
+
+    // Upload files to Gemini via temporary storage to avoid memory crashes
+    const fileParts = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        return {
-          inlineData: {
-            data: buffer.toString("base64"),
+        
+        // Create a unique temporary file path
+        const tempFilePath = path.join(os.tmpdir(), `upload-${Date.now()}-${Math.random().toString(36).substring(7)}-${file.name}`);
+        
+        // Write buffer to temp file
+        await fs.writeFile(tempFilePath, buffer);
+        
+        try {
+          // Upload to Gemini
+          const uploadResponse = await fileManager.uploadFile(tempFilePath, {
             mimeType: file.type,
-          },
-        };
+            displayName: file.name,
+          });
+          
+          return {
+            fileData: {
+              mimeType: uploadResponse.file.mimeType,
+              fileUri: uploadResponse.file.uri,
+            },
+          };
+        } finally {
+          // Clean up: delete the temporary file
+          await fs.unlink(tempFilePath).catch((err) => 
+            console.error(`Failed to delete temp file ${tempFilePath}:`, err)
+          );
+        }
       })
     );
 
@@ -71,7 +97,7 @@ Return JSON ONLY. Keep 'analysis' brief using math shorthand (e.g., '2nd: 8. Mai
       contents: [
         {
           role: "user",
-          parts: imageParts
+          parts: fileParts
         }
       ],
       generationConfig: {
