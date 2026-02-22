@@ -288,7 +288,7 @@ export default function EstimatorPage() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-12">
+    <main className="min-h-screen bg-gradient-to-br from-zinc-50 via-slate-50 to-emerald-50/30 px-4 py-12">
       <div className="mx-auto max-w-3xl">
         
         {/* Header */}
@@ -305,14 +305,14 @@ export default function EstimatorPage() {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm md:p-8">
+        <div className="relative overflow-hidden rounded-3xl border border-zinc-200/60 bg-white/80 p-6 shadow-2xl backdrop-blur-sm md:p-8 ring-1 ring-zinc-900/5">
           
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
               1. Upload 4 Photos of the exterior of your house (Max 8)
             </label>
-            <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50 transition hover:border-zinc-400 hover:bg-zinc-100">
+            <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 transition duration-300 ease-in-out hover:border-blue-500 hover:bg-blue-50/50 hover:shadow-lg">
               <input 
                 type="file" 
                 accept="image/*" 
@@ -356,23 +356,23 @@ export default function EstimatorPage() {
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
               2. Select Service Type
             </label>
-            <div className="flex rounded-xl bg-zinc-100 p-1">
+            <div className="flex rounded-xl bg-zinc-100 p-1 ring-1 ring-zinc-900/5">
               <button
                 onClick={() => setMode("in_out")}
-                className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
+                className={`flex-1 rounded-lg py-2.5 text-sm font-bold transition-all duration-300 ${
                   mode === "in_out"
-                    ? "bg-white text-zinc-900 shadow-sm"
-                    : "text-zinc-500 hover:text-zinc-900"
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md ring-1 ring-emerald-500 scale-[1.02]"
+                    : "text-zinc-500 hover:bg-zinc-200/50 hover:text-zinc-900"
                 }`}
               >
                 Inside & Out
               </button>
               <button
                 onClick={() => setMode("ext")}
-                className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
+                className={`flex-1 rounded-lg py-2.5 text-sm font-bold transition-all duration-300 ${
                   mode === "ext"
-                    ? "bg-white text-zinc-900 shadow-sm"
-                    : "text-zinc-500 hover:text-zinc-900"
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md ring-1 ring-emerald-500 scale-[1.02]"
+                    : "text-zinc-500 hover:bg-zinc-200/50 hover:text-zinc-900"
                 }`}
               >
                 Exterior Only
@@ -384,7 +384,7 @@ export default function EstimatorPage() {
           <button
             onClick={handleCalculate}
             disabled={files.length === 0 || isProcessing}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 py-4 text-sm font-semibold text-white shadow-md transition hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="group flex w-full transform items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 py-4 text-sm font-bold text-white shadow-lg transition duration-300 hover:scale-105 hover:shadow-xl hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {isProcessing ? (
               <div className="flex flex-col items-center w-full">
