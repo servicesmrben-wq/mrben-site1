@@ -356,16 +356,6 @@ export default function EstimatorPage() {
             </label>
             <div className="flex rounded-xl bg-zinc-100 p-1">
               <button
-                onClick={() => setMode("ext")}
-                className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
-                  mode === "ext"
-                    ? "bg-white text-zinc-900 shadow-sm"
-                    : "text-zinc-500 hover:text-zinc-900"
-                }`}
-              >
-                Exterior Only
-              </button>
-              <button
                 onClick={() => setMode("in_out")}
                 className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
                   mode === "in_out"
@@ -374,6 +364,16 @@ export default function EstimatorPage() {
                 }`}
               >
                 Inside & Out
+              </button>
+              <button
+                onClick={() => setMode("ext")}
+                className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
+                  mode === "ext"
+                    ? "bg-white text-zinc-900 shadow-sm"
+                    : "text-zinc-500 hover:text-zinc-900"
+                }`}
+              >
+                Exterior Only
               </button>
             </div>
           </div>
