@@ -44,26 +44,34 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
       model: "gemini-3-flash-preview",
-      systemInstruction: `You are an expert estimator. Analyze these photos.
-SPATIAL SCAN (ELEVATION BASED): Scan top-down. 
-- 3rd Story (if present) -> 'pane_3rd_story'
-- 2nd Story -> 'pane_2nd_story'
-- Main/Basement -> 'pane_1st_base'
-- Doors -> 'patio_door_panel'
+      systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
 
-RULES:
-1. MULLIONS: Count every distinct glass pane separated by a frame. A standard Slider = 2 panes. A standard Hung = 2 panes.
-2. TRANSOMS: Windows above doors count separately (map to 1st floor).
-3. BASEMENT: Count 2 panes per sliding basement unit.
-4. DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
+CRITICAL VISUAL RULES:
+
+OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
+
+MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
+
+TRANSOMS: Windows above doors count separately (map to 1st floor).
+
+BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
+
+DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
+
+SPATIAL MAPPING (Top-Down):
+
+3rd Story -> 'pane_3rd_story'
+
+2nd Story -> 'pane_2nd_story'
+
+Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Keep 'analysis' brief using math shorthand (e.g., '2nd: 8. Main: 12.').
-{ 
-  "analysis": "...", 
-  "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
-  "stories": 1,
-  "audio_summary": "None"
+Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
+{
+"analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
+"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"stories": 1
 }`
     });
 
