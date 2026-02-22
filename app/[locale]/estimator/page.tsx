@@ -196,7 +196,9 @@ export default function EstimatorPage() {
           pane_1st_base: 0,
           patio_door_panel: 0
         },
-        stories: 1
+        stories: 1,
+        mode: mode,
+        serviceType: mode === "ext" ? "Exterior Only" : "Inside & Out"
       };
 
       results.forEach((res, i) => {
@@ -509,6 +511,7 @@ export default function EstimatorPage() {
                       s2: result.window_counts.pane_2nd_story,
                       s1: result.window_counts.pane_1st_base,
                       doors: result.window_counts.patio_door_panel,
+                      service: mode === "ext" ? "Exterior Only" : "Inside & Out",
                     },
                     hash: "contact" // Scroll to #contact
                   }}

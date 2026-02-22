@@ -53,13 +53,17 @@ function ContactContent({ t, contactRef }: { t: (key: string, options?: any) => 
   const estimateS2 = searchParams.get("s2");
   const estimateS1 = searchParams.get("s1");
   const estimateDoors = searchParams.get("doors");
+  const urlService = searchParams.get("service");
 
   useEffect(() => {
     if (estimateQuote) {
       // Pre-fill message or handle logic if needed
       // setForm(p => ({ ...p, message: "I'm interested in the estimate I just generated." }));
     }
-  }, [estimateQuote]);
+    if (urlService) {
+      setServices(prev => prev.includes(urlService) ? prev : [...prev, urlService]);
+    }
+  }, [estimateQuote, urlService]);
 
   const MAX_IMAGES = 5;
   const MAX_IMAGE_SIZE = 15 * 1024 * 1024;
@@ -281,6 +285,24 @@ function ContactContent({ t, contactRef }: { t: (key: string, options?: any) => 
           message: data?.error || t("sendError"),
         });
         return;
+      }
+
+      // Save lead to drive
+      try {
+        const leadData = {
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          referenceId: `LEAD-${Date.now()}`,
+          service: services.length ? services.join(", ") : "(none selected)"
+        };
+        await fetch("/api/save-lead-to-drive", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify(leadData)
+        });
+      } catch (err) {
+        console.warn("Failed to save lead to drive", err);
       }
 
       setStatus({

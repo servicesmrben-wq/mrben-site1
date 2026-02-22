@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, referenceId } = await req.json();
+    const { name, email, phone, referenceId, service } = await req.json();
 
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
     const rawKey = process.env.DRIVE_PRIVATE_KEY || "";
@@ -28,6 +28,8 @@ export async function POST(req: Request) {
     const content = `LEAD CAPTURE
 Reference ID: ${referenceId}
 Date: ${new Date().toLocaleString()}
+
+Service Type: ${service || "N/A"}
 
 Name: ${name}
 Email: ${email}
