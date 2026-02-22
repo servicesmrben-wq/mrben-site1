@@ -165,10 +165,39 @@ export default function EstimatorPage() {
           formData.append("files", file); 
         });
 
-        const res = await fetch("/api/estimate", {
-          method: "POST",
-          body: formData,
-        });
+        let res;
+        let attempts = 0;
+        const maxRetries = 1;
+
+        while (attempts <= maxRetries) {
+          try {
+            res = await fetch("/api/estimate", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (res.ok) break; // Success, exit loop
+
+            // If server error (e.g. 504), retry
+            if (attempts < maxRetries && res.status >= 500) {
+              attempts++;
+              await new Promise((resolve) => setTimeout(resolve, 1500));
+              continue;
+            }
+
+            break; // Exit if client error (4xx) or retries exhausted
+          } catch (error) {
+            // Retry on network failures too
+            if (attempts < maxRetries) {
+              attempts++;
+              await new Promise((resolve) => setTimeout(resolve, 1500));
+            } else {
+              throw error; // Re-throw if out of retries
+            }
+          }
+        }
+
+        if (!res) throw new Error("Network request failed");
 
         let data;
         const contentType = res.headers.get("content-type");
