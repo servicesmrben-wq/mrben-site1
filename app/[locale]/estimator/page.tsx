@@ -298,7 +298,7 @@ export default function EstimatorPage() {
             BETA — AI Estimation
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
-            AI Window Cleaning Estimator 🧠
+            AI🧠 Window Cleaning Estimator
           </h1>
           <p className="mt-3 text-lg text-zinc-600">
             Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.
