@@ -56,7 +56,7 @@ export default function EstimatorPage() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [mode, setMode] = useState<"ext" | "in_out">("ext");
+  const [mode, setMode] = useState<"ext" | "in_out">("in_out");
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   
