@@ -356,23 +356,23 @@ export default function EstimatorPage() {
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
               2. Select Service Type
             </label>
-            <div className="flex rounded-xl bg-zinc-100 p-1 ring-1 ring-zinc-900/5">
+            <div className="flex rounded-xl bg-zinc-100 p-1">
               <button
                 onClick={() => setMode("in_out")}
-                className={`flex-1 rounded-lg py-2.5 text-sm font-bold transition-all duration-300 ${
+                className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
                   mode === "in_out"
-                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md ring-1 ring-emerald-500 scale-[1.02]"
-                    : "text-zinc-500 hover:bg-zinc-200/50 hover:text-zinc-900"
+                    ? "bg-white text-zinc-900 shadow-sm"
+                    : "text-zinc-500 hover:text-zinc-900"
                 }`}
               >
                 Inside & Out
               </button>
               <button
                 onClick={() => setMode("ext")}
-                className={`flex-1 rounded-lg py-2.5 text-sm font-bold transition-all duration-300 ${
+                className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition ${
                   mode === "ext"
-                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md ring-1 ring-emerald-500 scale-[1.02]"
-                    : "text-zinc-500 hover:bg-zinc-200/50 hover:text-zinc-900"
+                    ? "bg-white text-zinc-900 shadow-sm"
+                    : "text-zinc-500 hover:text-zinc-900"
                 }`}
               >
                 Exterior Only
