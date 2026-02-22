@@ -154,14 +154,12 @@ export default function EstimatorPage() {
         chunks.push(files.slice(i, i + CHUNK_SIZE));
       }
 
-      const fetchPromises = chunks.map(async (chunk) => {
-        // Use pre-compressed files
-        const chunkStartIndex = files.indexOf(chunk[0]);
-        // Safe mapping ensuring we don't go out of bounds if compressedFiles isn't fully ready
-        const finalChunk = chunk.map((file, i) => compressedFiles[chunkStartIndex + i] || file);
+      const results = [];
 
+      // SEQUENTIAL PROCESSING
+      for (const chunk of chunks) {
         const formData = new FormData();
-        finalChunk.forEach((file) => {
+        chunk.forEach((file) => {
           formData.append("files", file); 
         });
 
@@ -176,23 +174,21 @@ export default function EstimatorPage() {
               body: formData,
             });
 
-            if (res.ok) break; // Success, exit loop
+            if (res.ok) break;
 
-            // If server error (e.g. 504), retry
             if (attempts < maxRetries && res.status >= 500) {
               attempts++;
               await new Promise((resolve) => setTimeout(resolve, 1500));
               continue;
             }
 
-            break; // Exit if client error (4xx) or retries exhausted
+            break;
           } catch (error) {
-            // Retry on network failures too
             if (attempts < maxRetries) {
               attempts++;
               await new Promise((resolve) => setTimeout(resolve, 1500));
             } else {
-              throw error; // Re-throw if out of retries
+              throw error;
             }
           }
         }
@@ -212,10 +208,9 @@ export default function EstimatorPage() {
         if (!res.ok) {
           throw new Error(data.error || "Estimation failed");
         }
-        return data;
-      });
-
-      const results = await Promise.all(fetchPromises);
+        
+        results.push(data);
+      }
 
       const mergedResult = {
         analysis: "",
