@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link"; // Ensure Link is imported
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
+import imageCompression from "browser-image-compression";
 
 // Client-side compression utility
 const compressImage = async (file: File): Promise<File> => {
@@ -148,10 +149,29 @@ export default function EstimatorPage() {
     }, 200);
 
     try {
+      // Compress images to avoid payload limits
+      const compressionOptions = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 768,
+        useWebWorker: true,
+      };
+
+      const compressedFilesList = await Promise.all(
+        files.map(async (file) => {
+          try {
+            const compressedFile = await imageCompression(file, compressionOptions);
+            return new File([compressedFile], file.name, { type: compressedFile.type });
+          } catch (error) {
+            console.error("Compression failed:", file.name, error);
+            return file;
+          }
+        })
+      );
+
       const CHUNK_SIZE = 4;
       const chunks: File[][] = [];
-      for (let i = 0; i < files.length; i += CHUNK_SIZE) {
-        chunks.push(files.slice(i, i + CHUNK_SIZE));
+      for (let i = 0; i < compressedFilesList.length; i += CHUNK_SIZE) {
+        chunks.push(compressedFilesList.slice(i, i + CHUNK_SIZE));
       }
 
       const results = [];
