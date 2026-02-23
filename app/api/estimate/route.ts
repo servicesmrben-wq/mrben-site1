@@ -18,6 +18,23 @@ export const runtime = "nodejs";
 // Hard timeout for the route; keep this ≤ 60s to satisfy Vercel constraints.
 export const maxDuration = 60;
 
+// WARM-UP HANDLER (page-load prefetch / keepalive)
+export async function GET() {
+  return NextResponse.json(
+    {
+      analysis: "Warm-up OK. Use POST /api/estimate with FormData(files).",
+      window_counts: {
+        pane_3rd_story: 0,
+        pane_2nd_story: 0,
+        pane_1st_base: 0,
+        patio_door_panel: 0,
+      },
+      stories: 1,
+    },
+    { status: 200 }
+  );
+}
+
 // Type definitions for the returned schema
 interface PaneCounts {
   pane_3rd_story: number;
