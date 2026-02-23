@@ -32,6 +32,7 @@ Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
 Return JSON ONLY. No markdown, no backticks, no explanation outside the JSON.
+Keep the 'analysis' field brief - one short sentence per image maximum.
 Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
 {
 "analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
@@ -87,7 +88,7 @@ export async function POST(req: Request) {
 
     const generationPromise = client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1024,
+      max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [
         {
