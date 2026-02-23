@@ -37,10 +37,47 @@ You MUST return raw JSON only. No markdown. No backticks. No text before or afte
 Your entire response must start with { and end with }.
 Use the 'analysis' field for brief step-by-step reasoning per image before finalizing counts.
 {
-"analysis": "Img 1: Upper wall has 2 windows at main floor height (single story wall, not 2nd story)...",
+"analysis": "Img 1: ...",
 "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`;
+
+const REVIEW_PROMPT = `You previously counted window panes in these images and got this result:
+{PREVIOUS_RESULT}
+
+Review the images one more time focusing specifically on:
+- Basement windows near the foundation line that may have been missed
+- Windows on the far left and right edges of walls
+- Any windows partially hidden by objects like tanks, AC units, or shelters
+- Door glass panels that may have been skipped
+- Large windows that may have been undercounted (e.g. counted as 1 pane when they are 2 or 3)
+
+Studies show AI vision models typically undercount — bias your review toward finding more panes if you are unsure.
+
+If you believe the count is too low, return adjusted numbers. If you think the count is correct, return the same numbers.
+
+You MUST return raw JSON only. No markdown. No backticks. No text before or after the JSON.
+Your entire response must start with { and end with }.
+{
+"analysis": "Review notes...",
+"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"stories": 1
+}`;
+
+function averageCounts(first: any, second: any) {
+  const keys = ["pane_3rd_story", "pane_2nd_story", "pane_1st_base", "patio_door_panel"];
+  const averaged: any = {};
+  for (const key of keys) {
+    averaged[key] = Math.round(((first[key] || 0) + (second[key] || 0)) / 2);
+  }
+  return averaged;
+}
+
+function extractJSON(text: string) {
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("No JSON found in response");
+  return JSON.parse(jsonMatch[0].trim());
+}
 
 export async function POST(req: Request) {
   try {
@@ -66,10 +103,7 @@ export async function POST(req: Request) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         return [
-          {
-            type: "text" as const,
-            text: `Image ${index + 1}:`,
-          },
+          { type: "text" as const, text: `Image ${index + 1}:` },
           {
             type: "image" as const,
             source: {
@@ -88,7 +122,8 @@ export async function POST(req: Request) {
       setTimeout(() => reject(new Error("Request Timeout")), 58000);
     });
 
-    const generationPromise = client.messages.create({
+    // --- PASS 1: Initial count ---
+    const pass1Promise = client.messages.create({
       model: "claude-opus-4-6",
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
@@ -97,36 +132,51 @@ export async function POST(req: Request) {
           role: "user",
           content: [
             ...imageParts.flat(),
-            {
-              type: "text",
-              text: "Analyze all images and return the JSON result.",
-            },
+            { type: "text", text: "Analyze all images and return the JSON result." },
           ],
         },
       ],
     });
 
-    const result = await Promise.race([generationPromise, timeoutPromise]) as Anthropic.Message;
+    const pass1Result = await Promise.race([pass1Promise, timeoutPromise]) as Anthropic.Message;
+    const pass1Text = pass1Result.content[0].type === "text" ? pass1Result.content[0].text : "";
+    const pass1Data = extractJSON(pass1Text);
 
-    const rawText = result.content[0].type === "text" ? result.content[0].text : "";
+    // --- PASS 2: Self-critique review ---
+    const reviewPrompt = REVIEW_PROMPT.replace(
+      "{PREVIOUS_RESULT}",
+      JSON.stringify(pass1Data.window_counts)
+    );
 
-    // Extract JSON even if model wraps it in markdown
-    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error("AI Parsing Error:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
-    }
-    const cleanText = jsonMatch[0].trim();
+    const pass2Promise = client.messages.create({
+      model: "claude-opus-4-6",
+      max_tokens: 4096,
+      system: reviewPrompt,
+      messages: [
+        {
+          role: "user",
+          content: [
+            ...imageParts.flat(),
+            { type: "text", text: "Review your previous count and return the JSON result." },
+          ],
+        },
+      ],
+    });
 
-    let parsedData;
-    try {
-      parsedData = JSON.parse(cleanText);
-    } catch (e) {
-      console.error("AI Parsing Error:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
-    }
+    const pass2Result = await Promise.race([pass2Promise, timeoutPromise]) as Anthropic.Message;
+    const pass2Text = pass2Result.content[0].type === "text" ? pass2Result.content[0].text : "";
+    const pass2Data = extractJSON(pass2Text);
 
-    return NextResponse.json(parsedData);
+    // --- Average the two passes ---
+    const averagedCounts = averageCounts(pass1Data.window_counts, pass2Data.window_counts);
+
+    return NextResponse.json({
+      analysis: `Pass 1: ${pass1Data.analysis}\n\nPass 2 (review): ${pass2Data.analysis}`,
+      window_counts: averagedCounts,
+      stories: pass1Data.stories,
+      pass1_counts: pass1Data.window_counts,
+      pass2_counts: pass2Data.window_counts,
+    });
 
   } catch (error: any) {
     console.error("Estimation Error:", error);
