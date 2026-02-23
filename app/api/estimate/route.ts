@@ -31,7 +31,8 @@ SPATIAL MAPPING (Top-Down):
 Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. No markdown, no backticks, no explanation outside the JSON.
+You MUST return raw JSON only. No markdown. No backticks. No text before or after the JSON. 
+Your entire response must start with { and end with }.
 Keep the 'analysis' field brief - one short sentence per image maximum.
 Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
 {
@@ -107,7 +108,14 @@ export async function POST(req: Request) {
     const result = await Promise.race([generationPromise, timeoutPromise]) as Anthropic.Message;
 
     const rawText = result.content[0].type === "text" ? result.content[0].text : "";
-    const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+
+    // Extract JSON even if model wraps it in markdown
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error("AI Parsing Error:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
+    }
+    const cleanText = jsonMatch[0].trim();
 
     let parsedData;
     try {
