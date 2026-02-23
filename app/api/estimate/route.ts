@@ -50,13 +50,13 @@ CRITICAL VISUAL RULES:
 
 OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
 
-MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
+PURE PANE COUNTING: Ignore window styles, types, or opening mechanisms. Count every distinct piece of glass separated by a physical frame. If a single window block is divided by a frame into 2 pieces of glass, that is 2 panes. If it is divided into 3, that is 3 panes.
 
-TRANSOMS: Windows above doors count separately (map to 1st floor).
+TRANSOMS: Glass positioned above doors counts separately (map to 1st floor).
 
-BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
+BASEMENT: Look closely at the foundation line. Count every distinct piece of glass found in the foundation shadows.
 
-DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
+DOORS: Count each distinct glass panel of patio/entry doors as 'patio_door_panel'.
 
 SPATIAL MAPPING (Top-Down):
 
