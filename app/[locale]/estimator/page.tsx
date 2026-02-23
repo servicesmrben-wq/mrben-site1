@@ -183,6 +183,11 @@ export default function EstimatorPage() {
           formData.append("files", file); 
         });
 
+        console.log("[Estimator] calculate click", {
+          files: chunk.length,
+          method: "POST",
+        });
+
         let res;
         let attempts = 0;
         const maxRetries = 1;
@@ -192,6 +197,12 @@ export default function EstimatorPage() {
             res = await fetch("/api/estimate", {
               method: "POST",
               body: formData,
+            });
+
+            console.log("[Estimator] estimate response", {
+              files: chunk.length,
+              method: "POST",
+              status: res.status,
             });
 
             if (res.ok) break;

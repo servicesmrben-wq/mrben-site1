@@ -23,7 +23,23 @@ export const maxDuration = 60;
 export async function GET() {
   return NextResponse.json(
     {
-      analysis: "Warm-up OK. Use POST /api/estimate with FormData(files).",
+      analysis: "warmup",
+      window_counts: {
+        pane_3rd_story: 0,
+        pane_2nd_story: 0,
+        pane_1st_base: 0,
+        patio_door_panel: 0,
+      },
+      stories: 1,
+    },
+    { status: 200 }
+  );
+}
+
+export async function OPTIONS() {
+  return NextResponse.json(
+    {
+      analysis: "warmup",
       window_counts: {
         pane_3rd_story: 0,
         pane_2nd_story: 0,
@@ -174,6 +190,7 @@ async function runVisionModel(
  * model, merges the results, and returns a schema‑valid JSON response.
  */
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
   // Validate API key early
   if (!process.env.OPENAI_API_KEY) {
     const msg = "Missing OPENAI_API_KEY environment variable";
@@ -252,7 +269,7 @@ export async function POST(request: NextRequest) {
   // Merge results conservatively: take the maximum count for each category and
   // for the number of stories. Concatenate analyses to preserve any notes.
   const merged: Estimate = {
-    analysis: [result1.analysis, result2.analysis].filter(Boolean).join(" | "),
+    analysis: `ok pass1=${result1.window_counts.pane_3rd_story + result1.window_counts.pane_2nd_story + result1.window_counts.pane_1st_base + result1.window_counts.patio_door_panel} pass2=${result2.window_counts.pane_3rd_story + result2.window_counts.pane_2nd_story + result2.window_counts.pane_1st_base + result2.window_counts.patio_door_panel} merged=${Math.max(result1.window_counts.pane_3rd_story, result2.window_counts.pane_3rd_story) + Math.max(result1.window_counts.pane_2nd_story, result2.window_counts.pane_2nd_story) + Math.max(result1.window_counts.pane_1st_base, result2.window_counts.pane_1st_base) + Math.max(result1.window_counts.patio_door_panel, result2.window_counts.patio_door_panel)} ms=${Date.now() - startedAt}`,
     window_counts: {
       pane_3rd_story: Math.max(result1.window_counts.pane_3rd_story, result2.window_counts.pane_3rd_story),
       pane_2nd_story: Math.max(result1.window_counts.pane_2nd_story, result2.window_counts.pane_2nd_story),
@@ -263,4 +280,24 @@ export async function POST(request: NextRequest) {
   };
 
   return NextResponse.json(merged);
+}
+
+function methodNotAllowed() {
+  return NextResponse.json(emptyEstimate("method_not_allowed"), { status: 405 });
+}
+
+export async function PUT() {
+  return methodNotAllowed();
+}
+
+export async function PATCH() {
+  return methodNotAllowed();
+}
+
+export async function DELETE() {
+  return methodNotAllowed();
+}
+
+export async function HEAD() {
+  return methodNotAllowed();
 }
