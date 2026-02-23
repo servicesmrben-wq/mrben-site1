@@ -7,53 +7,8 @@ import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 import imageCompression from "browser-image-compression";
 
-// Client-side compression utility
-const compressImage = async (file: File): Promise<File> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = document.createElement("img");
-      img.src = event.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const MAX_WIDTH = 1024;
-        const MAX_HEIGHT = 1024;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-        } else {
-          if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx?.drawImage(img, 0, 0, width, height);
-
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), { type: "image/jpeg" });
-              resolve(newFile);
-            } else {
-              reject(new Error("Canvas compression failed"));
-            }
-          },
-          "image/jpeg",
-          0.7
-        );
-      };
-    };
-    reader.onerror = (error) => reject(error);
-  });
-};
-
 export default function EstimatorPage() {
   const [files, setFiles] = useState<File[]>([]);
-  const [compressedFiles, setCompressedFiles] = useState<File[]>([]); // Store ready-to-upload files
   const [previews, setPreviews] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -93,22 +48,11 @@ export default function EstimatorPage() {
       setResult(null);
       setError(null);
       e.target.value = "";
-
-      // Background Compression
-      validFiles.forEach(async (file) => {
-        try {
-          const compressed = await compressImage(file);
-          setCompressedFiles(prev => [...prev, compressed]);
-        } catch {
-          setCompressedFiles(prev => [...prev, file]); // Fallback
-        }
-      });
     }
   };
 
   const removeFile = (index: number) => {
     setFiles(prev => prev.filter((_, i) => i !== index));
-    setCompressedFiles(prev => prev.filter((_, i) => i !== index));
     setPreviews(prev => {
       const urlToRemove = prev[index];
       URL.revokeObjectURL(urlToRemove);
@@ -260,8 +204,8 @@ export default function EstimatorPage() {
       // --- BACKGROUND BACKUP TO GOOGLE DRIVE ---
       const DRIVE_CHUNK_SIZE = 2;
       const driveChunks: File[][] = [];
-      for (let i = 0; i < files.length; i += DRIVE_CHUNK_SIZE) {
-        driveChunks.push(files.slice(i, i + DRIVE_CHUNK_SIZE));
+      for (let i = 0; i < compressedFilesList.length; i += DRIVE_CHUNK_SIZE) {
+        driveChunks.push(compressedFilesList.slice(i, i + DRIVE_CHUNK_SIZE));
       }
 
       (async () => {
@@ -275,11 +219,7 @@ export default function EstimatorPage() {
               driveData.append("referenceId", newRefId);
             }
 
-            // Use pre-compressed files here too
-            const chunkStartIndex = files.indexOf(chunk[0]);
-            const finalChunk = chunk.map((file, idx) => compressedFiles[chunkStartIndex + idx] || file);
-
-            finalChunk.forEach((file) => {
+            chunk.forEach((file) => {
               driveData.append("files", file);
             });
             
