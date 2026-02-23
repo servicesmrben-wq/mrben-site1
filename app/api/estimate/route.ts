@@ -17,6 +17,8 @@ A "2nd story" only exists if you can clearly see two separate living levels stac
 
 OBSTRUCTIONS: Actively look behind propane tanks, AC units, plastic winter shelters, and into shadows. Do not miss partially hidden windows.
 
+FULL WIDTH SCANNING: Before counting, mentally divide each wall into left, center, and right thirds. Count each third separately, then sum them. Never stop scanning at an obstruction — always continue to the far edge of the wall.
+
 PURE PANE COUNTING: Ignore window styles or opening mechanisms. Count every distinct piece of glass separated by a physical frame divider. A window divided into 2 glass sections = 2 panes. Divided into 3 = 3 panes.
 
 BASEMENT: Look closely at the foundation/concrete line near ground level. Count every distinct piece of glass in the foundation zone.
