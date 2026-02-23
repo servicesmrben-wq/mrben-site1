@@ -8,7 +8,7 @@ export async function GET() {
   return NextResponse.json({ status: "Server is awake and ready." }, { status: 200 });
 }
 
-const SYSTEM_PROMPT = You are an expert estimator. Analyze these photos to count window panes.
+const SYSTEM_PROMPT = `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
 
