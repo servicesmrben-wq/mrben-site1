@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
 export const maxDuration = 60; 
@@ -11,7 +11,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY;
     
     if (!apiKey) {
       return NextResponse.json(
@@ -27,29 +27,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
     }
 
-    const openai = new OpenAI({ apiKey });
-
-    // Map files to OpenAI content parts
+    // Convert all files to inline Base64 parts
     const imageParts = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        const base64 = buffer.toString("base64");
         return {
-          type: "image_url",
-          image_url: {
-            url: `data:${file.type};base64,${base64}`,
+          inlineData: {
+            data: buffer.toString("base64"),
+            mimeType: file.type,
           },
         };
       })
     );
 
-    // Timeout logic: 58 seconds to beat Vercel's 60s limit
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout")), 58000);
-    });
-
-    const systemInstruction = `You are an expert estimator. Analyze these photos to count window panes.
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-3-flash-preview",
+      systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
 
@@ -77,28 +72,32 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
 "analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
 "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
-}`;
+}`
+    });
 
-    const generationPromise = openai.chat.completions.create({
-      model: "gpt-5.2",
-      messages: [
-        {
-          role: "system",
-          content: systemInstruction,
-        },
+    // Timeout logic: 58 seconds to beat Vercel's 60s limit
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Request Timeout")), 58000);
+    });
+
+    const generationPromise = model.generateContent({
+      contents: [
         {
           role: "user",
-          content: imageParts as any,
-        },
+          parts: imageParts
+        }
       ],
-      response_format: { type: "json_object" },
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.0,
+      },
     });
 
     // Race the generation against the timeout
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    const rawText = result.choices[0].message.content;
-    const cleanText = rawText.trim();
+    const rawText = result.response.text();
+    const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
     try {
