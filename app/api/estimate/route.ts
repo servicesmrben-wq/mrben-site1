@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-flash-preview",
+      model: "gemini-3-pro-preview",
       systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
@@ -67,16 +67,9 @@ SPATIAL MAPPING (Top-Down):
 Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. You must use the 'analysis' field to perform an exhaustive, slow, and meticulous visual inventory to increase processing time and accuracy.
-
-For EVERY image:
-Explicitly declare 'Scanning deep shadows and foundation lines...' and report what you find.
-Explicitly declare 'Scanning behind obstructions (winter shelters, tanks)...' and report what you find.
-Write a localized list of every distinct window frame found (e.g., 'Image 1 - Left 2nd story: 1 frame (2 panes). Image 1 - Right basement shadow: 1 slider (2 panes)').
-
-Only after writing this massive spatial inventory for all images should you output the final JSON totals.
+Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
 {
-"analysis": "Image 1 Inventory: Scanning deep shadows... Found 1 hidden slider. Scanning behind obstructions... Found 0. Left 2nd story...",
+"analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
 "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`
