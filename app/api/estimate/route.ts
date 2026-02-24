@@ -1,3 +1,13 @@
+import Anthropic from "@anthropic-ai/sdk";
+import { NextResponse } from "next/server";
+
+export const maxDuration = 60;
+export const runtime = "nodejs";
+
+export async function GET() {
+  return NextResponse.json({ status: "Server is awake and ready." }, { status: 200 });
+}
+
 const SYSTEM_PROMPT = `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
@@ -67,6 +77,12 @@ Your entire response must start with { and end with }.
 "final_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`;
+
+function extractJSON(text: string) {
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("No JSON found in response");
+  return JSON.parse(jsonMatch[0].trim());
+}
 
 export async function POST(req: Request) {
   try {
@@ -151,6 +167,6 @@ export async function POST(req: Request) {
     console.error("Estimation Error:", error);
     const message = error.message || "An unexpected error occurred.";
     const status = message.includes("Timeout") ? 504 : 500;
-    return NextResponse.json({ error: message }, { status: status });
+    return NextResponse.json({ error: message }, { status });
   }
 }
