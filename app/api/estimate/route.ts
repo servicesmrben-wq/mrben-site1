@@ -1,13 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
-import { NextResponse } from "next/server";
-
-export const maxDuration = 60;
-export const runtime = "nodejs";
-
-export async function GET() {
-  return NextResponse.json({ status: "Server is awake and ready." }, { status: 200 });
-}
-
 const SYSTEM_PROMPT = `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
@@ -40,21 +30,43 @@ SPATIAL MAPPING:
 - All other windows including split-level, raised foundation upper windows, and any ambiguous cases = pane_1st_base
 - Door glass panels = patio_door_panel
 
+DOUBLE-CHECK METHODOLOGY:
+You MUST perform TWO COMPLETE PASSES through the images before finalizing your answer:
+
+PASS 1 - Initial Count:
+- Scan all images systematically
+- Count all window panes following the rules above
+- Document your initial counts
+
+PASS 2 - Verification:
+- Re-examine each image from scratch as if you haven't seen it before
+- Recount independently without referencing your first count
+- Look specifically for:
+  * Windows you might have missed behind obstructions
+  * Areas where symmetry inference should apply
+  * Basement windows near the foundation
+  * Door glass panels
+  * Any discrepancies between passes
+
+RECONCILIATION:
+- Compare Pass 1 and Pass 2 counts
+- If they differ, re-examine those specific areas
+- Explain any differences found
+- Use the more accurate count (usually the higher one if windows were missed in one pass)
+
 OUTPUT FORMAT:
 You MUST return raw JSON only. No markdown. No backticks. No text before or after the JSON.
 Your entire response must start with { and end with }.
-Use the 'analysis' field for brief step-by-step reasoning per image before finalizing counts.
+
 {
-"analysis": "Img 1: ...",
-"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"pass_1_analysis": "First pass findings...",
+"pass_1_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"pass_2_analysis": "Second pass findings...",
+"pass_2_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"reconciliation": "Explanation of any differences and why final counts were chosen...",
+"final_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`;
-
-function extractJSON(text: string) {
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("No JSON found in response");
-  return JSON.parse(jsonMatch[0].trim());
-}
 
 export async function POST(req: Request) {
   try {
@@ -107,38 +119,32 @@ export async function POST(req: Request) {
           role: "user" as const,
           content: [
             ...imageParts.flat(),
-            { type: "text" as const, text: "Analyze all images and return the JSON result." },
+            { 
+              type: "text" as const, 
+              text: "Perform TWO complete counting passes on all images, then reconcile any differences and provide your final counts in the JSON format specified." 
+            },
           ],
         },
       ],
     };
 
-    // Run both calls in parallel
-    const generationPromise = Promise.all([
+    // Single API call with self-review
+    const result = await Promise.race([
       client.messages.create(callConfig),
-      client.messages.create(callConfig),
-    ]);
-
-    const results = await Promise.race([generationPromise, timeoutPromise]) as Anthropic.Message[];
+      timeoutPromise
+    ]) as Anthropic.Message;
     
-    const rawText1 = results[0].content[0].type === "text" ? results[0].content[0].text : "";
-    const rawText2 = results[1].content[0].type === "text" ? results[1].content[0].text : "";
-    
-    const parsedData1 = extractJSON(rawText1);
-    const parsedData2 = extractJSON(rawText2);
-
-    const averageCounts = (key: string) => 
-      Math.ceil(((parsedData1.window_counts[key] || 0) + (parsedData2.window_counts[key] || 0)) / 2);
+    const rawText = result.content[0].type === "text" ? result.content[0].text : "";
+    const parsedData = extractJSON(rawText);
 
     return NextResponse.json({
-      analysis: `[Pass 1]: ${parsedData1.analysis}\n\n[Pass 2]: ${parsedData2.analysis}`,
-      window_counts: {
-        pane_3rd_story: averageCounts('pane_3rd_story'),
-        pane_2nd_story: averageCounts('pane_2nd_story'),
-        pane_1st_base: averageCounts('pane_1st_base'),
-        patio_door_panel: averageCounts('patio_door_panel'),
-      },
-      stories: Math.max(parsedData1.stories || 1, parsedData2.stories || 1),
+      pass_1_analysis: parsedData.pass_1_analysis,
+      pass_1_counts: parsedData.pass_1_counts,
+      pass_2_analysis: parsedData.pass_2_analysis,
+      pass_2_counts: parsedData.pass_2_counts,
+      reconciliation: parsedData.reconciliation,
+      window_counts: parsedData.final_counts,
+      stories: parsedData.stories || 1,
     });
 
   } catch (error: any) {
