@@ -98,29 +98,47 @@ export async function POST(req: Request) {
       setTimeout(() => reject(new Error("Request Timeout")), 58000);
     });
 
-    const generationPromise = client.messages.create({
+    const callConfig = {
       model: "claude-opus-4-6",
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [
         {
-          role: "user",
+          role: "user" as const,
           content: [
             ...imageParts.flat(),
-            { type: "text", text: "Analyze all images and return the JSON result." },
+            { type: "text" as const, text: "Analyze all images and return the JSON result." },
           ],
         },
       ],
-    });
+    };
 
-    const result = await Promise.race([generationPromise, timeoutPromise]) as Anthropic.Message;
-    const rawText = result.content[0].type === "text" ? result.content[0].text : "";
-    const parsedData = extractJSON(rawText);
+    // Run both calls in parallel
+    const generationPromise = Promise.all([
+      client.messages.create(callConfig),
+      client.messages.create(callConfig),
+    ]);
+
+    const results = await Promise.race([generationPromise, timeoutPromise]) as Anthropic.Message[];
+    
+    const rawText1 = results[0].content[0].type === "text" ? results[0].content[0].text : "";
+    const rawText2 = results[1].content[0].type === "text" ? results[1].content[0].text : "";
+    
+    const parsedData1 = extractJSON(rawText1);
+    const parsedData2 = extractJSON(rawText2);
+
+    const averageCounts = (key: string) => 
+      Math.ceil(((parsedData1.window_counts[key] || 0) + (parsedData2.window_counts[key] || 0)) / 2);
 
     return NextResponse.json({
-      analysis: parsedData.analysis,
-      window_counts: parsedData.window_counts,
-      stories: parsedData.stories,
+      analysis: `[Pass 1]: ${parsedData1.analysis}\n\n[Pass 2]: ${parsedData2.analysis}`,
+      window_counts: {
+        pane_3rd_story: averageCounts('pane_3rd_story'),
+        pane_2nd_story: averageCounts('pane_2nd_story'),
+        pane_1st_base: averageCounts('pane_1st_base'),
+        patio_door_panel: averageCounts('patio_door_panel'),
+      },
+      stories: Math.max(parsedData1.stories || 1, parsedData2.stories || 1),
     });
 
   } catch (error: any) {
