@@ -35,6 +35,19 @@ DOORS: Count each distinct glass panel in entry doors and patio doors as 'patio_
 
 TRANSOMS: Glass above a door counts as 'patio_door_panel' (map to 1st floor).
 
+WINDOW SIZE CONSISTENCY CHECK:
+- Windows on the same floor typically have similar pane configurations
+- If one window has 6 panes, adjacent similar-sized windows likely have 6 panes too
+- Exception: bathroom windows are often different (smaller, obscured glass, fewer panes)
+- Use this pattern recognition to verify your counts and catch errors
+
+ZOOM IN MENTALLY:
+- When counting, mentally zoom into each window
+- Look for thin dividing lines between panes (muntins)
+- False muntins (decorative grids between glass layers) still count - they indicate pane design
+- A single large pane with no dividers = 1 pane, not 0
+- Examine each window closely before moving to the next
+
 SPATIAL MAPPING:
 - Windows on an unambiguous upper floor = pane_2nd_story or pane_3rd_story
 - All other windows including split-level, raised foundation upper windows, and any ambiguous cases = pane_1st_base
@@ -47,6 +60,7 @@ PASS 1 - Initial Count:
 - Scan all images systematically
 - Count all window panes following the rules above
 - Document your initial counts
+- Note any uncertainties or areas requiring closer inspection
 
 PASS 2 - Verification:
 - Re-examine each image from scratch as if you haven't seen it before
@@ -63,6 +77,11 @@ RECONCILIATION:
 - If they differ, re-examine those specific areas
 - Explain any differences found
 - Use the more accurate count (usually the higher one if windows were missed in one pass)
+- State your confidence level (high/medium/low) based on:
+  * Image clarity and lighting
+  * Number of obstructions
+  * Amount of symmetry inference required
+  * Agreement between Pass 1 and Pass 2
 
 OUTPUT FORMAT:
 You MUST return raw JSON only. No markdown. No backticks. No text before or after the JSON.
@@ -74,6 +93,7 @@ Your entire response must start with { and end with }.
 "pass_2_analysis": "Second pass findings...",
 "pass_2_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "reconciliation": "Explanation of any differences and why final counts were chosen...",
+"confidence": "high/medium/low",
 "final_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`;
@@ -159,6 +179,7 @@ export async function POST(req: Request) {
       pass_2_analysis: parsedData.pass_2_analysis,
       pass_2_counts: parsedData.pass_2_counts,
       reconciliation: parsedData.reconciliation,
+      confidence: parsedData.confidence,
       window_counts: parsedData.final_counts,
       stories: parsedData.stories || 1,
     });
