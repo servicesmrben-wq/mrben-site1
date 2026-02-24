@@ -17,6 +17,14 @@ A "2nd story" only exists if you can clearly see two separate living levels stac
 
 OBSTRUCTIONS: Actively look behind propane tanks, AC units, plastic winter shelters, and into shadows. Do not miss partially hidden windows.
 
+SYMMETRY INFERENCE:
+Residential homes are often architecturally symmetric. Use this to your advantage:
+- If you can clearly count panes on one side of a wall but the other side is partially obstructed, infer the hidden side likely mirrors the visible side.
+- If you see a window group with 3 panes on the left of a door, assume the right side likely has 3 panes too unless you can clearly see otherwise.
+- If a window is partially hidden by a tree, tank, or shelter but a similar window elsewhere on the same wall is fully visible, use that visible window as a reference for the hidden one.
+- Only apply symmetry inference when you have a clear reference window to compare against. Do not guess randomly.
+- When using symmetry, note it in the analysis field: "Right window partially hidden by tree, inferred 3 panes based on matching left window."
+
 FULL WIDTH SCANNING: Before counting, mentally divide each wall into left, center, and right thirds. Count each third separately, then sum them. Never stop scanning at an obstruction — always continue to the far edge of the wall.
 
 PURE PANE COUNTING: Ignore window styles or opening mechanisms. Count every distinct piece of glass separated by a physical frame divider. A window divided into 2 glass sections = 2 panes. Divided into 3 = 3 panes.
