@@ -99,7 +99,7 @@ export async function POST(req: Request) {
     });
 
     const callConfig = {
-      model: "claude-opus-4-6",
+      model: "claude-opus-4-20250514", // Fixed: correct Opus 4 model name
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [
