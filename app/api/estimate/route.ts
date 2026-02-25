@@ -159,10 +159,19 @@ export async function POST(req: Request) {
     const rawText = result.content[0].type === "text" ? result.content[0].text : "";
     const parsedData = extractJSON(rawText);
 
+    // Remap new "sections_*" keys back to "pane_*" keys for frontend compatibility
+    const counts = parsedData.final_counts;
+    const mappedCounts = {
+      pane_3rd_story: counts.sections_3rd_story ?? 0,
+      pane_2nd_story: counts.sections_2nd_story ?? 0,
+      pane_1st_base: counts.sections_1st_base ?? 0,
+      patio_door_panel: counts.door_glass_section ?? 0,
+    };
+
     return NextResponse.json({
       analysis: parsedData.analysis,
       confidence: parsedData.confidence,
-      window_counts: parsedData.final_counts,
+      window_counts: mappedCounts,
       stories: parsedData.stories || 1,
     });
 
