@@ -109,11 +109,11 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-pro",
+      model: "gemini-2.0-flash-exp",
       systemInstruction: SYSTEM_PROMPT,
     });
 
-    const timeoutPromise = new Promise((_, reject) => {
+    const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => reject(new Error("Request Timeout")), 88000);
     });
 
@@ -125,7 +125,6 @@ export async function POST(req: Request) {
     ]);
 
     const result = await Promise.race([generationPromise, timeoutPromise]);
-    
     const response = await result.response;
     const rawText = response.text();
     const parsedData = extractJSON(rawText);
