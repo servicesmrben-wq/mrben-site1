@@ -80,10 +80,8 @@ export default function EstimatorPage() {
     setReferenceId(newRefId);
 
     // Smart Progress Logic
-    // Parallel batches of 4 mean 8 images take the same time as 4.
-    // 10s per image in the largest batch.
-    const effectiveCount = Math.min(files.length, 4);
-    const estimatedWaitTimeMs = effectiveCount * 10000 + 2000; 
+    // Single API call with all images — estimate ~8s per image
+    const estimatedWaitTimeMs = files.length * 8000 + 3000; 
     const startTime = Date.now();
     
     const progressInterval = setInterval(() => {
@@ -112,91 +110,70 @@ export default function EstimatorPage() {
         })
       );
 
-      const CHUNK_SIZE = 4;
-      const chunks: File[][] = [];
-      for (let i = 0; i < compressedFilesList.length; i += CHUNK_SIZE) {
-        chunks.push(compressedFilesList.slice(i, i + CHUNK_SIZE));
-      }
+      // SINGLE API CALL — all images sent together for unified analysis
+      const formData = new FormData();
+      compressedFilesList.forEach((file) => {
+        formData.append("files", file);
+      });
 
-      const results = [];
+      let res;
+      let attempts = 0;
+      const maxRetries = 1;
 
-      // SEQUENTIAL PROCESSING
-      for (const chunk of chunks) {
-        const formData = new FormData();
-        chunk.forEach((file) => {
-          formData.append("files", file); 
-        });
+      while (attempts <= maxRetries) {
+        try {
+          res = await fetch("/api/estimate", {
+            method: "POST",
+            body: formData,
+          });
 
-        let res;
-        let attempts = 0;
-        const maxRetries = 1;
+          if (res.ok) break;
 
-        while (attempts <= maxRetries) {
-          try {
-            res = await fetch("/api/estimate", {
-              method: "POST",
-              body: formData,
-            });
+          if (attempts < maxRetries && res.status >= 500) {
+            attempts++;
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            continue;
+          }
 
-            if (res.ok) break;
-
-            if (attempts < maxRetries && res.status >= 500) {
-              attempts++;
-              await new Promise((resolve) => setTimeout(resolve, 1500));
-              continue;
-            }
-
-            break;
-          } catch (error) {
-            if (attempts < maxRetries) {
-              attempts++;
-              await new Promise((resolve) => setTimeout(resolve, 1500));
-            } else {
-              throw error;
-            }
+          break;
+        } catch (error) {
+          if (attempts < maxRetries) {
+            attempts++;
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+          } else {
+            throw error;
           }
         }
+      }
 
-        if (!res) throw new Error("Network request failed");
+      if (!res) throw new Error("Network request failed");
 
-        let data;
-        const contentType = res.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          console.error("Non-JSON API Response:", text);
-          throw new Error("Server error: The analysis timed out or failed.");
-        }
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error("Non-JSON API Response:", text);
+        throw new Error("Server error: The analysis timed out or failed.");
+      }
 
-        if (!res.ok) {
-          throw new Error(data.error || "Estimation failed");
-        }
-        
-        results.push(data);
+      if (!res.ok) {
+        throw new Error(data.error || "Estimation failed");
       }
 
       const mergedResult = {
-        analysis: "",
+        analysis: data.analysis || "",
         window_counts: {
-          pane_3rd_story: 0,
-          pane_2nd_story: 0,
-          pane_1st_base: 0,
-          patio_door_panel: 0
+          pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
+          pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
+          pane_1st_base: data.window_counts?.pane_1st_base || 0,
+          patio_door_panel: data.window_counts?.patio_door_panel || 0,
         },
-        stories: 1,
+        stories: data.stories || 1,
         mode: mode,
         serviceType: mode === "ext" ? "Exterior Only" : "Inside & Out"
       };
-
-      results.forEach((res, i) => {
-        mergedResult.analysis += `Batch ${i + 1}: ` + (res.analysis || "") + "\n";
-        
-        Object.keys(mergedResult.window_counts).forEach((key) => {
-          const k = key as keyof typeof mergedResult.window_counts;
-          mergedResult.window_counts[k] += (res.window_counts[k] || 0);
-        });
-      });
 
       setResult(mergedResult);
       setProgress(100); 
