@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
 export const maxDuration = 90;
@@ -78,11 +78,11 @@ function extractJSON(text: string) {
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GOOGLE_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Server configuration error: Missing AI API Key" },
+        { error: "Server configuration error: Missing Google API Key" },
         { status: 500 }
       );
     }
@@ -95,54 +95,39 @@ export async function POST(req: Request) {
     }
 
     const imageParts = await Promise.all(
-      files.map(async (file, index) => {
+      files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        return [
-          { type: "text" as const, text: `Image ${index + 1}:` },
-          {
-            type: "image" as const,
-            source: {
-              type: "base64" as const,
-              media_type: file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
-              data: buffer.toString("base64"),
-            },
+        return {
+          inlineData: {
+            data: buffer.toString("base64"),
+            mimeType: file.type,
           },
-        ];
+        };
       })
     );
 
-    const client = new Anthropic({ apiKey });
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-pro",
+      systemInstruction: SYSTEM_PROMPT,
+    });
 
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => reject(new Error("Request Timeout")), 88000);
     });
 
-    const callConfig = {
-      model: "claude-opus-4-6",
-      max_tokens: 2048,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user" as const,
-          content: [
-            ...imageParts.flat(),
-            { 
-              type: "text" as const, 
-              text: "Count all window panes carefully using the two-pass methodology and provide your final counts in the JSON format specified." 
-            },
-          ],
-        },
-      ],
-    };
+    const prompt = "Count all window panes carefully using the two-pass methodology and provide your final counts in the JSON format specified.";
 
-    // Single API call with self-review
-    const result = await Promise.race([
-      client.messages.create(callConfig),
-      timeoutPromise
-    ]) as Anthropic.Message;
+    const generationPromise = model.generateContent([
+      prompt,
+      ...imageParts,
+    ]);
+
+    const result = await Promise.race([generationPromise, timeoutPromise]);
     
-    const rawText = result.content[0].type === "text" ? result.content[0].text : "";
+    const response = await result.response;
+    const rawText = response.text();
     const parsedData = extractJSON(rawText);
 
     return NextResponse.json({
