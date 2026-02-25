@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 60;
+export const maxDuration = 90;
 export const runtime = "nodejs";
 
 export async function GET() {
@@ -53,46 +53,18 @@ SPATIAL MAPPING:
 - All other windows including split-level, raised foundation upper windows, and any ambiguous cases = pane_1st_base
 - Door glass panels = patio_door_panel
 
-DOUBLE-CHECK METHODOLOGY:
-You MUST perform TWO COMPLETE PASSES through the images before finalizing your answer:
-
-PASS 1 - Initial Count:
-- Scan all images systematically
-- Count all window panes following the rules above
-- Document your initial counts
-- Note any uncertainties or areas requiring closer inspection
-
-PASS 2 - Verification:
-- Re-examine each image from scratch as if you haven't seen it before
-- Recount independently without referencing your first count
-- Look specifically for:
-  * Windows you might have missed behind obstructions
-  * Areas where symmetry inference should apply
-  * Basement windows near the foundation
-  * Door glass panels
-  * Any discrepancies between passes
-
-RECONCILIATION:
-- Compare Pass 1 and Pass 2 counts
-- If they differ, re-examine those specific areas
-- Explain any differences found
-- Use the more accurate count (usually the higher one if windows were missed in one pass)
-- State your confidence level (high/medium/low) based on:
-  * Image clarity and lighting
-  * Number of obstructions
-  * Amount of symmetry inference required
-  * Agreement between Pass 1 and Pass 2
+COUNTING METHODOLOGY:
+Internally perform two mental passes to verify accuracy, but provide a concise summary:
+- First pass: Systematic scan and count
+- Second pass: Verification focusing on easy-to-miss areas (obstructions, basement, doors, symmetry)
+- Note key findings and confidence level
 
 OUTPUT FORMAT:
 You MUST return raw JSON only. No markdown. No backticks. No text before or after the JSON.
 Your entire response must start with { and end with }.
 
 {
-"pass_1_analysis": "First pass findings...",
-"pass_1_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
-"pass_2_analysis": "Second pass findings...",
-"pass_2_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
-"reconciliation": "Explanation of any differences and why final counts were chosen...",
+"analysis": "Brief summary of counting process and key findings...",
 "confidence": "high/medium/low",
 "final_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
@@ -143,12 +115,12 @@ export async function POST(req: Request) {
     const client = new Anthropic({ apiKey });
 
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout")), 58000);
+      setTimeout(() => reject(new Error("Request Timeout")), 88000);
     });
 
     const callConfig = {
       model: "claude-opus-4-6",
-      max_tokens: 4096,
+      max_tokens: 2048,
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -157,7 +129,7 @@ export async function POST(req: Request) {
             ...imageParts.flat(),
             { 
               type: "text" as const, 
-              text: "Perform TWO complete counting passes on all images, then reconcile any differences and provide your final counts in the JSON format specified." 
+              text: "Count all window panes carefully using the two-pass methodology and provide your final counts in the JSON format specified." 
             },
           ],
         },
@@ -174,11 +146,7 @@ export async function POST(req: Request) {
     const parsedData = extractJSON(rawText);
 
     return NextResponse.json({
-      pass_1_analysis: parsedData.pass_1_analysis,
-      pass_1_counts: parsedData.pass_1_counts,
-      pass_2_analysis: parsedData.pass_2_analysis,
-      pass_2_counts: parsedData.pass_2_counts,
-      reconciliation: parsedData.reconciliation,
+      analysis: parsedData.analysis,
       confidence: parsedData.confidence,
       window_counts: parsedData.final_counts,
       stories: parsedData.stories || 1,
