@@ -18,6 +18,14 @@ A "glass section" is each distinct, separate piece of glass divided by a physica
 - A window with a fixed center + two operable side lites = 3 glass sections
 - Always count what you can see separated by a physical divider — do not count decorative grille patterns printed on or between glass layers UNLESS they create a true physical divider
 
+GRID WINDOWS — CRITICAL:
+Windows can be divided both vertically AND horizontally creating a grid.
+- A window with 3 columns and 2 rows = 6 glass sections (3×2)
+- A window with 2 columns and 2 rows = 4 glass sections (2×2)
+- Always check for horizontal rails dividing a window into upper and lower rows
+- Do not stop counting after identifying vertical sections — scan the full height too
+- Formula: count columns × count rows = total glass sections for that window
+
 STORY IDENTIFICATION - READ CAREFULLY:
 A "2nd story" only exists if you can clearly see two separate living levels stacked vertically with a floor/ceiling between them (like a full two-story house). A tall single-story wall with windows placed at different heights is still 1st floor. A split-level or raised foundation where windows appear at two heights on the same wall does NOT create a 2nd story. When in doubt, classify as 1st floor (sections_1st_base). Only use sections_2nd_story or sections_3rd_story when a full upper floor with its own distinct windows is unambiguously visible.
 
