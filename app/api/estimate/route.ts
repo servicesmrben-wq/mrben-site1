@@ -1,3 +1,13 @@
+import OpenAI from "openai";
+import { NextResponse } from "next/server";
+
+export const maxDuration = 58;
+export const runtime = "nodejs";
+
+export async function GET() {
+  return NextResponse.json({ status: "Server is awake and ready." }, { status: 200 });
+}
+
 const SYSTEM_PROMPT = `You are an expert window-washing estimator. You will be given MULTIPLE photos of the SAME property. Your job is to count distinct glass sections (pricing units) accurately and conservatively, without double counting across photos.
 
 NON-NEGOTIABLE OUTPUT:
@@ -16,7 +26,7 @@ A "glass section" is one physically separate piece of glass bounded by real fram
 CRITICAL: MULTI-PHOTO ANTI-DUPLICATE RULE (MOST IMPORTANT):
 These photos can overlap. You must produce ONE set of counts for the house WITHOUT double counting the same windows seen in multiple images.
 Method:
-1) Build a mental “master map” of UNIQUE windows/doors for the property.
+1) Build a mental "master map" of UNIQUE windows/doors for the property.
 2) For each unique window/door, pick the clearest view among photos to count sections.
 3) If the same window appears in two photos, count it ONCE (use the best/closest/least-glare view).
 4) If unsure whether two windows are the same, use landmarks (door, garage, corners, roofline, deck, chimney) to decide. If still unsure, assume overlap (avoid double counting) and note it in analysis.
@@ -30,7 +40,7 @@ Do NOT count:
 - Lines that appear only in glare/reflection.
 - Interior blinds, curtains, or reflected siding lines.
 - Water streaks, dirt, tape, or screen patterns.
-If a “grid” is ambiguous, prefer fewer sections and mark confidence lower.
+If a "grid" is ambiguous, prefer fewer sections and mark confidence lower.
 
 GRID WINDOWS — DO NOT MISS ROWS:
 Many windows have both vertical AND horizontal splits.
@@ -63,11 +73,11 @@ SYMMETRY INFERENCE (CONTROLLED):
 Use symmetry ONLY when:
 - One side is clearly visible and the other side is partially blocked, AND
 - The architecture strongly suggests mirroring.
-If you apply symmetry, say so in analysis (“inferred right window matches left: 3 sections”).
+If you apply symmetry, say so in analysis ("inferred right window matches left: 3 sections").
 
 COUNTING PROTOCOL (DO THIS ORDER):
 PASS A — MASTER MAP (NO NUMBERS YET):
-Identify unique facades/areas (front/back/left/right) and list unique window/door groups mentally so you don’t double count across photos.
+Identify unique facades/areas (front/back/left/right) and list unique window/door groups mentally so you don't double count across photos.
 
 PASS B — PER-OPENING COUNT:
 For each unique opening, count glass sections using the clearest photo. Apply grid math (columns × rows). Assign it to:
@@ -75,7 +85,7 @@ For each unique opening, count glass sections using the clearest photo. Apply gr
 
 PASS C — AUDIT / SANITY CHECK:
 - Verify you counted: basement, doors, sidelights, transoms, garage windows.
-- Check for “too perfect” totals caused by double counting across photos.
+- Check for "too perfect" totals caused by double counting across photos.
 - If multiple photos show the same facade, ensure windows were only counted once.
 
 RETURN JSON ONLY IN THIS SHAPE:
@@ -85,3 +95,136 @@ RETURN JSON ONLY IN THIS SHAPE:
   "final_counts": { "sections_3rd_story": 0, "sections_2nd_story": 0, "sections_1st_base": 0, "door_glass_section": 0 },
   "stories": 1
 }`;
+
+function extractJSON(text: string) {
+  // Find the JSON block that contains "final_counts" — reliable even with scratchpad text before it
+  const marker = text.indexOf('"final_counts"');
+  if (marker === -1) throw new Error("No JSON found in response");
+
+  // Walk left from marker to find the opening brace of this object
+  let openBrace = -1;
+  for (let i = marker; i >= 0; i--) {
+    if (text[i] === "{") { openBrace = i; break; }
+  }
+  if (openBrace === -1) throw new Error("No JSON found in response");
+
+  // Walk right from opening brace, tracking depth to find matching closing brace
+  let depth = 0;
+  let closeBrace = -1;
+  for (let i = openBrace; i < text.length; i++) {
+    if (text[i] === "{") depth++;
+    if (text[i] === "}") depth--;
+    if (depth === 0) { closeBrace = i; break; }
+  }
+  if (closeBrace === -1) throw new Error("No JSON found in response");
+
+  return JSON.parse(text.slice(openBrace, closeBrace + 1).trim());
+}
+
+export async function POST(req: Request) {
+  try {
+    const apiKey = process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "Server configuration error: Missing OpenAI API Key" },
+        { status: 500 }
+      );
+    }
+
+    const formData = await req.formData();
+    const files = formData.getAll("files") as File[];
+
+    if (!files || files.length === 0) {
+      return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
+    }
+
+    // Validate file types before processing
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    for (const file of files) {
+      if (!allowedTypes.includes(file.type)) {
+        return NextResponse.json(
+          { error: `Unsupported file type: ${file.type}. Please upload JPEG, PNG, GIF, or WebP images.` },
+          { status: 400 }
+        );
+      }
+    }
+
+    const imageParts = await Promise.all(
+      files.map(async (file, index) => {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64 = buffer.toString("base64");
+        return [
+          { type: "text" as const, text: `Image ${index + 1}:` },
+          {
+            type: "image_url" as const,
+            image_url: {
+              url: `data:${file.type};base64,${base64}`,
+              detail: "high" as const,
+            },
+          },
+        ];
+      })
+    );
+
+    const client = new OpenAI({ apiKey });
+
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Request Timeout")), 55000);
+    });
+
+    const callConfig = {
+      model: "gpt-5.2",
+      max_completion_tokens: 1024,
+      messages: [
+        {
+          role: "system" as const,
+          content: SYSTEM_PROMPT,
+        },
+        {
+          role: "user" as const,
+          content: [
+            ...imageParts.flat(),
+            {
+              type: "text" as const,
+              text: "Count all glass sections across all images. Two passes: first scan left-to-right per image, then verify basement, doors, transoms, sidelights, garage windows. Return raw JSON only.",
+            },
+          ],
+        },
+      ],
+    };
+
+    // Single API call
+    const result = await Promise.race([
+      client.chat.completions.create(callConfig),
+      timeoutPromise,
+    ]) as OpenAI.Chat.ChatCompletion;
+
+    const rawText = result.choices[0]?.message?.content ?? "";
+    console.log("RAW CLAUDE RESPONSE:", rawText.substring(0, 500));
+    const parsedData = extractJSON(rawText);
+
+    // Remap new "sections_*" keys back to "pane_*" keys for frontend compatibility
+    const counts = parsedData.final_counts;
+    const mappedCounts = {
+      pane_3rd_story: counts.sections_3rd_story ?? 0,
+      pane_2nd_story: counts.sections_2nd_story ?? 0,
+      pane_1st_base: counts.sections_1st_base ?? 0,
+      patio_door_panel: counts.door_glass_section ?? 0,
+    };
+
+    return NextResponse.json({
+      analysis: parsedData.analysis,
+      confidence: parsedData.confidence,
+      window_counts: mappedCounts,
+      stories: parsedData.stories || 1,
+    });
+
+  } catch (error: any) {
+    console.error("Estimation Error:", error);
+    const message = error.message || "An unexpected error occurred.";
+    const status = message.includes("Timeout") ? 504 : 500;
+    return NextResponse.json({ error: message }, { status });
+  }
+}
