@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
 export const maxDuration = 58;
@@ -8,92 +8,42 @@ export async function GET() {
   return NextResponse.json({ status: "Server is awake and ready." }, { status: 200 });
 }
 
-const SYSTEM_PROMPT = `You are an expert window‑washing estimator. You will be given MULTIPLE photos of the SAME property. Your job is to count distinct glass sections (pricing units) accurately and conservatively, without double counting across photos.
+const SYSTEM_PROMPT = `You are an expert window washing estimator. Analyze MULTIPLE photos of the SAME property and return a single unified count — no double counting across photos.
 
-PRIMARY GOAL:
-- **Do not miss sections.** When evidence is ambiguous, choose the higher plausible section count if it matches common residential window patterns. Undercounting is worse than mild overcounting. Explain any ambiguity in the "analysis" text.
+GLASS SECTION (the unit):
+Each physically separate piece of glass bounded by a real frame, mullion, or muntin.
+- Grid windows: columns × rows (3×2 = 6)
+- Mulled banks: count each pane inside the outer frame
+- Single uninterrupted pane = 1
+- Decorative grids between glass layers = do NOT count unless bars connect to the frame on both ends
 
-RAW OUTPUT (NON‑NEGOTIABLE):
-- Output MUST be raw JSON only — no markdown, no backticks, no extra text.
-- Begin with { and end with }.
-- Must include exactly these keys: "analysis", "confidence", "final_counts", "stories".
-- Values in "final_counts" must be integers >= 0.
-- Use "high", "medium", or "low" for confidence.
+ANTI-DUPLICATE (critical for multi-photo):
+Build one master map of unique windows. Use landmarks (garage, door, corners, roofline) to identify the same window across photos. Count each window ONCE using the clearest photo. If unsure whether two windows are the same, assume they are.
 
-DEFINITION OF A GLASS SECTION:
-A "glass section" is each physically separate pane of glass bounded by a true frame, mullion, or muntin — a real divider you would need to wipe around. Count every distinct piece of glass you see or can reasonably infer:
-- Grid windows: Sections = columns x rows (e.g., 3x2 grid = 6 sections). This includes muntin grids placed between glass layers if the grid bars visibly connect to the outer frame and form a consistent pattern.
-- Mulled banks: Within a larger frame, count each individual pane/unit inside.
-- Doors: Count all distinct glass panels associated with doors as door_glass_section (entry door lites, sidelights, transoms, patio doors). For patio/slider doors, count each panel if there is a clear divider between panels.
-- Basement windows: These are often small; count their sections carefully (often 1 but can be 2+).
-- Garage windows: Include them just like house windows.
+ROW CHECK (most common undercount):
+After counting columns, always scan top-to-bottom for a horizontal rail. Many windows have 2 rows. Total = columns × rows.
 
-CRITICAL: MULTI-PHOTO ANTI-DUPLICATE RULE:
-These photos may overlap. You must produce ONE set of counts for the property WITHOUT double counting the same windows. To do this:
-1. Build a mental "master map" of UNIQUE windows and doors.
-2. Use landmarks (door placement, garage, roofline, deck, chimneys, siding) to match windows across photos.
-3. For each unique opening, pick the clearest view across all photos to perform the section count.
-4. If unsure whether two windows are the same, assume they are the same (to avoid double counting) and note this uncertainty in your analysis.
+CATEGORIES:
+- sections_1st_base: all ground floor + basement + anything ambiguous
+- sections_2nd_story: only if a full second living floor is clearly visible
+- sections_3rd_story: only if a full third floor is clearly visible
+- door_glass_section: entry door lites, sidelights, transoms, patio door panels
 
-GRID DETECTION & ANTI-UNDERCOUNT RULES:
-Reflections and shadows can create fake lines; at the same time, real muntins can look "decorative." Only ignore a line when it is clearly an illusion. Count a division as a true divider when ANY of these apply:
-- The line visibly connects to the frame edge on both ends.
-- The line is consistent in width, spacing, and alignment with other grid lines.
-- The pattern matches common residential grids (1x1, 2x1, 3x1, 2x2, 3x2, 3x3, 4x2, etc.) or matches other windows on the same wall.
-- It appears across multiple angles or photos OR casts a slight shadow/edge.
-Do NOT count lines that are:
-- Only visible in a single photo as glare or reflection.
-- Internal blinds, curtains, screens, or mesh.
-- Water streaks, tape, or random dirt.
+DO NOT MISS:
+Basement windows (near foundation), garage windows, sidelights, transoms, windows behind AC units / propane tanks / shelters.
 
-ROW CHECK (DO NOT MISS HORIZONTAL RAILS):
-Most undercounts happen because horizontal splits are missed. For each window:
-1. Identify vertical columns first.
-2. Then force a row check — look top to bottom for a horizontal rail dividing upper and lower sashes. Many windows are split both ways.
-3. Total sections = columns x rows. If the top sash is divided but the bottom is not (or vice versa), count accordingly.
+SYMMETRY: Only infer hidden windows when one side is clearly blocked AND architecture strongly mirrors the visible side. Note it in analysis.
 
-PARTIAL & OBSTRUCTED WINDOWS:
-If a window is partially hidden (by a tree, furniture, snow cover, propane tank, etc.):
-- Count the visible sections.
-- If the window size/type matches a nearby fully visible window on the same wall, infer the hidden rows or columns to match it and mention this inference in your analysis.
-- If only a small portion is visible and no matching window exists, assume at least 1 section; increase the count only if the frame lines strongly suggest more.
+UNDERCOUNTING vs OVERCOUNTING: When genuinely ambiguous, lean toward the higher plausible count and note it.
 
-STORY IDENTIFICATION (STRICT):
-Classify the building stories based on visible full floors:
-- "sections_1st_base" for the ground level. Raised foundations or split levels still count as 1st unless you see a distinct upper facade.
-- "sections_2nd_story" only when a complete second living level is clearly visible (full set of windows separated by a floor line).
-- "sections_3rd_story" only if a full third level exists.
-If uncertain, classify conservatively as 1st. "stories" must be 1, 2, or 3.
+Return raw JSON only. No markdown, no backticks, nothing before { or after }.
 
-SYMMETRY INFERENCE (USE WITH CAUTION):
-Use symmetry to infer counts only when:
-- One side of a facade is fully visible, and the other is partly blocked, AND
-- Architectural features (rooflines, trim, spacing) strongly indicate a mirror image.
-If you infer symmetry, note exactly which windows were inferred in the analysis.
-
-OBSTRUCTIONS & FULL-WIDTH SCANNING:
-Do not stop scanning because of trees, tanks, AC units, shelters, or shadows. Scan each facade left-to-right, top-to-bottom. Include garage windows, sidelights, transoms, and basement openings.
-
-COUNTING METHODOLOGY (MANDATORY THREE PASSES):
-- PASS 1: Global Inventory — Identify all unique openings across all photos. Do NOT finalize counts yet.
-- PASS 2: Per-Opening Detail Count — For each unique opening, zoom in on the clearest view. Apply column x row grid math, verify horizontal rails, assign to correct category.
-- PASS 3: Miss Audit — Re-check basement windows, door lites/sidelights/transoms, garage windows. Ensure no double counting across photos.
-
-FINAL JSON OUTPUT (MANDATORY SHAPE):
-Return only this object:
 {
-  "analysis": "Briefly describe which photos were used for the primary counts, what overlaps were avoided, any symmetry or inference used, and any glare or obstruction uncertainties.",
+  "analysis": "Which photos used as primary, overlaps avoided, symmetry/inference used, any uncertainty.",
   "confidence": "high/medium/low",
-  "final_counts": {
-    "sections_3rd_story": 0,
-    "sections_2nd_story": 0,
-    "sections_1st_base": 0,
-    "door_glass_section": 0
-  },
+  "final_counts": { "sections_3rd_story": 0, "sections_2nd_story": 0, "sections_1st_base": 0, "door_glass_section": 0 },
   "stories": 1
-}
-
-Do not add any other keys or text outside the JSON.`;
+}`;
 
 function extractJSON(text: string) {
   // Find the JSON block that contains "final_counts" — reliable even with scratchpad text before it
@@ -122,11 +72,11 @@ function extractJSON(text: string) {
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Server configuration error: Missing OpenAI API Key" },
+        { error: "Server configuration error: Missing AI API Key" },
         { status: 500 }
       );
     }
@@ -153,34 +103,31 @@ export async function POST(req: Request) {
       files.map(async (file, index) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        const base64 = buffer.toString("base64");
         return [
           { type: "text" as const, text: `Image ${index + 1}:` },
           {
-            type: "image_url" as const,
-            image_url: {
-              url: `data:${file.type};base64,${base64}`,
-              detail: "high" as const,
+            type: "image" as const,
+            source: {
+              type: "base64" as const,
+              media_type: file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+              data: buffer.toString("base64"),
             },
           },
         ];
       })
     );
 
-    const client = new OpenAI({ apiKey });
+    const client = new Anthropic({ apiKey });
 
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => reject(new Error("Request Timeout")), 55000);
     });
 
     const callConfig = {
-      model: "gpt-5.2",
-      max_completion_tokens: 2048,
+      model: "claude-sonnet-4-6",
+      max_tokens: 1024, // JSON-only output is small
+      system: SYSTEM_PROMPT,
       messages: [
-        {
-          role: "system" as const,
-          content: SYSTEM_PROMPT,
-        },
         {
           role: "user" as const,
           content: [
@@ -194,13 +141,13 @@ export async function POST(req: Request) {
       ],
     };
 
-    // Single API call
+    // Single API call with self-review
     const result = await Promise.race([
-      client.chat.completions.create(callConfig),
+      client.messages.create(callConfig),
       timeoutPromise,
-    ]) as OpenAI.Chat.ChatCompletion;
+    ]) as Anthropic.Message;
 
-    const rawText = result.choices[0]?.message?.content ?? "";
+    const rawText = result.content[0].type === "text" ? result.content[0].text : "";
     const parsedData = extractJSON(rawText);
 
     // Remap new "sections_*" keys back to "pane_*" keys for frontend compatibility
