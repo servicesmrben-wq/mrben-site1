@@ -760,21 +760,61 @@
         "title": "Plain-Pied",
         "price": "165$+",
         "desc": "Parfait pour les maisons d'un étage.",
-        "features": ["Intérieur et Extérieur", "Moustiquaires Essuyés", "Cadres et Rebords"]
+        "features": [
+          "Intérieur et Extérieur",
+          "Moustiquaires Essuyés",
+          "Cadres et Rebords"
+        ]
       },
       "card2": {
         "title": "Maison à Étages",
         "price": "245$+",
         "desc": "Nettoyage complet pour grandes maisons.",
-        "features": ["Intérieur et Extérieur", "Vitres en Hauteur", "Rails Aspirés"]
+        "features": [
+          "Intérieur et Extérieur",
+          "Vitres en Hauteur",
+          "Rails Aspirés"
+        ]
       },
       "card3": {
         "title": "Nettoyage Gouttières",
         "price": "145$+",
         "desc": "Protégez votre maison des dégâts d'eau.",
-        "features": ["Retrait des Débris", "Descentes Vérifiées", "Photos sur Demande"]
+        "features": [
+          "Retrait des Débris",
+          "Descentes Vérifiées",
+          "Photos sur Demande"
+        ]
       },
       "note": "Les prix varient selon le nombre de fenêtres et l'accessibilité. Contactez-nous pour un devis précis."
     }
+  },
+  "estimator": {
+    "badge": "BETA — Estimation IA",
+    "title": "Estimateur de lavage de vitres par IA🧠",
+    "subtitle": "Téléversez des photos de l'extérieur de votre maison (tous les côtés). Notre IA comptera vos fenêtres et vous donnera une estimation de prix instantanée.",
+    "step1": "1. Téléversez jusqu'à 5 photos de l'extérieur de votre maison",
+    "clickToSelect": "Cliquez pour sélectionner des photos",
+    "fileTypes": "JPG, PNG (Max 10 Mo par fichier)",
+    "step2": "2. Sélectionnez le type de service",
+    "insideOut": "Intérieur et Extérieur",
+    "exteriorOnly": "Extérieur Seulement",
+    "processing": "Traitement de {count} images...",
+    "calculate": "Calculer l'estimation",
+    "poweredBy": "Propulsé par",
+    "estimatedTotal": "Total Estimé",
+    "totalPanes": "Nombre total de vitres : {count}",
+    "ref": "Réf :",
+    "disclaimer": "Cet estimateur IA🤖 est encore en apprentissage et sera vérifié par un humain.",
+    "breakdown": "Détails :",
+    "serviceFee": "Frais de service et déplacement",
+    "standardFee": "Frais de service standard",
+    "bookEstimate": "Réserver cette estimation",
+    "sendsDirectly": "Envoie votre estimation directement à notre équipe.",
+    "errorImageOnly": "Seuls les fichiers images (JPG, PNG) sont pris en charge pour le moment.",
+    "errorMaxImages": "Maximum 5 images autorisées par demande. Veuillez retirer quelques images.",
+    "errorGeneral": "Une erreur est survenue. Veuillez essayer avec moins d'images.",
+    "errorServer": "Erreur serveur : L'analyse a expiré ou échoué.",
+    "errorNetwork": "La requête réseau a échoué"
   }
 }

@@ -760,21 +760,61 @@
         "title": "Bungalow",
         "price": "$165+",
         "desc": "Perfect for single-story homes.",
-        "features": ["Interior & Exterior", "Screens Wiped", "Frames & Sills"]
+        "features": [
+          "Interior & Exterior",
+          "Screens Wiped",
+          "Frames & Sills"
+        ]
       },
       "card2": {
         "title": "Two-Story Home",
         "price": "$245+",
         "desc": "Complete cleaning for larger homes.",
-        "features": ["Interior & Exterior", "High Windows", "Tracks Vacuumed"]
+        "features": [
+          "Interior & Exterior",
+          "High Windows",
+          "Tracks Vacuumed"
+        ]
       },
       "card3": {
         "title": "Gutter Cleaning",
         "price": "$145+",
         "desc": "Protect your home from water damage.",
-        "features": ["Debris Removal", "Downspouts Flushed", "Photos on Request"]
+        "features": [
+          "Debris Removal",
+          "Downspouts Flushed",
+          "Photos on Request"
+        ]
       },
       "note": "Prices vary based on window count and accessibility. Contact us for a precise quote."
     }
+  },
+  "estimator": {
+    "badge": "BETA — AI Estimation",
+    "title": "AI🧠 Window Cleaning Estimator",
+    "subtitle": "Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.",
+    "step1": "1. Upload up to 5 photos of the exterior of your house",
+    "clickToSelect": "Click to select photos",
+    "fileTypes": "JPG, PNG (Max 10MB per file)",
+    "step2": "2. Select Service Type",
+    "insideOut": "Inside & Out",
+    "exteriorOnly": "Exterior Only",
+    "processing": "Processing {count} images...",
+    "calculate": "Calculate Estimate",
+    "poweredBy": "Powered by",
+    "estimatedTotal": "Estimated Total",
+    "totalPanes": "Total Panes Counted: {count}",
+    "ref": "Ref:",
+    "disclaimer": "This AI🤖 estimator is still learning and will be reviewed by a human.",
+    "breakdown": "Breakdown:",
+    "serviceFee": "Service & Travel Fee",
+    "standardFee": "Standard service fee",
+    "bookEstimate": "Book This Estimate",
+    "sendsDirectly": "Sends your estimate directly to our team.",
+    "errorImageOnly": "Only image files (JPG, PNG) are supported right now.",
+    "errorMaxImages": "Maximum 5 images allowed per request. Please remove some images.",
+    "errorGeneral": "An error occurred. Please try fewer images.",
+    "errorServer": "Server error: The analysis timed out or failed.",
+    "errorNetwork": "Network request failed"
   }
 }

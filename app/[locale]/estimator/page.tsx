@@ -6,8 +6,10 @@ import Link from "next/link"; // Ensure Link is imported
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 import imageCompression from "browser-image-compression";
+import { useTranslations } from "next-intl";
 
 export default function EstimatorPage() {
+  const t = useTranslations("estimator");
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -37,7 +39,7 @@ export default function EstimatorPage() {
       const validFiles = newFiles.filter(f => f.type.startsWith("image/"));
       
       if (validFiles.length !== newFiles.length) {
-        alert("Only image files (JPG, PNG) are supported right now.");
+        alert(t("errorImageOnly"));
       }
 
       // Generate stable URLs for new files
@@ -65,9 +67,9 @@ export default function EstimatorPage() {
   const handleCalculate = async () => {
     if (files.length === 0) return;
 
-    // 1. Validation: Max 8 Images
-    if (files.length > 8) {
-      alert("Maximum 8 images allowed per request. Please remove some images.");
+    // 1. Validation: Max 5 Images
+    if (files.length > 5) {
+      alert(t("errorMaxImages"));
       return;
     }
 
@@ -146,7 +148,7 @@ export default function EstimatorPage() {
         }
       }
 
-      if (!res) throw new Error("Network request failed");
+      if (!res) throw new Error(t("errorNetwork"));
 
       let data;
       const contentType = res.headers.get("content-type");
@@ -155,11 +157,11 @@ export default function EstimatorPage() {
       } else {
         const text = await res.text();
         console.error("Non-JSON API Response:", text);
-        throw new Error("Server error: The analysis timed out or failed.");
+        throw new Error(t("errorServer"));
       }
 
       if (!res.ok) {
-        throw new Error(data.error || "Estimation failed");
+        throw new Error(data.error || t("errorGeneral"));
       }
 
       const mergedResult = {
@@ -212,7 +214,7 @@ export default function EstimatorPage() {
 
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An error occurred. Please try fewer images.");
+      setError(err.message || t("errorGeneral"));
       setProgress(0);
     } finally {
       clearInterval(progressInterval);
@@ -256,13 +258,13 @@ export default function EstimatorPage() {
         <div className="mb-8 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
             <AlertTriangle className="h-3.5 w-3.5" />
-            BETA — AI Estimation
+            {t("badge")}
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">
-            AI🧠 Window Cleaning Estimator
+            {t("title")}
           </h1>
           <p className="mt-3 text-lg text-zinc-600">
-            Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -271,7 +273,7 @@ export default function EstimatorPage() {
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
-              1. Upload 4 Photos of the exterior of your house (Max 8)
+              {t("step1")}
             </label>
             <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 transition duration-300 ease-in-out hover:border-blue-500 hover:bg-blue-50/50 hover:shadow-lg">
               <input 
@@ -283,8 +285,8 @@ export default function EstimatorPage() {
               />
               <div className="flex flex-col items-center gap-2 text-zinc-500">
                 <Upload className="h-8 w-8" />
-                <span className="text-sm font-medium">Click to select photos</span>
-                <span className="text-xs text-zinc-400">JPG, PNG (Max 10MB per file)</span>
+                <span className="text-sm font-medium">{t("clickToSelect")}</span>
+                <span className="text-xs text-zinc-400">{t("fileTypes")}</span>
               </div>
             </div>
 
@@ -315,7 +317,7 @@ export default function EstimatorPage() {
           {/* Pricing Toggle */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
-              2. Select Service Type
+              {t("step2")}
             </label>
             <div className="flex rounded-xl bg-zinc-100 p-1">
               <button
@@ -326,7 +328,7 @@ export default function EstimatorPage() {
                     : "text-zinc-500 hover:text-zinc-900"
                 }`}
               >
-                Inside & Out
+                {t("insideOut")}
               </button>
               <button
                 onClick={() => setMode("ext")}
@@ -336,7 +338,7 @@ export default function EstimatorPage() {
                     : "text-zinc-500 hover:text-zinc-900"
                 }`}
               >
-                Exterior Only
+                {t("exteriorOnly")}
               </button>
             </div>
           </div>
@@ -351,7 +353,7 @@ export default function EstimatorPage() {
               <div className="flex flex-col items-center w-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>Processing {files.length} images...</span>
+                  <span>{t("processing", { count: files.length })}</span>
                 </div>
                 {/* Progress Bar */}
                 <div className="h-1.5 w-full max-w-[200px] bg-zinc-700 rounded-full overflow-hidden">
@@ -364,14 +366,14 @@ export default function EstimatorPage() {
             ) : (
               <>
                 <Calculator className="h-5 w-5" />
-                Calculate Estimate
+                {t("calculate")}
               </>
             )}
           </button>
 
           {/* Powered by Gemini Badge */}
           <div className="flex items-center justify-center gap-1.5 mt-4 pb-2">
-            <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase">Powered by</span>
+            <span className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase">{t("poweredBy")}</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" fill="url(#gemini-gradient)"/>
               <defs>
@@ -398,18 +400,18 @@ export default function EstimatorPage() {
             <div className="mt-8 animate-in fade-in slide-in-from-bottom-4">
               <div className="mb-6 rounded-2xl bg-emerald-50 p-6 text-center border border-emerald-100">
                 
-                <div className="text-sm font-medium text-emerald-800 uppercase tracking-wide">Estimated Total</div>
+                <div className="text-sm font-medium text-emerald-800 uppercase tracking-wide">{t("estimatedTotal")}</div>
                 <div className="mt-1 text-4xl font-bold text-emerald-900">
                   ${calculateTotal()}
                 </div>
                 
                 <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">
                   <CheckCircle2 className="h-4 w-4" />
-                  Total Panes Counted: {getTotalPanes()}
+                  {t("totalPanes", { count: getTotalPanes() })}
                 </div>
                 
                 <div className="mt-3 text-xs text-emerald-700">
-                  Ref: <span className="font-mono font-bold">{referenceId}</span> • This AI🤖 estimator is still learning and will be reviewed by a human.
+                  {t("ref")} <span className="font-mono font-bold">{referenceId}</span> • {t("disclaimer")}
                 </div>
               </div>
 
@@ -423,12 +425,12 @@ export default function EstimatorPage() {
                               )} 
                               */}
                 
-                              <div className="space-y-3">                  <div className="text-sm font-semibold text-zinc-900">Breakdown:</div>
+                              <div className="space-y-3">                  <div className="text-sm font-semibold text-zinc-900">{t("breakdown")}</div>
                   
                   <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
                     <div>
-                      <div className="text-sm font-medium text-zinc-900">Service & Travel Fee</div>
-                      <div className="text-xs text-zinc-500">Standard service fee</div>
+                      <div className="text-sm font-medium text-zinc-900">{t("serviceFee")}</div>
+                      <div className="text-xs text-zinc-500">{t("standardFee")}</div>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
@@ -478,11 +480,11 @@ export default function EstimatorPage() {
                   }}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
                 >
-                  Book This Estimate
+                  {t("bookEstimate")}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <p className="mt-3 text-center text-xs text-zinc-500">
-                  Sends your estimate directly to our team.
+                  {t("sendsDirectly")}
                 </p>
               </div>
             </div>
