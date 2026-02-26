@@ -42,9 +42,7 @@ FULL WIDTH SCANNING: Before counting, mentally divide each wall into left, cente
 
 BASEMENT: Look closely at the foundation/concrete line near ground level. Count every distinct glass section in the foundation zone. Basement windows are often smaller hopper-style units — count each glass section carefully.
 
-DOORS: Count each distinct glass panel in entry doors and patio doors as 'door_glass_section'. A door with 2 glass panels = 2. A door with a small window lite = 1. A full-length patio door = count each sliding/fixed panel. Do NOT skip door glass.
-
-TRANSOMS: Glass above a door counts as 'door_glass_section'.
+DOORS: Count each distinct glass panel in entry doors and patio doors as 'door_glass_section'. A door with 2 glass panels = 2. A door with a small window lite = 1. A full-length patio door = count each sliding/fixed panel. Do NOT skip door glass. Glass above a door (transoms) and narrow sidelights beside a door also count as 'door_glass_section'.
 
 CONSISTENCY CHECK:
 - Windows on the same wall typically have similar section configurations
@@ -65,26 +63,40 @@ SPATIAL MAPPING:
 - Door glass panels = door_glass_section
 
 COUNTING METHODOLOGY:
-Internally perform two mental passes to verify accuracy, but provide a concise summary:
-- First pass: Systematic scan left-to-right, count every glass section per window unit
-- Second pass: Verification focusing on easy-to-miss areas (obstructions, basement, doors, symmetry, mulled windows)
-- Note key findings and confidence level
+Before providing your final answer, work through your analysis in a <scratchpad>:
+1. Describe what you see in each image
+2. First pass — scan left-to-right, note each window/door and its glass section count
+3. Second pass — verify easy-to-miss areas: obstructions, basement, doors, sidelights, transoms, garage windows, attached structures, grid patterns
+4. Note any symmetry inference used
+5. Confirm story count
+6. Calculate final totals per category
 
-OUTPUT FORMAT:
-You MUST return raw JSON only. No markdown. No backticks. No text before or after the JSON.
-Your entire response must start with { and end with }.
+After your scratchpad, output raw JSON only. No markdown, no backticks, no text after the JSON.
 
 {
 "analysis": "Brief summary of counting process and key findings, noting any mulled windows, obstructions, or symmetry inferences...",
 "confidence": "high/medium/low",
 "final_counts": { "sections_3rd_story": 0, "sections_2nd_story": 0, "sections_1st_base": 0, "door_glass_section": 0 },
 "stories": 1
-}`;
+}
+
+Begin your analysis now.`;
 
 function extractJSON(text: string) {
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("No JSON found in response");
-  return JSON.parse(jsonMatch[0].trim());
+  // Use lastIndexOf approach to find the final JSON block after any scratchpad text
+  const lastBrace = text.lastIndexOf("}");
+  if (lastBrace === -1) throw new Error("No JSON found in response");
+  const firstBrace = text.lastIndexOf("{", lastBrace);
+  if (firstBrace === -1) throw new Error("No JSON found in response");
+  // Walk back to find the outermost opening brace of the final JSON object
+  let depth = 0;
+  let start = lastBrace;
+  for (let i = lastBrace; i >= 0; i--) {
+    if (text[i] === "}") depth++;
+    if (text[i] === "{") depth--;
+    if (depth === 0) { start = i; break; }
+  }
+  return JSON.parse(text.slice(start, lastBrace + 1).trim());
 }
 
 export async function POST(req: Request) {
@@ -142,7 +154,7 @@ export async function POST(req: Request) {
 
     const callConfig = {
       model: "claude-sonnet-4-6",
-      max_tokens: 2048,
+      max_tokens: 4096, // Increased to accommodate scratchpad reasoning before JSON
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -151,7 +163,7 @@ export async function POST(req: Request) {
             ...imageParts.flat(),
             {
               type: "text" as const,
-              text: "Count all glass sections carefully using the two-pass methodology. Remember: count each distinct piece of glass separated by a physical divider — mulled window banks count each individual section. Provide your final counts in the JSON format specified.",
+              text: "Analyze all images. Use your scratchpad to work through each wall systematically before providing your final JSON count. Remember: grid windows = columns 00d7 rows, sidelights and transoms count as door glass, and check garage windows and attached structures.",
             },
           ],
         },
