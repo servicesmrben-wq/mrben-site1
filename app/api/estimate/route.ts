@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 90;
+export const maxDuration = 58;
 export const runtime = "nodejs";
 
 export async function GET() {
@@ -63,15 +63,12 @@ SPATIAL MAPPING:
 - Door glass panels = door_glass_section
 
 COUNTING METHODOLOGY:
-Before providing your final answer, work through your analysis in a <scratchpad>:
-1. Describe what you see in each image
-2. First pass — scan left-to-right, note each window/door and its glass section count
-3. Second pass — verify easy-to-miss areas: obstructions, basement, doors, sidelights, transoms, garage windows, attached structures, grid patterns
-4. Note any symmetry inference used
-5. Confirm story count
-6. Calculate final totals per category
+Before your final JSON, write a BRIEF <scratchpad> (max 6 lines) covering:
+- Per-image window list with section counts (e.g. "Img1: 3-sec window, 2-sec window, 1 door lite")
+- Any symmetry inferences or obstructions
+- Story confirmation and category totals
 
-After your scratchpad, output raw JSON only. No markdown, no backticks, no text after the JSON.
+Keep the scratchpad concise. After it, output raw JSON only. No markdown, no backticks, no text after the JSON.
 
 {
 "analysis": "Brief summary of counting process and key findings, noting any mulled windows, obstructions, or symmetry inferences...",
@@ -149,12 +146,12 @@ export async function POST(req: Request) {
     const client = new Anthropic({ apiKey });
 
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout")), 88000);
+      setTimeout(() => reject(new Error("Request Timeout")), 55000);
     });
 
     const callConfig = {
       model: "claude-sonnet-4-6",
-      max_tokens: 4096, // Increased to accommodate scratchpad reasoning before JSON
+      max_tokens: 1500, // Kept low to avoid Vercel 60s timeout — scratchpad is brief
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -202,3 +199,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status });
   }
 }
+
