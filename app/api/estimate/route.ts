@@ -63,12 +63,10 @@ SPATIAL MAPPING:
 - Door glass panels = door_glass_section
 
 COUNTING METHODOLOGY:
-Before your final JSON, write a BRIEF <scratchpad> (max 6 lines) covering:
-- Per-image window list with section counts (e.g. "Img1: 3-sec window, 2-sec window, 1 door lite")
-- Any symmetry inferences or obstructions
-- Story confirmation and category totals
-
-Keep the scratchpad concise. After it, output raw JSON only. No markdown, no backticks, no text after the JSON.
+Write a BRIEF <scratchpad> before your JSON — numbers only, no descriptions:
+- One line per image: "Img1: 3+2+1=6 base, Img2: 4 base 2 door" etc.
+- Final totals line: "Total: base=X, 2nd=X, door=X"
+Then immediately output the JSON. No markdown, no backticks, nothing after the closing brace.
 
 {
 "analysis": "Brief summary of counting process and key findings, noting any mulled windows, obstructions, or symmetry inferences...",
@@ -80,20 +78,28 @@ Keep the scratchpad concise. After it, output raw JSON only. No markdown, no bac
 Begin your analysis now.`;
 
 function extractJSON(text: string) {
-  // Use lastIndexOf approach to find the final JSON block after any scratchpad text
-  const lastBrace = text.lastIndexOf("}");
-  if (lastBrace === -1) throw new Error("No JSON found in response");
-  const firstBrace = text.lastIndexOf("{", lastBrace);
-  if (firstBrace === -1) throw new Error("No JSON found in response");
-  // Walk back to find the outermost opening brace of the final JSON object
-  let depth = 0;
-  let start = lastBrace;
-  for (let i = lastBrace; i >= 0; i--) {
-    if (text[i] === "}") depth++;
-    if (text[i] === "{") depth--;
-    if (depth === 0) { start = i; break; }
+  // Find the JSON block that contains "final_counts" — reliable even with scratchpad text before it
+  const marker = text.indexOf('"final_counts"');
+  if (marker === -1) throw new Error("No JSON found in response");
+
+  // Walk left from marker to find the opening brace of this object
+  let openBrace = -1;
+  for (let i = marker; i >= 0; i--) {
+    if (text[i] === "{") { openBrace = i; break; }
   }
-  return JSON.parse(text.slice(start, lastBrace + 1).trim());
+  if (openBrace === -1) throw new Error("No JSON found in response");
+
+  // Walk right from opening brace, tracking depth to find matching closing brace
+  let depth = 0;
+  let closeBrace = -1;
+  for (let i = openBrace; i < text.length; i++) {
+    if (text[i] === "{") depth++;
+    if (text[i] === "}") depth--;
+    if (depth === 0) { closeBrace = i; break; }
+  }
+  if (closeBrace === -1) throw new Error("No JSON found in response");
+
+  return JSON.parse(text.slice(openBrace, closeBrace + 1).trim());
 }
 
 export async function POST(req: Request) {
@@ -151,7 +157,7 @@ export async function POST(req: Request) {
 
     const callConfig = {
       model: "claude-sonnet-4-6",
-      max_tokens: 1500, // Kept low to avoid Vercel 60s timeout — scratchpad is brief
+      max_tokens: 2048, // Enough for brief scratchpad + JSON
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -199,4 +205,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status });
   }
 }
-
