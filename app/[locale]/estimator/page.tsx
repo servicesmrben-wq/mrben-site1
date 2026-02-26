@@ -80,8 +80,8 @@ export default function EstimatorPage() {
     setReferenceId(newRefId);
 
     // Smart Progress Logic
-    // Single API call with all images — estimate ~8s per image
-    const estimatedWaitTimeMs = files.length * 8000 + 3000; 
+    // Single API call with all images — estimate ~10s per image
+    const estimatedWaitTimeMs = files.length * 10000 + 5000; 
     const startTime = Date.now();
     
     const progressInterval = setInterval(() => {
