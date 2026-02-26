@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
 export const maxDuration = 58;
@@ -103,11 +103,11 @@ function extractJSON(text: string) {
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Server configuration error: Missing AI API Key" },
+        { error: "Server configuration error: Missing OpenAI API Key" },
         { status: 500 }
       );
     }
@@ -134,31 +134,34 @@ export async function POST(req: Request) {
       files.map(async (file, index) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
+        const base64 = buffer.toString("base64");
         return [
           { type: "text" as const, text: `Image ${index + 1}:` },
           {
-            type: "image" as const,
-            source: {
-              type: "base64" as const,
-              media_type: file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
-              data: buffer.toString("base64"),
+            type: "image_url" as const,
+            image_url: {
+              url: `data:${file.type};base64,${base64}`,
+              detail: "high" as const,
             },
           },
         ];
       })
     );
 
-    const client = new Anthropic({ apiKey });
+    const client = new OpenAI({ apiKey });
 
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => reject(new Error("Request Timeout")), 55000);
     });
 
     const callConfig = {
-      model: "claude-sonnet-4-6",
-      max_tokens: 1024, // JSON-only output is small
-      system: SYSTEM_PROMPT,
+      model: "gpt-5.2",
+      max_tokens: 1024,
       messages: [
+        {
+          role: "system" as const,
+          content: SYSTEM_PROMPT,
+        },
         {
           role: "user" as const,
           content: [
@@ -172,13 +175,13 @@ export async function POST(req: Request) {
       ],
     };
 
-    // Single API call with self-review
+    // Single API call
     const result = await Promise.race([
-      client.messages.create(callConfig),
+      client.chat.completions.create(callConfig),
       timeoutPromise,
-    ]) as Anthropic.Message;
+    ]) as OpenAI.Chat.ChatCompletion;
 
-    const rawText = result.content[0].type === "text" ? result.content[0].text : "";
+    const rawText = result.choices[0]?.message?.content ?? "";
     console.log("RAW CLAUDE RESPONSE:", rawText.substring(0, 500));
     const parsedData = extractJSON(rawText);
 
@@ -205,3 +208,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status });
   }
 }
+
