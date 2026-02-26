@@ -63,12 +63,9 @@ SPATIAL MAPPING:
 - Door glass panels = door_glass_section
 
 COUNTING METHODOLOGY:
-Write a <scratchpad> with EXACTLY this format — no prose, no descriptions:
-Img1: [count] base, [count] 2nd, [count] door
-Img2: [count] base, [count] 2nd, [count] door
-Total: base=[X] 2nd=[X] 3rd=[X] door=[X]
-</scratchpad>
-Then immediately output the JSON. No other text.
+- First pass: scan left-to-right across each image, count every glass section per window
+- Second pass: verify basement, doors, sidelights, transoms, garage windows, obstructions
+Your entire response must be raw JSON only. No scratchpad, no markdown, no backticks, no text before or after the JSON. Start with { and end with }.
 
 {
 "analysis": "Brief summary of counting process and key findings, noting any mulled windows, obstructions, or symmetry inferences...",
@@ -159,7 +156,7 @@ export async function POST(req: Request) {
 
     const callConfig = {
       model: "claude-sonnet-4-6",
-      max_tokens: 4096, // Scratchpad + JSON needs headroom
+      max_tokens: 1024, // JSON-only output is small
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -168,7 +165,7 @@ export async function POST(req: Request) {
             ...imageParts.flat(),
             {
               type: "text" as const,
-              text: "Analyze all images. Use your scratchpad to work through each wall systematically before providing your final JSON count. Remember: grid windows = columns 00d7 rows, sidelights and transoms count as door glass, and check garage windows and attached structures.",
+              text: "Count all glass sections across all images. Two passes: first scan left-to-right per image, then verify basement, doors, transoms, sidelights, garage windows. Return raw JSON only.",
             },
           ],
         },
