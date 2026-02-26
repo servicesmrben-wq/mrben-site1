@@ -63,10 +63,12 @@ SPATIAL MAPPING:
 - Door glass panels = door_glass_section
 
 COUNTING METHODOLOGY:
-Write a BRIEF <scratchpad> before your JSON — numbers only, no descriptions:
-- One line per image: "Img1: 3+2+1=6 base, Img2: 4 base 2 door" etc.
-- Final totals line: "Total: base=X, 2nd=X, door=X"
-Then immediately output the JSON. No markdown, no backticks, nothing after the closing brace.
+Write a <scratchpad> with EXACTLY this format — no prose, no descriptions:
+Img1: [count] base, [count] 2nd, [count] door
+Img2: [count] base, [count] 2nd, [count] door
+Total: base=[X] 2nd=[X] 3rd=[X] door=[X]
+</scratchpad>
+Then immediately output the JSON. No other text.
 
 {
 "analysis": "Brief summary of counting process and key findings, noting any mulled windows, obstructions, or symmetry inferences...",
@@ -157,7 +159,7 @@ export async function POST(req: Request) {
 
     const callConfig = {
       model: "claude-sonnet-4-6",
-      max_tokens: 2048, // Enough for brief scratchpad + JSON
+      max_tokens: 4096, // Scratchpad + JSON needs headroom
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -206,4 +208,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status });
   }
 }
-
