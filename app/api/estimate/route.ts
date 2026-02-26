@@ -12,6 +12,7 @@ const SYSTEM_PROMPT = `You are an expert window‑washing estimator. You will be
 
 PRIMARY GOAL:
 - **Do not miss sections.** When evidence is ambiguous, choose the higher plausible section count if it matches common residential window patterns. Undercounting is worse than mild overcounting. Explain any ambiguity in the "analysis" text.
+- **Occlusion reconstruction is REQUIRED.** If openings are blocked by shelters, trees, snow, deep shadows, vehicles, or glare, reconstruct likely full openings from visible trim/frame geometry and nearby matching units; include these inferred openings in totals and describe them in "analysis".
 
 RAW OUTPUT (NON‑NEGOTIABLE):
 - Output MUST be raw JSON only — no markdown, no backticks, no extra text.
@@ -95,6 +96,25 @@ Return only this object:
 
 Do not add any other keys or text outside the JSON.`;
 
+type EstimateSchema = {
+  analysis: string;
+  confidence: "high" | "medium" | "low";
+  final_counts: {
+    sections_3rd_story: number;
+    sections_2nd_story: number;
+    sections_1st_base: number;
+    door_glass_section: number;
+  };
+  stories: 1 | 2 | 3;
+};
+
+const COUNT_FIELDS: (keyof EstimateSchema["final_counts"])[] = [
+  "sections_3rd_story",
+  "sections_2nd_story",
+  "sections_1st_base",
+  "door_glass_section",
+];
+
 function extractJSON(text: string) {
   // Find the JSON block that contains "final_counts" — reliable even with scratchpad text before it
   const marker = text.indexOf('"final_counts"');
@@ -118,6 +138,94 @@ function extractJSON(text: string) {
   if (closeBrace === -1) throw new Error("No JSON found in response");
 
   return JSON.parse(text.slice(openBrace, closeBrace + 1).trim());
+}
+
+function toNonNegativeInt(value: unknown) {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return 0;
+  return Math.max(0, Math.round(num));
+}
+
+function normalizeEstimate(data: any): EstimateSchema {
+  const confidenceRaw = typeof data?.confidence === "string" ? data.confidence.toLowerCase() : "medium";
+  const confidence: EstimateSchema["confidence"] =
+    confidenceRaw === "high" || confidenceRaw === "medium" || confidenceRaw === "low"
+      ? confidenceRaw
+      : "medium";
+
+  const storyRaw = toNonNegativeInt(data?.stories);
+  const stories: EstimateSchema["stories"] = storyRaw >= 3 ? 3 : storyRaw >= 2 ? 2 : 1;
+
+  return {
+    analysis: typeof data?.analysis === "string" ? data.analysis : "",
+    confidence,
+    final_counts: {
+      sections_3rd_story: toNonNegativeInt(data?.final_counts?.sections_3rd_story),
+      sections_2nd_story: toNonNegativeInt(data?.final_counts?.sections_2nd_story),
+      sections_1st_base: toNonNegativeInt(data?.final_counts?.sections_1st_base),
+      door_glass_section: toNonNegativeInt(data?.final_counts?.door_glass_section),
+    },
+    stories,
+  };
+}
+
+function allowsLowerCountFromPass2(field: keyof EstimateSchema["final_counts"], analysis: string) {
+  const text = analysis.toLowerCase();
+  const overcountSignals = ["double-count", "double count", "double counted", "duplicate", "overcount", "counted twice"];
+  const hasOvercountSignal = overcountSignals.some((signal) => text.includes(signal));
+  if (!hasOvercountSignal) return false;
+
+  const fieldSignals: Record<keyof EstimateSchema["final_counts"], string[]> = {
+    sections_3rd_story: ["sections_3rd_story", "3rd story", "third story", "third-floor", "third floor"],
+    sections_2nd_story: ["sections_2nd_story", "2nd story", "second story", "second-floor", "second floor"],
+    sections_1st_base: ["sections_1st_base", "1st base", "first floor", "ground level", "ground floor", "facade"],
+    door_glass_section: ["door_glass_section", "door glass", "door lite", "sidelight", "transom", "patio door", "slider"],
+  };
+
+  return fieldSignals[field].some((signal) => text.includes(signal));
+}
+
+function storyIncreaseJustified(pass2Analysis: string) {
+  const text = pass2Analysis.toLowerCase();
+  const storySignals = [
+    "full second",
+    "full third",
+    "distinct upper facade",
+    "separate floor line",
+    "clear second story",
+    "clear third story",
+    "complete second",
+    "complete third",
+  ];
+  return storySignals.some((signal) => text.includes(signal));
+}
+
+function mergePass1Pass2(pass1: EstimateSchema, pass2: EstimateSchema): EstimateSchema {
+  const mergedCounts = { ...pass1.final_counts };
+
+  for (const field of COUNT_FIELDS) {
+    const p1 = pass1.final_counts[field];
+    const p2 = pass2.final_counts[field];
+    if (p2 < p1 && allowsLowerCountFromPass2(field, pass2.analysis)) {
+      mergedCounts[field] = p2;
+    } else {
+      mergedCounts[field] = Math.max(p1, p2);
+    }
+  }
+
+  let mergedStories = pass1.stories;
+  if (pass2.stories < pass1.stories) {
+    mergedStories = pass1.stories;
+  } else if (pass2.stories > pass1.stories) {
+    mergedStories = storyIncreaseJustified(pass2.analysis) ? pass2.stories : pass1.stories;
+  }
+
+  return {
+    analysis: [pass1.analysis, pass2.analysis].filter(Boolean).join("\n\nAUDIT: "),
+    confidence: pass2.confidence === "low" && pass1.confidence !== "low" ? pass1.confidence : pass2.confidence,
+    final_counts: mergedCounts,
+    stories: mergedStories,
+  };
 }
 
 export async function POST(req: Request) {
@@ -169,42 +277,80 @@ export async function POST(req: Request) {
 
     const client = new OpenAI({ apiKey });
 
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout")), 55000);
-    });
+    const startedAt = Date.now();
+    const OVERALL_TIMEOUT_MS = 55000;
+    const remainingMs = () => OVERALL_TIMEOUT_MS - (Date.now() - startedAt);
 
-    const callConfig = {
-      model: "gpt-5.2",
-      max_completion_tokens: 2048,
-      messages: [
-        {
-          role: "system" as const,
-          content: SYSTEM_PROMPT,
-        },
-        {
-          role: "user" as const,
-          content: [
-            ...imageParts.flat(),
+    async function runPass(userText: string) {
+      const ms = remainingMs();
+      if (ms <= 0) throw new Error("Request Timeout");
+
+      const result = await Promise.race([
+        client.chat.completions.create({
+          model: "gpt-5.2",
+          max_completion_tokens: 2048,
+          messages: [
             {
-              type: "text" as const,
-              text: "Count all glass sections across all images. Two passes: first scan left-to-right per image, then verify basement, doors, transoms, sidelights, garage windows. Return raw JSON only.",
+              role: "system" as const,
+              content: SYSTEM_PROMPT,
+            },
+            {
+              role: "user" as const,
+              content: [
+                ...imageParts.flat(),
+                {
+                  type: "text" as const,
+                  text: userText,
+                },
+              ],
             },
           ],
-        },
-      ],
-    };
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Request Timeout")), ms)),
+      ]) as OpenAI.Chat.ChatCompletion;
 
-    // Single API call
-    const result = await Promise.race([
-      client.chat.completions.create(callConfig),
-      timeoutPromise,
-    ]) as OpenAI.Chat.ChatCompletion;
+      const rawText = result.choices[0]?.message?.content ?? "";
+      return normalizeEstimate(extractJSON(rawText));
+    }
 
-    const rawText = result.choices[0]?.message?.content ?? "";
-    const parsedData = extractJSON(rawText);
+    // PASS 1 (FULL COUNT)
+    const pass1 = await runPass(
+      "PASS 1 FULL COUNT: Build a master map of all unique openings across all images and count all glass sections. Prioritize recall and reconstruct occluded openings. Return raw JSON only in the exact required schema."
+    );
+
+    // PASS 2 (AUDIT ONLY)
+    let pass2: EstimateSchema | null = null;
+    try {
+      pass2 = await runPass(
+        `PASS 2 AUDIT ONLY: Use the images again and this PASS 1 JSON as baseline:\n${JSON.stringify(pass1)}\nDo NOT recount everything. Only find missed items: occluded/shelter/tree/shadow openings, hidden twin doors/windows inferred by symmetry/trim, basement windows, sliders counted as 1 instead of 2 panels, door glass, and missed horizontal rows on grid windows. Return corrected JSON in the SAME schema. In analysis, explicitly mention inferred hidden openings (example: hidden door behind shelter counted as 2 sections).`
+      );
+    } catch {
+      pass2 = null;
+    }
+
+    let finalEstimate: EstimateSchema = pass1;
+
+    if (pass2) {
+      const merged = mergePass1Pass2(pass1, pass2);
+      const sectionDiff = Math.abs(pass1.final_counts.sections_1st_base - pass2.final_counts.sections_1st_base);
+      const doorDiff = Math.abs(pass1.final_counts.door_glass_section - pass2.final_counts.door_glass_section);
+      const needsPass3 = sectionDiff >= 3 || doorDiff >= 3;
+
+      if (needsPass3) {
+        try {
+          finalEstimate = await runPass(
+            `PASS 3 ARBITRATION: Choose the most accurate totals from these two candidates using the images as source of truth. PASS 1:\n${JSON.stringify(pass1)}\nPASS 2:\n${JSON.stringify(pass2)}\nFocus on resolving large differences in sections_1st_base and door_glass_section while preserving high recall. Return only the final JSON in the required schema and explain your brief decision in analysis.`
+          );
+        } catch {
+          finalEstimate = merged;
+        }
+      } else {
+        finalEstimate = merged;
+      }
+    }
 
     // Remap new "sections_*" keys back to "pane_*" keys for frontend compatibility
-    const counts = parsedData.final_counts;
+    const counts = finalEstimate.final_counts;
     const mappedCounts = {
       pane_3rd_story: counts.sections_3rd_story ?? 0,
       pane_2nd_story: counts.sections_2nd_story ?? 0,
@@ -213,10 +359,10 @@ export async function POST(req: Request) {
     };
 
     return NextResponse.json({
-      analysis: parsedData.analysis,
-      confidence: parsedData.confidence,
+      analysis: finalEstimate.analysis,
+      confidence: finalEstimate.confidence,
       window_counts: mappedCounts,
-      stories: parsedData.stories || 1,
+      stories: finalEstimate.stories || 1,
     });
 
   } catch (error: any) {
