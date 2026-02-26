@@ -180,6 +180,7 @@ export async function POST(req: Request) {
     ]) as Anthropic.Message;
 
     const rawText = result.content[0].type === "text" ? result.content[0].text : "";
+    console.log("RAW CLAUDE RESPONSE:", rawText.substring(0, 500));
     const parsedData = extractJSON(rawText);
 
     // Remap new "sections_*" keys back to "pane_*" keys for frontend compatibility
@@ -205,3 +206,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status });
   }
 }
+
