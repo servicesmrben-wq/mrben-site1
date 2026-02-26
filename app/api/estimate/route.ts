@@ -156,7 +156,7 @@ export async function POST(req: Request) {
 
     const callConfig = {
       model: "gpt-5.2",
-      max_tokens: 1024,
+      max_completion_tokens: 1024,
       messages: [
         {
           role: "system" as const,
@@ -208,4 +208,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status });
   }
 }
-
