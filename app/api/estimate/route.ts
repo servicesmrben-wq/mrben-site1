@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-3.1-pro-preview",//"gemini-3-flash-preview"
+      model: "gemini-3.1-flash-image-preview",//"gemini-3-flash-preview"or"gemini-3.1-flash-image-preview"or"gemini-3.1-pro-preview"
       systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
