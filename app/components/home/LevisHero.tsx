@@ -43,13 +43,17 @@ export default function Hero({
   t, 
   heroRef, 
   sourceOfTruth,
-  googleProfile 
+  googleProfile,
+  phoneNumber,
+  phoneHref
 }: { 
   onQuote: () => void, 
   t: (key: string, options?: any) => string, 
   heroRef: RefObject<HTMLElement | null>, 
   sourceOfTruth?: string,
-  googleProfile: GoogleBusinessProfile
+  googleProfile: GoogleBusinessProfile,
+  phoneNumber: string,
+  phoneHref: string
 }) {
   const locale = useLocale();
   const placeId = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID;

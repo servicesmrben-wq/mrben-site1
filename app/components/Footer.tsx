@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/navigation"; // Use custom Link
+import { Link, usePathname } from "@/navigation"; // Use custom Link
 import { Phone, Mail, Star } from "lucide-react";
 
 const BRAND = {
@@ -14,7 +14,12 @@ const BRAND = {
 
 const Footer = () => {
   const locale = useLocale();
+  const pathname = usePathname();
   const t = useTranslations('Footer'); // Assuming 'Footer' namespace in your translation files
+
+  const isLevis = pathname === "/levis";
+  const phoneDisplay = isLevis ? "581-500-6868" : BRAND.phoneDisplay;
+  const phoneHref = isLevis ? "tel:+15815006868" : BRAND.phoneHref;
 
   const services = [
     {
@@ -96,8 +101,8 @@ const Footer = () => {
             <ul className="mt-4 space-y-3">
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-zinc-500" />
-                <a href={BRAND.phoneHref} className="text-sm text-zinc-600 hover:text-zinc-900">
-                  {BRAND.phoneDisplay}
+                <a href={phoneHref} className="text-sm text-zinc-600 hover:text-zinc-900">
+                  {phoneDisplay}
                 </a>
               </li>
               <li className="flex items-center gap-2">

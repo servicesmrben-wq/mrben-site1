@@ -73,7 +73,11 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLdString(localBusinessJsonLd) }}
       />
-      <LevisRedesignPreview sourceOfTruth={sourceOfTruth} />
+      <LevisRedesignPreview 
+        sourceOfTruth={sourceOfTruth} 
+        phoneNumber="581-500-6868"
+        phoneHref="tel:+15815006868"
+      />
       <SeoFaq title={t("faq.title")} items={homeFaqItems} />
     </>
   );

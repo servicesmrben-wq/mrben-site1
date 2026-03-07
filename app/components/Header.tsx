@@ -5,11 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/navigation"; // Use custom navigation hooks
 
-const BRAND = {
-  phoneHref: "tel:+15146997145",
-  phoneDisplay: "514-699-7145",
-};
-
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -17,6 +12,10 @@ export default function Header() {
   const t = useTranslations('Header'); // Assuming 'Header' namespace in your translation files
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const isLevis = pathname === "/levis";
+  const phoneDisplay = isLevis ? "581-500-6868" : "514-699-7145";
+  const phoneHref = isLevis ? "tel:+15815006868" : "tel:+15146997145";
 
   const navLinks = useMemo(
     () => [
@@ -221,14 +220,14 @@ export default function Header() {
             </button>
           </div>
           <a
-            href={BRAND.phoneHref}
+            href={phoneHref}
             className={`hidden items-center text-xs font-semibold transition sm:inline-flex sm:text-sm ${
               headerIsDark
                 ? "text-white/80 hover:text-white hover:underline focus-visible:ring-white/60"
                 : "text-zinc-700 hover:text-zinc-900 hover:underline focus-visible:ring-zinc-300"
             } rounded underline-offset-4 focus-visible:outline-none focus-visible:ring-2`}
           >
-            {BRAND.phoneDisplay}
+            {phoneDisplay}
           </a>
           <div className="flex flex-col items-center gap-1">
             <Link
@@ -371,10 +370,10 @@ export default function Header() {
 
             <div className="mt-2 flex flex-col items-center gap-4">
               <a
-                href={BRAND.phoneHref}
+                href={phoneHref}
                 className="text-lg font-semibold text-zinc-900"
               >
-                {BRAND.phoneDisplay}
+                {phoneDisplay}
               </a>
               <Link
                 href="/#contact"

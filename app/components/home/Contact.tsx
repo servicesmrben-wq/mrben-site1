@@ -23,7 +23,17 @@ function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: R
   );
 }
 
-function ContactContent({ t, contactRef }: { t: (key: string, options?: any) => string, contactRef: RefObject<HTMLDivElement | null> }) {
+function ContactContent({ 
+  t, 
+  contactRef,
+  phoneNumber = BRAND.phoneDisplay,
+  phoneHref = BRAND.phoneHref
+}: { 
+  t: (key: string, options?: any) => string, 
+  contactRef: RefObject<HTMLDivElement | null>,
+  phoneNumber?: string,
+  phoneHref?: string
+}) {
   const locale = useLocale();
   const searchParams = useSearchParams();
   const [form, setForm] = useState({
@@ -360,14 +370,14 @@ function ContactContent({ t, contactRef }: { t: (key: string, options?: any) => 
             <p className="mt-3 text-base leading-relaxed text-white/75">{t("contactP")}</p>
 
             <div className="mt-5 space-y-2 md:mt-6 md:space-y-3">
-              <a href={BRAND.phoneHref} className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15">
+              <a href={phoneHref} className="flex items-center justify-between rounded-3xl bg-white/10 px-5 py-4 text-white ring-1 ring-white/15 hover:bg-white/15">
                 <div className="flex items-center gap-3">
                   <div className="grid h-10 w-10 place-items-center rounded-2xl bg-white/10">
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
                     <div className="text-sm font-semibold">{t("phone")}</div>
-                    <div className="text-sm text-white/75">{BRAND.phoneDisplay}</div>
+                    <div className="text-sm text-white/75">{phoneNumber}</div>
                   </div>
                 </div>
                 <ArrowRight className="h-5 w-5 text-white/60" />
@@ -569,7 +579,12 @@ function ContactContent({ t, contactRef }: { t: (key: string, options?: any) => 
   );
 }
 
-export default function Contact(props: { t: (key: string, options?: any) => string, contactRef: RefObject<HTMLDivElement | null> }) {
+export default function Contact(props: { 
+  t: (key: string, options?: any) => string, 
+  contactRef: RefObject<HTMLDivElement | null>,
+  phoneNumber?: string,
+  phoneHref?: string
+}) {
   return (
     <Suspense fallback={<div>Loading form...</div>}>
       <ContactContent {...props} />

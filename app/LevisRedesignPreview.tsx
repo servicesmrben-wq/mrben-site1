@@ -16,7 +16,15 @@ import Reviews from "./components/home/Reviews";
 import ServiceArea from "./components/home/LevisServiceArea";
 import Contact from "./components/home/Contact";
 
-export default function LevisRedesignPreview({ sourceOfTruth }: { sourceOfTruth?: string }) {
+export default function LevisRedesignPreview({ 
+  sourceOfTruth,
+  phoneNumber = BRAND.phoneDisplay,
+  phoneHref = BRAND.phoneHref
+}: { 
+  sourceOfTruth?: string,
+  phoneNumber?: string,
+  phoneHref?: string
+}) {
   const t = useTranslations('MrBenRedesignPreview');
   const googleProfile = useGoogleBusinessProfile();
   
@@ -94,6 +102,8 @@ export default function LevisRedesignPreview({ sourceOfTruth }: { sourceOfTruth?
           heroRef={heroRef} 
           sourceOfTruth={sourceOfTruth}
           googleProfile={googleProfile}
+          phoneNumber={phoneNumber}
+          phoneHref={phoneHref}
         />
         <Services onQuote={scrollToContact} t={t} />
         <Pricing onQuote={scrollToContact} t={t} />
@@ -107,7 +117,12 @@ export default function LevisRedesignPreview({ sourceOfTruth }: { sourceOfTruth?
           t={t} 
           googleProfile={googleProfile}
         />
-        <Contact t={t} contactRef={contactRef} />
+        <Contact 
+          t={t} 
+          contactRef={contactRef} 
+          phoneNumber={phoneNumber}
+          phoneHref={phoneHref}
+        />
         <div aria-hidden="true" className="h-20 md:hidden" />
       </div>
       <div
@@ -129,7 +144,7 @@ export default function LevisRedesignPreview({ sourceOfTruth }: { sourceOfTruth?
             {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
           </button>
           <a
-            href={BRAND.phoneHref}
+            href={phoneHref}
             className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50"
           >
             <Phone className="h-4 w-4" />
