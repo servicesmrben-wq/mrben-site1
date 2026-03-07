@@ -44,33 +44,32 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
       model: "gemini-3-flash-preview",//"gemini-3-flash-preview"or"gemini-3.1-flash-image-preview"or"gemini-3.1-pro-preview"
-      systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
+      systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
 
-THE SQUEEGEE RULE (What to count): A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. Think of a panel as a single glass surface that requires its own distinct cleaning motion. If a physical frame separates two pieces of glass, they are two separate panels.
-- A standard double-hung or sliding window = 2 panels.
-- A large bay window with a big center glass and two smaller angled side glasses = 3 panels.
-- IGNORE DECORATIVE GRIDS (Muntins/Grilles): Do not count tiny squares inside a window. Treat the entire grid-covered area as one single glass panel.
-
 OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
 
-TRANSOMS: Windows above doors count as separate panels (map to 1st floor).
+MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
 
-BASEMENT: Count 2 panels per standard sliding basement unit. Look closely at the foundation line.
+TRANSOMS: Windows above doors count separately (map to 1st floor).
+
+BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
 
 DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
 
 SPATIAL MAPPING (Top-Down):
-(Note: Keep output keys as 'pane_' for system compatibility)
+
 3rd Story -> 'pane_3rd_story'
+
 2nd Story -> 'pane_2nd_story'
+
 Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image using the Squeegee Rule before outputting the final counts.
+Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
 {
-"analysis": "Img 1: Found 1 bay window (3 panels), plus 1 sliding basement window (2 panels). Ignored decorative grids...",
+"analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
 "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`
