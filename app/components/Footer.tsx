@@ -124,7 +124,7 @@ const Footer = () => {
         <div className="mt-10 border-t border-zinc-200 pt-8 text-center text-sm text-zinc-500">
           <p>&copy; {new Date().getFullYear()} {BRAND.name}. {t('rights')}</p>
           <p className="mt-1">
-            <Link href="/privacy-policy" className="hover:underline">
+            <Link href={locale === "fr" ? "/confidentialite" : "/privacy-policy"} className="hover:underline">
               {t('privacyPolicy')}
             </Link>
           </p>
