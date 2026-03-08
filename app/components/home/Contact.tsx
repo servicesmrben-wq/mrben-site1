@@ -26,8 +26,8 @@ function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: R
 function ContactContent({ 
   t, 
   contactRef,
-  phoneNumber = BRAND.phoneDisplay,
-  phoneHref = BRAND.phoneHref
+  phoneNumber: propPhoneNumber,
+  phoneHref: propPhoneHref
 }: { 
   t: (key: string, options?: any) => string, 
   contactRef: RefObject<HTMLDivElement | null>,
@@ -35,7 +35,13 @@ function ContactContent({
   phoneHref?: string
 }) {
   const locale = useLocale();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const isLevis = pathname === "/levis";
+  const phoneNumber = propPhoneNumber ?? (isLevis ? "418-741-2217" : BRAND.phoneDisplay);
+  const phoneHref = propPhoneHref ?? (isLevis ? "tel:+14187412217" : BRAND.phoneHref);
+
   const [form, setForm] = useState({
     name: "",
     phone: "",

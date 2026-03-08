@@ -18,8 +18,8 @@ const Footer = () => {
   const t = useTranslations('Footer'); // Assuming 'Footer' namespace in your translation files
 
   const isLevis = pathname === "/levis";
-  const phoneDisplay = isLevis ? "581-500-6868" : BRAND.phoneDisplay;
-  const phoneHref = isLevis ? "tel:+15815006868" : BRAND.phoneHref;
+  const phoneDisplay = isLevis ? "418-741-2217" : BRAND.phoneDisplay;
+  const phoneHref = isLevis ? "tel:+14187412217" : BRAND.phoneHref;
 
   const services = [
     {

@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { classNames } from "@/app/lib/utils";
 import { BRAND } from "@/app/lib/constants";
 import { useGoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
+import { usePathname } from "@/navigation";
 
 import Hero from "./components/home/Hero";
 import Services from "./components/home/Services";
@@ -19,6 +20,10 @@ import Contact from "./components/home/Contact";
 export default function MrBenRedesignPreview({ sourceOfTruth }: { sourceOfTruth?: string }) {
   const t = useTranslations('MrBenRedesignPreview');
   const googleProfile = useGoogleBusinessProfile();
+  const pathname = usePathname();
+
+  const isLevis = pathname === "/levis";
+  const phoneHref = isLevis ? "tel:+14187412217" : BRAND.phoneHref;
   
   const heroRef = useRef<HTMLElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
@@ -129,7 +134,7 @@ export default function MrBenRedesignPreview({ sourceOfTruth }: { sourceOfTruth?
             {t("primaryCTA")} <ArrowRight className="h-4 w-4" />
           </button>
           <a
-            href={BRAND.phoneHref}
+            href={phoneHref}
             className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-50"
           >
             <Phone className="h-4 w-4" />

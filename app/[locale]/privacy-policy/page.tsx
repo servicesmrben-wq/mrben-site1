@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy | MrBen",
   description:
     "Privacy policy for MrBen.ca. We use your information only for service communications and SMS updates; reply STOP to opt out. No marketing or data sales.",
+  robots: {
+    index: false,
+  },
 };
 
 export default function PrivacyPolicyPage() {

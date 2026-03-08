@@ -75,8 +75,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       />
       <LevisRedesignPreview 
         sourceOfTruth={sourceOfTruth} 
-        phoneNumber="581-500-6868"
-        phoneHref="tel:+15815006868"
+        phoneNumber="418-741-2217"
+        phoneHref="tel:+14187412217"
       />
       <SeoFaq title={t("faq.title")} items={homeFaqItems} />
     </>

@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Politique de confidentialité | MrBen",
   description:
     "Politique de confidentialité de MrBen.ca. Vos renseignements servent uniquement aux communications de service et aux SMS; répondez STOP pour vous désabonner. Aucun marketing ni vente de données.",
+  robots: {
+    index: false,
+  },
 };
 
 export default function ConfidentialitePage() {

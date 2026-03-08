@@ -14,8 +14,8 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   const isLevis = pathname === "/levis";
-  const phoneDisplay = isLevis ? "581-500-6868" : "514-699-7145";
-  const phoneHref = isLevis ? "tel:+15815006868" : "tel:+15146997145";
+  const phoneDisplay = isLevis ? "418-741-2217" : "514-699-7145";
+  const phoneHref = isLevis ? "tel:+14187412217" : "tel:+15146997145";
 
   const navLinks = useMemo(
     () => [
