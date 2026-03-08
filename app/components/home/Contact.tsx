@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Phone, Mail, ArrowRight, Upload, Calculator } from "lucide-react";
 import { useLocale } from "next-intl";
+import { usePathname } from "@/navigation";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import { BRAND } from "@/app/lib/constants";
 import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
