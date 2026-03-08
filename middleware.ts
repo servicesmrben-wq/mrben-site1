@@ -6,7 +6,7 @@ import { locales, localePrefix } from './navigation';
 // Coordinates for Lévis center
 const LEVIS_LAT = 46.8033;
 const LEVIS_LON = -71.1779;
-const RADIUS_KM = 45; // 45km perimeter for optimal drive time
+const RADIUS_KM = 100; // 100km perimeter for optimal drive time
 
 // Haversine formula to calculate distance between two coordinates
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
