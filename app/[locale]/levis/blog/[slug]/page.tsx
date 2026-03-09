@@ -24,6 +24,19 @@ export default async function LevisBlogPostPage({ params: rawParams }: { params:
   let post;
   try {
     post = await getPostData(slug, locale);
+    
+    // Dynamically swap Laurentides locations for Lévis locations
+    if (post && post.content) {
+      post.content = post.content
+        .replace(/des Laurentides/g, "de la région de Lévis")
+        .replace(/dans les Laurentides/g, "dans la région de Lévis")
+        .replace(/les Laurentides/g, "la région de Lévis")
+        .replace(/\bLaurentides\b/g, "Lévis")
+        .replace(/the Laurentians/g, "the Lévis region")
+        .replace(/\bLaurentian\b/g, "Lévis")
+        .replace(/Saint-Jérôme, Saint-Sauveur ou Mont-Tremblant/g, "Lévis, Saint-Nicolas ou Charny")
+        .replace(/Saint-Jérôme, Saint-Sauveur, or Mont-Tremblant/g, "Lévis, Saint-Nicolas, or Charny");
+    }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
     return (

@@ -5,7 +5,20 @@ import Image from "next/image";
 
 export default async function LevisBlogIndex({ params: rawParams }: { params: Promise<{ locale: string }> }) {
   const { locale } = await rawParams;
-  const allPosts = getSortedPostsData(locale);
+  const allPosts = getSortedPostsData(locale).map(post => ({
+    ...post,
+    summary: post.summary
+      ? post.summary
+          .replace(/des Laurentides/g, "de la région de Lévis")
+          .replace(/dans les Laurentides/g, "dans la région de Lévis")
+          .replace(/les Laurentides/g, "la région de Lévis")
+          .replace(/\bLaurentides\b/g, "Lévis")
+          .replace(/the Laurentians/g, "the Lévis region")
+          .replace(/\bLaurentian\b/g, "Lévis")
+          .replace(/Saint-Jérôme, Saint-Sauveur ou Mont-Tremblant/g, "Lévis, Saint-Nicolas ou Charny")
+          .replace(/Saint-Jérôme, Saint-Sauveur, or Mont-Tremblant/g, "Lévis, Saint-Nicolas, or Charny")
+      : post.summary
+  }));
   const t = await getTranslations({ locale, namespace: 'blog' });
 
   const formatDate = (dateString: string) => {
