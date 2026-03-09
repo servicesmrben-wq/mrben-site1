@@ -20,6 +20,9 @@ const Footer = () => {
   const isLevis = pathname === "/levis";
   const phoneDisplay = isLevis ? "418-741-2217" : BRAND.phoneDisplay;
   const phoneHref = isLevis ? "tel:+14187412217" : BRAND.phoneHref;
+  const googleReviewsUrl = isLevis 
+    ? "https://search.google.com/local/reviews?placeid=ChIJX8YdZaEiGUcRwtmLs-J2bn4" 
+    : BRAND.googleReviewsUrl;
 
   const services = [
     {
@@ -124,7 +127,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <Star className="h-4 w-4 text-zinc-500" />
-                <a href={BRAND.googleReviewsUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-600 hover:text-zinc-900">
+                <a href={googleReviewsUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-600 hover:text-zinc-900">
                   {t('reviewLink')}
                 </a>
               </li>
