@@ -23,14 +23,8 @@ const Footer = () => {
     "/territoire/saint-nicolas", 
     "/territoire/charny", 
     "/territoire/dosquet",
-    "/levis/services/lavage-de-vitres",
-    "/levis/services/window-cleaning",
-    "/levis/services/nettoyage-de-gouttieres",
-    "/levis/services/gutter-cleaning",
-    "/levis/services/nettoyage-de-revetement",
-    "/levis/services/siding-cleaning"
   ];
-  const isLevis = levisPaths.includes(pathname);
+  const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
 
   const phoneDisplay = isLevis ? "418-741-2217" : BRAND.phoneDisplay;
   const phoneHref = isLevis ? "tel:+14187412217" : BRAND.phoneHref;

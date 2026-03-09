@@ -19,14 +19,8 @@ export default function Header() {
     "/territoire/saint-nicolas", 
     "/territoire/charny", 
     "/territoire/dosquet",
-    "/levis/services/lavage-de-vitres",
-    "/levis/services/window-cleaning",
-    "/levis/services/nettoyage-de-gouttieres",
-    "/levis/services/gutter-cleaning",
-    "/levis/services/nettoyage-de-revetement",
-    "/levis/services/siding-cleaning"
   ];
-  const isLevis = levisPaths.includes(pathname);
+  const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
   
   const phoneDisplay = isLevis ? "418-741-2217" : "514-699-7145";
   const phoneHref = isLevis ? "tel:+14187412217" : "tel:+15146997145";
@@ -37,7 +31,7 @@ export default function Header() {
       { label: t('nav.services'), href: isLevis ? "/levis#services" : "/#services" },
       { label: t('nav.reviews'), href: isLevis ? "/levis#avis" : "/#avis" },
       { label: t('nav.territory'), href: isLevis ? "/levis#territoire" : "/#territoire" },
-      { label: t('nav.blog'), href: "/blog" },
+      { label: t('nav.blog'), href: isLevis ? "/levis/blog" : "/blog" },
       { label: t('nav.contact'), href: isLevis ? "/levis#contact" : "/#contact" },
     ],
     [t, isLevis]
