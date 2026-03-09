@@ -169,6 +169,10 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
     { href: "/territoire/laval", label: t("serviceAreas.cities.laval") },
   ];
 
+  const heroTitle = isLevis
+    ? t("heroTitle").replace("dans les Laurentides", "à Lévis").replace("in the Laurentians", "in Lévis")
+    : t("heroTitle");
+
   const heroSubtitle = isLevis 
     ? "MrBen offre le lavage de vitres résidentiel et commercial à Lévis, incluant Saint-Nicolas, Charny et Dosquet."
     : t("heroSubtitle");
@@ -178,7 +182,7 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
     : t("testimonials.quote1.author");
 
   const finalCTASubtitle = isLevis
-    ? t("finalCTA.subtitle").replace("dans les Laurentides", "à Lévis")
+    ? t("finalCTA.subtitle").replace("dans les Laurentides", "à Lévis").replace("in the Laurentians", "in Lévis")
     : t("finalCTA.subtitle");
 
   return (
@@ -202,14 +206,16 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
               {t("heroKicker")}
             </p>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
-              {t("heroTitle")}
+              {heroTitle}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-white/80 sm:text-lg">
               {heroSubtitle}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
-              {t("sourceOfTruth")}
-            </p>
+            {!isLevis && (
+              <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
+                {t("sourceOfTruth")}
+              </p>
+            )}
             <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Link
                 href={QUOTE_HREF}
