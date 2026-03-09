@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import WindowCleaningContent from "../../services/window-cleaning/WindowCleaningContent";
+import WindowCleaningContent from "@/app/[locale]/services/window-cleaning/WindowCleaningContent";
 import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
