@@ -123,7 +123,7 @@ export default function Header() {
           }`}
         >
           {navLinks.map((item) => {
-            if (item.href === "/#services") {
+            if (item.href.endsWith("#services")) {
               return (
                 <div key={item.href} className="relative group">
                   <Link
@@ -147,7 +147,7 @@ export default function Header() {
               );
             }
 
-            if (item.href === "/#territoire") {
+            if (item.href.endsWith("#territoire")) {
               return (
                 <div key={item.href} className="relative group">
                   <Link
