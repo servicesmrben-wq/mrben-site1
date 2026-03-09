@@ -177,7 +177,10 @@ export default function SidingCleaningContent({ t, pagePath, isLevis = false }: 
     : t("heroSubtitle");
 
   const testimonialAuthor = isLevis
-    ? t("testimonials.quote1.author").replace(", Laval", "")
+    ? t("testimonials.quote1.author")
+        .replace(", Laval", "")
+        .replace(", Saint-Sauveur", "")
+        .replace(", Mirabel", "")
     : t("testimonials.quote1.author");
 
   const finalCTASubtitle = isLevis
