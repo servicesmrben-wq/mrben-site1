@@ -45,7 +45,8 @@ export default function Hero({
   sourceOfTruth,
   googleProfile,
   phoneNumber,
-  phoneHref
+  phoneHref,
+  hideReviewCount = false
 }: { 
   onQuote: () => void, 
   t: (key: string, options?: any) => string, 
@@ -53,7 +54,8 @@ export default function Hero({
   sourceOfTruth?: string,
   googleProfile: GoogleBusinessProfile,
   phoneNumber: string,
-  phoneHref: string
+  phoneHref: string,
+  hideReviewCount?: boolean
 }) {
   const locale = useLocale();
   const placeId = process.env.NEXT_PUBLIC_GOOGLE_PLACE_ID;
@@ -202,14 +204,16 @@ export default function Hero({
             </p>
             <div className="mt-4 md:mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
               <div className="flex flex-col items-center gap-3 text-xs text-white/90 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
-                {placeId ? (
-                  <div className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start">
-                    {ratingLine}
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                    {ratingLine}
-                  </div>
+                {!hideReviewCount && (
+                  placeId ? (
+                    <div className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start">
+                      {ratingLine}
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                      {ratingLine}
+                    </div>
+                  )
                 )}
                 <div className="flex flex-col items-center gap-2 lg:items-start">
                   <div className="flex items-center gap-2">
