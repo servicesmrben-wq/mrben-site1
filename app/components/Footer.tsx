@@ -36,7 +36,12 @@ const Footer = () => {
     },
   ];
 
-  const territories = [
+  const territories = isLevis ? [
+    { href: "/territoire/levis", text: "Lévis" },
+    { href: "/territoire/saint-nicolas", text: "Saint-Nicolas" },
+    { href: "/territoire/charny", text: "Charny" },
+    { href: "/territoire/dosquet", text: "Dosquet" },
+  ] : [
     { href: "/territoire/lachute", text: t('territories.lachute') },
     { href: "/territoire/saint-jerome", text: t('territories.stJerome') },
     { href: "/territoire/mirabel", text: t('territories.mirabel') },
@@ -64,7 +69,7 @@ const Footer = () => {
             <h4 className="font-semibold text-zinc-800">{t('company')}</h4>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link href="/" className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline">
+                <Link href={isLevis ? "/levis" : "/"} className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline">
                   {t('home')}
                 </Link>
               </li>

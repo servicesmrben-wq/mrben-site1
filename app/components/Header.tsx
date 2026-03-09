@@ -19,20 +19,20 @@ export default function Header() {
 
   const navLinks = useMemo(
     () => [
-      { label: t('nav.home'), href: "/" },
-      { label: t('nav.services'), href: "/#services" },
-      { label: t('nav.reviews'), href: "/#avis" },
-      { label: t('nav.territory'), href: "/#territoire" },
+      { label: t('nav.home'), href: isLevis ? "/levis" : "/" },
+      { label: t('nav.services'), href: isLevis ? "/levis#services" : "/#services" },
+      { label: t('nav.reviews'), href: isLevis ? "/levis#avis" : "/#avis" },
+      { label: t('nav.territory'), href: isLevis ? "/levis#territoire" : "/#territoire" },
       { label: t('nav.blog'), href: "/blog" },
-      { label: t('nav.contact'), href: "/#contact" },
+      { label: t('nav.contact'), href: isLevis ? "/levis#contact" : "/#contact" },
     ],
-    [t]
+    [t, isLevis]
   );
 
   const cleaningLinks = [
-    { label: t('nav.windows'), href: "/#service-vitres" },
-    { label: t('nav.gutters'), href: "/#service-gouttieres" },
-    { label: t('nav.siding'), href: "/#service-revetement" },
+    { label: t('nav.windows'), href: isLevis ? "/levis#service-vitres" : "/#service-vitres" },
+    { label: t('nav.gutters'), href: isLevis ? "/levis#service-gouttieres" : "/#service-gouttieres" },
+    { label: t('nav.siding'), href: isLevis ? "/levis#service-revetement" : "/#service-revetement" },
   ];
 
   const servicesDropdownLinks = [
@@ -50,7 +50,12 @@ export default function Header() {
     },
   ];
 
-  const territoryDropdownLinks = [
+  const territoryDropdownLinks = isLevis ? [
+    { label: "Lévis", href: "/territoire/levis" },
+    { label: "Saint-Nicolas", href: "/territoire/saint-nicolas" },
+    { label: "Charny", href: "/territoire/charny" },
+    { label: "Dosquet", href: "/territoire/dosquet" },
+  ] : [
     { label: t('territoryDropdown.lachute'), href: "/territoire/lachute" },
     { label: t('territoryDropdown.saintJerome'), href: "/territoire/saint-jerome" },
     { label: t('territoryDropdown.saintSauveur'), href: "/territoire/saint-sauveur" },
