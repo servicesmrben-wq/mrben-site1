@@ -21,7 +21,7 @@ export default function ServiceArea({ t, googleProfile }: { t: (key: string, opt
       id="territoire"
       className="relative overflow-hidden"
       style={{
-        backgroundImage: "url('/territoire-map.png')",
+        backgroundImage: "url('/territoire-levis.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
