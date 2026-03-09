@@ -8,18 +8,36 @@ import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
-export const metadata: Metadata = {
-  alternates: {
-    canonical: BASE_URL,
-    languages: {
-      "fr-CA": BASE_URL,
-      "en-CA": BASE_URL,
-      "x-default": BASE_URL,
-    },
-  },
-};
+type Params = { locale: string };
 
-export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'home' });
+  const canonical = `${BASE_URL}/${locale}/levis`;
+  
+  const title = locale === "fr" 
+    ? "MrBen | Lavage de vitres et entretien extérieur à Lévis"
+    : "MrBen | Window cleaning and exterior maintenance in Lévis";
+    
+  const description = locale === "fr"
+    ? "Services professionnels de lavage de vitres, nettoyage de gouttières et revêtement à Lévis, Saint-Nicolas, Charny et Dosquet. Estimation gratuite."
+    : "Professional window cleaning, gutter cleaning, and siding washing in Lévis, Saint-Nicolas, Charny, and Dosquet. Free estimate.";
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        "fr-CA": `${BASE_URL}/fr/levis`,
+        "en-CA": `${BASE_URL}/en/levis`,
+        "x-default": `${BASE_URL}/fr/levis`,
+      },
+    },
+  };
+}
+
+export default async function Page({ params }: { params: Promise<Params> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'home' });
   const provider = getLocalBusinessProvider();
