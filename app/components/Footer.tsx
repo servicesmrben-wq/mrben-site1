@@ -43,6 +43,12 @@ const Footer = () => {
     { href: "/territoire/blainville", text: t('territories.blainville') },
   ];
 
+  const description = isLevis 
+    ? (locale === 'fr' 
+        ? "Nettoyage de vitres, gouttières et revêtement extérieur dans la région de Lévis."
+        : "Window, gutter, and siding cleaning in the Lévis region.")
+    : t('description');
+
   return (
     <footer className="bg-zinc-100 border-t border-zinc-200">
       <div className="mx-auto max-w-6xl px-4 py-10 md:py-16">
@@ -50,7 +56,7 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
             <h3 className="text-lg font-semibold text-zinc-900">{BRAND.name}</h3>
             <p className="mt-2 text-sm text-zinc-600">
-              {t('description')}
+              {description}
             </p>
           </div>
 

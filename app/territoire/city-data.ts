@@ -182,6 +182,88 @@ export const CITY_PAGES: CityPage[] = [
       ],
     },
   },
+  {
+    slug: "levis",
+    name: "Lévis",
+    fr: {
+      title: "Lavage de vitres et entretien extérieur à Lévis",
+      description: "Services professionnels de nettoyage de vitres et gouttières à Lévis (Vieux-Lévis, Lauzon, Pintendre).",
+      paragraphs: [
+        "À Lévis, du charme historique du Vieux-Lévis jusqu'aux nouveaux développements de Pintendre, l'entretien des propriétés est essentiel pour faire face aux vents du fleuve et aux changements de saison. Notre équipe offre un service méticuleux pour redonner de l'éclat à vos fenêtres et assurer le bon fonctionnement de vos gouttières.",
+        "Le lavage de vitres permet de maximiser la luminosité et de profiter pleinement de la vue, que vous soyez face au Château Frontenac ou dans un quartier résidentiel paisible. Nous utilisons des techniques de nettoyage sans traces pour un résultat professionnel durable.",
+        "Le nettoyage de gouttières est une étape clé pour protéger votre fondation contre les eaux de pluie. Dans une région boisée comme Lévis, les débris s'accumulent rapidement; nous nous assurons que l'évacuation se fait sans encombre.",
+      ],
+    },
+    en: {
+      title: "Window cleaning and exterior maintenance in Lévis",
+      description: "Professional window and gutter cleaning services in Lévis (Old Lévis, Lauzon, Pintendre).",
+      paragraphs: [
+        "In Lévis, from the historic charm of Old Lévis to the new developments in Pintendre, property maintenance is key to facing river winds and seasonal shifts. Our team provides meticulous service to brighten your windows and ensure your gutters function perfectly.",
+        "Window washing maximizes natural light and lets you enjoy the views, whether you're facing the skyline or in a quiet neighborhood. We use streak-free techniques for a lasting professional finish.",
+        "Gutter cleaning is a vital step in protecting your foundation from rainwater. In wooded areas like Lévis, debris builds up quickly; we ensure water flows freely away from your home.",
+      ],
+    },
+  },
+  {
+    slug: "saint-nicolas",
+    name: "Saint-Nicolas",
+    fr: {
+      title: "Lavage de vitres et entretien extérieur à Saint-Nicolas",
+      description: "Services de nettoyage de vitres et gouttières à Saint-Nicolas (Rive-Sud de Québec).",
+      paragraphs: [
+        "Saint-Nicolas est un secteur en pleine expansion où la propreté des façades contribue à la valeur des propriétés. Nous intervenons avec soin pour éliminer la poussière et les résidus accumulés sur vos vitres et revêtements extérieurs.",
+        "Nos services incluent le lavage de vitres intérieur et extérieur ainsi que la vidange complète des gouttières. Nous adaptons nos méthodes selon le type de bâtiment, du bungalow classique à la résidence de prestige.",
+      ],
+    },
+    en: {
+      title: "Window cleaning and exterior maintenance in Saint-Nicolas",
+      description: "Window and gutter cleaning services in Saint-Nicolas (South Shore of Quebec City).",
+      paragraphs: [
+        "Saint-Nicolas is a growing area where clean facades contribute to property value. We work carefully to remove dust and residue buildup from your windows and exterior siding.",
+        "Our services include interior and exterior window washing and full gutter cleaning. We adapt our methods to your specific home, from classic bungalows to prestige residences.",
+      ],
+    },
+  },
+  {
+    slug: "charny",
+    name: "Charny",
+    fr: {
+      title: "Services de nettoyage extérieur à Charny",
+      description: "Lavage de vitres et entretien de gouttières à Charny (Lévis).",
+      paragraphs: [
+        "À Charny, la proximité des grands axes et des zones boisées peut accélérer l'encrassement des vitres et le blocage des gouttières. Nous offrons un service local et rapide pour maintenir votre maison propre et sécuritaire.",
+        "Un lavage de vitres régulier prévient l'usure prématurée des cadrages et améliore l'aspect général de votre propriété. Nous nous occupons de tout, incluant les moustiquaires et les rails.",
+      ],
+    },
+    en: {
+      title: "Exterior cleaning services in Charny",
+      description: "Window washing and gutter cleaning in Charny (Lévis).",
+      paragraphs: [
+        "In Charny, the proximity to major roads and wooded areas can lead to faster window soiling and gutter blockages. We provide fast, local service to keep your home clean and safe.",
+        "Regular window washing prevents premature wear on frames and improves your property's overall look. We handle everything, including screens and tracks.",
+      ],
+    },
+  },
+  {
+    slug: "dosquet",
+    name: "Dosquet",
+    fr: {
+      title: "Lavage de vitres et entretien extérieur à Dosquet",
+      description: "Services de nettoyage extérieur à Dosquet et dans les environs.",
+      paragraphs: [
+        "Pour les résidents de Dosquet, nous proposons un service de nettoyage extérieur fiable et professionnel. Que ce soit pour le lavage de vos vitres ou le nettoyage de vos gouttières avant l'hiver, notre équipe se déplace pour vous offrir un résultat impeccable.",
+        "Nous comprenons l'importance d'un travail bien fait et du respect de votre environnement. Profitez d'une vue claire et d'une maison bien entretenue sans effort.",
+      ],
+    },
+    en: {
+      title: "Window cleaning and exterior maintenance in Dosquet",
+      description: "Exterior cleaning services in Dosquet and surrounding areas.",
+      paragraphs: [
+        "For Dosquet residents, we offer reliable and professional exterior cleaning. Whether it's window washing or gutter cleaning before winter, our team travels to provide spotless results.",
+        "We understand the importance of quality work and respecting your property. Enjoy a clear view and a well-maintained home with zero effort.",
+      ],
+    },
+  },
 ];
 
 function normalizeSlug(s: string) {

@@ -28,11 +28,22 @@ const CITY_HERO_IMAGES: Record<string, string> = {
   laval: "/nettoyage-vitres-maison-laval-laurentides-mrben.jpg",
 };
 
+const LEVIS_SLUGS = ["levis", "saint-nicolas", "charny", "dosquet"];
+
 export function CityPage({ city }: { city: CityPageData }) {
   const locale = useLocale() as Locale;
   const content = city[locale];
   const t = useTranslations('territoryCityPage');
   const tCommon = useTranslations('territory');
+  
+  const isLevisCity = LEVIS_SLUGS.includes(city.slug);
+  
+  const BRAND = {
+    name: "MrBen.ca",
+    phoneDisplay: isLevisCity ? "418-741-2217" : "514-699-7145",
+    phoneHref: isLevisCity ? "tel:+14187412217" : "tel:+15146997145",
+  };
+
   const citySourceOfTruth = tCommon("city.sourceOfTruth", { city: city.name });
   const priceLow = city.priceLow ?? DEFAULT_PRICE_LOW;
   const priceHigh = city.priceHigh ?? DEFAULT_PRICE_HIGH;
@@ -89,6 +100,8 @@ export function CityPage({ city }: { city: CityPageData }) {
     url: getCityUrl(city.slug, locale),
   };
 
+  const contactHref = isLevisCity ? `/${locale}/levis#contact` : "/#contact";
+
   return (
     <main className="min-h-screen bg-white text-zinc-900">
       <script
@@ -135,7 +148,7 @@ export function CityPage({ city }: { city: CityPageData }) {
           </div>
           <div className="mt-8 flex flex-col items-start gap-1">
             <Link
-              href="/#contact"
+              href={contactHref}
               className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
             >
               {t("cta")}
@@ -166,7 +179,7 @@ export function CityPage({ city }: { city: CityPageData }) {
             </div>
             <div className="mt-3">
               <div className="font-semibold text-zinc-900">{BRAND.name}</div>
-              <div>{BRAND.phoneDisplay}</div>
+              <a href={BRAND.phoneHref} className="hover:underline">{BRAND.phoneDisplay}</a>
             </div>
           </aside>
         </div>
@@ -214,7 +227,7 @@ export function CityPage({ city }: { city: CityPageData }) {
           <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-zinc-200 bg-zinc-50 p-6 text-center sm:items-start sm:text-left">
             <div className="flex flex-col items-center gap-1 sm:items-start">
               <Link
-                href="/#contact"
+                href={contactHref}
                 className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
               >
                 {t("cta")}

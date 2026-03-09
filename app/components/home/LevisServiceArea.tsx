@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { MapPin } from "lucide-react";
 import { useLocale } from "next-intl";
+import { Link } from "@/navigation";
 import SectionTitle from "./SectionTitle";
 import { BRAND } from "@/app/lib/constants";
 import { GoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
@@ -10,7 +11,12 @@ import { GoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
 export default function ServiceArea({ t, googleProfile }: { t: (key: string, options?: any) => string, googleProfile: GoogleBusinessProfile }) {
   const locale = useLocale();
   const cities = useMemo(() => {
-    return ["Lévis", "Saint-Nicolas", "Charny", "Saint-Romuald", "Saint-Étienne-de-Lauzon", "Dosquet"];
+    return [
+      { name: "Lévis", slug: "levis" },
+      { name: "Saint-Nicolas", slug: "saint-nicolas" },
+      { name: "Charny", slug: "charny" },
+      { name: "Dosquet", slug: "dosquet" },
+    ];
   }, []);
 
   const rating = googleProfile.rating;
@@ -47,13 +53,14 @@ export default function ServiceArea({ t, googleProfile }: { t: (key: string, opt
 
             <div className="mt-4 flex flex-wrap gap-2">
               {cities.map((c) => (
-                <span
-                  key={c}
-                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm"
+                <Link
+                  key={c.slug}
+                  href={`/territoire/${c.slug}`}
+                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm hover:bg-zinc-100 transition-colors"
                 >
                   <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
-                  {c}
-                </span>
+                  {c.name}
+                </Link>
               ))}
               <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm">
                 <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
