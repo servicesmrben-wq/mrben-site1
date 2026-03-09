@@ -17,7 +17,19 @@ const Footer = () => {
   const pathname = usePathname();
   const t = useTranslations('Footer'); // Assuming 'Footer' namespace in your translation files
 
-  const levisPaths = ["/levis", "/territoire/levis", "/territoire/saint-nicolas", "/territoire/charny", "/territoire/dosquet"];
+  const levisPaths = [
+    "/levis", 
+    "/territoire/levis", 
+    "/territoire/saint-nicolas", 
+    "/territoire/charny", 
+    "/territoire/dosquet",
+    "/levis/services/lavage-de-vitres",
+    "/levis/services/window-cleaning",
+    "/levis/services/nettoyage-de-gouttieres",
+    "/levis/services/gutter-cleaning",
+    "/levis/services/nettoyage-de-revetement",
+    "/levis/services/siding-cleaning"
+  ];
   const isLevis = levisPaths.includes(pathname);
 
   const phoneDisplay = isLevis ? "418-741-2217" : BRAND.phoneDisplay;
@@ -26,7 +38,20 @@ const Footer = () => {
     ? "https://search.google.com/local/reviews?placeid=ChIJX8YdZaEiGUcRwtmLs-J2bn4" 
     : BRAND.googleReviewsUrl;
 
-  const services = [
+  const services = isLevis ? [
+    {
+      href: locale === "fr" ? "/levis/services/lavage-de-vitres" : "/levis/services/window-cleaning",
+      text: t('services.vitres')
+    },
+    {
+      href: locale === "fr" ? "/levis/services/nettoyage-de-gouttieres" : "/levis/services/gutter-cleaning",
+      text: t('services.gouttieres')
+    },
+    {
+      href: locale === "fr" ? "/levis/services/nettoyage-de-revetement" : "/levis/services/siding-cleaning",
+      text: t('services.pression')
+    },
+  ] : [
     {
       href: locale === "fr" ? "/services/lavage-de-vitres" : "/services/window-cleaning",
       text: t('services.vitres')

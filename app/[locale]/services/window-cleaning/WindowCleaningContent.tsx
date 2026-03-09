@@ -18,14 +18,15 @@ import { getAbsoluteUrl, getLocalBusinessProvider } from "@/app/lib/seo/schema";
 
 const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
 
-const QUOTE_HREF = "/#contact";
-
 type Props = {
   t: (key: string) => string;
   pagePath: string;
+  isLevis?: boolean;
 };
 
-export default function WindowCleaningContent({ t, pagePath }: Props) {
+export default function WindowCleaningContent({ t, pagePath, isLevis = false }: Props) {
+  const QUOTE_HREF = isLevis ? "/levis#contact" : "/#contact";
+
   const whyUsItems = [
     {
       icon: ShieldCheck,
@@ -137,7 +138,12 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
     serviceType: t("jsonld.service.name"),
     description: t("jsonld.service.description"),
     provider: getLocalBusinessProvider(),
-    areaServed: [
+    areaServed: isLevis ? [
+      "Lévis, Québec, Canada",
+      "Saint-Nicolas, Québec, Canada",
+      "Charny, Québec, Canada",
+      "Dosquet, Québec, Canada",
+    ] : [
       "Laurentides, Québec, Canada",
       t("serviceAreas.cities.lachute"),
       t("serviceAreas.cities.saintJerome"),
@@ -149,7 +155,12 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
     url: getAbsoluteUrl(pagePath),
   };
 
-  const serviceAreas = [
+  const serviceAreas = isLevis ? [
+    { href: "/territoire/levis", label: "Lévis" },
+    { href: "/territoire/saint-nicolas", label: "Saint-Nicolas" },
+    { href: "/territoire/charny", label: "Charny" },
+    { href: "/territoire/dosquet", label: "Dosquet" },
+  ] : [
     { href: "/territoire/lachute", label: t("serviceAreas.cities.lachute") },
     { href: "/territoire/saint-jerome", label: t("serviceAreas.cities.saintJerome") },
     { href: "/territoire/saint-sauveur", label: t("serviceAreas.cities.saintSauveur") },
@@ -179,10 +190,13 @@ export default function WindowCleaningContent({ t, pagePath }: Props) {
               {t("heroKicker")}
             </p>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
-              {t("heroTitle")}
+              {t("heroTitle")} {isLevis ? "à Lévis" : ""}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-white/80 sm:text-lg">
-              {t("heroSubtitle")}
+              {isLevis 
+                ? t("heroSubtitle").replace("Laurentides", "région de Lévis")
+                : t("heroSubtitle")
+              }
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
               {t("sourceOfTruth")}

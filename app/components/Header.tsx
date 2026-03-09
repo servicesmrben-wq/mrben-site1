@@ -13,7 +13,19 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const levisPaths = ["/levis", "/territoire/levis", "/territoire/saint-nicolas", "/territoire/charny", "/territoire/dosquet"];
+  const levisPaths = [
+    "/levis", 
+    "/territoire/levis", 
+    "/territoire/saint-nicolas", 
+    "/territoire/charny", 
+    "/territoire/dosquet",
+    "/levis/services/lavage-de-vitres",
+    "/levis/services/window-cleaning",
+    "/levis/services/nettoyage-de-gouttieres",
+    "/levis/services/gutter-cleaning",
+    "/levis/services/nettoyage-de-revetement",
+    "/levis/services/siding-cleaning"
+  ];
   const isLevis = levisPaths.includes(pathname);
   
   const phoneDisplay = isLevis ? "418-741-2217" : "514-699-7145";
@@ -37,7 +49,20 @@ export default function Header() {
     { label: t('nav.siding'), href: isLevis ? "/levis#service-revetement" : "/#service-revetement" },
   ];
 
-  const servicesDropdownLinks = [
+  const servicesDropdownLinks = isLevis ? [
+    {
+      label: t('servicesDropdown.windowCleaning'),
+      href: locale === "fr" ? "/levis/services/lavage-de-vitres" : "/levis/services/window-cleaning"
+    },
+    {
+      label: t('nav.gutters'),
+      href: locale === "fr" ? "/levis/services/nettoyage-de-gouttieres" : "/levis/services/gutter-cleaning"
+    },
+    {
+      label: t('nav.siding'),
+      href: locale === "fr" ? "/levis/services/nettoyage-de-revetement" : "/levis/services/siding-cleaning"
+    },
+  ] : [
     {
       label: t('servicesDropdown.windowCleaning'),
       href: locale === "fr" ? "/services/lavage-de-vitres" : "/services/window-cleaning"
