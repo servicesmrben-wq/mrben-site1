@@ -169,6 +169,14 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
     { href: "/territoire/laval", label: t("serviceAreas.cities.laval") },
   ];
 
+  const heroSubtitle = isLevis 
+    ? "MrBen offre le lavage de vitres résidentiel et commercial dans la région de Lévis, incluant Saint-Nicolas, Charny et Dosquet."
+    : t("heroSubtitle");
+
+  const testimonialAuthor = isLevis
+    ? t("testimonials.quote1.author").replace(", Laval", "")
+    : t("testimonials.quote1.author");
+
   return (
     <main className="min-h-screen bg-white text-zinc-900">
       {/* Hero Section */}
@@ -190,13 +198,10 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
               {t("heroKicker")}
             </p>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
-              {t("heroTitle")} {isLevis ? "à Lévis" : ""}
+              {t("heroTitle")}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-white/80 sm:text-lg">
-              {isLevis 
-                ? t("heroSubtitle").replace("Laurentides", "région de Lévis")
-                : t("heroSubtitle")
-              }
+              {heroSubtitle}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-base">
               {t("sourceOfTruth")}
@@ -339,7 +344,7 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
                 “{t("testimonials.quote1.text")}”
               </blockquote>
               <p className="mt-3 text-sm font-semibold text-zinc-900">
-                {t("testimonials.quote1.author")}
+                {testimonialAuthor}
               </p>
             </div>
           </div>
