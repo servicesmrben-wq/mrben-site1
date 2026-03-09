@@ -10,9 +10,15 @@ export const dynamic = "force-dynamic";
 
 const GOOGLE_FIELDS = "rating,user_ratings_total,reviews";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const location = searchParams.get("location");
+
   const key = process.env.GOOGLE_PLACES_API_KEY;
-  const placeId = process.env.GOOGLE_PLACE_ID;
+  // Use Lévis ID if requested, otherwise fallback to the main ID
+  const placeId = location === "levis" 
+    ? process.env.GOOGLE_PLACE_ID_LEVIS 
+    : process.env.GOOGLE_PLACE_ID;
 
   if (!key || !placeId) {
     return Response.json({

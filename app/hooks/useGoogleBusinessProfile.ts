@@ -17,7 +17,7 @@ export type GoogleBusinessProfile = {
   isLoading: boolean;
 };
 
-export function useGoogleBusinessProfile() {
+export function useGoogleBusinessProfile(location?: string) {
   const [data, setData] = useState<GoogleBusinessProfile>({
     rating: 5.0, // Default fallback
     count: null,
@@ -27,8 +27,11 @@ export function useGoogleBusinessProfile() {
 
   useEffect(() => {
     let isMounted = true;
+    const url = location 
+      ? `/api/google-rating?location=${location}` 
+      : "/api/google-rating";
 
-    fetch("/api/google-rating")
+    fetch(url)
       .then((res) => res.json())
       .then((apiData) => {
         if (!isMounted) return;
@@ -50,7 +53,7 @@ export function useGoogleBusinessProfile() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [location]);
 
   return data;
 }

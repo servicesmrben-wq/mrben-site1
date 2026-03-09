@@ -26,7 +26,7 @@ export default function LevisRedesignPreview({
   phoneHref?: string
 }) {
   const t = useTranslations('MrBenRedesignPreview');
-  const googleProfile = useGoogleBusinessProfile();
+  const googleProfile = useGoogleBusinessProfile('levis');
   
   const heroRef = useRef<HTMLElement | null>(null);
   const contactRef = useRef<HTMLDivElement | null>(null);
