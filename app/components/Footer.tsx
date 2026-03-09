@@ -17,7 +17,9 @@ const Footer = () => {
   const pathname = usePathname();
   const t = useTranslations('Footer'); // Assuming 'Footer' namespace in your translation files
 
-  const isLevis = pathname === "/levis";
+  const levisPaths = ["/levis", "/territoire/levis", "/territoire/saint-nicolas", "/territoire/charny", "/territoire/dosquet"];
+  const isLevis = levisPaths.includes(pathname);
+
   const phoneDisplay = isLevis ? "418-741-2217" : BRAND.phoneDisplay;
   const phoneHref = isLevis ? "tel:+14187412217" : BRAND.phoneHref;
   const googleReviewsUrl = isLevis 

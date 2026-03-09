@@ -13,7 +13,9 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const isLevis = pathname === "/levis";
+  const levisPaths = ["/levis", "/territoire/levis", "/territoire/saint-nicolas", "/territoire/charny", "/territoire/dosquet"];
+  const isLevis = levisPaths.includes(pathname);
+  
   const phoneDisplay = isLevis ? "418-741-2217" : "514-699-7145";
   const phoneHref = isLevis ? "tel:+14187412217" : "tel:+15146997145";
 
