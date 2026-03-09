@@ -170,12 +170,16 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
   ];
 
   const heroSubtitle = isLevis 
-    ? "MrBen offre le lavage de vitres résidentiel et commercial dans la région de Lévis, incluant Saint-Nicolas, Charny et Dosquet."
+    ? "MrBen offre le lavage de vitres résidentiel et commercial à Lévis, incluant Saint-Nicolas, Charny et Dosquet."
     : t("heroSubtitle");
 
   const testimonialAuthor = isLevis
     ? t("testimonials.quote1.author").replace(", Laval", "")
     : t("testimonials.quote1.author");
+
+  const finalCTASubtitle = isLevis
+    ? t("finalCTA.subtitle").replace("dans les Laurentides", "à Lévis")
+    : t("finalCTA.subtitle");
 
   return (
     <main className="min-h-screen bg-white text-zinc-900">
@@ -389,7 +393,7 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
               {t("finalCTA.title")}
             </h2>
             <p className="mt-3 text-base text-zinc-600">
-              {t("finalCTA.subtitle")}
+              {finalCTASubtitle}
             </p>
           </div>
           <Link
