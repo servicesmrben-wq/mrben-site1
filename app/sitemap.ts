@@ -6,7 +6,7 @@ import { getSortedPostsData } from "./lib/blog";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const LAST_MAJOR_UPDATE = new Date("2024-12-11");
 
   const locales = ["en", "fr"];
   
@@ -33,14 +33,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticEntries = routes.flatMap((route) =>
     locales.map((locale) => ({
       url: `${BASE_URL}/${locale}${route}`,
-      lastModified: now,
+      lastModified: LAST_MAJOR_UPDATE,
     }))
   );
 
   const cityEntries = CITY_PAGES.flatMap((city) =>
     locales.map((locale) => ({
       url: `${BASE_URL}/${locale}/territoire/${city.slug}`,
-      lastModified: now,
+      lastModified: LAST_MAJOR_UPDATE,
     }))
   );
 

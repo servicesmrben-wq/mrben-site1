@@ -30,6 +30,13 @@ const intlMiddleware = createMiddleware({
 
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
+
+  // 0. Skip geo-redirection for search engine bots
+  const isBot = /googlebot|bingbot|yandexbot|duckduckbot|slurp|baiduspider/i.test(userAgent);
+  if (isBot) {
+    return intlMiddleware(req);
+  }
 
   // 1. Get location data from Vercel Edge headers
   const city = req.headers.get('x-vercel-ip-city')?.toLowerCase() || '';

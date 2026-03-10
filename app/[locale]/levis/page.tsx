@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import SeoFaq from "../../components/SeoFaq";
-import LevisRedesignPreview from "../../LevisRedesignPreview";
+import LevisRedesignPreview from "../../components/LevisRedesignPreview";
 import { toJsonLdString } from "../../lib/seo/jsonld";
 import { getLocalBusinessProvider } from "../../lib/seo/schema";
 import { getTranslations } from 'next-intl/server';

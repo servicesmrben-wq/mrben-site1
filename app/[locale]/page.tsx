@@ -1,23 +1,28 @@
 import type { Metadata } from "next";
 
 import SeoFaq from "../components/SeoFaq";
-import MrBenRedesignPreview from "../MrBenRedesignPreview";
+import MrBenRedesignPreview from "../components/MrBenRedesignPreview";
 import { toJsonLdString } from "../lib/seo/jsonld";
 import { getLocalBusinessProvider } from "../lib/seo/schema";
 import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
-export const metadata: Metadata = {
-  alternates: {
-    canonical: BASE_URL,
-    languages: {
-      "fr-CA": BASE_URL,
-      "en-CA": BASE_URL,
-      "x-default": BASE_URL,
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const url = `${BASE_URL}/${locale}`;
+
+  return {
+    alternates: {
+      canonical: url,
+      languages: {
+        "fr-CA": `${BASE_URL}/fr`,
+        "en-CA": `${BASE_URL}/en`,
+        "x-default": `${BASE_URL}/fr`,
+      },
     },
-  },
-};
+  };
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
