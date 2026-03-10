@@ -8,13 +8,13 @@ import { classNames } from "@/app/lib/utils";
 import { BRAND } from "@/app/lib/constants";
 import { useGoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
 
-import Hero from "./components/home/LevisHero";
-import Services from "./components/home/Services";
-import Pricing from "./components/home/Pricing";
-import Gallery from "./components/home/Gallery";
-import Reviews from "./components/home/Reviews";
-import ServiceArea from "./components/home/LevisServiceArea";
-import Contact from "./components/home/Contact";
+import Hero from "./home/LevisHero";
+import Services from "./home/Services";
+import Pricing from "./home/Pricing";
+import Gallery from "./home/Gallery";
+import Reviews from "./home/Reviews";
+import ServiceArea from "./home/LevisServiceArea";
+import Contact from "./home/Contact";
 
 export default function LevisRedesignPreview({ 
   sourceOfTruth,
