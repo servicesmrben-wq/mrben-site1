@@ -206,17 +206,9 @@ export default function Hero({
             </p>
             <div className="mt-4 md:mt-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
               <div className="flex flex-col items-center gap-3 text-xs text-white/90 sm:gap-3 sm:text-sm lg:col-span-7 lg:items-start">
-                {!hideReviewCount && (
-                  placeId ? (
-                    <div className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start">
-                      {ratingLine}
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                      {ratingLine}
-                    </div>
-                  )
-                )}
+                <div className="flex flex-wrap items-center justify-center gap-2 transition-opacity hover:opacity-90 lg:justify-start">
+                  {ratingLine}
+                </div>
                 <div className="flex flex-col items-center gap-2 lg:items-start">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-white/80" />
