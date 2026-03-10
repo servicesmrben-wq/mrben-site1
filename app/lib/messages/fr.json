@@ -525,7 +525,11 @@
       "saint-sauveur": "Vitres extérieures propres sur une maison à Saint-Sauveur",
       "mirabel": "Vitres fraîchement lavées sur une maison à Mirabel",
       "blainville": "Nettoyage de gouttières sur une maison à Blainville",
-      "laval": "Lavage à pression d’une entrée résidentielle à Laval"
+      "laval": "Lavage à pression d’une entrée résidentielle à Laval",
+      "levis": "Lavage de vitres professionnel sur une maison résidentielle à Lévis",
+      "saint-nicolas": "Lavage de vitres professionnel sur une maison résidentielle à Saint-Nicolas",
+      "charny": "Lavage de vitres professionnel sur une maison résidentielle à Charny",
+      "dosquet": "Lavage de vitres professionnel sur une maison résidentielle à Dosquet"
     },
     "services": {
       "windowCleaning": "Lavage de vitres",

@@ -525,7 +525,11 @@
       "saint-sauveur": "Clean exterior windows on a home in Saint-Sauveur",
       "mirabel": "Freshly cleaned windows on a Mirabel home",
       "blainville": "Gutter cleaning on a home in Blainville",
-      "laval": "Pressure washing a driveway in Laval"
+      "laval": "Pressure washing a driveway in Laval",
+      "levis": "Professional window cleaning on a residential home in Lévis",
+      "saint-nicolas": "Professional window cleaning on a residential home in Saint-Nicolas",
+      "charny": "Professional window cleaning on a residential home in Charny",
+      "dosquet": "Professional window cleaning on a residential home in Dosquet"
     },
     "services": {
       "windowCleaning": "Window cleaning",
