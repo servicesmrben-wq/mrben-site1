@@ -97,16 +97,14 @@ export default function LevisRedesignPreview({
     <div className="relative min-h-screen bg-white text-zinc-900">
       <div className="relative z-10">
         <Hero 
-          onQuote={scrollToContact} 
-          t={t} 
-          heroRef={heroRef} 
-          sourceOfTruth={sourceOfTruth}
+          sourceOfTruth={sourceOfTruth} 
           googleProfile={googleProfile}
           phoneNumber={phoneNumber}
           phoneHref={phoneHref}
-          hideReviewCount={true}
-        />
-        <Services onQuote={scrollToContact} t={t} />
+          onQuote={scrollToContact} 
+          t={t} 
+          heroRef={heroRef} 
+        />        <Services onQuote={scrollToContact} t={t} />
         <Pricing onQuote={scrollToContact} t={t} />
         <Gallery t={t} />
         <Reviews 
