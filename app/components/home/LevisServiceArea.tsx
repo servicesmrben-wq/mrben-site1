@@ -8,7 +8,15 @@ import SectionTitle from "./SectionTitle";
 import { BRAND } from "@/app/lib/constants";
 import { GoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
 
-export default function ServiceArea({ t, googleProfile }: { t: (key: string, options?: any) => string, googleProfile: GoogleBusinessProfile }) {
+export default function ServiceArea({ 
+  t, 
+  googleProfile,
+  hideReviewCount = false 
+}: { 
+  t: (key: string, options?: any) => string, 
+  googleProfile: GoogleBusinessProfile,
+  hideReviewCount?: boolean
+}) {
   const locale = useLocale();
   const cities = useMemo(() => {
     return [
@@ -88,7 +96,7 @@ export default function ServiceArea({ t, googleProfile }: { t: (key: string, opt
                   {rating.toFixed(1)}
                 </span>
                 <span className="text-yellow-500">★★★★★</span>
-                <span>{count}</span>
+                {!hideReviewCount && <span>{count}</span>}
               </div>
               <div className="text-base text-zinc-600">
                 {t("territory.googleTile.subtitle")}

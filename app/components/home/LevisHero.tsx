@@ -121,9 +121,11 @@ export default function Hero({
           {animatedStars}
         </motion.span>
       )}
-      <span className="tabular-nums" style={heroTextShadow}>
-        ({reviewCount || 61})
-      </span>
+      {!hideReviewCount && (
+        <span className="tabular-nums" style={heroTextShadow}>
+          ({reviewCount || 61})
+        </span>
+      )}
       <span aria-hidden="true" style={heroTextShadow}>
         ·
       </span>

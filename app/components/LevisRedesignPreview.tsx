@@ -104,6 +104,7 @@ export default function LevisRedesignPreview({
           onQuote={scrollToContact} 
           t={t} 
           heroRef={heroRef} 
+          hideReviewCount={true}
         />        <Services onQuote={scrollToContact} t={t} />
         <Pricing onQuote={scrollToContact} t={t} />
         <Gallery t={t} />
@@ -116,6 +117,7 @@ export default function LevisRedesignPreview({
         <ServiceArea 
           t={t} 
           googleProfile={googleProfile}
+          hideReviewCount={true}
         />
         <Contact 
           t={t} 
