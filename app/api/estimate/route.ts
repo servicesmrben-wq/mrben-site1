@@ -63,7 +63,8 @@ export async function POST(req: Request) {
     }
 
     const location = "us-central1";
-    const modelName = "mrben-pane-counter-v4";
+    // Use the numeric MODEL_ID for the REST API call
+    const modelName = "7631049401904922624";
     // FIX: Tuned models use a different URL path than standard publisher models
     const apiUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/tunedModels/${modelName}:generateContent`;
 
