@@ -64,7 +64,8 @@ export async function POST(req: Request) {
 
     const location = "us-central1";
     const modelName = "mrben-pane-counter-v4";
-    const apiUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${modelName}:generateContent`;
+    // FIX: Tuned models use a different URL path than standard publisher models
+    const apiUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/tunedModels/${modelName}:generateContent`;
 
     const requestBody = {
       contents: [
