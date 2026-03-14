@@ -114,17 +114,35 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     // Race the generation against the timeout
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
+    // --- DEBUGGING LOGS START HERE ---
+    
+    // LOG 1: The raw response object from Vertex
+    console.log("🔍 FULL VERTEX RESPONSE:", JSON.stringify(result.response, null, 2));
+
     // 4. Safely extract text from the Vertex AI response structure
     const rawText = result.response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    
+    // LOG 2: The exact text string before we try to clean it
+    console.log("📝 EXTRACTED RAW TEXT:", rawText);
+
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
     try {
+      if (!cleanText) {
+         throw new Error("Model returned an empty string");
+      }
       parsedData = JSON.parse(cleanText);
+      
+      // LOG 3: What the final JSON looks like before sending to frontend
+      console.log("✅ SUCCESSFULLY PARSED JSON:", parsedData);
+      
     } catch (e) {
-      console.error("AI Parsing Error:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
+      console.error("❌ AI Parsing Error. Raw Text was:", rawText);
+      return NextResponse.json({ error: `Failed to parse estimation data. Check Vercel logs.` }, { status: 500 });
     }
+
+    // --- DEBUGGING LOGS END HERE ---
 
     return NextResponse.json(parsedData);
 
