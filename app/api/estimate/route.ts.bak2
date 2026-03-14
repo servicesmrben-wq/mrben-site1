@@ -44,7 +44,6 @@ export async function POST(req: Request) {
     );
 
     // Initialize Vertex AI
-    console.log("DEBUG: Initializing Vertex AI with Project ID:", projectId);
     const vertexAI = new VertexAI({
       project: projectId,
       location: "us-central1",
@@ -56,7 +55,6 @@ export async function POST(req: Request) {
       }
     });
 
-    console.log("DEBUG: Getting model instance...");
     const model = vertexAI.getGenerativeModel({ 
       model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
       systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
@@ -75,9 +73,8 @@ export async function POST(req: Request) {
       }`
     });
 
-    console.log("DEBUG: Starting generateContent call...");
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout after 58s")), 58000);
+      setTimeout(() => reject(new Error("Request Timeout")), 58000);
     });
 
     const generationPromise = model.generateContent({
@@ -89,43 +86,17 @@ export async function POST(req: Request) {
     });
 
     // 1. Race logic
-    let result: any;
-    try {
-      console.log("DEBUG: Calling generateContent...");
-      result = await Promise.race([generationPromise, timeoutPromise]);
-      console.log("DEBUG: Promise.race resolved.");
-    } catch (raceError: any) {
-      console.error("DEBUG: Promise.race failed with error:", raceError.message || raceError);
-      if (raceError.stack) console.error("DEBUG: Error stack:", raceError.stack);
-      throw raceError;
-    }
+    const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
     // 2. Safety check: Did we get a response at all?
-    if (!result) {
-      console.error("DEBUG: result is completely null or undefined.");
-      throw new Error("No response object returned from Vertex AI SDK");
+    if (!result?.response?.candidates?.[0]) {
+      console.error("CRITICAL: Vertex AI returned an empty candidate list.", JSON.stringify(result));
+      throw new Error("Empty AI Response - Check IAM Permissions for 'Vertex AI User'");
     }
 
-    if (!result.response) {
-      console.error("DEBUG: result.response is missing. Keys in result:", Object.keys(result));
-      throw new Error("Missing response property in result from Vertex AI");
-    }
-
-    if (!result.response.candidates || result.response.candidates.length === 0) {
-      console.error("DEBUG: result.response.candidates is missing or empty.");
-      // Check for blocked reason
-      if (result.response.promptFeedback) {
-        console.error("DEBUG: Prompt feedback:", JSON.stringify(result.response.promptFeedback));
-      }
-      throw new Error("No candidates returned from Vertex AI (possibly safety block)");
-    }
-
-    console.log("DEBUG: Candidate found. Extracting text...");
     // 3. Extract text with fallback
-    const candidate = result.response.candidates[0];
-    const rawText = candidate.content?.parts?.[0]?.text || "";
-    console.log("DEBUG: Raw AI Text length:", rawText.length);
-    console.log("DEBUG: Raw AI Response Sample:", rawText.substring(0, 100));
+    const rawText = result.response.candidates[0].content?.parts?.[0]?.text || "";
+    console.log("DEBUG: Raw AI Response:", rawText);
 
     if (!rawText || rawText.length < 2) {
       throw new Error("AI returned an empty string. Possibly a cold-start or safety filter block.");
