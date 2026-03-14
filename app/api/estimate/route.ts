@@ -11,11 +11,13 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    // 1. Fix Vercel environment variable formatting bug
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
     const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
     
     if (!clientEmail || !privateKey || !projectId) {
+      console.error("Missing credentials:", { clientEmail: !!clientEmail, privateKey: !!privateKey, projectId: !!projectId });
       return NextResponse.json(
         { error: "Server configuration error: Missing Vertex AI Credentials or Project ID" },
         { status: 500 }
@@ -43,15 +45,14 @@ export async function POST(req: Request) {
       })
     );
 
-    // Initialize Vertex AI with the Service Account credentials
+    // 2. Initialize Vertex AI with cleaned privateKey
     const vertexAI = new VertexAI({
       project: projectId,
       location: "us-central1", // Standard region for Vertex AI
       googleAuthOptions: {
         credentials: {
           client_email: clientEmail,
-          // Crucial: Fixes escaped newlines from Vercel's environment variable storage
-          private_key: privateKey.replace(/\\n/g, '\n'), 
+          private_key: privateKey, 
         }
       }
     });
@@ -108,11 +109,34 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
       },
     });
 
-    // Race the generation against the timeout
-    const result = await Promise.race([generationPromise, timeoutPromise]) as any;
+    // 3. Hardened response check
+    let result: any;
+    try {
+      result = await Promise.race([generationPromise, timeoutPromise]);
+    } catch (raceError: any) {
+      console.error("DEBUG: Request failed:", raceError.message);
+      return NextResponse.json({ error: "AI Generation Failed", details: raceError.message }, { status: 500 });
+    }
 
-    // Use Vertex AI's standard path for extracting the text
+    // Check if the response exists and has candidates (equivalent to response.ok check)
+    if (!result?.response?.candidates?.[0]) {
+      console.error("HARDENED CHECK: No candidates returned. Raw result:", JSON.stringify(result));
+      return NextResponse.json({ 
+        error: "Unexpected end of JSON input", 
+        raw: JSON.stringify(result) 
+      }, { status: 500 });
+    }
+
     const rawText = result.response.candidates[0].content.parts[0].text;
+    
+    if (!rawText) {
+      console.error("HARDENED CHECK: AI returned empty text. Raw:", JSON.stringify(result));
+      return NextResponse.json({ 
+        error: "AI returned empty response", 
+        raw: JSON.stringify(result) 
+      }, { status: 500 });
+    }
+
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
@@ -120,7 +144,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
       parsedData = JSON.parse(cleanText);
     } catch (e) {
       console.error("AI Parsing Error:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
+      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
