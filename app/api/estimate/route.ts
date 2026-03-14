@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       googleAuthOptions: {
         credentials: {
           client_email: process.env.GOOGLE_CLIENT_EMAIL,
-          private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Formats the Vercel string back into real line breaks
+          private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), 
         }
       }
     });
@@ -62,32 +62,28 @@ export async function POST(req: Request) {
 
     const generativeModel = vertex_ai.getGenerativeModel({ 
       model: endpointPath,
-      systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
+      // UPDATED PROMPT: Force single-property evaluation and strict single JSON output
+      systemInstruction: `You are an expert estimator. Analyze ALL provided photos AS A SINGLE PROPERTY to count window panes. 
+
+CRITICAL MULTI-IMAGE RULE:
+Cross-reference the photos to identify overlapping angles. DO NOT double-count the same window if it appears in multiple images. Synthesize the images to understand the whole house.
 
 CRITICAL VISUAL RULES:
-
 OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
-
 MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
-
 TRANSOMS: Windows above doors count separately (map to 1st floor).
-
 BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
-
 DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
 
 SPATIAL MAPPING (Top-Down):
-
 3rd Story -> 'pane_3rd_story'
-
 2nd Story -> 'pane_2nd_story'
-
 Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
+Return EXACTLY ONE single JSON object representing the grand total for the entire house. DO NOT return an array. Use the 'analysis' field to briefly perform step-by-step reasoning across all images to avoid missing or double-counting windows.
 {
-"analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
+"analysis": "Cross-referencing images: Found 3 main windows on the left (Img 1 & 2 overlap, counted once). Found 1 hidden basement slider...",
 "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`
@@ -115,14 +111,9 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
     // --- DEBUGGING LOGS START HERE ---
-    
-    // LOG 1: The raw response object from Vertex
     console.log("🔍 FULL VERTEX RESPONSE:", JSON.stringify(result.response, null, 2));
 
-    // 4. Safely extract text from the Vertex AI response structure
     const rawText = result.response.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    
-    // LOG 2: The exact text string before we try to clean it
     console.log("📝 EXTRACTED RAW TEXT:", rawText);
 
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
@@ -132,16 +123,41 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
       if (!cleanText) {
          throw new Error("Model returned an empty string");
       }
-      parsedData = JSON.parse(cleanText);
       
-      // LOG 3: What the final JSON looks like before sending to frontend
-      console.log("✅ SUCCESSFULLY PARSED JSON:", parsedData);
+      let rawParsed = JSON.parse(cleanText);
+      
+      // THE FALLBACK REDUCER: If the model still returns an array of objects, squash them into one.
+      if (Array.isArray(rawParsed)) {
+        parsedData = {
+          analysis: "Aggregated from multiple outputs:\n",
+          window_counts: { pane_3rd_story: 0, pane_2nd_story: 0, pane_1st_base: 0, patio_door_panel: 0 },
+          stories: 1
+        };
+        
+        rawParsed.forEach(item => {
+          if (item.analysis) parsedData.analysis += item.analysis + "\n";
+          
+          if (item.window_counts) {
+            parsedData.window_counts.pane_3rd_story += item.window_counts.pane_3rd_story || 0;
+            parsedData.window_counts.pane_2nd_story += item.window_counts.pane_2nd_story || 0;
+            parsedData.window_counts.pane_1st_base += item.window_counts.pane_1st_base || 0;
+            parsedData.window_counts.patio_door_panel += item.window_counts.patio_door_panel || 0;
+          }
+          
+          if (item.stories > parsedData.stories) {
+            parsedData.stories = item.stories;
+          }
+        });
+        console.log("⚠️ MODEL RETURNED ARRAY. AGGREGATED FINAL JSON:", parsedData);
+      } else {
+        parsedData = rawParsed;
+        console.log("✅ SUCCESSFULLY PARSED SINGLE JSON:", parsedData);
+      }
       
     } catch (e) {
       console.error("❌ AI Parsing Error. Raw Text was:", rawText);
       return NextResponse.json({ error: `Failed to parse estimation data. Check Vercel logs.` }, { status: 500 });
     }
-
     // --- DEBUGGING LOGS END HERE ---
 
     return NextResponse.json(parsedData);
@@ -149,8 +165,6 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
   } catch (error: any) {
     console.error("Estimation Error:", error);
     const message = error.message || "An unexpected error occurred.";
-    
-    // Return 504 specifically for timeouts so frontend retry logic catches it
     const status = message.includes("Timeout") ? 504 : 500;
     
     return NextResponse.json(
