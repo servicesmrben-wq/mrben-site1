@@ -11,15 +11,17 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    // 1. Authenticate using the Service Account credentials
-    // IMPORTANT: In Vercel, the Private Key must have escaped newlines replaced
-    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-    const projectId = "529910920022"; // Using the Numeric ID for maximum reliability
-    
-    if (!clientEmail || !privateKey) {
-      console.error("Missing credentials in Environment Variables.");
-      return NextResponse.json({ error: "Server configuration error: Missing credentials" }, { status: 500 });
+    // 1. Check for your specific Vertex AI Vercel environment variables
+    if (
+      !process.env.GOOGLE_CLOUD_PROJECT_ID ||
+      !process.env.VERTEX_ENDPOINT_ID ||
+      !process.env.GOOGLE_CLIENT_EMAIL ||
+      !process.env.GOOGLE_PRIVATE_KEY
+    ) {
+      return NextResponse.json(
+        { error: "Server configuration error: Missing Vertex AI credentials or Endpoint ID" },
+        { status: 500 }
+      );
     }
 
     const formData = await req.formData();
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
     }
 
-    // Convert all files to inline Base64 parts for the AI
+    // Convert all files to inline Base64 parts
     const imageParts = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
@@ -43,67 +45,99 @@ export async function POST(req: Request) {
       })
     );
 
-    // 2. Initialize the official Vertex AI SDK
-    const vertexAI = new VertexAI({
-      project: projectId,
-      location: "us-central1",
+    // 2. Initialize Vertex AI with the explicit Service Account credentials
+    const vertex_ai = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT_ID,
+      location: 'us-central1',
       googleAuthOptions: {
         credentials: {
-          client_email: clientEmail,
-          private_key: privateKey, 
+          client_email: process.env.GOOGLE_CLIENT_EMAIL,
+          private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Formats the Vercel string back into real line breaks
         }
       }
     });
 
-    // 3. Define the model using the numeric Resource ID
-    // Note: Tuned models usually live in /tunedModels/ but gcloud describe showed /models/
-    // The SDK's getGenerativeModel is the most robust way to handle this.
-    const model = vertexAI.getGenerativeModel({ 
-      model: "projects/529910920022/locations/us-central1/models/7631049401904922624",
-      systemInstruction: `You are an expert window cleaning estimator. Analyze the images and count structurally framed glass panels. 
-      IGNORE DECORATIVE GRIDS. 
-      Return JSON: { "analysis": "...", "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 }, "stories": 1 }`
+    // 3. Construct the specific endpoint path for your deployed model
+    const endpointPath = `projects/${process.env.GOOGLE_CLOUD_PROJECT_ID}/locations/us-central1/endpoints/${process.env.VERTEX_ENDPOINT_ID}`;
+
+    const generativeModel = vertex_ai.getGenerativeModel({ 
+      model: endpointPath,
+      systemInstruction: `You are an expert estimator. Analyze these photos to count window panes.
+
+CRITICAL VISUAL RULES:
+
+OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
+
+MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
+
+TRANSOMS: Windows above doors count separately (map to 1st floor).
+
+BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
+
+DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
+
+SPATIAL MAPPING (Top-Down):
+
+3rd Story -> 'pane_3rd_story'
+
+2nd Story -> 'pane_2nd_story'
+
+Main/Basement -> 'pane_1st_base'
+
+OUTPUT FORMAT:
+Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
+{
+"analysis": "Img 1: Found 3 main windows (3 panes), plus 1 hidden basement slider in shadow (2 panes)...",
+"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"stories": 1
+}`
     });
 
-    // Timeout logic to prevent Vercel 504s
+    // Timeout logic: 58 seconds to beat Vercel's 60s limit
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout after 58s")), 58000);
+      setTimeout(() => reject(new Error("Request Timeout")), 58000);
     });
 
-    const generationPromise = model.generateContent({
-      contents: [{ role: "user", parts: imageParts }],
+    const generationPromise = generativeModel.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: imageParts
+        }
+      ],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.0,
       },
     });
 
-    // 4. Execute the call with Hardened Error Handling
-    let result: any;
-    try {
-      result = await Promise.race([generationPromise, timeoutPromise]);
-    } catch (apiError: any) {
-      console.error("VERTEX AI SDK ERROR:", apiError.message);
-      // This will catch the 404, 403, or 401 and print the EXACT message from Google
-      return NextResponse.json({ 
-        error: "Vertex AI call failed", 
-        details: apiError.message 
-      }, { status: 500 });
-    }
+    // Race the generation against the timeout
+    const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    // Extract and return the AI text
-    const rawText = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
-    
-    if (!rawText) {
-      console.error("EMPTY RESPONSE FROM AI. Full Result:", JSON.stringify(result));
-      return NextResponse.json({ error: "AI returned no data", raw: JSON.stringify(result) }, { status: 500 });
-    }
-
+    // 4. Safely extract text from the Vertex AI response structure
+    const rawText = result.response.candidates?.[0]?.content?.parts?.[0]?.text || "";
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
-    return NextResponse.json(JSON.parse(cleanText));
+    
+    let parsedData;
+    try {
+      parsedData = JSON.parse(cleanText);
+    } catch (e) {
+      console.error("AI Parsing Error:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
+    }
+
+    return NextResponse.json(parsedData);
 
   } catch (error: any) {
-    console.error("CRITICAL ROUTE ERROR:", error);
-    return NextResponse.json({ error: error.message || "An unexpected error occurred." }, { status: 500 });
+    console.error("Estimation Error:", error);
+    const message = error.message || "An unexpected error occurred.";
+    
+    // Return 504 specifically for timeouts so frontend retry logic catches it
+    const status = message.includes("Timeout") ? 504 : 500;
+    
+    return NextResponse.json(
+      { error: message },
+      { status: status }
+    );
   }
 }
