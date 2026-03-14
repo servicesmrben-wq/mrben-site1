@@ -43,115 +43,98 @@ export async function POST(req: Request) {
       })
     );
 
-    // Initialize Vertex AI
-    console.log("DEBUG: Initializing Vertex AI with Project ID:", projectId);
+    // Initialize Vertex AI with the Service Account credentials
     const vertexAI = new VertexAI({
       project: projectId,
-      location: "us-central1",
+      location: "us-central1", // Standard region for Vertex AI
       googleAuthOptions: {
         credentials: {
           client_email: clientEmail,
+          // Crucial: Fixes escaped newlines from Vercel's environment variable storage
           private_key: privateKey.replace(/\\n/g, '\n'), 
         }
       }
     });
 
-    console.log("DEBUG: Getting model instance...");
-    const model = vertexAI.getGenerativeModel({ 
-      model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
+const model = vertexAI.getGenerativeModel({ 
+  model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
       systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
 
-      CRITICAL VISUAL RULES:
-      THE SQUEEGEE RULE: A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. 
-      - A standard double-hung or sliding window = 2 panels.
-      - IGNORE DECORATIVE GRIDS.
-      
-      OUTPUT FORMAT:
-      Return JSON ONLY.
-      {
-        "analysis": "...",
-        "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
-        "stories": 1
-      }`
+CRITICAL VISUAL RULES:
+
+THE SQUEEGEE RULE (What to count): A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. Think of a panel as a single glass surface that requires its own distinct cleaning motion. If a physical frame separates two pieces of glass, they are two separate panels.
+- A standard double-hung or sliding window = 2 panels.
+- A large bay window with a big center glass and two smaller angled side glasses = 3 panels.
+- IGNORE DECORATIVE GRIDS (Muntins/Grilles): Do not count tiny squares inside a window. Treat the entire grid-covered area as one single glass panel.
+
+OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
+
+TRANSOMS: Windows above doors count as separate panels (map to 1st floor).
+
+BASEMENT: Count 2 panels per standard sliding basement unit. Look closely at the foundation line.
+
+DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
+
+SPATIAL MAPPING (Top-Down):
+(Note: Keep output keys as 'pane_' for system compatibility)
+3rd Story -> 'pane_3rd_story'
+2nd Story -> 'pane_2nd_story'
+Main/Basement -> 'pane_1st_base'
+
+OUTPUT FORMAT:
+Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image using the Squeegee Rule before outputting the final counts.
+{
+"analysis": "Img 1: Found 1 bay window (3 panels), plus 1 sliding basement window (2 panels). Ignored decorative grids...",
+"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+"stories": 1
+}`
     });
 
-    console.log("DEBUG: Starting generateContent call...");
+    // Timeout logic: 58 seconds to beat Vercel's 60s limit
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout after 58s")), 58000);
+      setTimeout(() => reject(new Error("Request Timeout")), 58000);
     });
 
     const generationPromise = model.generateContent({
-      contents: [{ role: "user", parts: imageParts }],
+      contents: [
+        {
+          role: "user",
+          parts: imageParts
+        }
+      ],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.0,
       },
     });
 
-    // 1. Race logic
-    let result: any;
-    try {
-      console.log("DEBUG: Calling generateContent...");
-      result = await Promise.race([generationPromise, timeoutPromise]);
-      console.log("DEBUG: Promise.race resolved.");
-    } catch (raceError: any) {
-      console.error("DEBUG: Promise.race failed with error:", raceError.message || raceError);
-      if (raceError.stack) console.error("DEBUG: Error stack:", raceError.stack);
-      throw raceError;
-    }
+    // Race the generation against the timeout
+    const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    // 2. Safety check: Did we get a response at all?
-    if (!result) {
-      console.error("DEBUG: result is completely null or undefined.");
-      throw new Error("No response object returned from Vertex AI SDK");
-    }
-
-    if (!result.response) {
-      console.error("DEBUG: result.response is missing. Keys in result:", Object.keys(result));
-      throw new Error("Missing response property in result from Vertex AI");
-    }
-
-    if (!result.response.candidates || result.response.candidates.length === 0) {
-      console.error("DEBUG: result.response.candidates is missing or empty.");
-      // Check for blocked reason
-      if (result.response.promptFeedback) {
-        console.error("DEBUG: Prompt feedback:", JSON.stringify(result.response.promptFeedback));
-      }
-      throw new Error("No candidates returned from Vertex AI (possibly safety block)");
-    }
-
-    console.log("DEBUG: Candidate found. Extracting text...");
-    // 3. Extract text with fallback
-    const candidate = result.response.candidates[0];
-    const rawText = candidate.content?.parts?.[0]?.text || "";
-    console.log("DEBUG: Raw AI Text length:", rawText.length);
-    console.log("DEBUG: Raw AI Response Sample:", rawText.substring(0, 100));
-
-    if (!rawText || rawText.length < 2) {
-      throw new Error("AI returned an empty string. Possibly a cold-start or safety filter block.");
-    }
-
+    // Use Vertex AI's standard path for extracting the text
+    const rawText = result.response.candidates[0].content.parts[0].text;
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
     try {
       parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("AI JSON Parse Error. Raw text was:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
+      console.error("AI Parsing Error:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
 
   } catch (error: any) {
     console.error("Estimation Error:", error);
+    const message = error.message || "An unexpected error occurred.";
     
-    // Specifically catch permission/auth errors that cause sub-second failures
-    if (error.message?.includes("Permission") || error.message?.includes("403")) {
-      return NextResponse.json({ error: "Permission Denied: Ensure Service Account has 'Vertex AI User' role." }, { status: 403 });
-    }
-
-    const status = error.message?.includes("Timeout") ? 504 : 500;
-    return NextResponse.json({ error: error.message || "An unexpected error occurred." }, { status });
+    // Return 504 specifically for timeouts so frontend retry logic catches it
+    const status = message.includes("Timeout") ? 504 : 500;
+    
+    return NextResponse.json(
+      { error: message },
+      { status: status }
+    );
   }
 }
