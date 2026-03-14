@@ -43,98 +43,86 @@ export async function POST(req: Request) {
       })
     );
 
-    // Initialize Vertex AI with the Service Account credentials
+    // Initialize Vertex AI
     const vertexAI = new VertexAI({
       project: projectId,
-      location: "us-central1", // Standard region for Vertex AI
+      location: "us-central1",
       googleAuthOptions: {
         credentials: {
           client_email: clientEmail,
-          // Crucial: Fixes escaped newlines from Vercel's environment variable storage
           private_key: privateKey.replace(/\\n/g, '\n'), 
         }
       }
     });
 
-const model = vertexAI.getGenerativeModel({ 
-  model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
+    const model = vertexAI.getGenerativeModel({ 
+      model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
       systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
 
-CRITICAL VISUAL RULES:
-
-THE SQUEEGEE RULE (What to count): A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. Think of a panel as a single glass surface that requires its own distinct cleaning motion. If a physical frame separates two pieces of glass, they are two separate panels.
-- A standard double-hung or sliding window = 2 panels.
-- A large bay window with a big center glass and two smaller angled side glasses = 3 panels.
-- IGNORE DECORATIVE GRIDS (Muntins/Grilles): Do not count tiny squares inside a window. Treat the entire grid-covered area as one single glass panel.
-
-OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
-
-TRANSOMS: Windows above doors count as separate panels (map to 1st floor).
-
-BASEMENT: Count 2 panels per standard sliding basement unit. Look closely at the foundation line.
-
-DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
-
-SPATIAL MAPPING (Top-Down):
-(Note: Keep output keys as 'pane_' for system compatibility)
-3rd Story -> 'pane_3rd_story'
-2nd Story -> 'pane_2nd_story'
-Main/Basement -> 'pane_1st_base'
-
-OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image using the Squeegee Rule before outputting the final counts.
-{
-"analysis": "Img 1: Found 1 bay window (3 panels), plus 1 sliding basement window (2 panels). Ignored decorative grids...",
-"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
-"stories": 1
-}`
+      CRITICAL VISUAL RULES:
+      THE SQUEEGEE RULE: A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. 
+      - A standard double-hung or sliding window = 2 panels.
+      - IGNORE DECORATIVE GRIDS.
+      
+      OUTPUT FORMAT:
+      Return JSON ONLY.
+      {
+        "analysis": "...",
+        "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+        "stories": 1
+      }`
     });
 
-    // Timeout logic: 58 seconds to beat Vercel's 60s limit
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => reject(new Error("Request Timeout")), 58000);
     });
 
     const generationPromise = model.generateContent({
-      contents: [
-        {
-          role: "user",
-          parts: imageParts
-        }
-      ],
+      contents: [{ role: "user", parts: imageParts }],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.0,
       },
     });
 
-    // Race the generation against the timeout
+    // 1. Race logic
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    // Use Vertex AI's standard path for extracting the text
-    const rawText = result.response.candidates[0].content.parts[0].text;
+    // 2. Safety check: Did we get a response at all?
+    if (!result?.response?.candidates?.[0]) {
+      console.error("CRITICAL: Vertex AI returned an empty candidate list.", JSON.stringify(result));
+      throw new Error("Empty AI Response - Check IAM Permissions for 'Vertex AI User'");
+    }
+
+    // 3. Extract text with fallback
+    const rawText = result.response.candidates[0].content?.parts?.[0]?.text || "";
+    console.log("DEBUG: Raw AI Response:", rawText);
+
+    if (!rawText || rawText.length < 2) {
+      throw new Error("AI returned an empty string. Possibly a cold-start or safety filter block.");
+    }
+
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
     try {
       parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("AI Parsing Error:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data." }, { status: 500 });
+      console.error("AI JSON Parse Error. Raw text was:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
 
   } catch (error: any) {
     console.error("Estimation Error:", error);
-    const message = error.message || "An unexpected error occurred.";
     
-    // Return 504 specifically for timeouts so frontend retry logic catches it
-    const status = message.includes("Timeout") ? 504 : 500;
-    
-    return NextResponse.json(
-      { error: message },
-      { status: status }
-    );
+    // Specifically catch permission/auth errors that cause sub-second failures
+    if (error.message?.includes("Permission") || error.message?.includes("403")) {
+      return NextResponse.json({ error: "Permission Denied: Ensure Service Account has 'Vertex AI User' role." }, { status: 403 });
+    }
+
+    const status = error.message?.includes("Timeout") ? 504 : 500;
+    return NextResponse.json({ error: error.message || "An unexpected error occurred." }, { status });
   }
 }
