@@ -62,7 +62,6 @@ export async function POST(req: Request) {
 
     const generativeModel = vertex_ai.getGenerativeModel({ 
       model: endpointPath,
-      // UPDATED PROMPT: Force single-property evaluation and strict single JSON output
       systemInstruction: `You are an expert estimator. Analyze ALL provided photos AS A SINGLE PROPERTY to count window panes. 
 
 CRITICAL MULTI-IMAGE RULE:
@@ -110,7 +109,6 @@ Return EXACTLY ONE single JSON object representing the grand total for the entir
     // Race the generation against the timeout
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    // --- DEBUGGING LOGS START HERE ---
     console.log("🔍 FULL VERTEX RESPONSE:", JSON.stringify(result.response, null, 2));
 
     const rawText = result.response.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -118,7 +116,9 @@ Return EXACTLY ONE single JSON object representing the grand total for the entir
 
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
-    let parsedData;
+    // FIX: Explicitly type parsedData as 'any' to pass Vercel's strict TS compiler
+    let parsedData: any;
+    
     try {
       if (!cleanText) {
          throw new Error("Model returned an empty string");
@@ -126,7 +126,6 @@ Return EXACTLY ONE single JSON object representing the grand total for the entir
       
       let rawParsed = JSON.parse(cleanText);
       
-      // THE FALLBACK REDUCER: If the model still returns an array of objects, squash them into one.
       if (Array.isArray(rawParsed)) {
         parsedData = {
           analysis: "Aggregated from multiple outputs:\n",
@@ -158,7 +157,6 @@ Return EXACTLY ONE single JSON object representing the grand total for the entir
       console.error("❌ AI Parsing Error. Raw Text was:", rawText);
       return NextResponse.json({ error: `Failed to parse estimation data. Check Vercel logs.` }, { status: 500 });
     }
-    // --- DEBUGGING LOGS END HERE ---
 
     return NextResponse.json(parsedData);
 
