@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { VertexAI } from "@google-cloud/vertexai";
 import { NextResponse } from "next/server";
 
 export const maxDuration = 60; 
@@ -11,11 +11,13 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY;
+    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
     
-    if (!apiKey) {
+    if (!clientEmail || !privateKey || !projectId) {
       return NextResponse.json(
-        { error: "Server configuration error: Missing AI API Key" },
+        { error: "Server configuration error: Missing Vertex AI Credentials or Project ID" },
         { status: 500 }
       );
     }
@@ -41,9 +43,21 @@ export async function POST(req: Request) {
       })
     );
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-flash-preview",//"gemini-3-flash-preview"or"gemini-3.1-flash-image-preview"or"gemini-3.1-pro-preview"
+    // Initialize Vertex AI with the Service Account credentials
+    const vertexAI = new VertexAI({
+      project: projectId,
+      location: "us-central1", // Standard region for Vertex AI
+      googleAuthOptions: {
+        credentials: {
+          client_email: clientEmail,
+          // Crucial: Fixes escaped newlines from Vercel's environment variable storage
+          private_key: privateKey.replace(/\\n/g, '\n'), 
+        }
+      }
+    });
+
+const model = vertexAI.getGenerativeModel({ 
+  model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
       systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
 
 CRITICAL VISUAL RULES:
@@ -97,7 +111,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     // Race the generation against the timeout
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    const rawText = result.response.text();
+    // Use Vertex AI's standard path for extracting the text
+    const rawText = result.response.candidates[0].content.parts[0].text;
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
