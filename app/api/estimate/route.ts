@@ -43,10 +43,10 @@ export async function POST(req: Request) {
       })
     );
 
-    // Initialize Vertex AI with the Service Account credentials
+    // Initialize Vertex AI
     const vertexAI = new VertexAI({
       project: projectId,
-      location: "us-central1", 
+      location: "us-central1",
       googleAuthOptions: {
         credentials: {
           client_email: clientEmail,
@@ -57,7 +57,20 @@ export async function POST(req: Request) {
 
     const model = vertexAI.getGenerativeModel({ 
       model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
-      systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels. Use the Squeegee Rule. Output JSON only.`
+      systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
+
+      CRITICAL VISUAL RULES:
+      THE SQUEEGEE RULE: A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. 
+      - A standard double-hung or sliding window = 2 panels.
+      - IGNORE DECORATIVE GRIDS.
+      
+      OUTPUT FORMAT:
+      Return JSON ONLY.
+      {
+        "analysis": "...",
+        "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
+        "stories": 1
+      }`
     });
 
     const timeoutPromise = new Promise((_, reject) => {
@@ -72,33 +85,31 @@ export async function POST(req: Request) {
       },
     });
 
-    // 1. Race the generation
+    // 1. Race logic
     const result = await Promise.race([generationPromise, timeoutPromise]) as any;
 
-    // 2. Safety Check: Did Google actually return a valid candidate?
-    if (!result?.response?.candidates?.[0]?.content?.parts?.[0]) {
-      console.error("CRITICAL: Vertex AI returned an empty response object:", JSON.stringify(result));
-      return NextResponse.json({ 
-        error: "The AI returned an empty response. This is usually a permission or 'Cold Start' issue.",
-        details: "Check Vercel logs for the full stringified result."
-      }, { status: 500 });
+    // 2. Safety check: Did we get a response at all?
+    if (!result?.response?.candidates?.[0]) {
+      console.error("CRITICAL: Vertex AI returned an empty candidate list.", JSON.stringify(result));
+      throw new Error("Empty AI Response - Check IAM Permissions for 'Vertex AI User'");
     }
 
-    // 3. Extract text safely
-    const rawText = result.response.candidates[0].content.parts[0].text || "";
+    // 3. Extract text with fallback
+    const rawText = result.response.candidates[0].content?.parts?.[0]?.text || "";
+    console.log("DEBUG: Raw AI Response:", rawText);
+
+    if (!rawText || rawText.length < 2) {
+      throw new Error("AI returned an empty string. Possibly a cold-start or safety filter block.");
+    }
+
     const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
-    if (!cleanText) {
-       console.error("AI returned empty text. Candidate status:", result.response.candidates[0].finishReason);
-       return NextResponse.json({ error: "AI returned no content." }, { status: 500 });
-    }
-
     let parsedData;
     try {
       parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("AI Parsing Error. Raw Text was:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data.", rawResponse: rawText }, { status: 500 });
+      console.error("AI JSON Parse Error. Raw text was:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
@@ -106,15 +117,12 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error("Estimation Error:", error);
     
-    // Check for specific instant-fail markers
-    const isPermissionError = error.message?.includes("403") || error.message?.includes("permission");
-    
-    return NextResponse.json(
-      { 
-        error: isPermissionError ? "Permission Denied: Service Account needs 'Vertex AI User' role." : error.message,
-        suggestion: isPermissionError ? "Go to Google Cloud IAM and add 'Vertex AI User' to your service account." : "Try again in 2 minutes."
-      }, 
-      { status: isPermissionError ? 403 : 500 }
-    );
+    // Specifically catch permission/auth errors that cause sub-second failures
+    if (error.message?.includes("Permission") || error.message?.includes("403")) {
+      return NextResponse.json({ error: "Permission Denied: Ensure Service Account has 'Vertex AI User' role." }, { status: 403 });
+    }
+
+    const status = error.message?.includes("Timeout") ? 504 : 500;
+    return NextResponse.json({ error: error.message || "An unexpected error occurred." }, { status });
   }
 }
