@@ -1,5 +1,5 @@
-import { VertexAI } from "@google-cloud/vertexai";
 import { NextResponse } from "next/server";
+import { GoogleAuth } from "google-auth-library";
 
 export const maxDuration = 60; 
 export const runtime = "nodejs";
@@ -45,21 +45,43 @@ export async function POST(req: Request) {
       })
     );
 
-    // 2. Initialize Vertex AI with cleaned privateKey
-    const vertexAI = new VertexAI({
-      project: projectId,
-      location: "us-central1", // Standard region for Vertex AI
-      googleAuthOptions: {
-        credentials: {
-          client_email: clientEmail,
-          private_key: privateKey, 
-        }
-      }
+    // 2. Obtain Google Auth Access Token
+    const auth = new GoogleAuth({
+      credentials: {
+        client_email: clientEmail,
+        private_key: privateKey,
+      },
+      scopes: "https://www.googleapis.com/auth/cloud-platform",
     });
 
-const model = vertexAI.getGenerativeModel({ 
-  model: "projects/gen-lang-client-0569585575/locations/us-central1/tunedModels/mrben-pane-counter-v4",
-      systemInstruction: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
+    const client = await auth.getClient();
+    const tokenResponse = await client.getAccessToken();
+    const accessToken = tokenResponse.token;
+
+    if (!accessToken) {
+      throw new Error("Failed to obtain Google access token");
+    }
+
+    const location = "us-central1";
+    const modelName = "mrben-pane-counter-v4";
+    const apiUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${modelName}:generateContent`;
+
+    const requestBody = {
+      contents: [
+        {
+          role: "user",
+          parts: [
+            ...imageParts,
+            {
+              text: "Count the window panes following the Squeegee Rule."
+            }
+          ]
+        }
+      ],
+      systemInstruction: {
+        parts: [
+          {
+            text: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
 
 CRITICAL VISUAL RULES:
 
@@ -89,71 +111,84 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
 "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
 "stories": 1
 }`
-    });
-
-    // Timeout logic: 58 seconds to beat Vercel's 60s limit
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request Timeout")), 58000);
-    });
-
-    const generationPromise = model.generateContent({
-      contents: [
-        {
-          role: "user",
-          parts: imageParts
-        }
-      ],
+          }
+        ]
+      },
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.0,
       },
+    };
+
+    // 3. Manual Fetch for Hardened Error Handling
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 58000);
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
     });
 
-    // 3. Hardened response check
-    let result: any;
+    clearTimeout(timeoutId);
+
+    // 1. Extract the raw text first
+    const rawText = await response.text();
+
+    // 2. Add a safety catch: if (!response.ok)
+    if (!response.ok) {
+      console.error("Vertex AI API Error Status:", response.status);
+      console.error("Vertex AI API Raw Text:", rawText);
+      return NextResponse.json(
+        { 
+          error: "Vertex AI API Error", 
+          status: response.status,
+          details: rawText 
+        }, 
+        { status: 500 }
+      );
+    }
+
+    // 3. Only execute JSON.parse if the response is actually successful
+    let data;
     try {
-      result = await Promise.race([generationPromise, timeoutPromise]);
-    } catch (raceError: any) {
-      console.error("DEBUG: Request failed:", raceError.message);
-      return NextResponse.json({ error: "AI Generation Failed", details: raceError.message }, { status: 500 });
+      data = JSON.parse(rawText);
+    } catch (e) {
+      console.error("AI Parsing Error. Raw text was:", rawText);
+      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
     }
 
-    // Check if the response exists and has candidates (equivalent to response.ok check)
-    if (!result?.response?.candidates?.[0]) {
-      console.error("HARDENED CHECK: No candidates returned. Raw result:", JSON.stringify(result));
+    // Extract the content from the API response structure
+    const candidate = data.candidates?.[0];
+    const aiResponseText = candidate?.content?.parts?.[0]?.text;
+
+    if (!aiResponseText) {
+      console.error("HARDENED CHECK: AI returned empty text structure. Raw:", rawText);
       return NextResponse.json({ 
-        error: "Unexpected end of JSON input", 
-        raw: JSON.stringify(result) 
+        error: "AI returned empty response structure", 
+        raw: rawText 
       }, { status: 500 });
     }
 
-    const rawText = result.response.candidates[0].content.parts[0].text;
-    
-    if (!rawText) {
-      console.error("HARDENED CHECK: AI returned empty text. Raw:", JSON.stringify(result));
-      return NextResponse.json({ 
-        error: "AI returned empty response", 
-        raw: JSON.stringify(result) 
-      }, { status: 500 });
-    }
-
-    const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+    const cleanText = aiResponseText.replace(/```json/gi, "").replace(/```/gi, "").trim();
     
     let parsedData;
     try {
       parsedData = JSON.parse(cleanText);
     } catch (e) {
-      console.error("AI Parsing Error:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
+      console.error("AI Nested JSON Parsing Error:", aiResponseText);
+      return NextResponse.json({ error: "Failed to parse nested JSON estimation data.", raw: aiResponseText }, { status: 500 });
     }
 
     return NextResponse.json(parsedData);
 
   } catch (error: any) {
     console.error("Estimation Error:", error);
-    const message = error.message || "An unexpected error occurred.";
-    
-    // Return 504 specifically for timeouts so frontend retry logic catches it
+    const message = error.name === 'AbortError' ? "Request Timeout after 58s" : (error.message || "An unexpected error occurred.");
     const status = message.includes("Timeout") ? 504 : 500;
     
     return NextResponse.json(
