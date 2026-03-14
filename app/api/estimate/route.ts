@@ -1,5 +1,5 @@
+import { VertexAI } from "@google-cloud/vertexai";
 import { NextResponse } from "next/server";
-import { GoogleAuth } from "google-auth-library";
 
 export const maxDuration = 60; 
 export const runtime = "nodejs";
@@ -11,17 +11,15 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    // 1. Fix Vercel environment variable formatting bug
+    // 1. Authenticate using the Service Account credentials
+    // IMPORTANT: In Vercel, the Private Key must have escaped newlines replaced
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
     const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    const projectId = "529910920022"; // Using the Numeric ID for maximum reliability
     
-    if (!clientEmail || !privateKey || !projectId) {
-      console.error("Missing credentials:", { clientEmail: !!clientEmail, privateKey: !!privateKey, projectId: !!projectId });
-      return NextResponse.json(
-        { error: "Server configuration error: Missing Vertex AI Credentials or Project ID" },
-        { status: 500 }
-      );
+    if (!clientEmail || !privateKey) {
+      console.error("Missing credentials in Environment Variables.");
+      return NextResponse.json({ error: "Server configuration error: Missing credentials" }, { status: 500 });
     }
 
     const formData = await req.formData();
@@ -31,7 +29,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
     }
 
-    // Convert all files to inline Base64 parts
+    // Convert all files to inline Base64 parts for the AI
     const imageParts = await Promise.all(
       files.map(async (file) => {
         const arrayBuffer = await file.arrayBuffer();
@@ -45,155 +43,67 @@ export async function POST(req: Request) {
       })
     );
 
-    // 2. Obtain Google Auth Access Token
-    const auth = new GoogleAuth({
-      credentials: {
-        client_email: clientEmail,
-        private_key: privateKey,
-      },
-      scopes: "https://www.googleapis.com/auth/cloud-platform",
+    // 2. Initialize the official Vertex AI SDK
+    const vertexAI = new VertexAI({
+      project: projectId,
+      location: "us-central1",
+      googleAuthOptions: {
+        credentials: {
+          client_email: clientEmail,
+          private_key: privateKey, 
+        }
+      }
     });
 
-    const client = await auth.getClient();
-    const tokenResponse = await client.getAccessToken();
-    const accessToken = tokenResponse.token;
+    // 3. Define the model using the numeric Resource ID
+    // Note: Tuned models usually live in /tunedModels/ but gcloud describe showed /models/
+    // The SDK's getGenerativeModel is the most robust way to handle this.
+    const model = vertexAI.getGenerativeModel({ 
+      model: "projects/529910920022/locations/us-central1/models/7631049401904922624",
+      systemInstruction: `You are an expert window cleaning estimator. Analyze the images and count structurally framed glass panels. 
+      IGNORE DECORATIVE GRIDS. 
+      Return JSON: { "analysis": "...", "window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 }, "stories": 1 }`
+    });
 
-    if (!accessToken) {
-      throw new Error("Failed to obtain Google access token");
-    }
+    // Timeout logic to prevent Vercel 504s
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Request Timeout after 58s")), 58000);
+    });
 
-    const location = "us-central1";
-    // FIX: The definitive resource name uses the numeric project ID and the 'models' path
-    const apiUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/529910920022/locations/us-central1/models/7631049401904922624:generateContent`;
-
-    const requestBody = {
-      contents: [
-        {
-          role: "user",
-          parts: [
-            ...imageParts,
-            {
-              text: "Count the window panes following the Squeegee Rule."
-            }
-          ]
-        }
-      ],
-      systemInstruction: {
-        parts: [
-          {
-            text: `You are an expert window cleaning estimator. Your task is to analyze the provided images and count the total number of individual, structurally framed glass panels.
-
-CRITICAL VISUAL RULES:
-
-THE SQUEEGEE RULE (What to count): A "panel" is a continuous sheet of glass fully enclosed by a thick, primary structural frame. Think of a panel as a single glass surface that requires its own distinct cleaning motion. If a physical frame separates two pieces of glass, they are two separate panels.
-- A standard double-hung or sliding window = 2 panels.
-- A large bay window with a big center glass and two smaller angled side glasses = 3 panels.
-- IGNORE DECORATIVE GRIDS (Muntins/Grilles): Do not count tiny squares inside a window. Treat the entire grid-covered area as one single glass panel.
-
-OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
-
-TRANSOMS: Windows above doors count as separate panels (map to 1st floor).
-
-BASEMENT: Count 2 panels per standard sliding basement unit. Look closely at the foundation line.
-
-DOORS: Count each panel of sliding/entry doors as 'patio_door_panel'.
-
-SPATIAL MAPPING (Top-Down):
-(Note: Keep output keys as 'pane_' for system compatibility)
-3rd Story -> 'pane_3rd_story'
-2nd Story -> 'pane_2nd_story'
-Main/Basement -> 'pane_1st_base'
-
-OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image using the Squeegee Rule before outputting the final counts.
-{
-"analysis": "Img 1: Found 1 bay window (3 panels), plus 1 sliding basement window (2 panels). Ignored decorative grids...",
-"window_counts": { "pane_3rd_story": 0, "pane_2nd_story": 0, "pane_1st_base": 0, "patio_door_panel": 0 },
-"stories": 1
-}`
-          }
-        ]
-      },
+    const generationPromise = model.generateContent({
+      contents: [{ role: "user", parts: imageParts }],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.0,
       },
-    };
-
-    // 3. Manual Fetch for Hardened Error Handling
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 58000);
-
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-      signal: controller.signal,
     });
 
-    clearTimeout(timeoutId);
-
-    // 1. Extract the raw text first
-    const rawText = await response.text();
-
-    // 2. Add a safety catch: if (!response.ok)
-    if (!response.ok) {
-      console.error("Vertex AI API Error Status:", response.status);
-      console.error("Vertex AI API Raw Text:", rawText);
-      return NextResponse.json(
-        { 
-          error: "Vertex AI API Error", 
-          status: response.status,
-          details: rawText 
-        }, 
-        { status: 500 }
-      );
-    }
-
-    // 3. Only execute JSON.parse if the response is actually successful
-    let data;
+    // 4. Execute the call with Hardened Error Handling
+    let result: any;
     try {
-      data = JSON.parse(rawText);
-    } catch (e) {
-      console.error("AI Parsing Error. Raw text was:", rawText);
-      return NextResponse.json({ error: "Failed to parse estimation data.", raw: rawText }, { status: 500 });
-    }
-
-    // Extract the content from the API response structure
-    const candidate = data.candidates?.[0];
-    const aiResponseText = candidate?.content?.parts?.[0]?.text;
-
-    if (!aiResponseText) {
-      console.error("HARDENED CHECK: AI returned empty text structure. Raw:", rawText);
+      result = await Promise.race([generationPromise, timeoutPromise]);
+    } catch (apiError: any) {
+      console.error("VERTEX AI SDK ERROR:", apiError.message);
+      // This will catch the 404, 403, or 401 and print the EXACT message from Google
       return NextResponse.json({ 
-        error: "AI returned empty response structure", 
-        raw: rawText 
+        error: "Vertex AI call failed", 
+        details: apiError.message 
       }, { status: 500 });
     }
 
-    const cleanText = aiResponseText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+    // Extract and return the AI text
+    const rawText = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
     
-    let parsedData;
-    try {
-      parsedData = JSON.parse(cleanText);
-    } catch (e) {
-      console.error("AI Nested JSON Parsing Error:", aiResponseText);
-      return NextResponse.json({ error: "Failed to parse nested JSON estimation data.", raw: aiResponseText }, { status: 500 });
+    if (!rawText) {
+      console.error("EMPTY RESPONSE FROM AI. Full Result:", JSON.stringify(result));
+      return NextResponse.json({ error: "AI returned no data", raw: JSON.stringify(result) }, { status: 500 });
     }
 
-    return NextResponse.json(parsedData);
+    const cleanText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+    return NextResponse.json(JSON.parse(cleanText));
 
   } catch (error: any) {
-    console.error("Estimation Error:", error);
-    const message = error.name === 'AbortError' ? "Request Timeout after 58s" : (error.message || "An unexpected error occurred.");
-    const status = message.includes("Timeout") ? 504 : 500;
-    
-    return NextResponse.json(
-      { error: message },
-      { status: status }
-    );
+    console.error("CRITICAL ROUTE ERROR:", error);
+    return NextResponse.json({ error: error.message || "An unexpected error occurred." }, { status: 500 });
   }
 }
