@@ -285,7 +285,7 @@ function ContactContent({
         formData.append("estimateQuote", estimateQuote);
         formData.append("estimatePanes", estimatePanes || "0");
         formData.append("estimateTime", estimateTime || "N/A");
-        formData.append("estimateDetails", `3rd: ${estimateS3}, 2nd: ${estimateS2}, 1st: ${estimateS1}, Doors: ${estimateDoors}`);
+        formData.append("estimateDetails", `Rez-de-chaussée et sous-sol : ${estimateS1}, Deuxième étage : ${estimateS2}, Troisième étage : ${estimateS3}, Portes : ${estimateDoors}`);
         
         // Extended comparison
         formData.append("qExt", qExt || "N/A");

@@ -199,7 +199,7 @@ export async function POST(req: Request) {
       textLines.push(`OPTION 2 : Extérieur Seulement`);
       textLines.push(`Prix : $${qExt} | Temps : ${tExt}`);
       textLines.push("");
-      textLines.push(`Détails : ${estimateDetails}`);
+      textLines.push(`Détails des panneaux comptés : ${estimateDetails}`);
       textLines.push("---------------------------");
     }
 
@@ -248,7 +248,7 @@ export async function POST(req: Request) {
           </div>
 
           <p style="margin: 15px 0 0 0; font-size: 0.85em; color: #64748b; border-top: 1px solid #dcfce7; pt-10px;">
-            <strong>Détails :</strong> ${escapeHtml(estimateDetails)}
+            <strong>Détails des panneaux comptés :</strong> ${escapeHtml(estimateDetails)}
           </p>
         </div>
       `);
