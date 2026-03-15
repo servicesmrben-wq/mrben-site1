@@ -64,6 +64,7 @@ function ContactContent({
   const [status, setStatus] = useState({ state: "idle", message: "" });
 
   // Extract Estimate Params
+  const estimateRef = searchParams.get("ref");
   const estimateQuote = searchParams.get("quote");
   const estimatePanes = searchParams.get("panes");
   const estimateTime = searchParams.get("time");
@@ -274,6 +275,7 @@ function ContactContent({
       
       // Inject Estimate Data if present
       if (estimateQuote) {
+        formData.append("estimateRef", estimateRef || "");
         formData.append("estimateQuote", estimateQuote);
         formData.append("estimatePanes", estimatePanes || "0");
         formData.append("estimateTime", estimateTime || "N/A");

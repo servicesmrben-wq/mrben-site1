@@ -75,6 +75,7 @@ export async function POST(req: Request) {
     const honeypot = normalizeSingleLine(formData.get("company"));
 
     // Estimate Data
+    const estimateRef = normalizeSingleLine(formData.get("estimateRef"));
     const estimateQuote = normalizeSingleLine(formData.get("estimateQuote"));
     const estimatePanes = normalizeSingleLine(formData.get("estimatePanes"));
     const estimateTime = normalizeSingleLine(formData.get("estimateTime"));
@@ -165,18 +166,23 @@ export async function POST(req: Request) {
     ];
 
     if (estimateQuote) {
+      const displayService = selectedService === "Exterior Only" ? "Extérieur Seulement" : "Intérieur et Extérieur";
+      const driveSearchUrl = `https://drive.google.com/drive/search?q=${estimateRef}`;
+      
       textLines.push("");
-      textLines.push("--- AI ESTIMATE SUMMARY ---");
-      textLines.push(`USER SELECTED: ${selectedService}`);
-      textLines.push(`Total Panes: ${estimatePanes}`);
+      textLines.push("--- RÉSUMÉ DE L'ESTIMATION IA ---");
+      textLines.push(`RÉF ID : ${estimateRef}`);
+      textLines.push(`LIEN DRIVE : ${driveSearchUrl}`);
+      textLines.push(`SÉLECTION DE L'UTILISATEUR : ${displayService}`);
+      textLines.push(`Nombre total de vitres : ${estimatePanes}`);
       textLines.push("");
-      textLines.push(`OPTION 1: Inside & Out`);
-      textLines.push(`Price: $${qInOut} | Time: ${tInOut}`);
+      textLines.push(`OPTION 1 : Intérieur et Extérieur`);
+      textLines.push(`Prix : $${qInOut} | Temps : ${tInOut}`);
       textLines.push("");
-      textLines.push(`OPTION 2: Exterior Only`);
-      textLines.push(`Price: $${qExt} | Time: ${tExt}`);
+      textLines.push(`OPTION 2 : Extérieur Seulement`);
+      textLines.push(`Prix : $${qExt} | Temps : ${tExt}`);
       textLines.push("");
-      textLines.push(`Breakdown: ${estimateDetails}`);
+      textLines.push(`Détails : ${estimateDetails}`);
       textLines.push("---------------------------");
     }
 
@@ -199,27 +205,31 @@ export async function POST(req: Request) {
     ];
 
     if (estimateQuote) {
+      const displayService = selectedService === "Exterior Only" ? "Extérieur Seulement" : "Intérieur et Extérieur";
+      const driveSearchUrl = `https://drive.google.com/drive/search?q=${estimateRef}`;
+
       htmlLines.push(`
         <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: sans-serif;">
-          <h3 style="margin: 0 0 10px 0; color: #166534;">AI Estimate Summary</h3>
-          <p style="margin: 5px 0;"><strong>User Selected:</strong> <span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">${escapeHtml(selectedService)}</span></p>
-          <p style="margin: 5px 0;"><strong>Total Panes:</strong> ${escapeHtml(estimatePanes)}</p>
+          <h3 style="margin: 0 0 10px 0; color: #166534;">Résumé de l'estimation IA</h3>
+          <p style="margin: 5px 0;"><strong>Réf ID :</strong> <a href="${driveSearchUrl}" style="color: #166534; font-weight: bold; text-decoration: underline;">${escapeHtml(estimateRef)}</a> (Lien Drive)</p>
+          <p style="margin: 5px 0;"><strong>Sélection de l'utilisateur :</strong> <span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">${escapeHtml(displayService)}</span></p>
+          <p style="margin: 5px 0;"><strong>Nombre total de vitres :</strong> ${escapeHtml(estimatePanes)}</p>
           
-          <div style="margin-top: 15px; display: grid; grid-template-cols: 1fr 1fr; gap: 10px;">
+          <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-              <div style="font-weight: bold; font-size: 0.8em; color: #64748b; text-transform: uppercase;">Inside & Out</div>
+              <div style="font-weight: bold; font-size: 0.8em; color: #64748b; text-transform: uppercase;">Intérieur et Extérieur</div>
               <div style="font-size: 1.2em; font-weight: bold; color: #0f172a;">$${escapeHtml(qInOut)}</div>
-              <div style="font-size: 0.85em; color: #64748b;">Time: ${escapeHtml(tInOut)}</div>
+              <div style="font-size: 0.85em; color: #64748b;">Temps : ${escapeHtml(tInOut)}</div>
             </div>
             <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-              <div style="font-weight: bold; font-size: 0.8em; color: #64748b; text-transform: uppercase;">Exterior Only</div>
+              <div style="font-weight: bold; font-size: 0.8em; color: #64748b; text-transform: uppercase;">Extérieur Seulement</div>
               <div style="font-size: 1.2em; font-weight: bold; color: #0f172a;">$${escapeHtml(qExt)}</div>
-              <div style="font-size: 0.85em; color: #64748b;">Time: ${escapeHtml(tExt)}</div>
+              <div style="font-size: 0.85em; color: #64748b;">Temps : ${escapeHtml(tExt)}</div>
             </div>
           </div>
 
           <p style="margin: 15px 0 0 0; font-size: 0.85em; color: #64748b; border-top: 1px solid #dcfce7; pt-10px;">
-            <strong>Breakdown:</strong> ${escapeHtml(estimateDetails)}
+            <strong>Détails :</strong> ${escapeHtml(estimateDetails)}
           </p>
         </div>
       `);

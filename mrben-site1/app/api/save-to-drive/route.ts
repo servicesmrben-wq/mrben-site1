@@ -28,13 +28,45 @@ export async function POST(req: Request) {
     // Get Reference ID (Default to "NoRef" if missing)
     const referenceId = formData.get("referenceId")?.toString() || "NoRef";
 
+    // --- SUBFOLDER CREATION ---
+    // 1. Create or Find Subfolder for this Estimate
+    let subfolderId = folderId;
+    try {
+      const searchRes = await drive.files.list({
+        q: `name = '${referenceId}' and '${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+        fields: "files(id)",
+        supportsAllDrives: true,
+        includeItemsFromAllDrives: true,
+      });
+
+      if (searchRes.data.files && searchRes.data.files.length > 0) {
+        subfolderId = searchRes.data.files[0].id!;
+      } else {
+        const folderMetadata = {
+          name: referenceId,
+          mimeType: "application/vnd.google-apps.folder",
+          parents: [folderId],
+        };
+        const folder = await drive.files.create({
+          requestBody: folderMetadata,
+          fields: "id",
+          supportsAllDrives: true,
+        });
+        subfolderId = folder.data.id!;
+      }
+    } catch (err) {
+      console.error("Folder creation error:", err);
+      // Fallback to root folder if subfolder creation fails
+    }
+    // ---------------------------
+
     // 1. Handle Metadata (Estimate Breakdown)
     const metadata = formData.get("metadata");
     if (metadata && typeof metadata === "string") {
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const fileMetadata = {
         name: `${referenceId}_Estimate_${timestamp}.json`,
-        parents: [folderId],
+        parents: [subfolderId],
       };
       const media = {
         mimeType: "application/json",
@@ -65,7 +97,7 @@ export async function POST(req: Request) {
       // Prepend Reference ID to filename
       const fileMetadata = {
         name: `${referenceId}_${file.name}`,
-        parents: [folderId],
+        parents: [subfolderId],
       };
       const media = {
         mimeType: file.type,
@@ -83,7 +115,7 @@ export async function POST(req: Request) {
 
     await Promise.allSettled(uploadPromises);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, folderId: subfolderId });
 
   } catch (error) {
     console.error("Drive upload error:", error);

@@ -470,6 +470,7 @@ export default function EstimatorPage() {
                   href={{
                     pathname: "/", // Link to home page
                     query: {
+                      ref: referenceId,
                       quote: calculateTotalForMode(mode),
                       panes: getTotalPanes(),
                       time: formatHours(calculateMinutesForMode(mode)),
