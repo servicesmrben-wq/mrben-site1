@@ -419,11 +419,6 @@ export default function EstimatorPage() {
                     <CheckCircle2 className="h-4 w-4" />
                     {t("totalPanes", { count: getTotalPanes() })}
                   </div>
-
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
-                    <Loader2 className="h-4 w-4" />
-                    Estimated Time: {formatHours(calculateMinutesForMode(mode))}
-                  </div>
                 </div>
                 
                 <div className="mt-4 text-xs text-emerald-700">

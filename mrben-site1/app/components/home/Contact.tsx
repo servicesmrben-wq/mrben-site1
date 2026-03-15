@@ -454,7 +454,7 @@ function ContactContent({
                   <span className="text-sm font-bold">AI Estimated Total: ${estimateQuote}</span>
                 </div>
                 <div className="mt-1 text-xs text-emerald-600">
-                  {estimatePanes} panes • Estimated Time: {estimateTime}
+                  {estimatePanes} panes
                 </div>
               </div>
             )}
