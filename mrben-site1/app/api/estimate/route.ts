@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-export const maxDuration = 60; 
 export const runtime = "nodejs";
 
 // The URL of your newly deployed Cloud Run Microservice
@@ -38,8 +37,6 @@ export async function POST(req: Request) {
     const response = await fetch(CLOUD_RUN_API_URL, {
       method: "POST",
       body: backendFormData,
-      // Pass-through timeout signal to prevent hanging
-      signal: AbortSignal.timeout(55000) 
     });
 
     if (!response.ok) {
@@ -57,10 +54,6 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("Next.js Route Error:", error);
-    
-    if (error.name === 'TimeoutError') {
-      return NextResponse.json({ error: "Estimation took too long. Please try fewer photos." }, { status: 504 });
-    }
     
     return NextResponse.json({ error: "Failed to connect to estimator service." }, { status: 500 });
   }
