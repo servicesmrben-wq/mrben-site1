@@ -77,7 +77,15 @@ export async function POST(req: Request) {
     // Estimate Data
     const estimateQuote = normalizeSingleLine(formData.get("estimateQuote"));
     const estimatePanes = normalizeSingleLine(formData.get("estimatePanes"));
+    const estimateTime = normalizeSingleLine(formData.get("estimateTime"));
     const estimateDetails = normalizeSingleLine(formData.get("estimateDetails"));
+
+    // Extended comparison
+    const qExt = normalizeSingleLine(formData.get("qExt"));
+    const tExt = normalizeSingleLine(formData.get("tExt"));
+    const qInOut = normalizeSingleLine(formData.get("qInOut"));
+    const tInOut = normalizeSingleLine(formData.get("tInOut"));
+    const selectedService = normalizeSingleLine(formData.get("selectedService"));
 
     if (honeypot) {
       return new Response(JSON.stringify({ ok: false, error: "Invalid submission." }), {
@@ -159,8 +167,15 @@ export async function POST(req: Request) {
     if (estimateQuote) {
       textLines.push("");
       textLines.push("--- AI ESTIMATE SUMMARY ---");
-      textLines.push(`Estimated Total: $${estimateQuote}`);
+      textLines.push(`USER SELECTED: ${selectedService}`);
       textLines.push(`Total Panes: ${estimatePanes}`);
+      textLines.push("");
+      textLines.push(`OPTION 1: Inside & Out`);
+      textLines.push(`Price: $${qInOut} | Time: ${tInOut}`);
+      textLines.push("");
+      textLines.push(`OPTION 2: Exterior Only`);
+      textLines.push(`Price: $${qExt} | Time: ${tExt}`);
+      textLines.push("");
       textLines.push(`Breakdown: ${estimateDetails}`);
       textLines.push("---------------------------");
     }
@@ -185,11 +200,27 @@ export async function POST(req: Request) {
 
     if (estimateQuote) {
       htmlLines.push(`
-        <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin: 15px 0;">
+        <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: sans-serif;">
           <h3 style="margin: 0 0 10px 0; color: #166534;">AI Estimate Summary</h3>
-          <p style="margin: 5px 0;"><strong>Estimated Total:</strong> $${escapeHtml(estimateQuote)}</p>
+          <p style="margin: 5px 0;"><strong>User Selected:</strong> <span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">${escapeHtml(selectedService)}</span></p>
           <p style="margin: 5px 0;"><strong>Total Panes:</strong> ${escapeHtml(estimatePanes)}</p>
-          <p style="margin: 5px 0; font-size: 0.9em; color: #555;">${escapeHtml(estimateDetails)}</p>
+          
+          <div style="margin-top: 15px; display: grid; grid-template-cols: 1fr 1fr; gap: 10px;">
+            <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <div style="font-weight: bold; font-size: 0.8em; color: #64748b; text-transform: uppercase;">Inside & Out</div>
+              <div style="font-size: 1.2em; font-weight: bold; color: #0f172a;">$${escapeHtml(qInOut)}</div>
+              <div style="font-size: 0.85em; color: #64748b;">Time: ${escapeHtml(tInOut)}</div>
+            </div>
+            <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+              <div style="font-weight: bold; font-size: 0.8em; color: #64748b; text-transform: uppercase;">Exterior Only</div>
+              <div style="font-size: 1.2em; font-weight: bold; color: #0f172a;">$${escapeHtml(qExt)}</div>
+              <div style="font-size: 0.85em; color: #64748b;">Time: ${escapeHtml(tExt)}</div>
+            </div>
+          </div>
+
+          <p style="margin: 15px 0 0 0; font-size: 0.85em; color: #64748b; border-top: 1px solid #dcfce7; pt-10px;">
+            <strong>Breakdown:</strong> ${escapeHtml(estimateDetails)}
+          </p>
         </div>
       `);
     }

@@ -803,7 +803,7 @@
     "step2": "2. Select Service Type",
     "insideOut": "Inside & Out",
     "exteriorOnly": "Exterior Only",
-    "processing": "Processing {count} images...",
+    "processing": "Processing {count} images, estimated time {time}s...",
     "calculate": "Calculate Estimate",
     "poweredBy": "Powered by",
     "estimatedTotal": "Estimated Total",

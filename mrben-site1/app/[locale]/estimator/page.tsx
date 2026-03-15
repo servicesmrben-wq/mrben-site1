@@ -222,19 +222,23 @@ export default function EstimatorPage() {
     }
   };
 
-  const calculateTotal = () => {
-    if (!result || !result.window_counts) return "0.00";
+  const calculateMinutesForMode = (m: "ext" | "in_out") => {
+    if (!result || !result.window_counts) return 0;
     
     let totalMinutes = 0;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
       const item = PRICING_DATA[k];
       if (item && typeof count === "number") {
-        const unitMinutes = mode === "ext" ? item.minutes : item.minutes * 2;
+        const unitMinutes = m === "ext" ? item.minutes : item.minutes * 2;
         totalMinutes += unitMinutes * count;
       }
     });
+    return totalMinutes;
+  };
 
+  const calculateTotalForMode = (m: "ext" | "in_out") => {
+    const totalMinutes = calculateMinutesForMode(m);
     const windowCost = totalMinutes * RATE_PER_MINUTE;
     const SAFETY_BUFFER = 1.075; // 7.5% Markup
     let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
@@ -243,6 +247,11 @@ export default function EstimatorPage() {
     total = Math.round(total / 5) * 5;
 
     return total.toFixed(2);
+  };
+
+  const formatHours = (mins: number) => {
+    const h = mins / 60;
+    return h.toFixed(1) + "h";
   };
 
   const getTotalPanes = () => {
@@ -353,7 +362,7 @@ export default function EstimatorPage() {
               <div className="flex flex-col items-center w-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>{t("processing", { count: files.length })}</span>
+                  <span>{t("processing", { count: files.length, time: files.length * 10 + 5 })}</span>
                 </div>
                 {/* Progress Bar */}
                 <div className="h-1.5 w-full max-w-[200px] bg-zinc-700 rounded-full overflow-hidden">
@@ -402,28 +411,27 @@ export default function EstimatorPage() {
                 
                 <div className="text-sm font-medium text-emerald-800 uppercase tracking-wide">{t("estimatedTotal")}</div>
                 <div className="mt-1 text-4xl font-bold text-emerald-900">
-                  ${calculateTotal()}
+                  ${calculateTotalForMode(mode)}
                 </div>
                 
-                <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">
-                  <CheckCircle2 className="h-4 w-4" />
-                  {t("totalPanes", { count: getTotalPanes() })}
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">
+                    <CheckCircle2 className="h-4 w-4" />
+                    {t("totalPanes", { count: getTotalPanes() })}
+                  </div>
+
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
+                    <Loader2 className="h-4 w-4" />
+                    Estimated Time: {formatHours(calculateMinutesForMode(mode))}
+                  </div>
                 </div>
                 
-                <div className="mt-3 text-xs text-emerald-700">
+                <div className="mt-4 text-xs text-emerald-700">
                   {t("ref")} <span className="font-mono font-bold">{referenceId}</span> • {t("disclaimer")}
                 </div>
               </div>
 
               <div className="mt-8 border-t border-zinc-100 pt-6">
-                              {/* 
-                              {result.analysis && (
-                                <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4">
-                                  <div className="text-xs font-semibold uppercase text-blue-700 mb-2">AI Analysis Log</div>
-                                  <p className="text-sm text-blue-900 whitespace-pre-wrap leading-relaxed">{result.analysis}</p>
-                                </div>
-                              )} 
-                              */}
                 
                               <div className="space-y-3">                  <div className="text-sm font-semibold text-zinc-900">{t("breakdown")}</div>
                   
@@ -452,9 +460,8 @@ export default function EstimatorPage() {
                           <div className="text-xs text-zinc-500">{item.desc}</div>
                         </div>
                                               <div className="flex items-center gap-4">
-                                                <div className="text-sm text-zinc-600">{c}x</div>
                                                 <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
-                                                  ${(c * (mode === "ext" ? item.minutes : item.minutes * 2) * RATE_PER_MINUTE).toFixed(2)}
+                                                  {c}x
                                                 </div>
                                               </div>                      </div>
                     );
@@ -468,8 +475,15 @@ export default function EstimatorPage() {
                   href={{
                     pathname: "/", // Link to home page
                     query: {
-                      quote: calculateTotal(),
+                      quote: calculateTotalForMode(mode),
                       panes: getTotalPanes(),
+                      time: formatHours(calculateMinutesForMode(mode)),
+                      // Include both for the email/tag
+                      q_ext: calculateTotalForMode("ext"),
+                      t_ext: formatHours(calculateMinutesForMode("ext")),
+                      q_inout: calculateTotalForMode("in_out"),
+                      t_inout: formatHours(calculateMinutesForMode("in_out")),
+                      
                       s3: result.window_counts.pane_3rd_story,
                       s2: result.window_counts.pane_2nd_story,
                       s1: result.window_counts.pane_1st_base,

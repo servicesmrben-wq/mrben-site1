@@ -5,7 +5,10 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, referenceId, service } = await req.json();
+    const { 
+      name, email, phone, referenceId, service, 
+      qExt, tExt, qInOut, tInOut 
+    } = await req.json();
 
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
     const rawKey = process.env.DRIVE_PRIVATE_KEY || "";
@@ -29,7 +32,11 @@ export async function POST(req: Request) {
 Reference ID: ${referenceId}
 Date: ${new Date().toLocaleString()}
 
-Service Type: ${service || "N/A"}
+User Selected: ${service || "N/A"}
+
+AI ESTIMATES:
+1. Inside & Out:  $${qInOut || "N/A"} (${tInOut || "N/A"})
+2. Exterior Only: $${qExt || "N/A"} (${tExt || "N/A"})
 
 Name: ${name}
 Email: ${email}

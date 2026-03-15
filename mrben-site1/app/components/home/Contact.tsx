@@ -66,6 +66,14 @@ function ContactContent({
   // Extract Estimate Params
   const estimateQuote = searchParams.get("quote");
   const estimatePanes = searchParams.get("panes");
+  const estimateTime = searchParams.get("time");
+  
+  // Extended comparison params
+  const qExt = searchParams.get("q_ext");
+  const tExt = searchParams.get("t_ext");
+  const qInOut = searchParams.get("q_inout");
+  const tInOut = searchParams.get("t_inout");
+
   const estimateS3 = searchParams.get("s3");
   const estimateS2 = searchParams.get("s2");
   const estimateS1 = searchParams.get("s1");
@@ -268,7 +276,15 @@ function ContactContent({
       if (estimateQuote) {
         formData.append("estimateQuote", estimateQuote);
         formData.append("estimatePanes", estimatePanes || "0");
+        formData.append("estimateTime", estimateTime || "N/A");
         formData.append("estimateDetails", `3rd: ${estimateS3}, 2nd: ${estimateS2}, 1st: ${estimateS1}, Doors: ${estimateDoors}`);
+        
+        // Extended comparison
+        formData.append("qExt", qExt || "N/A");
+        formData.append("tExt", tExt || "N/A");
+        formData.append("qInOut", qInOut || "N/A");
+        formData.append("tInOut", tInOut || "N/A");
+        formData.append("selectedService", urlService || "N/A");
       }
       
       if (useBlobBackup) {
@@ -311,7 +327,11 @@ function ContactContent({
           email: form.email,
           phone: form.phone,
           referenceId: `LEAD-${Date.now()}`,
-          service: services.length ? services.join(", ") : "(none selected)"
+          service: urlService || (services.length ? services.join(", ") : "(none selected)"),
+          qExt,
+          tExt,
+          qInOut,
+          tInOut
         };
         await fetch("/api/save-lead-to-drive", {
            method: "POST",
@@ -434,7 +454,7 @@ function ContactContent({
                   <span className="text-sm font-bold">AI Estimated Total: ${estimateQuote}</span>
                 </div>
                 <div className="mt-1 text-xs text-emerald-600">
-                  Includes {estimatePanes} panes + $60 base fee.
+                  {estimatePanes} panes • Estimated Time: {estimateTime}
                 </div>
               </div>
             )}
