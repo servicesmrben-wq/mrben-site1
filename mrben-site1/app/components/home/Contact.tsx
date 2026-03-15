@@ -297,6 +297,7 @@ function ContactContent({
         // Pricing metrics
         formData.append("hourlyRate", hourlyRate || "N/A");
         formData.append("markup", markup || "N/A");
+        formData.append("serviceFee", serviceFee || "N/A");
       }
       
       if (useBlobBackup) {
