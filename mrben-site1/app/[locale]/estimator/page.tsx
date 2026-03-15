@@ -499,6 +499,7 @@ export default function EstimatorPage() {
                       // Include hidden pricing metrics for the email
                       hr: RATE_PER_MINUTE * 60,
                       markup: "7.5%",
+                      fee: BASE_FEE,
                       
                       s3: result.window_counts.pane_3rd_story,
                       s2: result.window_counts.pane_2nd_story,

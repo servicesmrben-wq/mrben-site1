@@ -78,6 +78,7 @@ function ContactContent({
   // Pricing metrics
   const hourlyRate = searchParams.get("hr");
   const markup = searchParams.get("markup");
+  const serviceFee = searchParams.get("fee");
 
   const estimateS3 = searchParams.get("s3");
 

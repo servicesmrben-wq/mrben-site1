@@ -91,6 +91,7 @@ export async function POST(req: Request) {
     // Pricing metrics
     const hourlyRate = normalizeSingleLine(formData.get("hourlyRate"));
     const markup = normalizeSingleLine(formData.get("markup"));
+    const serviceFee = normalizeSingleLine(formData.get("serviceFee"));
 
     if (honeypot) {
       return new Response(JSON.stringify({ ok: false, error: "Invalid submission." }), {
@@ -179,7 +180,7 @@ export async function POST(req: Request) {
       textLines.push(`LIEN DRIVE : ${driveSearchUrl} (<-Cliquez ici, GoogleDrive Photos Client)`);
       textLines.push(`SÉLECTION DE L'UTILISATEUR : ${displayService}`);
       textLines.push(`Nombre total de panneaux vitrés : ${estimatePanes}`);
-      textLines.push(`Métrique : ${hourlyRate}$/heure | Marge : +${markup}`);
+      textLines.push(`Métrique : ${hourlyRate}$/heure | Marge : +${markup} | Frais de service et déplacement : ${serviceFee}$`);
       textLines.push("");
       textLines.push(`OPTION 1 : Intérieur et Extérieur`);
       textLines.push(`Prix : $${qInOut} | Temps : ${tInOut}`);
@@ -219,7 +220,7 @@ export async function POST(req: Request) {
           <p style="margin: 5px 0;"><strong>Réf ID :</strong> <a href="${driveSearchUrl}" style="color: #166534; font-weight: bold; text-decoration: underline;">${escapeHtml(estimateRef)}</a> (<-Cliquez ici, GoogleDrive Photos Client)</p>
           <p style="margin: 5px 0;"><strong>Sélection de l'utilisateur :</strong> <span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">${escapeHtml(displayService)}</span></p>
           <p style="margin: 5px 0;"><strong>Nombre total de panneaux vitrés :</strong> ${escapeHtml(estimatePanes)}</p>
-          <p style="margin: 5px 0; font-size: 0.85em; color: #64748b;"><strong>Métrique :</strong> ${escapeHtml(hourlyRate)}$/heure | <strong>Marge :</strong> +${escapeHtml(markup)}</p>
+          <p style="margin: 5px 0; font-size: 0.85em; color: #64748b;"><strong>Métrique :</strong> ${escapeHtml(hourlyRate)}$/heure | <strong>Marge :</strong> +${escapeHtml(markup)} | <strong>Frais de service et déplacement :</strong> ${escapeHtml(serviceFee)}$</p>
           
           <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
