@@ -1,0 +1,10 @@
+{
+  "rates": {
+    "hourly_rate": 120,
+    "minutes_per_pane": 2,
+    "minutes_per_patio_door": 5,
+    "travel_fee": 0,
+    "minimum_job_price": 120
+  },
+  "rounding": 5
+}
