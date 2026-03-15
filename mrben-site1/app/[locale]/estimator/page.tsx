@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link"; // Ensure Link is imported
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
@@ -14,11 +14,13 @@ export default function EstimatorPage() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [mode, setMode] = useState<"ext" | "in_out">("in_out");
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   
-  // Tracking
+  // Refs
+  const resultsRef = useRef<HTMLDivElement>(null);
   const [referenceId, setReferenceId] = useState("");
 
   // Clean up object URLs
@@ -83,7 +85,9 @@ export default function EstimatorPage() {
 
     // Smart Progress Logic
     // Single API call with all images — estimate ~10s per image
-    const estimatedWaitTimeMs = files.length * 10000 + 5000; 
+    const seconds = files.length * 10 + 5;
+    const estimatedWaitTimeMs = seconds * 1000; 
+    setTimeLeft(seconds);
     const startTime = Date.now();
     
     const progressInterval = setInterval(() => {
@@ -91,6 +95,10 @@ export default function EstimatorPage() {
       const calculatedProgress = Math.min((elapsed / estimatedWaitTimeMs) * 100, 95); 
       setProgress(calculatedProgress);
     }, 200);
+
+    const countdownInterval = setInterval(() => {
+      setTimeLeft(prev => Math.max(prev - 1, 0));
+    }, 1000);
 
     try {
       // Compress images to avoid payload limits
@@ -218,9 +226,17 @@ export default function EstimatorPage() {
       setProgress(0);
     } finally {
       clearInterval(progressInterval);
+      clearInterval(countdownInterval);
       setIsProcessing(false);
     }
   };
+
+  // Scroll into view when result is ready
+  useEffect(() => {
+    if (result) {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [result]);
 
   const calculateMinutesForMode = (m: "ext" | "in_out") => {
     if (!result || !result.window_counts) return 0;
@@ -362,7 +378,7 @@ export default function EstimatorPage() {
               <div className="flex flex-col items-center w-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>{t("processing", { count: files.length, time: files.length * 10 + 5 })}</span>
+                  <span>{t("processing", { count: files.length, time: timeLeft })}</span>
                 </div>
                 {/* Progress Bar */}
                 <div className="h-1.5 w-full max-w-[200px] bg-zinc-700 rounded-full overflow-hidden">
@@ -406,7 +422,7 @@ export default function EstimatorPage() {
 
           {/* Results Section */}
           {result && (
-            <div className="mt-8 animate-in fade-in slide-in-from-bottom-4">
+            <div ref={resultsRef} className="mt-8 animate-in fade-in slide-in-from-bottom-4">
               <div className="mb-6 rounded-2xl bg-emerald-50 p-6 text-center border border-emerald-100">
                 
                 <div className="text-sm font-medium text-emerald-800 uppercase tracking-wide">{t("estimatedTotal")}</div>
