@@ -72,7 +72,7 @@ function ContactContent({
   // Extended comparison params
   const qExt = searchParams.get("q_ext");
   const tExt = searchParams.get("t_ext");
-  const qInOut = searchParams.get("t_inout");
+  const qInOut = searchParams.get("q_inout");
   const tInOut = searchParams.get("t_inout");
 
   // Pricing metrics
@@ -342,7 +342,9 @@ function ContactContent({
           qExt,
           tExt,
           qInOut,
-          tInOut
+          tInOut,
+          hourlyRate,
+          markup
         };
         await fetch("/api/save-lead-to-drive", {
            method: "POST",

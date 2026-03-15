@@ -7,7 +7,8 @@ export async function POST(req: Request) {
   try {
     const { 
       name, email, phone, referenceId, service, 
-      qExt, tExt, qInOut, tInOut 
+      qExt, tExt, qInOut, tInOut,
+      hourlyRate, markup 
     } = await req.json();
 
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
@@ -37,6 +38,10 @@ User Selected: ${service || "N/A"}
 AI ESTIMATES:
 1. Inside & Out:  $${qInOut || "N/A"} (${tInOut || "N/A"})
 2. Exterior Only: $${qExt || "N/A"} (${tExt || "N/A"})
+
+Internal Metrics:
+Métrique: ${hourlyRate || "N/A"}$/heure
+Marge: +${markup || "N/A"}
 
 Name: ${name}
 Email: ${email}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link"; // Ensure Link is imported
+import { Link } from "@/navigation"; 
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 import imageCompression from "browser-image-compression";
