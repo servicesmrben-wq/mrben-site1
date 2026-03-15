@@ -1,4 +1,4 @@
-export const BASE_HOURLY_RATE = 120; // $120 per hour
+export const BASE_HOURLY_RATE = 115; // $115 per hour
 export const RATE_PER_MINUTE = BASE_HOURLY_RATE / 60;
 
 export const PRICING_DATA = {

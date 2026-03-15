@@ -72,10 +72,15 @@ function ContactContent({
   // Extended comparison params
   const qExt = searchParams.get("q_ext");
   const tExt = searchParams.get("t_ext");
-  const qInOut = searchParams.get("q_inout");
+  const qInOut = searchParams.get("t_inout");
   const tInOut = searchParams.get("t_inout");
 
+  // Pricing metrics
+  const hourlyRate = searchParams.get("hr");
+  const markup = searchParams.get("markup");
+
   const estimateS3 = searchParams.get("s3");
+
   const estimateS2 = searchParams.get("s2");
   const estimateS1 = searchParams.get("s1");
   const estimateDoors = searchParams.get("doors");
@@ -287,6 +292,10 @@ function ContactContent({
         formData.append("qInOut", qInOut || "N/A");
         formData.append("tInOut", tInOut || "N/A");
         formData.append("selectedService", urlService || "N/A");
+        
+        // Pricing metrics
+        formData.append("hourlyRate", hourlyRate || "N/A");
+        formData.append("markup", markup || "N/A");
       }
       
       if (useBlobBackup) {
