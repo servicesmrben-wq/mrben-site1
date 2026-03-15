@@ -170,6 +170,17 @@ export async function POST(req: Request) {
       `SERVICES : ${servicesLabel}`
     ];
 
+    textLines.push("");
+    textLines.push("MESSAGE :");
+    textLines.push(safeMessage);
+
+    textLines.push("");
+    if (imageUrls.length > 0) {
+      textLines.push("PHOTOS (LIENS) :");
+      textLines.push(...imageUrls);
+      textLines.push("");
+    }
+
     if (estimateQuote) {
       const displayService = selectedService === "Exterior Only" ? "Extérieur Seulement" : "Intérieur et Extérieur";
       const driveSearchUrl = `https://drive.google.com/drive/search?q=${estimateRef}`;
@@ -192,15 +203,6 @@ export async function POST(req: Request) {
       textLines.push("---------------------------");
     }
 
-    textLines.push("");
-    if (imageUrls.length > 0) {
-      textLines.push("PHOTOS (LIENS) :");
-      textLines.push(...imageUrls);
-      textLines.push("");
-    }
-    textLines.push("MESSAGE :");
-    textLines.push(safeMessage);
-
     // Construct HTML Body
     const htmlLines = [
       `<p><strong>NOM :</strong> ${escapeHtml(name)}</p>`,
@@ -209,6 +211,16 @@ export async function POST(req: Request) {
       `<p><strong>ADRESSE :</strong> ${escapeHtml(addressLabel)}</p>`,
       `<p><strong>SERVICES :</strong> ${escapeHtml(servicesLabel)}</p>`,
     ];
+
+    htmlLines.push(`<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`);
+
+    if (imageUrls.length > 0) {
+      htmlLines.push(`<p><strong>PHOTOS (LIENS) :</strong></p><ul>`);
+      imageUrls.forEach((url) => {
+        htmlLines.push(`<li><a href="${url}">${url}</a></li>`);
+      });
+      htmlLines.push(`</ul>`);
+    }
 
     if (estimateQuote) {
       const displayService = selectedService === "Exterior Only" ? "Extérieur Seulement" : "Intérieur et Extérieur";
@@ -241,16 +253,6 @@ export async function POST(req: Request) {
         </div>
       `);
     }
-
-    if (imageUrls.length > 0) {
-      htmlLines.push(`<p><strong>PHOTOS (LIENS) :</strong></p><ul>`);
-      imageUrls.forEach((url) => {
-        htmlLines.push(`<li><a href="${url}">${url}</a></li>`);
-      });
-      htmlLines.push(`</ul>`);
-    }
-
-    htmlLines.push(`<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`);
 
     const attachments = await Promise.all(
       files.map(async (file) => {
