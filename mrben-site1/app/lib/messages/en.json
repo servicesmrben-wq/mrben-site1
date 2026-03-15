@@ -1,0 +1,824 @@
+{
+  "home": {
+    "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Sauveur, Saint-Jérôme, and Mirabel.",
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "0": {
+          "q": "Do you clean interior and exterior windows?",
+          "a": "Yes. We provide interior and exterior window cleaning for houses, condos, and commercial buildings."
+        },
+        "1": {
+          "q": "What areas do you serve?",
+          "a": "We are a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Sauveur, Saint-Jérôme, and Mirabel."
+        },
+        "2": {
+          "q": "Do you offer residential and commercial services?",
+          "a": "Yes. We provide residential and commercial window cleaning services."
+        },
+        "3": {
+          "q": "Does the service include screens?",
+          "a": "Yes. Window cleaning can include screens depending on the selected service."
+        },
+        "4": {
+          "q": "What affects the price of window cleaning?",
+          "a": "Pricing depends on the number of windows, access, soil level, and the type of building."
+        }
+      }
+    },
+    "jsonld": {
+      "localBusiness": {
+        "description": "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across the Laurentides, including Lachute, Saint-Jérôme, and Mirabel."
+      }
+    }
+  },
+  "common": {
+    "getQuote": "Get Your Free Quote"
+  },
+  "windowCleaning": {
+    "metaTitle": "Window Cleaning Services in the Laurentians | Mr. Ben",
+    "metaDescription": "Mr. Ben offers professional residential and commercial window cleaning across the Laurentides areas. Interior & exterior panes, screens, and frames included with a streak-free guarantee. Get your free quote today!",
+    "heroKicker": "Window Cleaning Service",
+    "heroTitle": "Super-Clear Window Cleaning in the Laurentians",
+    "heroSubtitle": "Streak-free results, reliable professionals, and a 100% satisfaction guarantee.",
+    "heroCTA": "Get Your Free Quote",
+    "sourceOfTruth": "MrBen offers window cleaning for residential and commercial properties in the Laurentians, including Lachute, Saint-Jérôme, Mirabel, and Blainville.",
+    "heroImageAlt": "MrBen technician washing exterior windows on a residential home",
+    "heroCtaNote": "Fast response • No obligation",
+    "heroTrust1": "5-Star Rated",
+    "heroTrust2": "10+ Years in Business",
+    "heroTrust3": "Fully Insured",
+    "whyUsTitle": "Why Choose Mr. Ben?",
+    "whyUsSubtitle": "Local experts who show up on time, respect your property, and deliver spotless results.",
+    "whyUs": {
+      "point1": {
+        "title": "Fully Insured & Bonded",
+        "desc": "Our team is fully insured and bonded, so your home and property are protected at every visit."
+      },
+      "point2": {
+        "title": "100% Satisfaction Guarantee",
+        "desc": "We are not done until you are thrilled. If something is missed, we will make it right."
+      },
+      "point3": {
+        "title": "Eco-Friendly Cleaning",
+        "desc": "We use biodegradable, streak-free solutions that are safe for families, pets, and gardens."
+      },
+      "point4": {
+        "title": "On-Time, Professional Service",
+        "desc": "Clear communication, tidy work areas, and punctual arrivals so your day stays on schedule."
+      }
+    },
+    "processTitle": "Our Window Cleaning Process",
+    "processSubtitle": "A detailed, step-by-step approach to leave every pane sparkling and your space protected.",
+    "process": {
+      "step1": {
+        "title": "Inspect & Prepare",
+        "desc": "We assess your windows, note any problem areas, and if needed protect nearby surfaces before cleaning begins."
+      },
+      "step2": {
+        "title": "Professional Cleaning",
+        "desc": "Each pane is washed and squeegeed using streak-free techniques and eco-friendly products."
+      },
+      "step3": {
+        "title": "Frames & Screens",
+        "desc": "We wipe frames, sills, and clean screens to remove dust, cobwebs, and buildup."
+      },
+      "step4": {
+        "title": "Final Touch & Review",
+        "desc": "A final walk-through ensures every window is crystal clear and meets your expectations."
+      },
+      "includedTitle": "What’s Included",
+      "included1": "Interior & exterior window cleaning",
+      "included2": "Frame and sill wipe-down",
+      "included3": "Screen cleaning and dust removal",
+      "included4": "Cobweb and debris removal around panes",
+      "included5": "Post-service walkthrough for quality"
+    },
+    "stats": {
+      "title": "Our Track Record",
+      "years": {
+        "title": "10+ Years",
+        "desc": "Serving the community since 2007."
+      },
+      "windows": {
+        "title": "500,000+ Windows",
+        "desc": "Professionally cleaned by our team."
+      },
+      "rating": {
+        "title": "5-Star Rated",
+        "desc": "Average customer rating across reviews."
+      },
+      "guarantee": {
+        "title": "Insured, careful workmanship",
+        "desc": "We’re fully insured and work carefully on every property. If something isn’t right, we’ll make it right quickly."
+      }
+    },
+    "testimonials": {
+      "title": "What Our Customers Are Saying",
+      "quote1": {
+        "text": "The team was fantastic! They arrived on time, did an amazing job, and my windows are sparkling clean. I highly recommend Mr. Ben!",
+        "author": "Jane D., Laval",
+        "photoAlt": "Customer Jane D."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "0": {
+          "q": "How often should windows be cleaned?",
+          "a": "For most homes, 2–4 times per year is ideal. Spring removes salt, dust, and pollen; fall prepares for the cold season. We can recommend a frequency based on exposure (busy road, trees, waterfront)."
+        },
+        "1": {
+          "q": "Do you do interior and exterior window cleaning?",
+          "a": "Yes. We offer exterior and interior cleaning, including frames and sills when needed. You can also choose exterior-only if you prefer."
+        },
+        "2": {
+          "q": "Do I need to be home during the service?",
+          "a": "Not always. For exterior-only work, we can often clean without you being home if access is clear. For interior cleaning, someone must be present to provide access."
+        },
+        "3": {
+          "q": "What if the weather is uncertain?",
+          "a": "We monitor the forecast closely. Light rain doesn’t always prevent exterior cleaning, but if conditions are unfavorable we will reschedule quickly."
+        },
+        "4": {
+          "q": "How do you estimate the price?",
+          "a": "Pricing depends on the number and type of windows, access, and how dirty they are. We can often provide a quick estimate from a few exterior photos, then confirm on site if needed."
+        },
+        "5": {
+          "q": "Are you insured and equipped for height work?",
+          "a": "Yes. We are insured and use safe methods and equipment (ladders, poles, and the right approach) based on the property layout."
+        }
+      }
+    },
+    "serviceAreas": {
+      "title": "Service Areas",
+      "lead": "Serving:",
+      "conjunction": "and",
+      "outro": "surrounding communities.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Ready to see your windows sparkle?",
+      "subtitle": "Contact us today for your free quote and let us brighten your view!"
+    },
+    "jsonld": {
+      "service": {
+        "name": "Residential and commercial window cleaning",
+        "description": "Professional window cleaning service across the Laurentians, including interior and exterior glass, frames, and screens for a streak-free finish."
+      }
+    }
+  },
+  "gutterCleaning": {
+    "metaTitle": "Gutter Cleaning Services in the Laurentians | Mr. Ben",
+    "metaDescription": "Professional gutter cleaning in Lachute, Saint-Jérôme, and Mirabel. Debris removal, downspout flushing, and roof protection. Fully insured. Get a free quote!",
+    "heroKicker": "Gutter Cleaning Service",
+    "heroTitle": "Protect Your Home from Water Damage",
+    "heroSubtitle": "Complete debris removal and downspout flushing for proper drainage.",
+    "heroCTA": "Get Your Free Quote",
+    "sourceOfTruth": "MrBen provides thorough gutter cleaning services across the Laurentians to prevent water damage and protect your foundation.",
+    "heroImageAlt": "Technician removing leaves from gutters on a residential home",
+    "heroCtaNote": "Fast response • No obligation",
+    "heroTrust1": "Debris Removal",
+    "heroTrust2": "Flow Check",
+    "heroTrust3": "Fully Insured",
+    "whyUsTitle": "Why Choose Mr. Ben for Gutters?",
+    "whyUsSubtitle": "We do the dangerous work so you don't have to. Safe, clean, and effective.",
+    "whyUs": {
+      "point1": {
+        "title": "Safety First",
+        "desc": "We use stabilizers and safety gear to access high gutters without risking injury or damage."
+      },
+      "point2": {
+        "title": "No Mess Left Behind",
+        "desc": "We bag and remove all debris. Your lawn and walkways will be cleaner than when we arrived."
+      },
+      "point3": {
+        "title": "Downspout Flush",
+        "desc": "Cleaning the gutter isn't enough; we ensure the water actually flows down and away."
+      },
+      "point4": {
+        "title": "Preventative Inspection",
+        "desc": "We alert you to any loose spikes, rust, or roof issues we spot while up there."
+      }
+    },
+    "processTitle": "Our Gutter Cleaning Process",
+    "processSubtitle": "A systematic approach to ensure your drainage system works perfectly.",
+    "process": {
+      "step1": {
+        "title": "Debris Removal",
+        "desc": "We manually remove leaves, twigs, and sludge from all troughs."
+      },
+      "step2": {
+        "title": "Downspout Clearing",
+        "desc": "We check and flush downspouts to ensure there are no hidden clogs."
+      },
+      "step3": {
+        "title": "Flow Test",
+        "desc": "We run water through the system to verify proper drainage and flow."
+      },
+      "step4": {
+        "title": "Site Cleanup",
+        "desc": "We collect all debris and rinse any splashes off the siding or ground."
+      },
+      "includedTitle": "What’s Included",
+      "included1": "Removal of all debris from gutters",
+      "included2": "Downspout flushing & clog removal",
+      "included3": "Bagging & disposal of waste",
+      "included4": "Basic inspection of gutter condition",
+      "included5": "Cleanup of ground area"
+    },
+    "stats": {
+      "title": "Why It Matters",
+      "years": {
+        "title": "Prevent Leaks",
+        "desc": "Clogged gutters cause roof leaks."
+      },
+      "windows": {
+        "title": "Foundation Safety",
+        "desc": "Overflow damages your foundation."
+      },
+      "rating": {
+        "title": "Pest Control",
+        "desc": "Wet leaves attract mosquitoes."
+      },
+      "guarantee": {
+        "title": "Ice Dam Prevention",
+        "desc": "Clean gutters reduce winter ice dams."
+      }
+    },
+    "testimonials": {
+      "title": "Satisfied Customers",
+      "quote1": {
+        "text": "My gutters were overflowing like waterfalls. Mr. Ben cleaned them out and now everything drains perfectly. Super clean job!",
+        "author": "Mark S., Saint-Sauveur",
+        "photoAlt": "Customer Mark S."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "0": {
+          "q": "How often should gutters be cleaned?",
+          "a": "At least twice a year: late spring (after seeds fall) and late fall (after leaves fall)."
+        },
+        "1": {
+          "q": "Do you clean the downspouts?",
+          "a": "Yes! A clean gutter is useless if the pipe is clogged. We flush them to ensure flow."
+        },
+        "2": {
+          "q": "Do I need to be home?",
+          "a": "No, as long as we have access to the water tap and the perimeter of the house."
+        },
+        "3": {
+          "q": "Do you repair broken gutters?",
+          "a": "We can re-secure loose spikes, but we focus on cleaning. For major repairs, we can refer a specialist."
+        },
+        "4": {
+          "q": "Is it messy?",
+          "a": "No. We hand-scoop the debris into bags. We don't blow leaves all over your yard."
+        },
+        "5": {
+          "q": "What about gutter guards?",
+          "a": "If you have guards, we can brush the tops off. If they need to be removed to clean inside, there may be an extra charge."
+        }
+      }
+    },
+    "serviceAreas": {
+      "title": "Service Areas",
+      "lead": "Serving:",
+      "conjunction": "and",
+      "outro": "surrounding communities.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Ready for rain?",
+      "subtitle": "Book your gutter cleaning today and protect your home from water damage."
+    },
+    "jsonld": {
+      "service": {
+        "name": "Residential Gutter Cleaning",
+        "description": "Professional gutter cleaning service including debris removal, downspout flushing, and site cleanup."
+      }
+    }
+  },
+  "sidingCleaning": {
+    "metaTitle": "Siding Cleaning Services | Restore Your Home's Look | Mr. Ben",
+    "metaDescription": "Safe and effective siding cleaning in the Laurentians. Remove mold, algae, and road dust from vinyl, aluminum, and wood. Get a free quote!",
+    "heroKicker": "Exterior Siding Cleaning",
+    "heroTitle": "Reveal Your Home’s True Color",
+    "heroSubtitle": "Gentle, effective cleaning to remove grime, algae, and years of buildup.",
+    "heroCTA": "Get Your Free Quote",
+    "sourceOfTruth": "MrBen offers siding cleaning services to restore the curb appeal of homes in Lachute, Mirabel, and Saint-Jérôme.",
+    "heroImageAlt": "Technician washing vinyl siding on a white house",
+    "heroCtaNote": "Fast response • No obligation",
+    "heroTrust1": "Safe Methods",
+    "heroTrust2": "Boosts Value",
+    "heroTrust3": "Fully Insured",
+    "whyUsTitle": "Why Wash Your Siding?",
+    "whyUsSubtitle": "It’s not just about looks; it’s about protecting your investment from long-term damage.",
+    "whyUs": {
+      "point1": {
+        "title": "Prevent Damage",
+        "desc": "Mold and algae can eat away at surfaces over time. Cleaning extends the life of your siding."
+      },
+      "point2": {
+        "title": "Instant Curb Appeal",
+        "desc": "A clean exterior makes your home look 5-10 years newer instantly."
+      },
+      "point3": {
+        "title": "Safe Techniques",
+        "desc": "We use the right pressure and solutions for your specific material (vinyl, aluminum, or wood)."
+      },
+      "point4": {
+        "title": "Concrete & Decks",
+        "desc": "We can also refresh driveways, walkways, and patios while we are there."
+      }
+    },
+    "processTitle": "Our Exterior Cleaning Approach",
+    "processSubtitle": "We treat your home like our own, using safe and effective methods.",
+    "process": {
+      "step1": {
+        "title": "Assessment",
+        "desc": "We identify the material type and the nature of the stains (organic vs. traffic)."
+      },
+      "step2": {
+        "title": "Preparation",
+        "desc": "We protect delicate plants and ensure windows are closed tight."
+      },
+      "step3": {
+        "title": "Application",
+        "desc": "We apply a specialized cleaning solution to lift dirt and kill organic growth."
+      },
+      "step4": {
+        "title": "Rinse & Review",
+        "desc": "A thorough rinse leaves your home looking fresh and spotless."
+      },
+      "includedTitle": "Surfaces We Clean",
+      "included1": "Vinyl & Aluminum Siding",
+      "included2": "Wood & Composite Decks",
+      "included3": "Concrete Driveways & Walkways",
+      "included4": "Patios & Pavers",
+      "included5": "Fences & Railings"
+    },
+    "stats": {
+      "title": "The Benefits",
+      "years": {
+        "title": "Higher Value",
+        "desc": "Clean homes appraise higher."
+      },
+      "windows": {
+        "title": "Healthier Home",
+        "desc": "Remove mold spores and pollen."
+      },
+      "rating": {
+        "title": "Longer Life",
+        "desc": "Protect paint and materials."
+      },
+      "guarantee": {
+        "title": "Satisfaction",
+        "desc": "We stand behind our results."
+      }
+    },
+    "testimonials": {
+      "title": "Satisfied Customers",
+      "quote1": {
+        "text": "I thought I needed to repaint my house, but Mr. Ben washed it and it looks brand new! Saved me thousands.",
+        "author": "Pierre L., Mirabel",
+        "photoAlt": "Customer Pierre L."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "0": {
+          "q": "Will high pressure damage my siding?",
+          "a": "We adjust the pressure based on the material. For most siding, we use a 'soft wash' technique that relies on cleaning solutions rather than brute force."
+        },
+        "1": {
+          "q": "Does this include window cleaning?",
+          "a": "Exterior cleaning often splashes windows. We recommend booking a window cleaning service immediately after for a perfect finish."
+        },
+        "2": {
+          "q": "Can you remove oil stains from driveways?",
+          "a": "We can significantly lighten them, though old, deep oil stains are sometimes permanent. We'll give you an honest assessment."
+        },
+        "3": {
+          "q": "Do I need to be home?",
+          "a": "No, as long as we have access to a water source and all windows are closed."
+        },
+        "4": {
+          "q": "Is your soap safe for plants?",
+          "a": "Yes. We pre-soak plants with water and rinse them thoroughly afterward to dilute any runoff."
+        },
+        "5": {
+          "q": "How often should I wash my house?",
+          "a": "Usually every 1-2 years, depending on tree cover and humidity."
+        }
+      }
+    },
+    "serviceAreas": {
+      "title": "Service Areas",
+      "lead": "Serving:",
+      "conjunction": "and",
+      "outro": "surrounding communities.",
+      "cities": {
+        "lachute": "Lachute",
+        "saintJerome": "Saint-Jérôme",
+        "saintSauveur": "Saint-Sauveur",
+        "mirabel": "Mirabel",
+        "blainville": "Blainville",
+        "laval": "Laval"
+      }
+    },
+    "finalCTA": {
+      "title": "Make your home look new again",
+      "subtitle": "Get a free quote for siding and exterior cleaning today."
+    },
+    "jsonld": {
+      "service": {
+        "name": "Exterior Siding Cleaning",
+        "description": "Professional exterior house washing and siding cleaning service."
+      }
+    }
+  },
+  "territory": {
+    "city": {
+      "sourceOfTruth": "MrBen provides residential and commercial window cleaning in {city} and across the Laurentians."
+    }
+  },
+  "territoryCityPage": {
+    "jsonld": {
+      "city": {
+        "serviceNamePrefix": "Window cleaning in ",
+        "serviceDescriptionPrefix": "Window cleaning and exterior maintenance service offered in "
+      }
+    },
+    "h1": "Window cleaning in {CITY}",
+    "servicesTitle": "Services offered in {CITY}",
+    "buildingsTitle": "Building types we serve",
+    "pricingTitle": "Estimated window cleaning prices",
+    "whyTitle": "Why choose MrBen in {CITY}",
+    "faqTitle": "Frequently asked questions",
+    "pricingSentence": "Window cleaning in {CITY} typically ranges from ${LOW} to ${HIGH}, depending on window count, number of storeys, accessibility, and whether it’s inside + outside.",
+    "servicesBullets": [
+      "Window cleaning (inside + outside)",
+      "Exterior-only window cleaning",
+      "Frames and tracks",
+      "Sunrooms and solariums (when applicable)"
+    ],
+    "buildingsBullets": [
+      "Single-family home / bungalow",
+      "Two-storey home",
+      "Plex / condo / apartment",
+      "Small storefront / office"
+    ],
+    "whyParagraph": "Our team serves {CITY} and nearby areas with practical, punctual service that respects your property.",
+    "whyBullets": [
+      "Local team familiar with homes in the area",
+      "Liability insurance for safe, compliant service",
+      "Professional equipment for higher and hard-to-reach windows",
+      "Reliable service with satisfaction-focused follow-up"
+    ],
+    "faq": [
+      {
+        "q": "Do you clean both inside and outside windows?",
+        "a": "Yes. We offer interior + exterior cleaning, or exterior-only service based on your preference."
+      },
+      {
+        "q": "How long does the service take?",
+        "a": "Timing depends on window count and access. For a typical home, service often takes a few hours."
+      },
+      {
+        "q": "Do you clean 2nd/3rd-storey windows?",
+        "a": "Yes, we use the proper equipment to clean higher windows safely."
+      },
+      {
+        "q": "How often should windows be cleaned?",
+        "a": "Most clients schedule 2 to 4 cleanings per year, depending on dust, pollen, and weather exposure."
+      },
+      {
+        "q": "Are you insured?",
+        "a": "Yes, our team carries liability insurance for work performed on your property."
+      }
+    ],
+    "servicesLabel": "Services offered",
+    "cta": "Get a free estimate",
+    "ctaReassurance": "Fast response • No obligation",
+    "napLabel": "Business info",
+    "heroImageAlt": {
+      "lachute": "Before-and-after window cleaning on a residential home in Lachute",
+      "saint-jerome": "Residential window cleaning service in Saint-Jérôme",
+      "saint-sauveur": "Clean exterior windows on a home in Saint-Sauveur",
+      "mirabel": "Freshly cleaned windows on a Mirabel home",
+      "blainville": "Gutter cleaning on a home in Blainville",
+      "laval": "Pressure washing a driveway in Laval",
+      "levis": "Professional window cleaning on a residential home in Lévis",
+      "saint-nicolas": "Professional window cleaning on a residential home in Saint-Nicolas",
+      "charny": "Professional window cleaning on a residential home in Charny",
+      "dosquet": "Professional window cleaning on a residential home in Dosquet"
+    },
+    "services": {
+      "windowCleaning": "Window cleaning",
+      "gutterCleaning": "Gutter cleaning",
+      "sidingCleaning": "Siding cleaning"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Tips, tutorials, and case studies from the team at MrBen.ca.",
+    "readMore": "Read more"
+  },
+  "Header": {
+    "nav": {
+      "home": "Home",
+      "services": "Services",
+      "reviews": "Reviews",
+      "territory": "Service area",
+      "blog": "Blog",
+      "contact": "Contact",
+      "windows": "Windows",
+      "gutters": "Gutters",
+      "siding": "Siding"
+    },
+    "servicesDropdown": {
+      "windowCleaning": "Window Cleaning"
+    },
+    "territoryDropdown": {
+      "lachute": "Lachute",
+      "saintJerome": "Saint-Jérôme",
+      "saintSauveur": "Saint-Sauveur",
+      "mirabel": "Mirabel",
+      "blainville": "Blainville",
+      "laval": "Laval"
+    },
+    "quote": "Get a free estimate",
+    "ctaReassurance": "Fast response • No obligation",
+    "cleaning": "Cleaning",
+    "locale": {
+      "fr_short": "FR",
+      "en_short": "EN"
+    }
+  },
+  "Footer": {
+    "description": "Window, gutter, and siding cleaning in the Laurentians.",
+    "company": "Company",
+    "home": "Home",
+    "nav": {
+      "blog": "Blog",
+      "services": "Services",
+      "territory": "Service area"
+    },
+    "services": {
+      "vitres": "Window Cleaning",
+      "gouttieres": "Gutter Cleaning",
+      "pression": "Pressure Washing"
+    },
+    "territories": {
+      "lachute": "Lachute",
+      "stJerome": "Saint-Jérôme",
+      "mirabel": "Mirabel",
+      "blainville": "Blainville"
+    },
+    "contact": "Contact",
+    "reviewLink": "See Our Reviews",
+    "rights": "All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "review1Name": "Laurie",
+    "review1Text": "Very good job cleaning our windows inside and out and cleaning our gutters again this year. Highly recommend!",
+    "review2Name": "Donna",
+    "review2Text": "Very happy with the service provided by Mr. Ben. He showed up on time and was very thorough in the cleaning provided.",
+    "review3Name": "Hadassah",
+    "review3Text": "Efficient, quick and polite team, as well as a reasonably priced service. Recommend this company!"
+  },
+  "MrBenRedesignPreview": {
+    "langShort": "EN",
+    "langLabel": "English",
+    "toggleTo": "FR",
+    "topTagline": "Free estimate • Courteous & on-time service",
+    "privacyPolicyLink": "Privacy Policy",
+    "navServices": "Services",
+    "navGallery": "Work",
+    "navReviews": "Reviews",
+    "navTerritory": "Area",
+    "navContact": "Contact",
+    "navCall": "Call",
+    "navOnline": "Get a free estimate",
+    "navSubTitle": "Cleaning",
+    "navSub": "Windows • Gutters • Siding",
+    "heroBadgeA": "Residential & commercial",
+    "heroBadgeB": "Laurentians & nearby",
+    "heroH1a": "Residential and commercial window cleaning in the Laurentides",
+    "heroH1b": "Lachute, Saint-Jérôme, Mirabel and surrounding areas",
+    "heroP": "Friendly, courteous and punctual team — fast, meticulous service with strong value.",
+    "heroCTA": "Get a free estimate",
+    "primaryCTA": "Get a free estimate",
+    "ctaReassurance": "Fast response • No obligation",
+    "heroTrust1": "Google",
+    "heroTrust2": "Local Laurentides business",
+    "heroTrust3": "Fully insured",
+    "heroTrust4": "Residential and commercial",
+    "heroVerifiedByGoogle": "Verified on Google",
+    "heroLeaveReview": "Leave a Google review",
+    "heroStat1T": "10+ years",
+    "heroStat1S": "Serving the community since 2007.",
+    "heroStat2T": "On time",
+    "heroStat2S": "Clear communication",
+    "heroStat3T": "Professional",
+    "heroStat3S": "Proper equipment",
+    "secServicesK": "What we do",
+    "secServicesT": "Core services",
+    "secServicesS": "Three services, one standard: clean, fast, and tailored to your needs.",
+    "serviceVitresT": "Window cleaning",
+    "serviceVitresD": "Inside/outside, frames, screens — single-storey homes or multi-level buildings.",
+    "serviceVitresH": "From $165 (single-storey)",
+    "serviceVitresB1": "Residential & commercial",
+    "serviceVitresB2": "Equipment for heights",
+    "serviceVitresB3": "Streak-free finish",
+    "serviceVitresIconAlt": "Window cleaning icon",
+    "serviceGoutT": "Gutter cleaning",
+    "serviceGoutD": "Prevent overflow and damage by keeping gutters clear.",
+    "serviceGoutH": "Inspection + clean",
+    "serviceGoutB1": "Remove debris",
+    "serviceGoutB2": "Flow check",
+    "serviceGoutB3": "Prevention advice",
+    "serviceGoutIconAlt": "Gutter cleaning icon",
+    "servicePressT": "Siding cleaning",
+    "servicePressD": "Restore wood, concrete and siding for a like-new look.",
+    "servicePressH": "Before / After",
+    "servicePressB1": "Driveways & patios",
+    "servicePressB2": "Home exterior",
+    "servicePressB3": "Railings & decks",
+    "servicePressIconAlt": "Pressure washing icon",
+    "serviceCTA": "Get a free estimate",
+    "fastQuoteT": "Faster quoting",
+    "fastQuoteP": "Send a few photos of the outside of your home to speed up the estimate.",
+    "fastQuoteEmail": "Get a free estimate",
+    "fastQuoteCall": "Call",
+    "secGalK": "Before / After",
+    "secGalT": "Work",
+    "secGalS": "Explore our recent window cleaning, gutter cleaning, and pressure washing projects. Professional results for homes and businesses in your area.",
+    "tip": "Tip",
+    "tipText": "Use 12–20 photos max, well framed, and group them: windows, gutters, pressure.",
+    "secRevK": "Trust",
+    "secRevT": "What clients like",
+    "secRevS": "Based on real Google reviews from our clients.",
+    "reviewLabel": "Residential client",
+    "val1T": "Punctual",
+    "val1D": "We respect your schedule and your time.",
+    "val2T": "Professional",
+    "val2D": "Methods and equipment matched to each surface.",
+    "val3T": "Results",
+    "val3D": "Meticulous finish and clean work area.",
+    "galleryToggleMore": "See more work",
+    "galleryToggleLess": "See less",
+    "trustToggleMore": "See more trust points",
+    "trustToggleLess": "See less",
+    "secAreaK": "Service area",
+    "secAreaT": "We come to you",
+    "secAreaS": "If you’re in the region, chances are we can serve you.",
+    "cities": "Cities served",
+    "nearbyCities": "and nearby cities",
+    "areaP": "For nearby sectors, send your address and we’ll confirm quickly.",
+    "territory": {
+      "googleTile": {
+        "title": "MrBen.ca",
+        "ratingValue": "5.0",
+        "reviewCount": "(61)",
+        "subtitle": "Window cleaning service",
+        "aria": "Read our Google reviews"
+      }
+    },
+    "zonesServedLabel": "Service areas:",
+    "convTip": "Conversion tip",
+    "convTipText": "Add a Google map + “Directions” button and an “Availability” box to reduce friction.",
+    "googleMapsAlt": "View our Google Maps profile",
+    "contactK": "Free estimate",
+    "contactT": "Contact us",
+    "contactP": "Tell us what you need and we’ll respond quickly. Add photos for faster quoting.",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Hours",
+    "hoursText": "Mon–Fri • 8am–5pm",
+    "services": "Cleaning",
+    "servicesMenuVitres": "Windows",
+    "servicesMenuGout": "Gutters",
+    "servicesMenuSiding": "Siding",
+    "formT": "Get a free estimate",
+    "open": "Open",
+    "name": "Name",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "address": "Address",
+    "choose": "Choose one or more services",
+    "servicesRequested": "Requested services",
+    "chooseServices": "Choose services",
+    "selected": "selected",
+    "desc": "Details",
+    "descHint": "Tip: adding photos speeds up quoting.",
+    "photoLabel": "Add a few images of your house here!",
+    "photoSelectButton": "Select images",
+    "photoHelper": "JPG/PNG • 15 MB max per photo • up to 5 photos",
+    "photoErrorMax": "Maximum 5 photos.",
+    "photoErrorType": "Accepted formats: JPG/JPEG and PNG.",
+    "photoErrorSize": "Each photo must be 5 MB or less.",
+    "photoRemove": "Remove",
+    "photoSelected": "{count} of {max} selected",
+    "send": "Send request",
+    "modalTitle": "Get a free estimate",
+    "modalStep": "Step",
+    "modalOf": "of",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue",
+    "citiesList": "Hawkesbury, Lachute, Saint-Sauveur, Saint-Jérôme, Mirabel, Blainville, Saint-Eustache, Laval",
+    "serviceOption1": "Interior/exterior windows",
+    "serviceOption2": "Exterior windows only",
+    "serviceOption3": "Gutter cleaning",
+    "serviceOption4": "Siding wash",
+    "descPlaceholder": "Example: single-storey, 12 windows, need windows + gutters...",
+    "networkError": "Network error. Please try again.",
+    "sendSuccess": "Message sent. We will contact you shortly.",
+    "sendError": "Failed to send. Please try again.",
+    "sending": "Sending...",
+    "workAlt": "Work",
+    "thumbAlt": "Thumb",
+    "pricing": {
+      "kicker": "Transparent Pricing",
+      "title": "Simple, Upfront Estimates",
+      "subtitle": "No hidden fees. Just honest pricing for quality work.",
+      "card1": {
+        "title": "Bungalow",
+        "price": "$165+",
+        "desc": "Perfect for single-story homes.",
+        "features": [
+          "Interior & Exterior",
+          "Screens Wiped",
+          "Frames & Sills"
+        ]
+      },
+      "card2": {
+        "title": "Two-Story Home",
+        "price": "$225+",
+        "desc": "Complete cleaning for larger homes.",
+        "features": [
+          "Interior & Exterior",
+          "High Windows",
+          "Tracks Vacuumed"
+        ]
+      },
+      "card3": {
+        "title": "Gutter Cleaning",
+        "price": "$145+",
+        "desc": "Protect your home from water damage.",
+        "features": [
+          "Debris Removal",
+          "Downspouts Flushed",
+          "Photos on Request"
+        ]
+      },
+      "note": "Prices vary based on window count and accessibility. Contact us for a precise quote."
+    }
+  },
+  "estimator": {
+    "badge": "BETA — AI Estimation",
+    "title": "AI🧠 Window Cleaning Estimator",
+    "subtitle": "Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.",
+    "step1": "1. Upload up to 5 photos of the exterior of your house",
+    "clickToSelect": "Click to select photos",
+    "fileTypes": "JPG, PNG (Max 10MB per file)",
+    "step2": "2. Select Service Type",
+    "insideOut": "Inside & Out",
+    "exteriorOnly": "Exterior Only",
+    "processing": "Processing {count} images...",
+    "calculate": "Calculate Estimate",
+    "poweredBy": "Powered by",
+    "estimatedTotal": "Estimated Total",
+    "totalPanes": "Total Panes Counted: {count}",
+    "ref": "Ref:",
+    "disclaimer": "This AI🤖 estimator is still learning and will be reviewed by a human.",
+    "breakdown": "Breakdown:",
+    "serviceFee": "Service & Travel Fee",
+    "standardFee": "Standard service fee",
+    "bookEstimate": "Book This Estimate",
+    "sendsDirectly": "Sends your estimate directly to our team.",
+    "errorImageOnly": "Only image files (JPG, PNG) are supported right now.",
+    "errorMaxImages": "Maximum 5 images allowed per request. Please remove some images.",
+    "errorGeneral": "An error occurred. Please try fewer images.",
+    "errorServer": "Server error: The analysis timed out or failed.",
+    "errorNetwork": "Network request failed"
+  }
+}
