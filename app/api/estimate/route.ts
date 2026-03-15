@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     );
 
     // 3. Prepare the VIP Vertex AI API Call (Hitting the Global Endpoint)
-    const modelId = "gemini-3.0-flash-preview"; 
+    const modelId = "gemini-3-flash-preview"; 
     const url = `https://aiplatform.googleapis.com/v1/projects/${projectId}/locations/global/publishers/google/models/${modelId}:generateContent`;
 
     const requestBody = {
