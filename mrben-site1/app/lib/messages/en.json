@@ -797,7 +797,7 @@
     "badge": "BETA — AI Estimation",
     "title": "AI🧠 Window Cleaning Estimator",
     "subtitle": "Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.",
-    "step1": "1. Upload up to 5 photos of the exterior of your house",
+    "step1": "1. Upload up to 10 photos of the exterior of your house",
     "clickToSelect": "Click to select photos",
     "fileTypes": "JPG, PNG (Max 10MB per file)",
     "step2": "2. Select Service Type",
@@ -816,7 +816,7 @@
     "bookEstimate": "Book This Estimate",
     "sendsDirectly": "Sends your estimate directly to our team.",
     "errorImageOnly": "Only image files (JPG, PNG) are supported right now.",
-    "errorMaxImages": "Maximum 5 images allowed per request. Please remove some images.",
+    "errorMaxImages": "Maximum 10 images allowed per request. Please remove some images.",
     "errorGeneral": "An error occurred. Please try fewer images.",
     "errorServer": "Server error: The analysis timed out or failed.",
     "errorNetwork": "Network request failed"

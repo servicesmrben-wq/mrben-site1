@@ -797,7 +797,7 @@
     "badge": "BETA — Estimation IA",
     "title": "Estimateur de lavage de vitres par IA🧠",
     "subtitle": "Téléversez des photos de l'extérieur de votre maison (tous les côtés). Notre IA comptera vos fenêtres et vous donnera une estimation de prix instantanée.",
-    "step1": "1. Téléversez jusqu'à 5 photos de l'extérieur de votre maison",
+    "step1": "1. Téléversez jusqu'à 10 photos de l'extérieur de votre maison",
     "clickToSelect": "Cliquez pour sélectionner des photos",
     "fileTypes": "JPG, PNG (Max 10 Mo par fichier)",
     "step2": "2. Sélectionnez le type de service",
@@ -816,7 +816,7 @@
     "bookEstimate": "Réserver cette estimation",
     "sendsDirectly": "Envoie votre estimation directement à notre équipe.",
     "errorImageOnly": "Seuls les fichiers images (JPG, PNG) sont pris en charge pour le moment.",
-    "errorMaxImages": "Maximum 5 images autorisées par demande. Veuillez retirer quelques images.",
+    "errorMaxImages": "Maximum 10 images autorisées par demande. Veuillez retirer quelques images.",
     "errorGeneral": "Une erreur est survenue. Veuillez essayer avec moins d'images.",
     "errorServer": "Erreur serveur : L'analyse a expiré ou échoué.",
     "errorNetwork": "La requête réseau a échoué"

@@ -69,8 +69,8 @@ export default function EstimatorPage() {
   const handleCalculate = async () => {
     if (files.length === 0) return;
 
-    // 1. Validation: Max 5 Images
-    if (files.length > 5) {
+    // 1. Validation: Max 10 Images
+    if (files.length > 10) {
       alert(t("errorMaxImages"));
       return;
     }
@@ -103,8 +103,8 @@ export default function EstimatorPage() {
     try {
       // Compress images to avoid payload limits
       const compressionOptions = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 768,
+        maxSizeMB: 1.0,
+        maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
 
@@ -130,9 +130,12 @@ export default function EstimatorPage() {
       let attempts = 0;
       const maxRetries = 1;
 
+      // DIRECT CLOUD RUN URL (Bypassing Vercel for 32MB payload support)
+      const CLOUD_RUN_URL = "https://mrben-estimator-api-529910920022.us-east1.run.app/estimate";
+
       while (attempts <= maxRetries) {
         try {
-          res = await fetch("/api/estimate", {
+          res = await fetch(CLOUD_RUN_URL, {
             method: "POST",
             body: formData,
           });
