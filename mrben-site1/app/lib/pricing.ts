@@ -3,29 +3,29 @@ export const RATE_PER_MINUTE = BASE_HOURLY_RATE / 60;
 
 export const PRICING_DATA = {
   pane_1st_base: {
-    label: "1st Story / Basement Pane",
+    label: "pane_1st_base_label",
     minutes: 1.57, // Time per pane (exterior)
-    desc: "Ground-level and foundation windows"
+    desc: "pane_1st_base_desc"
   },
   pane_2nd_story: {
-    label: "2nd Story Pane",
+    label: "pane_2nd_story_label",
     minutes: 1.8,
-    desc: "Windows requiring extended reach"
+    desc: "pane_2nd_story_desc"
   },
   pane_3rd_story: {
-    label: "3rd Story Pane",
+    label: "pane_3rd_story_label",
     minutes: 2.10,
-    desc: "High-reach upper floor windows"
+    desc: "pane_3rd_story_desc"
   },
   patio_door_pane: {
-    label: "Patio Door Section",
+    label: "patio_door_pane_label",
     minutes: 2.0,
-    desc: "Large sliding glass sections"
+    desc: "patio_door_pane_desc"
   },
   entry_door_pane: {
-    label: "Entry Door Pane",
+    label: "entry_door_pane_label",
     minutes: 1.5, // 3.0 min total for a 2-pane door
-    desc: "Standard front/back door glass"
+    desc: "entry_door_pane_desc"
   }
 };
 

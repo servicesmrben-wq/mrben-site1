@@ -553,8 +553,8 @@ export default function EstimatorPage() {
                     return (
                       <div key={key} className="flex items-center justify-between border-b border-zinc-100 pb-2 last:border-0">
                         <div>
-                          <div className="text-sm font-medium text-zinc-900">{item.label}</div>
-                          <div className="text-xs text-zinc-500">{item.desc}</div>
+                          <div className="text-sm font-medium text-zinc-900">{t(item.label)}</div>
+                          <div className="text-xs text-zinc-500">{t(item.desc)}</div>
                         </div>
                                               <div className="flex items-center gap-4">
                                                 <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
