@@ -343,6 +343,18 @@ export default function EstimatorPage() {
 
         <div className="relative overflow-hidden rounded-3xl border border-zinc-200/60 bg-white/80 p-6 shadow-2xl backdrop-blur-sm md:p-8 ring-1 ring-zinc-900/5">
           
+          {/* Logo in top right */}
+          <div className="absolute right-6 top-6 hidden sm:block">
+            <Image 
+              src="/brand/mrben-logo-transparent.png" 
+              alt="MrBen Logo" 
+              width={100} 
+              height={50} 
+              className="opacity-80"
+              priority
+            />
+          </div>
+          
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
