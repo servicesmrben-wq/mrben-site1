@@ -795,7 +795,7 @@
   },
   "estimator": {
     "badge": "BETA — AI Estimation",
-    "title": "AI🧠 Window Cleaning Estimator",
+    "title": "AI🤖 Window Cleaning Estimator",
     "subtitle": "Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.",
     "step1": "1. Upload up to 10 photos of the exterior of your house",
     "clickToSelect": "Click to select photos",
