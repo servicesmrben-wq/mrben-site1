@@ -175,8 +175,52 @@ export default function EstimatorPage() {
         throw new Error(data.error || t("errorGeneral"));
       }
 
+      const totalPanes = Object.values(data.window_counts || {}).reduce((sum: number, count: any) => sum + Number(count), 0);
+      
+      // Helper to calculate values for the JSON backup
+      const getModeData = (m: "ext" | "in_out") => {
+        let totalMinutes = 0;
+        Object.entries(data.window_counts || {}).forEach(([key, count]) => {
+          const k = key as PricingKey;
+          const item = PRICING_DATA[k];
+          if (item && typeof count === "number") {
+            const unitMinutes = m === "ext" ? item.minutes : item.minutes * 2;
+            totalMinutes += unitMinutes * count;
+          }
+        });
+        const windowCost = totalMinutes * RATE_PER_MINUTE;
+        const SAFETY_BUFFER = 1.075;
+        let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
+        total = Math.round(total / 5) * 5;
+        
+        return {
+          price: `$${total.toFixed(2)}`,
+          time: `${(totalMinutes / 60).toFixed(1)}h`
+        };
+      };
+
+      const inOutData = getModeData("in_out");
+      const extData = getModeData("ext");
+
       const mergedResult = {
         analysis: data.analysis || "",
+        referenceId: newRefId,
+        user_selection: mode === "ext" ? "Extérieur Seulement" : "Intérieur et Extérieur",
+        total_panes: totalPanes,
+        pricing_metrics: `115$/heure | Marge : +7.5% | Frais de service et déplacement : ${BASE_FEE}$`,
+        estimates: {
+          inside_and_out: {
+            label: "Intérieur et Extérieur",
+            price: inOutData.price,
+            time: inOutData.time
+          },
+          exterior_only: {
+            label: "Extérieur Seulement",
+            price: extData.price,
+            time: extData.time
+          }
+        },
+        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}`,
         window_counts: {
           pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
           pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
