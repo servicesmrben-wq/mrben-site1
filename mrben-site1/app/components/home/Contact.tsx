@@ -84,7 +84,8 @@ function ContactContent({
 
   const estimateS2 = searchParams.get("s2");
   const estimateS1 = searchParams.get("s1");
-  const estimateDoors = searchParams.get("doors");
+  const estimatePatio = searchParams.get("patio");
+  const estimateEntry = searchParams.get("entry");
   const urlService = searchParams.get("service");
 
   useEffect(() => {
@@ -285,7 +286,7 @@ function ContactContent({
         formData.append("estimateQuote", estimateQuote);
         formData.append("estimatePanes", estimatePanes || "0");
         formData.append("estimateTime", estimateTime || "N/A");
-        formData.append("estimateDetails", `Rez-de-chaussée et sous-sol : ${estimateS1}, Deuxième étage : ${estimateS2}, Troisième étage : ${estimateS3}, Portes : ${estimateDoors}`);
+        formData.append("estimateDetails", `Rez-de-chaussée et sous-sol : ${estimateS1}, Deuxième étage : ${estimateS2}, Troisième étage : ${estimateS3}, Portes patio (panneaux) : ${estimatePatio}, Portes d'entrée (assumé 2 vitres/porte) : ${estimateEntry}`);
         
         // Extended comparison
         formData.append("qExt", qExt || "N/A");

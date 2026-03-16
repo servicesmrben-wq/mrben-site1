@@ -17,10 +17,15 @@ export const PRICING_DATA = {
     minutes: 2.10,
     desc: "High-reach upper floor windows"
   },
-  patio_door_panel: {
-    label: "Patio Door / Entry Glass",
+  patio_door_pane: {
+    label: "Patio Door Section",
     minutes: 2.0,
-    desc: "Large glass doors or entry inserts"
+    desc: "Large sliding glass sections"
+  },
+  entry_door_pane: {
+    label: "Entry Door Pane",
+    minutes: 1.5, // 3.0 min total for a 2-pane door
+    desc: "Standard front/back door glass"
   }
 };
 
