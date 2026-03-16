@@ -249,25 +249,28 @@ export default function EstimatorPage() {
       }
 
       (async () => {
+        // 1. Send Metadata FIRST (This creates the folder and saves the JSON)
+        try {
+          const metaData = new FormData();
+          metaData.append("metadata", JSON.stringify(mergedResult, null, 2));
+          metaData.append("referenceId", newRefId);
+          await fetch("/api/save-to-drive", { method: "POST", body: metaData });
+        } catch (e) {
+          console.warn("Metadata backup failed:", e);
+        }
+
+        // 2. Send Images in chunks
         for (let i = 0; i < driveChunks.length; i++) {
           try {
             const chunk = driveChunks[i];
             const driveData = new FormData();
-
-            if (i === 0) {
-              driveData.append("metadata", JSON.stringify(mergedResult, null, 2));
-              driveData.append("referenceId", newRefId);
-            }
-
+            driveData.append("referenceId", newRefId);
             chunk.forEach((file) => {
               driveData.append("files", file);
             });
-            
-            driveData.append("referenceId", newRefId);
-
             await fetch("/api/save-to-drive", { method: "POST", body: driveData });
           } catch (e) {
-            console.warn("Background backup failed:", e);
+            console.warn(`Image batch ${i} backup failed:`, e);
           }
         }
       })();
