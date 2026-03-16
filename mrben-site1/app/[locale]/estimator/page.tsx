@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/navigation"; 
-import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight } from "lucide-react";
+import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight, Info } from "lucide-react";
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 import imageCompression from "browser-image-compression";
 import { useTranslations } from "next-intl";
@@ -18,9 +18,14 @@ export default function EstimatorPage() {
   const [mode, setMode] = useState<"ext" | "in_out">("in_out");
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Instructions Modal State
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [hasSeenInstructions, setHasSeenInstructions] = useState(false);
   
   // Refs
   const resultsRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [referenceId, setReferenceId] = useState("");
 
   // Clean up object URLs
@@ -323,6 +328,23 @@ export default function EstimatorPage() {
     return Object.values(result.window_counts).reduce((sum: number, count: any) => sum + Number(count), 0);
   };
 
+  const handleUploadClick = (e: React.MouseEvent) => {
+    // If user hasn't seen instructions, show modal and prevent default upload
+    if (!hasSeenInstructions) {
+      e.preventDefault();
+      setShowInstructions(true);
+    }
+  };
+
+  const closeModal = () => {
+    setShowInstructions(false);
+    setHasSeenInstructions(true);
+    // Automatically trigger the file selector after closing instructions for the first time
+    setTimeout(() => {
+      fileInputRef.current?.click();
+    }, 100);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-zinc-50 via-slate-50 to-emerald-50/30 px-4 py-12">
       <div className="mx-auto max-w-3xl">
@@ -358,10 +380,14 @@ export default function EstimatorPage() {
           {/* File Upload */}
           <div className="mb-8">
             <label className="mb-3 block text-sm font-semibold text-zinc-900">
-              {t("step1")}
+              {t("step1Title")}
             </label>
-            <div className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 transition duration-300 ease-in-out hover:border-blue-500 hover:bg-blue-50/50 hover:shadow-lg">
+            <div 
+              onClick={handleUploadClick}
+              className="relative flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 transition duration-300 ease-in-out hover:border-blue-500 hover:bg-blue-50/50 hover:shadow-lg"
+            >
               <input 
+                ref={fileInputRef}
                 type="file" 
                 accept="image/*" 
                 multiple
@@ -584,6 +610,52 @@ export default function EstimatorPage() {
 
         </div>
       </div>
+
+      {/* Instructions Modal */}
+      {showInstructions && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm animate-in fade-in duration-300"
+            onClick={closeModal}
+          />
+          
+          {/* Modal Content */}
+          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-8 duration-300">
+            <div className="relative p-6 sm:p-8">
+              {/* Close Button */}
+              <button 
+                onClick={closeModal}
+                className="absolute right-4 top-4 rounded-full p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="flex flex-col items-center text-center">
+                <div className="mb-4 rounded-2xl bg-blue-50 p-3 text-blue-600">
+                  <Info className="h-8 w-8" />
+                </div>
+                
+                <h3 className="mb-2 text-xl font-bold text-zinc-900">
+                  {t("step1Title")}
+                </h3>
+                
+                <div className="mb-8 whitespace-pre-wrap text-left text-sm leading-relaxed text-zinc-600 bg-zinc-50 p-4 rounded-2xl border border-zinc-100">
+                  {t("step1Instructions")}
+                </div>
+
+                <button
+                  onClick={closeModal}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-zinc-900 py-4 text-sm font-bold text-white shadow-lg transition hover:bg-zinc-800 active:scale-[0.98]"
+                >
+                  {t("gotIt")}
+                  <CheckCircle2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
