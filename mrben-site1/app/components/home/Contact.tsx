@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Phone, Mail, ArrowRight, Upload, Calculator } from "lucide-react";
 import { useLocale } from "next-intl";
-import { usePathname } from "@/navigation";
+import { usePathname, Link } from "@/navigation";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import { BRAND } from "@/app/lib/constants";
 import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
@@ -622,6 +622,17 @@ function ContactContent({
               <button type="submit" disabled={status.state === "sending"} className="mt-5 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 active:opacity-90 disabled:opacity-60">
                 {status.state === "sending" ? t("sending") : t("send")} <ArrowRight className="h-4 w-4" />
               </button>
+
+              {/* Privacy Notice */}
+              <div className="mt-3 text-center text-[10px] text-zinc-500 leading-none">
+                {t("privacyNotice")}
+                <Link 
+                  href={locale === "fr" ? "/confidentialite" : "/privacy-policy"} 
+                  className="font-medium text-zinc-400 underline underline-offset-2 hover:text-zinc-600"
+                >
+                  {t("privacyLink")}
+                </Link>.
+              </div>
             </form>
           </div>
         </div>

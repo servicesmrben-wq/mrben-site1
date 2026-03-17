@@ -754,6 +754,8 @@
     "sendSuccess": "Message sent. We will contact you shortly.",
     "sendError": "Failed to send. Please try again.",
     "sending": "Sending...",
+    "privacyNotice": "By clicking send, you agree to our ",
+    "privacyLink": "privacy policy",
     "workAlt": "Work",
     "thumbAlt": "Thumb",
     "pricing": {

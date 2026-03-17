@@ -754,6 +754,8 @@
     "sendSuccess": "Message envoyé. Nous vous contacterons sous peu.",
     "sendError": "Échec de l’envoi. Veuillez réessayer.",
     "sending": "Envoi en cours...",
+    "privacyNotice": "En cliquant sur envoyer, vous acceptez notre ",
+    "privacyLink": "politique de confidentialité",
     "workAlt": "Réalisation",
     "thumbAlt": "Miniature",
     "pricing": {
