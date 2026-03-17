@@ -249,12 +249,19 @@ export default function EstimatorPage() {
       }
 
       (async () => {
+        let activeFolderId = "";
+
         // 1. Send Metadata FIRST (This creates the folder and saves the JSON)
         try {
           const metaData = new FormData();
           metaData.append("metadata", JSON.stringify(mergedResult, null, 2));
           metaData.append("referenceId", newRefId);
-          await fetch("/api/save-to-drive", { method: "POST", body: metaData });
+          
+          const metaRes = await fetch("/api/save-to-drive", { method: "POST", body: metaData });
+          const metaResult = await metaRes.json();
+          if (metaResult.success && metaResult.folderId) {
+            activeFolderId = metaResult.folderId;
+          }
         } catch (e) {
           console.warn("Metadata backup failed:", e);
         }
@@ -265,6 +272,12 @@ export default function EstimatorPage() {
             const chunk = driveChunks[i];
             const driveData = new FormData();
             driveData.append("referenceId", newRefId);
+            
+            // Pass the specific folderId we just created/found
+            if (activeFolderId) {
+              driveData.append("subfolderId", activeFolderId);
+            }
+
             chunk.forEach((file) => {
               driveData.append("files", file);
             });

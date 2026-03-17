@@ -25,38 +25,43 @@ export async function POST(req: Request) {
     const drive = google.drive({ version: "v3", auth });
     const formData = await req.formData();
 
-    // Get Reference ID (Default to "NoRef" if missing)
+    // Get Reference ID
     const referenceId = formData.get("referenceId")?.toString() || "NoRef";
+    
+    // Check if the client already has a subfolderId for this session
+    let subfolderId = formData.get("subfolderId")?.toString();
 
-    // --- SUBFOLDER CREATION ---
-    // 1. Create or Find Subfolder for this Estimate
-    let subfolderId = folderId;
-    try {
-      const searchRes = await drive.files.list({
-        q: `name = '${referenceId}' and '${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
-        fields: "files(id)",
-        supportsAllDrives: true,
-        includeItemsFromAllDrives: true,
-      });
-
-      if (searchRes.data.files && searchRes.data.files.length > 0) {
-        subfolderId = searchRes.data.files[0].id!;
-      } else {
-        const folderMetadata = {
-          name: referenceId,
-          mimeType: "application/vnd.google-apps.folder",
-          parents: [folderId],
-        };
-        const folder = await drive.files.create({
-          requestBody: folderMetadata,
-          fields: "id",
+    // --- SUBFOLDER LOGIC ---
+    if (!subfolderId) {
+      try {
+        // Search for existing folder with this Reference ID
+        const searchRes = await drive.files.list({
+          q: `name = '${referenceId}' and '${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+          fields: "files(id)",
           supportsAllDrives: true,
+          includeItemsFromAllDrives: true,
         });
-        subfolderId = folder.data.id!;
+
+        if (searchRes.data.files && searchRes.data.files.length > 0) {
+          subfolderId = searchRes.data.files[0].id!;
+        } else {
+          // Create new folder
+          const folderMetadata = {
+            name: referenceId,
+            mimeType: "application/vnd.google-apps.folder",
+            parents: [folderId],
+          };
+          const folder = await drive.files.create({
+            requestBody: folderMetadata,
+            fields: "id",
+            supportsAllDrives: true,
+          });
+          subfolderId = folder.data.id!;
+        }
+      } catch (err) {
+        console.error("Folder logic error:", err);
+        subfolderId = folderId; // Fallback to root
       }
-    } catch (err) {
-      console.error("Folder creation error:", err);
-      // Fallback to root folder if subfolder creation fails
     }
     // ---------------------------
 
