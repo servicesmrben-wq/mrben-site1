@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy | MrBen",
   description:
-    "Privacy policy for MrBen.ca. We use your information only for service communications and SMS updates; reply STOP to opt out. No marketing or data sales.",
+    "Privacy policy for MrBen.ca. Transparency on data collection, AI analysis, and the protection of your personal information.",
   robots: {
     index: false,
   },
@@ -17,59 +17,95 @@ export default function PrivacyPolicyPage() {
           <p className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
             Legal
           </p>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Privacy Policy</h1>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            Privacy Policy
+          </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-600">
-            This Privacy Policy explains how MrBen.ca collects, uses, and protects your
-            information when you request our window cleaning and exterior maintenance services.
+            Last Updated: March 2026. This policy details how MrBen.ca manages your personal information in accordance with Quebec and Canadian laws.
           </p>
         </div>
       </section>
 
       <section className="mx-auto max-w-4xl px-4 py-12">
-        <div className="space-y-6 text-base leading-relaxed text-zinc-700">
-          <p>
-            We only collect the information you choose to provide (such as your name, address,
-            phone number, and email) so we can prepare estimates, schedule service, and communicate
-            with you about the services you request.
-          </p>
-          <p>
-            If you opt in to SMS updates, we use text messages solely for service communications,
-            including appointment confirmations, arrival updates, and service follow-ups. Reply
-            STOP at any time to opt out. Standard message and data rates may apply.
-          </p>
-          <p>
-            We do not send marketing or promotional messages, and we do not sell, rent, or share
-            your personal information with third parties for marketing purposes.
-          </p>
+        <div className="space-y-10 text-base leading-relaxed text-zinc-700">
+          
+          {/* 1. Data Collection */}
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">1. Information Collected</h2>
+            <p>
+              We only collect information that you voluntarily provide through our contact forms and our estimator:
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li><strong>Identity:</strong> First and last name.</li>
+              <li><strong>Contact Info:</strong> Email address, phone number, and physical property address.</li>
+              <li><strong>Media:</strong> Photos of your property's exterior (via the estimator).</li>
+              <li><strong>Service:</strong> Estimate details and the type of service requested.</li>
+            </ul>
+          </div>
 
-          <h3 className="pt-4 text-lg font-semibold text-zinc-900">AI Estimator Tool & Photo Uploads</h3>
-          <p>
-            To provide instant, accurate service quotes, we offer an interactive AI Estimator tool on our website. When you use this tool, the following data practices apply:
-          </p>
-          <ul className="list-disc space-y-2 pl-5">
-            <li>
-              <strong>Temporary Session Tracking:</strong> When you request a quote, our system generates a temporary, randomized Reference ID (e.g., EST-12345) to connect your uploaded photos to your final estimate. This is a temporary memory function strictly necessary to provide the quoting service you requested. We do not use persistent tracking cookies or cross-site tracking files for this tool.
-            </li>
-            <li>
-              <strong>Property Photos:</strong> The photos you upload of your property&apos;s exterior are processed to calculate window counts and service requirements.
-            </li>
-            <li>
-              <strong>Secure Storage & Service Improvement:</strong> If you choose to submit your contact information to lock in your quote, your photos and the associated AI estimate breakdown are securely stored in our enterprise Google Workspace infrastructure. This allows us to fulfill your service request and is also used internally to improve the accuracy of our quoting algorithms over time.
-            </li>
-            <li>
-              <strong>No Third-Party Sale:</strong> We will never sell your property photos or personal contact information to third parties.
-            </li>
-          </ul>
-          <p>
-            If you prefer not to use the automated tool, you can always request a standard quote by contacting us directly.
-          </p>
+          {/* 2. Use of Artificial Intelligence */}
+          <div className="rounded-2xl bg-zinc-50 p-6 ring-1 ring-zinc-200/60">
+            <h2 className="text-lg font-semibold text-zinc-900 mb-3">2. Artificial Intelligence (AI) Processing</h2>
+            <p>
+              Our estimation tool uses artificial intelligence (Google Gemini) to analyze uploaded photos. This automated processing is used exclusively to:
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1 text-sm">
+              <li>Count the number of window panes and door panels.</li>
+              <li>Determine the number of stories of the property.</li>
+              <li>Generate an instant and accurate price quote.</li>
+            </ul>
+            <p className="mt-3 text-sm italic">
+              Note: No photos are used to train public AI models or sold to third parties.
+            </p>
+          </div>
 
-          <p>
-            If you have questions about this policy or your information, please contact us at{" "}
-            <a className="font-medium text-zinc-900 underline-offset-4 hover:underline" href="mailto:info@mrben.ca">
+          {/* 3. SMS Communications */}
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">3. SMS Communications</h2>
+            <p>
+              By providing your phone number, you agree to receive text messages related exclusively to your services:
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li>Appointment confirmations and reminders.</li>
+              <li>Arrival time updates from our team.</li>
+              <li>Post-service satisfaction follow-ups.</li>
+            </ul>
+            <p className="mt-3 font-medium">
+              We do not send marketing SMS. You can reply "STOP" at any time to opt out of these messages.
+            </p>
+          </div>
+
+          {/* 4. Storage and Security */}
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">4. Storage and Security</h2>
+            <p>
+              Your data is securely stored on <strong>Google Workspace (Google Drive)</strong> servers. We apply strict security measures to protect your information against unauthorized access. We do not sell, rent, or share your personal data with third parties for advertising purposes.
+            </p>
+          </div>
+
+          {/* 5. Your Rights (Law 25 & PIPEDA) */}
+          <div className="border-t border-zinc-100 pt-8">
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">5. Your Rights</h2>
+            <p>
+              In accordance with Quebec's Law 25 and Canada's PIPEDA, you have the following rights:
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li><strong>Right of Access:</strong> Consult the information we hold about you.</li>
+              <li><strong>Right of Rectification:</strong> Request the correction of inaccurate data.</li>
+              <li><strong>Right of Withdrawal:</strong> Withdraw your consent to the use of your data.</li>
+            </ul>
+          </div>
+
+          {/* Privacy Officer Contact */}
+          <div className="rounded-2xl bg-zinc-900 p-8 text-white">
+            <h2 className="text-lg font-bold mb-2">Privacy Officer</h2>
+            <p className="text-zinc-400 mb-4">For any questions or requests regarding your data:</p>
+            <p className="font-medium">Benjamin</p>
+            <a className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4" href="mailto:info@mrben.ca">
               info@mrben.ca
-            </a>.
-          </p>
+            </a>
+          </div>
+
         </div>
       </section>
     </main>

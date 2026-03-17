@@ -10,6 +10,7 @@ import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import { BRAND } from "@/app/lib/constants";
 import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
 import confetti from "canvas-confetti";
+import { unpackData } from "@/app/lib/url-packer";
 
 function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: React.RefObject<HTMLInputElement | null>, [key: string]: any }) {
   return (
@@ -63,30 +64,37 @@ function ContactContent({
 
   const [status, setStatus] = useState({ state: "idle", message: "" });
 
-  // Extract Estimate Params
-  const estimateRef = searchParams.get("ref");
-  const estimateQuote = searchParams.get("quote");
-  const estimatePanes = searchParams.get("panes");
-  const estimateTime = searchParams.get("time");
+  // Extract Estimate Params (Handling both packed and unpacked data)
+  const estimateData = React.useMemo(() => {
+    const packed = searchParams.get("data");
+    if (packed) {
+      return unpackData(packed);
+    }
+    return null;
+  }, [searchParams]);
+
+  const estimateRef = estimateData?.ref || searchParams.get("ref");
+  const estimateQuote = estimateData?.quote || searchParams.get("quote");
+  const estimatePanes = estimateData?.panes || searchParams.get("panes");
+  const estimateTime = estimateData?.time || searchParams.get("time");
   
   // Extended comparison params
-  const qExt = searchParams.get("q_ext");
-  const tExt = searchParams.get("t_ext");
-  const qInOut = searchParams.get("q_inout");
-  const tInOut = searchParams.get("t_inout");
+  const qExt = estimateData?.q_ext || searchParams.get("q_ext");
+  const tExt = estimateData?.t_ext || searchParams.get("t_ext");
+  const qInOut = estimateData?.q_inout || searchParams.get("q_inout");
+  const tInOut = estimateData?.t_inout || searchParams.get("t_inout");
 
   // Pricing metrics
-  const hourlyRate = searchParams.get("hr");
-  const markup = searchParams.get("markup");
-  const serviceFee = searchParams.get("fee");
+  const hourlyRate = estimateData?.hr || searchParams.get("hr");
+  const markup = estimateData?.markup || searchParams.get("markup");
+  const serviceFee = estimateData?.fee || searchParams.get("fee");
 
-  const estimateS3 = searchParams.get("s3");
-
-  const estimateS2 = searchParams.get("s2");
-  const estimateS1 = searchParams.get("s1");
-  const estimatePatio = searchParams.get("patio");
-  const estimateEntry = searchParams.get("entry");
-  const urlService = searchParams.get("service");
+  const estimateS3 = estimateData?.s3 || searchParams.get("s3");
+  const estimateS2 = estimateData?.s2 || searchParams.get("s2");
+  const estimateS1 = estimateData?.s1 || searchParams.get("s1");
+  const estimatePatio = estimateData?.patio || searchParams.get("patio");
+  const estimateEntry = estimateData?.entry || searchParams.get("entry");
+  const urlService = estimateData?.service || searchParams.get("service");
 
   useEffect(() => {
     if (estimateQuote) {
@@ -340,7 +348,7 @@ function ContactContent({
           name: form.name,
           email: form.email,
           phone: form.phone,
-          referenceId: `LEAD-${Date.now()}`,
+          referenceId: estimateRef || `LEAD-${Date.now()}`,
           service: urlService || (services.length ? services.join(", ") : "(none selected)"),
           qExt,
           tExt,

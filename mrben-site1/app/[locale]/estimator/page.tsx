@@ -7,6 +7,7 @@ import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 import imageCompression from "browser-image-compression";
 import { useTranslations } from "next-intl";
+import { packData } from "@/app/lib/url-packer";
 
 export default function EstimatorPage() {
   const t = useTranslations("estimator");
@@ -586,31 +587,29 @@ export default function EstimatorPage() {
               <div className="mt-8 border-t border-zinc-100 pt-6">
                 <Link
                   href={{
-                    pathname: "/", // Link to home page
+                    pathname: "/",
                     query: {
-                      ref: referenceId,
-                      quote: calculateTotalForMode(mode),
-                      panes: getTotalPanes(),
-                      time: formatHours(calculateMinutesForMode(mode)),
-                      // Include both for the email/tag
-                      q_ext: calculateTotalForMode("ext"),
-                      t_ext: formatHours(calculateMinutesForMode("ext")),
-                      q_inout: calculateTotalForMode("in_out"),
-                      t_inout: formatHours(calculateMinutesForMode("in_out")),
-                      
-                      // Include hidden pricing metrics for the email
-                      hr: RATE_PER_MINUTE * 60,
-                      markup: "7.5%",
-                      fee: BASE_FEE,
-                      
-                      s3: result.window_counts.pane_3rd_story,
-                      s2: result.window_counts.pane_2nd_story,
-                      s1: result.window_counts.pane_1st_base,
-                      patio: result.window_counts.patio_door_pane,
-                      entry: result.window_counts.entry_door_pane,
-                      service: mode === "ext" ? "Exterior Only" : "Inside & Out",
+                      data: packData({
+                        ref: referenceId,
+                        quote: calculateTotalForMode(mode),
+                        panes: getTotalPanes(),
+                        time: formatHours(calculateMinutesForMode(mode)),
+                        q_ext: calculateTotalForMode("ext"),
+                        t_ext: formatHours(calculateMinutesForMode("ext")),
+                        q_inout: calculateTotalForMode("in_out"),
+                        t_inout: formatHours(calculateMinutesForMode("in_out")),
+                        hr: RATE_PER_MINUTE * 60,
+                        markup: "7.5%",
+                        fee: BASE_FEE,
+                        s3: result.window_counts.pane_3rd_story,
+                        s2: result.window_counts.pane_2nd_story,
+                        s1: result.window_counts.pane_1st_base,
+                        patio: result.window_counts.patio_door_pane,
+                        entry: result.window_counts.entry_door_pane,
+                        service: mode === "ext" ? "Exterior Only" : "Inside & Out",
+                      })
                     },
-                    hash: "contact" // Scroll to #contact
+                    hash: "contact"
                   }}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700 hover:shadow-emerald-300"
                 >

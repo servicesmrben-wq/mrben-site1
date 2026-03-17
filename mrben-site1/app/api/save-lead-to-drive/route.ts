@@ -29,6 +29,26 @@ export async function POST(req: Request) {
 
     const drive = google.drive({ version: "v3", auth });
 
+    // --- SUBFOLDER LOGIC ---
+    let targetFolderId = folderId;
+    if (referenceId && referenceId.startsWith("EST-")) {
+      try {
+        const searchRes = await drive.files.list({
+          q: `name = '${referenceId}' and '${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+          fields: "files(id)",
+          supportsAllDrives: true,
+          includeItemsFromAllDrives: true,
+        });
+
+        if (searchRes.data.files && searchRes.data.files.length > 0) {
+          targetFolderId = searchRes.data.files[0].id!;
+        }
+      } catch (err) {
+        console.error("Error finding subfolder for lead:", err);
+      }
+    }
+    // ---------------------------
+
     const content = `LEAD CAPTURE
 Reference ID: ${referenceId}
 Date: ${new Date().toLocaleString()}
@@ -50,7 +70,7 @@ Phone: ${phone}
 
     const fileMetadata = {
       name: `${referenceId}_Lead_${name.replace(/\s+/g, "_")}.txt`,
-      parents: [folderId],
+      parents: [targetFolderId],
     };
 
     const media = {

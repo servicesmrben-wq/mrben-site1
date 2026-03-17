@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Politique de confidentialité | MrBen",
   description:
-    "Politique de confidentialité de MrBen.ca. Vos renseignements servent uniquement aux communications de service et aux SMS; répondez STOP pour vous désabonner. Aucun marketing ni vente de données.",
+    "Politique de confidentialité de MrBen.ca. Transparence sur la collecte de données, l'analyse par IA et la protection de vos renseignements personnels.",
   robots: {
     index: false,
   },
@@ -21,36 +21,91 @@ export default function ConfidentialitePage() {
             Politique de confidentialité
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-600">
-            Cette politique explique comment MrBen.ca collecte, utilise et protège vos
-            renseignements lorsque vous demandez nos services de lavage de vitres et
-            d’entretien extérieur.
+            Dernière mise à jour : Mars 2026. Cette politique détaille comment MrBen.ca gère vos renseignements personnels conformément aux lois québécoises et canadiennes.
           </p>
         </div>
       </section>
 
       <section className="mx-auto max-w-4xl px-4 py-12">
-        <div className="space-y-6 text-base leading-relaxed text-zinc-700">
-          <p>
-            Nous recueillons uniquement les informations que vous choisissez de fournir (nom,
-            adresse, téléphone et courriel) afin de préparer une estimation, planifier le service
-            et communiquer avec vous au sujet des services demandés.
-          </p>
-          <p>
-            Si vous acceptez de recevoir des SMS, ces messages servent exclusivement aux
-            communications de service, y compris les confirmations de rendez-vous, les mises à
-            jour d’arrivée et les suivis de service. Répondez STOP en tout temps pour vous
-            désabonner. Des frais de messagerie et de données peuvent s’appliquer.
-          </p>
-          <p>
-            Nous n’envoyons aucun message marketing ou promotionnel et nous ne vendons, ne louons
-            ni ne partageons vos renseignements personnels à des tiers à des fins de marketing.
-          </p>
-          <p>
-            Pour toute question concernant cette politique ou vos renseignements, écrivez-nous à{" "}
-            <a className="font-medium text-zinc-900 underline-offset-4 hover:underline" href="mailto:info@mrben.ca">
+        <div className="space-y-10 text-base leading-relaxed text-zinc-700">
+          
+          {/* 1. Collecte des renseignements */}
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">1. Renseignements recueillis</h2>
+            <p>
+              Nous recueillons uniquement les informations que vous fournissez volontairement via nos formulaires de contact et notre estimateur :
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li><strong>Identité :</strong> Nom et prénom.</li>
+              <li><strong>Coordonnées :</strong> Adresse courriel, numéro de téléphone et adresse physique de la propriété.</li>
+              <li><strong>Médias :</strong> Photos de l'extérieur de votre propriété (via l'estimateur).</li>
+              <li><strong>Service :</strong> Détails de l'estimation et type de service demandé.</li>
+            </ul>
+          </div>
+
+          {/* 2. Utilisation de l'Intelligence Artificielle */}
+          <div className="rounded-2xl bg-zinc-50 p-6 ring-1 ring-zinc-200/60">
+            <h2 className="text-lg font-semibold text-zinc-900 mb-3">2. Traitement par Intelligence Artificielle (IA)</h2>
+            <p>
+              Notre outil d'estimation utilise l'intelligence artificielle (Google Gemini) pour analyser les photos téléversées. Ce traitement automatisé sert exclusivement à :
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1 text-sm">
+              <li>Compter le nombre de vitres et de panneaux de portes.</li>
+              <li>Déterminer le nombre d'étages de la propriété.</li>
+              <li>Générer une soumission de prix instantanée et précise.</li>
+            </ul>
+            <p className="mt-3 text-sm italic">
+              Note : Aucune photo n'est utilisée pour entraîner des modèles d'IA publics ou vendue à des tiers.
+            </p>
+          </div>
+
+          {/* 3. Communications SMS */}
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">3. Communications par SMS</h2>
+            <p>
+              En nous fournissant votre numéro de téléphone, vous acceptez de recevoir des messages texte liés exclusivement à vos services :
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li>Confirmations et rappels de rendez-vous.</li>
+              <li>Mises à jour sur l'heure d'arrivée de notre équipe.</li>
+              <li>Suivis de satisfaction après service.</li>
+            </ul>
+            <p className="mt-3 font-medium">
+              Nous n'envoyons aucun SMS marketing. Vous pouvez répondre "STOP" à tout moment pour cesser de recevoir ces messages.
+            </p>
+          </div>
+
+          {/* 4. Stockage et Sécurité */}
+          <div>
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">4. Stockage et sécurité</h2>
+            <p>
+              Vos données sont stockées de manière sécurisée sur les serveurs de <strong>Google Workspace (Google Drive)</strong>. Nous appliquons des mesures de sécurité strictes pour protéger vos renseignements contre tout accès non autorisé. Nous ne vendons, ne louons, ni ne partageons vos données personnelles avec des tiers à des fins publicitaires.
+            </p>
+          </div>
+
+          {/* 5. Vos Droits (Loi 25) */}
+          <div className="border-t border-zinc-100 pt-8">
+            <h2 className="text-xl font-bold text-zinc-900 mb-4">5. Vos droits (Loi 25)</h2>
+            <p>
+              Conformément à la Loi 25 du Québec, vous disposez des droits suivants :
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li><strong>Droit d'accès :</strong> Consulter les renseignements que nous détenons sur vous.</li>
+              <li><strong>Droit de rectification :</strong> Demander la correction de données inexactes.</li>
+              <li><strong>Droit au retrait :</strong> Retirer votre consentement à l'utilisation de vos données.</li>
+            </ul>
+          </div>
+
+          {/* Contact Responsable */}
+          <div className="rounded-2xl bg-zinc-900 p-8 text-white">
+            <h2 className="text-lg font-bold mb-2">Responsable de la protection de la vie privée</h2>
+            <p className="text-zinc-400 mb-4">Pour toute question ou demande concernant vos données :</p>
+            <p className="font-medium">Benjamin</p>
+            <a className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4" href="mailto:info@mrben.ca">
               info@mrben.ca
-            </a>.
-          </p>
+            </a>
+          </div>
+
         </div>
       </section>
     </main>
