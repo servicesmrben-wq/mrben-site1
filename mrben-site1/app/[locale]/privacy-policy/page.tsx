@@ -63,15 +63,15 @@ export default function PrivacyPolicyPage() {
           <div>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">3. SMS Communications</h2>
             <p>
-              By providing your phone number, you agree to receive text messages related exclusively to your services:
+              By providing your phone number, you agree to receive text messages related to your services:
             </p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>Appointment confirmations and reminders.</li>
               <li>Arrival time updates from our team.</li>
-              <li>Post-service satisfaction follow-ups.</li>
+              <li>Post-service satisfaction follow-ups and related communications.</li>
             </ul>
             <p className="mt-3 font-medium">
-              We do not send marketing SMS. You can reply "STOP" at any time to opt out of these messages.
+              You can reply "STOP" at any time to opt out of these messages.
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export default function PrivacyPolicyPage() {
           <div>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">4. Storage and Security</h2>
             <p>
-              Your data is securely stored on <strong>Google Workspace (Google Drive)</strong> servers. We apply strict security measures to protect your information against unauthorized access. We do not sell, rent, or share your personal data with third parties for advertising purposes.
+              Your data is securely stored on <strong>Google Workspace (Google Drive)</strong> servers. We apply strict security measures to protect your information against unauthorized access. We do not sell or rent your personal data to third parties for advertising purposes.
             </p>
           </div>
 
@@ -101,8 +101,8 @@ export default function PrivacyPolicyPage() {
             <h2 className="text-lg font-bold mb-2">Privacy Officer</h2>
             <p className="text-zinc-400 mb-4">For any questions or requests regarding your data:</p>
             <p className="font-medium">Benjamin</p>
-            <a className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4" href="mailto:info@mrben.ca">
-              info@mrben.ca
+            <a className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4" href="mailto:admin@mrben.ca">
+              admin@mrben.ca
             </a>
           </div>
 

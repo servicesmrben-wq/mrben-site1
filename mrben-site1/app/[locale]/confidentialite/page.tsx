@@ -63,15 +63,15 @@ export default function ConfidentialitePage() {
           <div>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">3. Communications par SMS</h2>
             <p>
-              En nous fournissant votre numéro de téléphone, vous acceptez de recevoir des messages texte liés exclusivement à vos services :
+              En nous fournissant votre numéro de téléphone, vous acceptez de recevoir des messages texte liés à vos services :
             </p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>Confirmations et rappels de rendez-vous.</li>
               <li>Mises à jour sur l'heure d'arrivée de notre équipe.</li>
-              <li>Suivis de satisfaction après service.</li>
+              <li>Suivis de satisfaction après service et communications connexes.</li>
             </ul>
             <p className="mt-3 font-medium">
-              Nous n'envoyons aucun SMS marketing. Vous pouvez répondre "STOP" à tout moment pour cesser de recevoir ces messages.
+              Vous pouvez répondre "STOP" à tout moment pour cesser de recevoir ces messages.
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export default function ConfidentialitePage() {
           <div>
             <h2 className="text-xl font-bold text-zinc-900 mb-4">4. Stockage et sécurité</h2>
             <p>
-              Vos données sont stockées de manière sécurisée sur les serveurs de <strong>Google Workspace (Google Drive)</strong>. Nous appliquons des mesures de sécurité strictes pour protéger vos renseignements contre tout accès non autorisé. Nous ne vendons, ne louons, ni ne partageons vos données personnelles avec des tiers à des fins publicitaires.
+              Vos données sont stockées de manière sécurisée sur les serveurs de <strong>Google Workspace (Google Drive)</strong>. Nous appliquons des mesures de sécurité strictes pour protéger vos renseignements contre tout accès non autorisé. Nous ne vendons ni ne louons vos données personnelles à des tiers à des fins publicitaires.
             </p>
           </div>
 
@@ -101,8 +101,8 @@ export default function ConfidentialitePage() {
             <h2 className="text-lg font-bold mb-2">Responsable de la protection de la vie privée</h2>
             <p className="text-zinc-400 mb-4">Pour toute question ou demande concernant vos données :</p>
             <p className="font-medium">Benjamin</p>
-            <a className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4" href="mailto:info@mrben.ca">
-              info@mrben.ca
+            <a className="text-emerald-400 hover:text-emerald-300 underline underline-offset-4" href="mailto:admin@mrben.ca">
+              admin@mrben.ca
             </a>
           </div>
 
