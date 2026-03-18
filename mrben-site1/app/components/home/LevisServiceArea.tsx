@@ -82,7 +82,7 @@ export default function ServiceArea({
 
           <a
             className="flex cursor-pointer items-center justify-center rounded-3xl border border-zinc-200 bg-white p-6 text-left shadow-sm"
-            href={BRAND.googleReviewsUrl}
+            href={BRAND.googleReviewsUrlLevis}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("territory.googleTile.aria")}

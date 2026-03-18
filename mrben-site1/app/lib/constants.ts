@@ -5,6 +5,7 @@ export const BRAND = {
   email: "service@mrben.ca",
   emailHref: "service@mrben.ca",
   googleReviewsUrl: "https://maps.app.goo.gl/tDWmLSud1LPRVFBLA",
+  googleReviewsUrlLevis: "https://share.google/2j5xFzbfirtCGDwh0",
 };
 
 export const IMAGE_URLS = [

@@ -94,7 +94,7 @@ export default function Hero({
 
   const ratingLine = (
     <a 
-      href={BRAND.googleReviewsUrl} 
+      href={BRAND.googleReviewsUrlLevis} 
       target="_blank" 
       rel="noopener noreferrer" 
       className="flex flex-wrap items-center gap-2 hover:opacity-90 transition-opacity"
