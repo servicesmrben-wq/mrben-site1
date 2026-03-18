@@ -5,26 +5,31 @@ export const PRICING_DATA = {
   pane_1st_base: {
     label: "pane_1st_base_label",
     minutes: 1.57, // Time per pane (exterior)
+    minutes_in_out: 3.14, // Time per pane (interior + exterior)
     desc: "pane_1st_base_desc"
   },
   pane_2nd_story: {
     label: "pane_2nd_story_label",
-    minutes: 1.8,
+    minutes: 1.77,
+    minutes_in_out: 3.54,
     desc: "pane_2nd_story_desc"
   },
   pane_3rd_story: {
     label: "pane_3rd_story_label",
-    minutes: 2.10,
+    minutes: 1.97,
+    minutes_in_out: 3.94,
     desc: "pane_3rd_story_desc"
   },
   patio_door_pane: {
     label: "patio_door_pane_label",
-    minutes: 2.0,
+    minutes: 1.97,
+    minutes_in_out: 3.94,
     desc: "patio_door_pane_desc"
   },
   entry_door_pane: {
     label: "entry_door_pane_label",
-    minutes: 1.5, // 3.0 min total for a 2-pane door
+    minutes: 1.25, // 2.5 min total for a 2-pane door
+    minutes_in_out: 2.50,
     desc: "entry_door_pane_desc"
   }
 };
