@@ -213,7 +213,8 @@ export default function EstimatorPage() {
         referenceId: newRefId,
         user_selection: mode === "ext" ? "Extérieur Seulement" : "Intérieur et Extérieur",
         total_panes: totalPanes,
-        pricing_metrics: `115$/heure | Marge : +7.5% | Frais de service et déplacement : ${BASE_FEE}$`,
+        confidence_score: data.confidence_score || 0,
+        pricing_metrics: `115$/heure | Score de confiance : ${data.confidence_score || 0}% | Marge : +7.5% | Frais de service et déplacement : ${BASE_FEE}$`,
         estimates: {
           inside_and_out: {
             label: "Intérieur et Extérieur",

@@ -63,8 +63,15 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     "patio_door_pane": 0,
     "entry_door_pane": 0 
   },
+  "confidence_score": 85,
   "stories": 1
-}`;
+}
+
+CONFIDENCE RULES:
+- 95-100: Crystal clear photos, all angles visible, zero obstructions.
+- 80-94: Good photos, minor shadows or distant shots, but very high certainty.
+- 60-79: Moderate obstructions (winter shelters/bushes) or missing one side of house.
+- Below 60: Very blurry, heavy obstructions, or major guessing required.`;
 
     const body = {
       systemInstruction: {
