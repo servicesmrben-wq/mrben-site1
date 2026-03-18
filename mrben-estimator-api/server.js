@@ -52,17 +52,17 @@ SPATIAL MAPPING (Top-Down):
 - 2nd Story -> 'pane_2nd_story'
 - Main/Basement -> 'pane_1st_base'
 
-CONFIDENCE EVALUATION:
-Assign a 'confidence_score' (0-100) based on photo quality and visibility:
+POST-COUNTING CONFIDENCE EVALUATION:
+*ONLY AFTER* you have completed the full window count, evaluate the photo quality and assign a 'confidence_score' (0-100):
 - 95-100: Crystal clear photos, all angles visible, zero obstructions.
-- 80-94: Good photos, minor shadows or distant shots, but very high certainty.
+- 80-94: Good photos, minor shadows or distant shots.
 - 60-79: Moderate obstructions (winter shelters/bushes) or missing one side of house.
-- Below 60: Very blurry, heavy obstructions, or major guessing required.
+- Below 60: Very blurry, heavy obstructions, or major guessing was required.
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
+Return JSON ONLY. You MUST follow this exact JSON sequence to ensure counting accuracy is not compromised by quality evaluation. Use the 'analysis_counting' field to briefly perform step-by-step reasoning per image to actively look for hidden/shadowed windows before outputting the final counts.
 {
-  "analysis": "Img 1: Found 3 main windows (3 panes), 1 sliding patio door (2 panes), plus 1 hidden basement slider in shadow (2 panes)...",
+  "analysis_counting": "Img 1: Found 3 main windows (3 panes), 1 sliding patio door (2 panes), plus 1 hidden basement slider in shadow (2 panes)...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
@@ -70,8 +70,9 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     "patio_door_pane": 0,
     "entry_door_pane": 0 
   },
-  "confidence_score": 0,
-  "stories": 1
+  "stories": 1,
+  "analysis_confidence": "Photos were generally clear, but side B had heavy shadows requiring close inspection.",
+  "confidence_score": 85
 }`;
 
     const body = {
