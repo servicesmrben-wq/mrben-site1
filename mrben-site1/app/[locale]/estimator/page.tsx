@@ -599,6 +599,7 @@ export default function EstimatorPage() {
                         t_ext: formatHours(calculateMinutesForMode("ext")),
                         q_inout: calculateTotalForMode("in_out"),
                         t_inout: formatHours(calculateMinutesForMode("in_out")),
+                        conf: result.confidence_score,
                         hr: RATE_PER_MINUTE * 60,
                         markup: "7.5%",
                         fee: BASE_FEE,
