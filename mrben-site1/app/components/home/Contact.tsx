@@ -295,6 +295,7 @@ function ContactContent({
         formData.append("estimateQuote", estimateQuote);
         formData.append("estimatePanes", estimatePanes || "0");
         formData.append("estimateTime", estimateTime || "N/A");
+        formData.append("estimateConf", estimateConf || "0");
         formData.append("estimateDetails", `Rez-de-chaussée et sous-sol : ${estimateS1}, Deuxième étage : ${estimateS2}, Troisième étage : ${estimateS3}, Portes patio (panneaux) : ${estimatePatio}, Portes d'entrée (assumé 2 vitres/porte) : ${estimateEntry}`);
         
         // Extended comparison
