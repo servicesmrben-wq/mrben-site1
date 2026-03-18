@@ -190,7 +190,7 @@ export default function EstimatorPage() {
           const k = key as PricingKey;
           const item = PRICING_DATA[k];
           if (item && typeof count === "number") {
-            const unitMinutes = m === "ext" ? item.minutes : item.minutes_in_out;
+            const unitMinutes = m === "ext" ? item.minutes_ext : (item.minutes_ext + item.minutes_int);
             totalMinutes += unitMinutes * count;
           }
         });
@@ -316,7 +316,7 @@ export default function EstimatorPage() {
       const k = key as PricingKey;
       const item = PRICING_DATA[k];
       if (item && typeof count === "number") {
-        const unitMinutes = m === "ext" ? item.minutes : item.minutes_in_out;
+        const unitMinutes = m === "ext" ? item.minutes_ext : (item.minutes_ext + item.minutes_int);
         totalMinutes += unitMinutes * count;
       }
     });
