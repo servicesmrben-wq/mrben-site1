@@ -77,6 +77,7 @@ function ContactContent({
   const estimateQuote = estimateData?.quote || searchParams.get("quote");
   const estimatePanes = estimateData?.panes || searchParams.get("panes");
   const estimateTime = estimateData?.time || searchParams.get("time");
+  const estimateConf = estimateData?.conf || searchParams.get("conf");
   
   // Extended comparison params
   const qExt = estimateData?.q_ext || searchParams.get("q_ext");
