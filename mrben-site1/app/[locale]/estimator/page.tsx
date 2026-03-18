@@ -209,7 +209,8 @@ export default function EstimatorPage() {
       const extData = getModeData("ext");
 
       const mergedResult = {
-        analysis: data.analysis || "",
+        analysis: data.analysis_counting || "",
+        analysis_confidence: data.analysis_confidence || "",
         referenceId: newRefId,
         user_selection: mode === "ext" ? "Extérieur Seulement" : "Intérieur et Extérieur",
         total_panes: totalPanes,
