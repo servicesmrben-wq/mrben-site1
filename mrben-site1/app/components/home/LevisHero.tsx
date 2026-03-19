@@ -68,8 +68,8 @@ export default function Hero({
     ? "Lavage de vitres résidentiel et commercial à Lévis" 
     : "Residential and commercial window cleaning in Lévis";
   const heroH1b = locale === 'fr'
-    ? "Lévis, Saint-Nicolas & Lotbinière"
-    : "Lévis, Saint-Nicolas & Lotbinière";
+    ? "Lévis, Saint-Nicolas et la région de Lotbinière"
+    : "Lévis, Saint-Nicolas and the Lotbinière region";
   const heroTrust2 = locale === 'fr' ? "Entreprise locale de Lévis" : "Local Lévis business";
 
   const rating = googleProfile.rating;
