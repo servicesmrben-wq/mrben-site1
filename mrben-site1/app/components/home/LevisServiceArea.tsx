@@ -24,6 +24,7 @@ export default function ServiceArea({
       { name: "Saint-Nicolas", slug: "saint-nicolas" },
       { name: "Charny", slug: "charny" },
       { name: "Dosquet", slug: "dosquet" },
+      { name: "Lotbinière", slug: "lotbiniere" },
     ];
   }, []);
 
@@ -48,7 +49,7 @@ export default function ServiceArea({
       <div className="relative mx-auto max-w-6xl px-4 py-10 md:py-16">
         <SectionTitle
           kicker={t("secAreaK")}
-          title={t("secAreaT")}
+          title="Lévis & Lotbinière"
           subtitle={t("secAreaS")}
           subtitleClassName="hidden md:block"
         />

@@ -63,13 +63,13 @@ export default function Hero({
   const heroTextShadow = { textShadow: "0 1px 2px rgba(0,0,0,0.35)" };
 
   // Custom strings for Lévis
-  const heroBadgeB = locale === 'fr' ? "Lévis et la Rive-Sud" : "Lévis and South Shore";
+  const heroBadgeB = locale === 'fr' ? "Lévis & Lotbinière" : "Lévis & Lotbinière";
   const heroH1a = locale === 'fr' 
     ? "Lavage de vitres résidentiel et commercial à Lévis" 
     : "Residential and commercial window cleaning in Lévis";
   const heroH1b = locale === 'fr'
-    ? "Lévis, Saint-Nicolas, Charny et environs"
-    : "Lévis, Saint-Nicolas, Charny and surrounding areas";
+    ? "Lévis, Saint-Nicolas & Lotbinière"
+    : "Lévis, Saint-Nicolas & Lotbinière";
   const heroTrust2 = locale === 'fr' ? "Entreprise locale de Lévis" : "Local Lévis business";
 
   const rating = googleProfile.rating;
