@@ -4,8 +4,7 @@ const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 
 const app = express();
-// FIX 1: Cloud Run dynamic port binding
-const port = process.env.PORT || 8080;
+const port = 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -38,36 +37,32 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-    // FIX 2: Wrapped the prompt in a proper JavaScript string variable
-    const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
+const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
 
 CRITICAL VISUAL RULES:
 - DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, framed unit of a window that is either fixed or designed to slide/open. It is not an individual piece of glass within a decorative grid (muntin).
-- CATEGORIZE BY TYPE: When you identify a panel/sash, you must categorize it. If it is one solid piece of glass, count it as a 'standard_panel'. If the panel is split down the middle by a thick vertical or horizontal structural frame (not a tiny decorative grid), count it as a 'divided_panel'.
-- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly to accurately categorize the panels.
-- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only evaluate the major sliding or fixed structural panels.
+- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to check for horizontal dividers.
+- MULTIPLY SECTIONS x SASHES: Do not just count vertical frames. First, count the vertical columns. Second, look for a horizontal middle divider separating the top and bottom halves. Multiply them! (e.g., A window with 3 vertical sections, split horizontally in the middle = 6 total cleanable panels).
+- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
 - OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden basement windows.
 - BASEMENT: Identify basement windows by looking closely at the foundation line.
-- TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window.
-- DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'.
+- TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base').
+- DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'. (e.g., A door with glass + 2 sidelights = 3 entry_door_panes).
 - DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
 
 SPATIAL MAPPING (Top-Down):
-- 3rd Story -> 'standard_panel_3rd_story' or 'divided_panel_3rd_story'
-- 2nd Story -> 'standard_panel_2nd_story' or 'divided_panel_2nd_story'
-- Main/Basement -> 'standard_panel_1st_base' or 'divided_panel_1st_base'
+- 3rd Story -> 'pane_3rd_story'
+- 2nd Story -> 'pane_2nd_story'
+- Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step reasoning for every window assembly before outputting the final counts.
+Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math for every window assembly before outputting the final counts.
 {
-  "analysis_counting": "Img 1: Found a large window assembly on the 1st floor. It has 3 main panels. I am zooming in. None of the panels have structural dividers. I am counting 3 standard_panel_1st_base...",
+  "analysis_counting": "Img 1: Found a large window assembly on the 1st floor. It has 3 vertical sections. Each section is split horizontally into a top and bottom half. 3 x 2 = 6 total panels...",
   "window_counts": { 
-    "standard_panel_3rd_story": 0,
-    "divided_panel_3rd_story": 0,
-    "standard_panel_2nd_story": 0,
-    "divided_panel_2nd_story": 0,
-    "standard_panel_1st_base": 0, 
-    "divided_panel_1st_base": 0,
+    "pane_3rd_story": 0, 
+    "pane_2nd_story": 0, 
+    "pane_1st_base": 0, 
     "patio_door_pane": 0,
     "entry_door_pane": 0 
   },
@@ -125,7 +120,6 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step reas
   }
 });
 
-// FIX 3: Re-added the '0.0.0.0' binding
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
