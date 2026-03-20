@@ -798,8 +798,8 @@
   "estimator": {
     "badge": "BETA — Estimation IA",
     "title": "Estimateur de lavage de vitres par IA🤖",
-    "subtitle": "Téléversez des photos de l'extérieur de votre maison (tous les côtés). Notre IA comptera vos fenêtres et vous donnera une estimation de prix instantanée.",
-    "step1Title": "1. Conseils pour une estimation précise",
+    "subtitle": "Notre IA comptera vos fenêtres et vous donnera une estimation de prix instantanée.",
+    "step1Title": "Téléversez des photos de l'extérieur de votre maison (tous les côtés)",
     "step1": "1. Téléversez jusqu'à 10 photos de l'extérieur de votre maison",
     "step1Instructions": "Pour une estimation précise, veuillez suivre ces conseils :\n\n• Face à la maison et reculez : Placez-vous directement devant chaque face de la maison (évitez les angles prononcés) et reculez de 20 à 40 pieds pour que toute la façade soit visible.\n\n• Capturez chaque côté : Prenez une photo claire de l'avant, de l'arrière et des deux côtés (gauche et droite).\n\n• Combien de photos ? 4 images sont généralement parfaites, mais vous pouvez en envoyer jusqu'à 10 pour les plus grandes propriétés.\n\nEn continuant, vous acceptez notre politique de confidentialité et l'analyse de vos photos par notre outil d'IA.",
     "clickToSelect": "Cliquez pour sélectionner des photos",

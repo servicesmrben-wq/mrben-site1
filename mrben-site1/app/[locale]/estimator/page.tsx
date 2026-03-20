@@ -43,11 +43,33 @@ export default function EstimatorPage() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files);
-      const validFiles = newFiles.filter(f => f.type.startsWith("image/"));
+      const MAX_FILES = 10;
+      const currentCount = files.length;
       
-      if (validFiles.length !== newFiles.length) {
-        alert(t("errorImageOnly"));
+      if (currentCount >= MAX_FILES) {
+        alert(t("errorMaxImages"));
+        e.target.value = "";
+        return;
+      }
+
+      const incomingFiles = Array.from(e.target.files);
+      const availableSlots = MAX_FILES - currentCount;
+      
+      const validFiles = incomingFiles
+        .filter(f => f.type.startsWith("image/"))
+        .slice(0, availableSlots);
+      
+      if (validFiles.length < incomingFiles.length) {
+        if (incomingFiles.some(f => !f.type.startsWith("image/"))) {
+          alert(t("errorImageOnly"));
+        } else if (incomingFiles.length > availableSlots) {
+          alert(t("errorMaxImages"));
+        }
+      }
+
+      if (validFiles.length === 0) {
+        e.target.value = "";
+        return;
       }
 
       // Generate stable URLs for new files
@@ -210,12 +232,10 @@ export default function EstimatorPage() {
 
       const mergedResult = {
         analysis: data.analysis_counting || "",
-        analysis_confidence: data.analysis_confidence || "",
         referenceId: newRefId,
         user_selection: mode === "ext" ? "Extérieur Seulement" : "Intérieur et Extérieur",
         total_panes: totalPanes,
-        confidence_score: data.confidence_score || 0,
-        pricing_metrics: `115$/heure | Score de confiance : ${data.confidence_score || 0}% | Marge : +7.5% | Frais de service et déplacement : ${BASE_FEE}$`,
+        pricing_metrics: `115$/heure | Marge : +7.5% | Frais de service et déplacement : ${BASE_FEE}$`,
         estimates: {
           inside_and_out: {
             label: "Intérieur et Extérieur",
@@ -600,7 +620,6 @@ export default function EstimatorPage() {
                         t_ext: formatHours(calculateMinutesForMode("ext")),
                         q_inout: calculateTotalForMode("in_out"),
                         t_inout: formatHours(calculateMinutesForMode("in_out")),
-                        conf: result.confidence_score,
                         hr: RATE_PER_MINUTE * 60,
                         markup: "7.5%",
                         fee: BASE_FEE,

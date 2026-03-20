@@ -798,8 +798,8 @@
   "estimator": {
     "badge": "BETA — AI Estimation",
     "title": "AI🤖 Window Cleaning Estimator",
-    "subtitle": "Upload photos of the exterior of your home (all sides). Our AI will count your windows and give you an instant price estimate.",
-    "step1Title": "1. Guidelines for an Accurate Estimate",
+    "subtitle": "Our AI will count your windows and give you an instant price estimate.",
+    "step1Title": "Upload photos of the exterior of your home (all sides)",
     "step1": "1. Upload up to 10 photos of the exterior of your house",
     "step1Instructions": "For the most accurate estimate, please follow these guidelines:\n\n• Straight On & Step Back: Face each side of the house directly (avoid sharp angles) and stand 20 to 40 feet away so the entire side fits in the frame.\n\n• Capture Every Side: Get a clear shot of the front, back, left, and right.\n\n• How Many? 4 images are usually perfect, but you can upload up to 10 for larger homes.\n\nBy continuing, you agree to our privacy policy and the AI analysis of your photos.",
     "clickToSelect": "Click to select photos",
