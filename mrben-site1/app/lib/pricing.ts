@@ -28,8 +28,8 @@ export const PRICING_DATA = {
   },
   entry_door_pane: {
     label: "entry_door_pane_label",
-    minutes_ext: 1.25, // 2.5 min total for a 2-pane door
-    minutes_int: 1.25,
+    minutes_ext: 2.5,
+    minutes_int: 2.5,
     desc: "entry_door_pane_desc"
   }
 };

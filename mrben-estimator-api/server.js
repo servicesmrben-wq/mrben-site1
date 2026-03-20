@@ -45,7 +45,7 @@ CRITICAL VISUAL RULES:
 - TRANSOMS: Windows above doors count separately (map to 1st floor).
 - BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
 - DOORS (PATIO): Count every large glass section/panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
-- DOORS (ENTRY): Standard front/back doors. Assume 2 glass panes for every entry door found, count as 'entry_door_pane'.
+- DOORS (ENTRY): Standard front/back doors. Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
