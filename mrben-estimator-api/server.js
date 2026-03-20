@@ -1,11 +1,11 @@
-cat << 'EOF' > server.js
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 
 const app = express();
-const port = 8080;
+// FIX 1: Allow Cloud Run to inject its dynamic port
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -87,7 +87,7 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
       }
     };
 
-    // Updated to use the requested 3.1 Pro Preview API
+    // Set to 3.1 Pro Preview as requested
     const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview-api:generateContent';
 
     const response = await fetch(url, {
@@ -120,7 +120,7 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
   }
 });
 
-app.listen(port, () => {
+// FIX 2: Explicitly bind to '0.0.0.0'
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
-EOF
