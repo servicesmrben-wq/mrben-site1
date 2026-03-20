@@ -37,14 +37,17 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-    const systemInstruction = `You are an expert estimator. Analyze these photos to count window panes.
+    const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
 
 CRITICAL VISUAL RULES:
-- OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
-- MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
+- DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, framed unit of a window that is either fixed or designed to slide/open. It is not an individual piece of glass within a decorative grid (muntin).
+- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to check for horizontal dividers.
+- MULTIPLY SECTIONS x SASHES: Do not just count vertical frames. First, count the vertical columns. Second, look for a horizontal middle divider separating the top and bottom halves. Multiply them! (e.g., A window with 3 vertical sections, split horizontally in the middle = 6 total cleanable panels).
+- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
+- OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden basement windows.
 - TRANSOMS: Windows above doors count separately (map to 1st floor).
-- BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
-- DOORS (PATIO): Count every large glass section/panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
+- BASEMENT: Identify basement windows by looking closely at the foundation line.
+- DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
 - DOORS (ENTRY): Standard front/back doors. Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
 
 SPATIAL MAPPING (Top-Down):
@@ -53,9 +56,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis_counting' field to briefly perform step-by-step reasoning per image to actively look for hidden/shadowed windows before outputting the final counts.
+Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math for every window assembly before outputting the final counts.
 {
-  "analysis_counting": "Img 1: Found 3 main windows (3 panes), 1 sliding patio door (2 panes), plus 1 hidden basement slider in shadow (2 panes)...",
+  "analysis_counting": "Img 1: Found a large window assembly on the 1st floor. It has 3 vertical sections. Each section is split horizontally into a top and bottom half. 3 x 2 = 6 total panels...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
