@@ -37,7 +37,7 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-    const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
+const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
 
 CRITICAL VISUAL RULES:
 - DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, framed unit of a window that is either fixed or designed to slide/open. It is not an individual piece of glass within a decorative grid (muntin).
@@ -45,10 +45,10 @@ CRITICAL VISUAL RULES:
 - MULTIPLY SECTIONS x SASHES: Do not just count vertical frames. First, count the vertical columns. Second, look for a horizontal middle divider separating the top and bottom halves. Multiply them! (e.g., A window with 3 vertical sections, split horizontally in the middle = 6 total cleanable panels).
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
 - OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden basement windows.
-- TRANSOMS: Windows above doors count separately (map to 1st floor).
 - BASEMENT: Identify basement windows by looking closely at the foundation line.
+- TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base').
+- DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'. (e.g., A door with glass + 2 sidelights = 3 entry_door_panes).
 - DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
-- DOORS (ENTRY): Standard front/back doors. Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
