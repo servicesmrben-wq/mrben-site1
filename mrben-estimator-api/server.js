@@ -4,8 +4,7 @@ const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 
 const app = express();
-// FIX 1: Allow Cloud Run to inject its dynamic port
-const port = process.env.PORT || 8080;
+const port = 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -38,19 +37,15 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-    const systemInstruction = `You are an expert window estimator for a cleaning business. Analyze these photos to count the major cleanable window PANELS (often called sashes).
+    const systemInstruction = `You are an expert estimator. Analyze these photos to count window panes.
 
 CRITICAL VISUAL RULES:
-- BREAK DOWN ASSEMBLIES: Do not count a large window block as just "1". 
-- COUNT VERTICAL SECTIONS: Look for thick vertical frames (mullions). A large window often has 2 or 3 vertical columns.
-- COUNT HORIZONTAL DIVISIONS: Look for thick horizontal frames separating the top and bottom glass. 
-- CALCULATE TOTAL PANELS: Multiply the vertical sections by the horizontal divisions. (e.g., A window with 3 vertical sections, where each section has a top and bottom half, equals 6 total panels). Count these as your base panes.
-- IGNORE DECORATIVE GRIDS: Do NOT count the tiny individual glass squares (muntins/grids) inside a larger panel. Count the main panel itself as 1 piece.
 - OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, and into deep shadows. Do not miss partially hidden basement windows.
+- MULLIONS: Count every distinct glass pane separated by a frame. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes). Standard slider/hung = 2 panes.
 - TRANSOMS: Windows above doors count separately (map to 1st floor).
-- BASEMENT: Count 2 panels per sliding basement unit. Look closely at the foundation line.
-- DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
-- DOORS (ENTRY): Standard front/back doors. Assume 1 glass panel for every entry door found, count as 'entry_door_pane'.
+- BASEMENT: Count 2 panes per sliding basement unit. Look closely at the foundation line.
+- DOORS (PATIO): Count every large glass section/panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
+- DOORS (ENTRY): Standard front/back doors. Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
@@ -58,9 +53,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math for every window assembly before outputting the final counts.
+Return JSON ONLY. Use the 'analysis_counting' field to briefly perform step-by-step reasoning per image to actively look for hidden/shadowed windows before outputting the final counts.
 {
-  "analysis_counting": "Img 1: Found a large window assembly on the 1st floor. It has 3 vertical sections. Each section is split horizontally into a top and bottom half. 3 x 2 = 6 total panels...",
+  "analysis_counting": "Img 1: Found 3 main windows (3 panes), 1 sliding patio door (2 panes), plus 1 hidden basement slider in shadow (2 panes)...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
@@ -87,8 +82,7 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
       }
     };
 
-    // Set to 3.1 Pro Preview as requested
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview-api:generateContent';
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
 
     const response = await fetch(url, {
       method: 'POST',
@@ -111,7 +105,10 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
     let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     textResult = textResult.replace(/```json|```/g, '').trim();
     
+    // Parse the AI window counts
     const aiResult = JSON.parse(textResult);
+    
+    // Return ONLY the counts (Frontend will handle pricing)
     res.json(aiResult);
 
   } catch (error) {
@@ -120,7 +117,6 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
   }
 });
 
-// FIX 2: Explicitly bind to '0.0.0.0'
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
