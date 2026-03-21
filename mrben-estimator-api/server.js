@@ -37,21 +37,21 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-const systemInstruction = `You are an expert estimator. Analyze the provided photos to accurately count ALL cleanable window PANELS (often called sashes) and present the results in a structured JSON format.
+const systemInstruction = `You are an expert estimator. Analyze these photos to accurately count ALL cleanable window PANELS (often called sashes) and present the results in JSON.
 
 CRITICAL VISUAL RULES:
-- FLOOR-BY-FLOOR SCANNING: After establishing a strict bounding box (peak to foundation, extreme left to extreme right, ignoring background), do not scan haphazardly. You must scan strictly FLOOR-BY-FLOOR. Start at the highest floor (e.g., 2nd Story), scan it completely from left-to-right. Then drop down to the Main Floor and scan left-to-right. Finally, scan the Basement left-to-right.
-- DEFINITION OF A PANEL (NO GROUPING): A 'panel' (or 'sash') is ANY independent, structurally framed unit of glass. NEVER group them using conversational terms like "large window with a side panel." If a window assembly has a thick vertical or horizontal frame (mullion) dividing the glass, EVERY divided section is its own equal panel. (e.g., A side-by-side sliding window split vertically down the middle = 2 panels. A standard window split horizontally = 2 panels). Count every physically framed section of glass individually.
-- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to ensure you see all structural frames.
-- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the actual sliding or fixed structural panels.
-- IGNORE REFLECTIONS: The glass will often reflect trees, cars, or neighboring houses. Ignore all reflections on the glass surface.
-- THE OCCLUSION RULE (SEEING THROUGH TREES): Mentally reconstruct frames behind bare branches or patio posts. However, if a plastic winter shelter is completely opaque/frosted and you cannot see the frames, DO NOT HALLUCINATE. Simply count the opaque entrance as 1 'entry_door_pane' and move on.
-- BASEMENT: Identify basement windows by looking closely at the foundation line.
-- COUNTING STORIES: Calculate the total number of above-ground stories the house has. Do not count the basement as a story.
-- TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base').
-- LONG ROWS & LANDMARKS: When counting a long row of similar windows, you will lose count. To prevent this, you MUST anchor every single window assembly to a physical landmark in the photo (e.g., 'above the AC unit', 'left of the electrical meter', 'behind the green tank'). Count them strictly one-by-one.
-- DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'. (e.g., A door with glass + 2 sidelights = 3 entry_door_panes).
-- DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
+
+DEFINITION OF A PANEL: Count every distinct, physically framed section of glass. Do not group them. If a large window frame has a vertical or horizontal divider (mullion) in the middle, count EACH section as its own panel. (e.g., A sliding window split down the middle = 2 panes. A standard top/bottom window = 2 panes). 
+
+OBSTRUCTIONS & TREES: Look closely behind bare tree branches and into deep shadows. Branches will visually slice window frames—mentally reconstruct them so you don't overcount broken shapes. If a plastic winter shelter is totally frosted/opaque, do not guess; just count it as 1 entry door.
+
+REFLECTIONS: Ignore reflections of trees or neighboring houses on the glass.
+
+TRANSOMS: Windows directly above doors count separately as a 1st-floor window.
+
+BASEMENT: Look closely at the foundation line. Count 2 panes per sliding basement unit.
+
+DOORS: Count each main glass panel of sliding/entry doors as 'patio_door_pane' or 'entry_door_pane'. Count narrow side windows (sidelights) individually.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
@@ -59,9 +59,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning. You MUST structure your diary using this exact format, inserting an [IMAGE X START] header before scanning each new photo:
+Return JSON ONLY. Use the 'analysis' field to briefly write out your thoughts and step-by-step counting per image so you don't miss anything.
 {
-  "analysis_counting": "[IMAGE 1 START] | 1. BOUNDING BOX: Established. | 2. OBJECT 1: [PHYSICAL LANDMARK: e.g., 'Far left edge'] - 1 split window = 2 pane_1st_base. | 3. OBJECT 2: [PHYSICAL LANDMARK: e.g., 'Left of AC unit'] - 1 solid frame = 1 pane_1st_base. | [IMAGE 2 START] | 4. OBJECT 3: [PHYSICAL LANDMARK: e.g., 'Behind green tank'] - 1 solid frame = 1 pane_1st_base. | END SCAN.",
+  "analysis": "Image 1: I see 3 main windows on the left (3 panes), 1 large slider split in the middle (2 panes), and 1 hidden basement slider (2 panes). Image 2...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
@@ -71,7 +71,6 @@ Return JSON ONLY. You must output a single object with the grand totals for ALL 
   },
   "stories": 1
 }`;
-
     const body = {
       systemInstruction: {
         parts: [{ text: systemInstruction }]
