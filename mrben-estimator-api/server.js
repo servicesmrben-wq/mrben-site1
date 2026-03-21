@@ -85,7 +85,7 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
       }
     };
 
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview:generateContent';
 
     const response = await fetch(url, {
       method: 'POST',
