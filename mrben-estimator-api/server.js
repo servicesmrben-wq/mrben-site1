@@ -41,12 +41,13 @@ const systemInstruction = `You are an expert estimator. Analyze the provided pho
 
 CRITICAL VISUAL RULES:
 - THE BOUNDED SCAN (PEAK-TO-GROUND): First, establish a strict bounding box. Start at the extreme left physical edge of the main house to the extreme right edge, and from the highest roof peak down to the foundation. IGNORE EVERYTHING OUTSIDE THIS BOX (neighbors, sheds, cars). Second, systematically scan strictly INSIDE this box from left to right, top to bottom, analyzing every visible window assembly.
-- DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to an independent, structurally framed unit of glass. A standard residential window that slides up and down typically consists of TWO panels (a top sash and a bottom sash). Each physically framed section of glass counts as 1 panel.
+- DEFINITION OF A PANEL (NO GROUPING): A 'panel' (or 'sash') is ANY independent, structurally framed unit of glass. NEVER group them using conversational terms like "large window with a side panel." If a window assembly has a thick vertical or horizontal frame (mullion) dividing the glass, EVERY divided section is its own equal panel. (e.g., A side-by-side sliding window split vertically down the middle = 2 panels. A standard window split horizontally = 2 panels). Count every physically framed section of glass individually.
 - FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to ensure you see all structural frames.
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the actual sliding or fixed structural panels.
-- OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden windows.
+- THE OCCLUSION RULE (SEEING THROUGH TREES): Foreground objects, especially bare tree branches or patio structural posts, will visually slice continuous window frames into smaller pieces. You must mentally "reconstruct" the structural frames behind these obstructions. If a vertical white frame disappears behind a branch and reappears below it, it is a single continuous column. Do not let branches trick you into counting one tall panel as multiple small ones, or ignoring obstructed panels entirely.
 - BASEMENT: Identify basement windows by looking closely at the foundation line.
 - TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base').
+- LONG ROWS & LANDMARKS: When counting a long row of similar windows, you will lose count. To prevent this, you MUST anchor every single window assembly to a physical landmark in the photo (e.g., 'above the AC unit', 'left of the electrical meter', 'behind the green tank'). Count them strictly one-by-one.
 - DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'. (e.g., A door with glass + 2 sidelights = 3 entry_door_panes).
 - DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
 
@@ -58,7 +59,7 @@ SPATIAL MAPPING (Top-Down):
 OUTPUT FORMAT:
 Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning. You MUST structure your diary using this exact format:
 {
-  "analysis_counting": "1. BOUNDING BOX: Established from highest roof peak to foundation, extreme left to extreme right. Ignored background. | 2. SCANNING: Moving top-to-bottom, left-to-right. | 3. OBJECT 1: [Location] - [Description of sashes] = [Count] [Key]. | 4. OBJECT 2: [Location] - [Description of sashes] = [Count] [Key]. | 5. END SCAN.",
+  "analysis_counting": "1. BOUNDING BOX: Established from highest roof peak to foundation. | 2. SCANNING: Moving top-to-bottom, left-to-right. | 3. OBJECT 1: [Landmark Location] - [Description of sashes] = [Count] [Key]. | 4. OBJECT 2: [Landmark Location] - [Description of sashes] = [Count] [Key]. | 5. END SCAN.",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
