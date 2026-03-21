@@ -37,12 +37,12 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
+const systemInstruction = `You are an expert estimator. Analyze the provided photos to accurately count the major cleanable window PANELS (often called sashes) and present the results in a structured JSON format.
 
 CRITICAL VISUAL RULES:
-- DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, framed unit of a window that is either fixed or designed to slide/open. It is not an individual piece of glass within a decorative grid (muntin).
-- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to check for horizontal dividers.
-- MULTIPLY SECTIONS x 1.5: Do not just count vertical frames. First, count the vertical columns. If a column is solid glass, count it as 1 panel. If a column has a thick horizontal middle divider separating a top and bottom half, count that column as 1.5 panels (do not count it as 2). (e.g., A window with 3 vertical sections, split horizontally in the middle = 4.5 total cleanable panels).
+- DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, structurally framed unit of glass. A standard residential window that slides up and down typically consists of TWO panels (a top sash and a bottom sash). Each physically framed section of glass counts as 1 panel.
+- SYSTEMATIC SCAN: For each image, systematically scan from left to right, top to bottom, ensuring every visible window assembly and potential hidden area is thoroughly analyzed.
+- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to ensure you see all structural frames.
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
 - OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden basement windows.
 - BASEMENT: Identify basement windows by looking closely at the foundation line.
@@ -56,9 +56,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math for every window assembly before outputting the final counts.
+Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning for every window assembly before outputting the final counts.
 {
-  "analysis_counting": "Img 1: Found a large window assembly on the 1st floor. It has 3 vertical sections. Each section is split horizontally into a top and bottom half. 3 x 1.5 = 4.5 total panels...",
+  "analysis_counting": "Img 1: Scanning left to right. Found 1 standard window assembly on the 1st floor. It has a top and bottom sash, so that is 2 pane_1st_base. Found 1 entry door with 2 sidelights, so that is 3 entry_door_pane...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
