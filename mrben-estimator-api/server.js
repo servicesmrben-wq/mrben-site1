@@ -37,16 +37,17 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-const systemInstruction = `You are an expert estimator. Analyze these photos to count the major cleanable window PANELS (often called sashes).
+    const systemInstruction = `You are an expert estimator. Analyze the provided photos to accurately count the major cleanable window PANELS (often called sashes) and present the results in a structured JSON format.
 
 CRITICAL VISUAL RULES:
-- DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, framed unit of a window that is either fixed or designed to slide/open. It is not an individual piece of glass within a decorative grid (muntin).
-- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to check for horizontal dividers.
-- MULTIPLY SECTIONS x SASHES: Do not just count vertical frames. First, count the vertical columns. Second, look for a horizontal middle divider separating the top and bottom halves. Multiply them! (e.g., A window with 3 vertical sections, split horizontally in the middle = 6 total cleanable panels).
+- DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, structurally framed unit of a window that is either fixed or designed to slide/open. Each structural mullion or frame that creates a distinct, cleanable glass section defines a new panel. It is NOT an individual piece of glass within a decorative grid (muntin).
+- SYSTEMATIC SCAN: For each image, systematically scan from left to right, top to bottom, ensuring every visible window assembly and potential hidden area is thoroughly analyzed.
+- FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting.
+- THE 1.5x DIVIDER RULE: Do not just count vertical frames. First, count the vertical columns. If a column is solid glass, count it as 1 panel. If a column has a thick horizontal middle divider separating a top and bottom half, count that column as 1.5 panels (do not count it as 2). (e.g., A window assembly with 3 vertical columns, all split horizontally = 4.5 total cleanable panels).
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
 - OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden basement windows.
 - BASEMENT: Identify basement windows by looking closely at the foundation line.
-- TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base').
+- TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base'). 
 - DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'. (e.g., A door with glass + 2 sidelights = 3 entry_door_panes).
 - DOORS (PATIO): Count every large glass panel of sliding patio doors as 'patio_door_pane'. (e.g., a standard 2-panel sliding door = 2 panes).
 
@@ -56,9 +57,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math for every window assembly before outputting the final counts.
+Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning for every window assembly before outputting the final counts.
 {
-  "analysis_counting": "Img 1: Found a large window assembly on the 1st floor. It has 3 vertical sections. Each section is split horizontally into a top and bottom half. 3 x 2 = 6 total panels...",
+  "analysis_counting": "Img 1: Scanning left to right. Found 1 large window assembly on the 1st floor. It has 3 vertical columns. Each column has a horizontal middle frame. 3 columns x 1.5 = 4.5 total panels (pane_1st_base)...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 

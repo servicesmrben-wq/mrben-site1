@@ -4,7 +4,7 @@ const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -85,7 +85,7 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
       }
     };
 
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview:generateContent';
 
     const response = await fetch(url, {
       method: 'POST',
@@ -120,6 +120,6 @@ Return JSON ONLY. Use the 'analysis_counting' field to perform step-by-step math
   }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
