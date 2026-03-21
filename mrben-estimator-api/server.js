@@ -56,9 +56,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning for every window assembly before outputting the final counts.
+Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning. You MUST structure your diary using this exact format:
 {
-  "analysis_counting": "Img 1: Establishing bounding box from roof peak to ground. Scanning left to right. Found 1 standard window assembly on the 1st floor. It has a top and bottom sash, so that is 2 pane_1st_base. Found 1 entry door with 2 sidelights, so that is 3 entry_door_pane...",
+  "analysis_counting": "1. BOUNDING BOX: Established from highest roof peak to foundation, extreme left to extreme right. Ignored background. | 2. SCANNING: Moving top-to-bottom, left-to-right. | 3. OBJECT 1: [Location] - [Description of sashes] = [Count] [Key]. | 4. OBJECT 2: [Location] - [Description of sashes] = [Count] [Key]. | 5. END SCAN.",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
