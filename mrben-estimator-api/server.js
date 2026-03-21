@@ -40,11 +40,12 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
 const systemInstruction = `You are an expert estimator. Analyze the provided photos to accurately count the major cleanable window PANELS (often called sashes) and present the results in a structured JSON format.
 
 CRITICAL VISUAL RULES:
+- THE BOUNDING BOX (PEAK-TO-GROUND): Force your analysis to start at the extreme left physical edge of the main house and move methodically to the extreme right edge. Vertically, start at the absolute highest peak of the roof (to ensure you catch all dormer/attic windows) and move strictly downward to the ground/foundation. IGNORE EVERYTHING OUTSIDE THIS MAIN STRUCTURE. Absolutely do not count windows on neighboring houses in the background, detached sheds, or cars.
 - DEFINITION OF A PANEL: For this task, a 'panel' (or 'sash') refers to a major, independent, structurally framed unit of glass. A standard residential window that slides up and down typically consists of TWO panels (a top sash and a bottom sash). Each physically framed section of glass counts as 1 panel.
-- SYSTEMATIC SCAN: For each image, systematically scan from left to right, top to bottom, ensuring every visible window assembly and potential hidden area is thoroughly analyzed.
+- SYSTEMATIC SCAN: For each image, systematically scan from left to right, top to bottom, ensuring every visible window assembly inside the bounding box is thoroughly analyzed.
 - FULL HOUSE ZOOM: Do not glance and guess on full-house shots. Mentally "zoom in" on every individual window assembly before counting to ensure you see all structural frames.
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
-- OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden basement windows.
+- OBSTRUCTIONS & SHADOWS: Actively look behind plastic winter shelters, tanks, into deep shadows, and behind tree branches. Do not miss partially hidden windows.
 - BASEMENT: Identify basement windows by looking closely at the foundation line.
 - TRANSOMS (WINDOWS ABOVE DOORS): The horizontal window directly above a door is called a "transom". Do not count this as a door pane. Count it separately as a regular 1st-floor window ('pane_1st_base').
 - DOORS (ENTRY) & SIDELIGHTS: Do not just assume 1 pane. Count the main glass panel on the door itself as 1 'entry_door_pane'. If there are narrow vertical windows immediately next to the door (sidelights), count each sidelight as an additional 'entry_door_pane'. (e.g., A door with glass + 2 sidelights = 3 entry_door_panes).
@@ -58,7 +59,7 @@ SPATIAL MAPPING (Top-Down):
 OUTPUT FORMAT:
 Return JSON ONLY. You must output a single object with the grand totals for ALL images combined. Use the 'analysis_counting' field to perform step-by-step reasoning for every window assembly before outputting the final counts.
 {
-  "analysis_counting": "Img 1: Scanning left to right. Found 1 standard window assembly on the 1st floor. It has a top and bottom sash, so that is 2 pane_1st_base. Found 1 entry door with 2 sidelights, so that is 3 entry_door_pane...",
+  "analysis_counting": "Img 1: Establishing bounding box from roof peak to ground. Scanning left to right. Found 1 standard window assembly on the 1st floor. It has a top and bottom sash, so that is 2 pane_1st_base. Found 1 entry door with 2 sidelights, so that is 3 entry_door_pane...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
