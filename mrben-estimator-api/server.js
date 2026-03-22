@@ -126,7 +126,7 @@ CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize, group, or
     }
 
     const data = await response.json();
-    // console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
+    console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
     let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     textResult = textResult.replace(/```json|```/g, '').trim();
     
