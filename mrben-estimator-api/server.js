@@ -102,7 +102,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
       }
     };
 
-    // Updated Vertex AI URL to Gemini 3 Flash Preview
+    // Correct name Vertex AI URL to "gemini-3-flash-preview" or "gemini-3.1-pro-preview"
    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview:generateContent';
 
     const response = await fetch(url, {
