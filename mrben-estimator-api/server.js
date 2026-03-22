@@ -106,7 +106,7 @@ CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize. You must 
     };
 
     // Correct name Vertex AI URL to "gemini-3-flash-preview" or "gemini-3.1-pro-preview"
-   const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview:generateContent';
+   const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
 
     const response = await fetch(url, {
       method: 'POST',
