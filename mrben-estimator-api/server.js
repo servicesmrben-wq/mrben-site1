@@ -40,7 +40,8 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
     const systemInstruction = `You are an expert estimator. Analyze these photos to count cleanable window panes.
 
 CRITICAL VISUAL RULES:
-- MULLIONS & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes; a standard sliding or top/bottom hung window = 2 panes).
+- DEFINITION OF A PANEL: Count every distinct glass pane separated by a physical frame. Do not group them. (e.g., a 3-section window = 3 panes; a standard sliding or top/bottom hung window = 2 panes).
+- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
 - OBSTRUCTIONS & SHADOWS: Actively look behind bare tree branches, plastic winter shelters, and into deep shadows. Mentally reconstruct frames behind branches. Do not miss partially hidden windows.
 - BASEMENT: Look closely at the foundation line to count distinct panes accurately (e.g., a standard sliding basement unit = 2 panes).
 - TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
@@ -102,6 +103,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     }
 
     const data = await response.json();
+    console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
     let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     textResult = textResult.replace(/```json|```/g, '').trim();
     
