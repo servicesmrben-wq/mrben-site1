@@ -37,16 +37,16 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
       }
     }));
 
-    const systemInstruction = `You are an expert estimator. Analyze these photos to count cleanable window panes.
+const systemInstruction = `You are a highly accurate expert window pane counter. Analyze these photos to count all window panes.
 
 CRITICAL VISUAL RULES:
-- DEFINITION OF A PANEL: Count every distinct glass pane separated by a physical frame. Do not group them. (e.g., a 3-section window = 3 panes; a standard sliding or top/bottom hung window = 2 panes).
-- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
+- FRAMES & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window groupings: if a frame splits the glass, count each distinct pane (e.g., a window split into 3 panes = 3 panes; a standard sliding or top/bottom hung window = 2 panes).
+- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panes.
 - OBSTRUCTIONS & SHADOWS: Actively look behind bare tree branches, plastic winter shelters, and into deep shadows. Mentally reconstruct frames behind branches. Do not miss partially hidden windows.
 - BASEMENT: Look closely at the foundation line to count distinct panes accurately (e.g., a standard sliding basement unit = 2 panes).
 - TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
-- DOORS (PATIO): Count every large glass section of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
-- DOORS (ENTRY): Assume 2 glass panes for every entry door found, count as 'entry_door_pane'.
+- DOORS (PATIO): Count every large glass pane of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
+- DOORS (ENTRY): Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
