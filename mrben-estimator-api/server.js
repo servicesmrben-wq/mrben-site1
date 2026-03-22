@@ -43,9 +43,9 @@ CRITICAL VISUAL RULES:
 
 DEFINITION OF A PANEL: Count every distinct, physically framed section of glass. Do not group them. If a large window frame has a vertical or horizontal divider (mullion) in the middle, count EACH section as its own panel. (e.g., A sliding window split down the middle = 2 panes. A standard top/bottom window = 2 panes). 
 
-OBSTRUCTIONS & TREES: Look closely behind bare tree branches and into deep shadows. Branches will visually slice window frames—mentally reconstruct them so you don't overcount broken shapes. If a plastic winter shelter is totally frosted/opaque, do not guess; just count it as 1 entry door.
+IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panels.
 
-REFLECTIONS: Ignore reflections of trees or neighboring houses on the glass.
+OBSTRUCTIONS & TREES: Look closely behind bare tree branches and into deep shadows. Branches will visually slice window frames—mentally reconstruct them so you don't overcount broken shapes. If a plastic winter shelter is totally frosted/opaque, do not guess; just count it as 1 entry door.
 
 TRANSOMS: Windows directly above doors count separately as a 1st-floor window.
 
