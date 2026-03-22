@@ -56,7 +56,7 @@ SPATIAL MAPPING (Top-Down):
 OUTPUT FORMAT:
 Return JSON ONLY. You MUST use the 'analysis' field to explicitly tally the panes before outputting the final integers. 
 
-CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize, group, or guess. You must systematically point to them in your text to force a physical count (e.g., "Top floor left to right: grouping of 3, grouping of 2. Main floor: massive block of 4, slider of 2...").
+CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize. You must systematically tally them INSIDE the 'analysis' string to force a physical count (e.g., "Top floor left to right: 3, 2. Main floor: 4, 2..."). Do not generate any text outside of the JSON object.
 
 {
   "analysis": "Top floor scan: left window has 2 panes, middle has 3 panes, right has 2. (Total 2nd story = 7). Main floor scan: large picture window split into 4 panes, plus 1 sliding patio door (2 panes). (Total 1st base = 6)...",
