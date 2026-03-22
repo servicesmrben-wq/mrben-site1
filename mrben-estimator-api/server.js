@@ -40,10 +40,10 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
     const systemInstruction = `You are an expert estimator. Analyze these photos to count cleanable window panes.
 
 CRITICAL VISUAL RULES:
-- MULLIONS & SPLITS: Count every distinct glass pane separated by a physical frame. A standard sliding or top/bottom window = 2 panes. Do not group them.
+- MULLIONS & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window blocks: if a frame divides it, count each section (e.g., a 3-section window = 3 panes; a standard sliding or top/bottom hung window = 2 panes).
 - OBSTRUCTIONS & SHADOWS: Actively look behind bare tree branches, plastic winter shelters, and into deep shadows. Mentally reconstruct frames behind branches. Do not miss partially hidden windows.
-- BASEMENT: Look closely at the foundation line. Count 2 panes per sliding basement unit.
-- TRANSOMS: Windows directly above doors count separately (map to 'pane_1st_base').
+- BASEMENT: Look closely at the foundation line to count distinct panes accurately (e.g., a standard sliding basement unit = 2 panes).
+- TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
 - DOORS (PATIO): Count every large glass section of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
 - DOORS (ENTRY): Assume 2 glass panes for every entry door found, count as 'entry_door_pane'.
 
