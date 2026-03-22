@@ -54,9 +54,12 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
+Return ONE SINGLE JSON OBJECT ONLY. Do not return a JSON array or a list. You must aggregate and combine the counts from ALL uploaded photos into this single object. 
+
+CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize. You must systematically tally them INSIDE the 'analysis' string to force a physical count across all images (e.g., "Img 1: Top floor left to right: 3, 2. Img 2: Main floor: 4, 2..."). Do not generate any text outside of the JSON object.
+
 {
-  "analysis": "Img 1: Found 3 main windows (3 panes), 1 sliding patio door (2 panes), plus 1 hidden basement slider behind branches (2 panes)...",
+  "analysis": "Img 1: Found 2 main panes... Img 2: Found 3 more panes... Consolidating unique panes to avoid double counting...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
@@ -123,7 +126,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     }
 
     const data = await response.json();
-    console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
+    //console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
     let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     textResult = textResult.replace(/```json|```/g, '').trim();
     
