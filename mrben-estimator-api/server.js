@@ -54,9 +54,12 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reasoning per image to avoid missing hidden windows before outputting the final counts.
+Return JSON ONLY. You MUST use the 'analysis' field to explicitly tally the panes before outputting the final integers. 
+
+CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize, group, or guess. You must systematically point to them in your text to force a physical count (e.g., "Top floor left to right: grouping of 3, grouping of 2. Main floor: massive block of 4, slider of 2...").
+
 {
-  "analysis": "Img 1: Found 3 main windows (3 panes), 1 sliding patio door (2 panes), plus 1 hidden basement slider behind branches (2 panes)...",
+  "analysis": "Top floor scan: left window has 2 panes, middle has 3 panes, right has 2. (Total 2nd story = 7). Main floor scan: large picture window split into 4 panes, plus 1 sliding patio door (2 panes). (Total 1st base = 6)...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
