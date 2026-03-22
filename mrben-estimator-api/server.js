@@ -77,13 +77,33 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
           parts: contents
         }
       ],
+      // Re-added safety settings to bypass the 45-second silent blocks
+      safetySettings: [
+        {
+          category: "HARM_CATEGORY_HARASSMENT",
+          threshold: "BLOCK_NONE"
+        },
+        {
+          category: "HARM_CATEGORY_HATE_SPEECH",
+          threshold: "BLOCK_NONE"
+        },
+        {
+          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          threshold: "BLOCK_NONE"
+        },
+        {
+          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+          threshold: "BLOCK_NONE"
+        }
+      ],
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.0
       }
     };
 
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview:generateContent';
+    // Updated Vertex AI URL to Gemini 3 Flash Preview
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.0-flash-preview:generateContent';
 
     const response = await fetch(url, {
       method: 'POST',
@@ -103,7 +123,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly perform step-by-step reaso
     }
 
     const data = await response.json();
-    console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
+    // console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
     let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     textResult = textResult.replace(/```json|```/g, '').trim();
     
