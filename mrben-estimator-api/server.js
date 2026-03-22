@@ -40,7 +40,7 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
 const systemInstruction = `You are a highly accurate expert window pane counter. Analyze these photos to count all window panes.
 
 CRITICAL VISUAL RULES:
-- FRAMES & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window groupings: if a frame splits the glass, count each distinct pane (e.g., a window split into 3 panes = 3 panes; a standard sliding or top/bottom hung window = 2 panes).
+- FRAMES & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window groupings: if a frame splits the glass, count each distinct pane.
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panes.
 - OBSTRUCTIONS & SHADOWS: Actively look behind bare tree branches, plastic winter shelters, and into deep shadows. Mentally reconstruct frames behind branches. Do not miss partially hidden windows.
 - BASEMENT: Look closely at the foundation line to count distinct panes accurately (e.g., a standard sliding basement unit = 2 panes).
