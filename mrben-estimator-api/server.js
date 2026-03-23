@@ -61,7 +61,7 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
 }`;
 
     // Swapped to us-east1 to bypass the crowded global queue
-    const url = 'https://us-east1-aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/us-east1/publishers/google/models/gemini-3-flash-preview:generateContent';
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
 
     const MAX_RETRIES = 2; 
 
