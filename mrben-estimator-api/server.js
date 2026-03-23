@@ -176,4 +176,19 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
       }
       
-      if (result.stories >
+     if (result.stories > finalTotals.stories) {
+        finalTotals.stories = result.stories;
+      }
+    });
+
+    res.json(finalTotals);
+
+  } catch (error) {
+    console.error('Server Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on port ${port}`);
+});
