@@ -60,12 +60,18 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
   "stories": 1
 }`;
 
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+    // Swapped to us-east1 to bypass the crowded global queue
+    const url = 'https://us-east1-aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/us-east1/publishers/google/models/gemini-3-flash-preview:generateContent';
 
-    // MAXIMUM RETRIES PER IMAGE
     const MAX_RETRIES = 2; 
 
+    // The delay helper function for staggered launching
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     const aiPromises = req.files.map(async (file, index) => {
+      // THE STAGGERED LAUNCH: Space out each request by 1000ms
+      await delay(index * 1000);
+      
       let attempt = 0;
       
       // The Self-Healing Retry Loop
@@ -90,7 +96,7 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
             ],
             generationConfig: {
               responseMimeType: "application/json",
-              temperature: 0.0 // Keep it deterministic
+              temperature: 0.0
             }
           };
 
@@ -118,20 +124,17 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
 
           textResult = textResult.replace(/```json|```/g, '').trim();
           
-          // If this parses successfully, we return and break out of the while loop!
           return JSON.parse(textResult);
 
         } catch (error) {
           attempt++;
           console.warn(`[Image ${index + 1}] Attempt ${attempt} failed: ${error.message}`);
           
-          // If we hit our max retries, accept defeat gracefully
           if (attempt > MAX_RETRIES) {
             console.error(`[Image ${index + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
             return { window_counts: {}, stories: 1, analysis: `Img ${index + 1} analysis failed after retries.` };
           }
           
-          // Optional: wait half a second before trying again so we don't spam the API
           await new Promise(resolve => setTimeout(resolve, 500));
         }
       }
