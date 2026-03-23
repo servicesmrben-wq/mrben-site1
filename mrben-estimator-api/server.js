@@ -30,14 +30,7 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
     const tokenResponse = await client.getAccessToken();
     const accessToken = tokenResponse.token;
 
-    const contents = req.files.map(file => ({
-      inline_data: {
-        mime_type: file.mimetype,
-        data: file.buffer.toString('base64')
-      }
-    }));
-
-const systemInstruction = `You are a highly accurate expert window pane counter. Analyze these photos to count all window panes.
+    const systemInstruction = `You are a highly accurate expert window pane counter. Analyze this photo to count all window panes.
 
 CRITICAL VISUAL RULES:
 - FRAMES & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window groupings: if a frame splits the glass, count each distinct pane.
@@ -54,12 +47,9 @@ SPATIAL MAPPING (Top-Down):
 - Main/Basement -> 'pane_1st_base'
 
 OUTPUT FORMAT:
-Return ONE SINGLE JSON OBJECT ONLY. Do not return a JSON array or a list. You must aggregate and combine the counts from ALL uploaded photos into this single object. 
-
-CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize. You must systematically tally them INSIDE the 'analysis' string to force a physical count across all images (e.g., "Img 1: Top floor left to right: 3, 2. Img 2: Main floor: 4, 2..."). Do not generate any text outside of the JSON object.
-
+Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see in this specific image before outputting the final counts. Do not generate text outside the JSON.
 {
-  "analysis": "Img 1: Found 2 main panes... Img 2: Found 3 more panes... Consolidating unique panes to avoid double counting...",
+  "analysis": "Top floor left to right: 3, 2. Main floor: 4, 2...",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
@@ -70,78 +60,120 @@ CRITICAL DENSITY RULE: For images with many windows, DO NOT summarize. You must 
   "stories": 1
 }`;
 
-    const body = {
-      systemInstruction: {
-        parts: [{ text: systemInstruction }]
-      },
-      contents: [
-        {
-          role: 'user',
-          parts: contents
+    // Swapped to us-east1 to bypass the crowded global queue
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+
+    const MAX_RETRIES = 2; 
+    const CONCURRENCY_LIMIT = 2; // Process in batches of 2 to stay under Vertex quota
+    const resultsArray = [];
+
+    // THE BATCHING ENGINE
+    for (let i = 0; i < req.files.length; i += CONCURRENCY_LIMIT) {
+      const batchFiles = req.files.slice(i, i + CONCURRENCY_LIMIT);
+      
+      const batchPromises = batchFiles.map(async (file, index) => {
+        const globalIndex = i + index; // Keep logging numbers accurate for debugging
+        let attempt = 0;
+        
+        // The Self-Healing Retry Loop
+        while (attempt <= MAX_RETRIES) {
+          try {
+            const body = {
+              systemInstruction: { parts: [{ text: systemInstruction }] },
+              contents: [{
+                role: 'user',
+                parts: [{
+                  inline_data: {
+                    mime_type: file.mimetype,
+                    data: file.buffer.toString('base64')
+                  }
+                }]
+              }],
+              safetySettings: [
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+              ],
+              generationConfig: {
+                responseMimeType: "application/json",
+                temperature: 0.0
+              }
+            };
+
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                'X-Vertex-AI-LLM-Request-Type': 'shared',
+                'X-Vertex-AI-LLM-Shared-Request-Type': 'priority'
+              },
+              body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            
+            if (!textResult) {
+              throw new Error('Empty response from model');
+            }
+
+            textResult = textResult.replace(/```json|```/g, '').trim();
+            
+            return JSON.parse(textResult);
+
+          } catch (error) {
+            attempt++;
+            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${error.message}`);
+            
+            if (attempt > MAX_RETRIES) {
+              console.error(`[Image ${globalIndex + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
+              return { window_counts: {}, stories: 1, analysis: `Img ${globalIndex + 1} analysis failed after retries.` };
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
         }
-      ],
-      // Re-added safety settings to bypass the 45-second silent blocks
-      safetySettings: [
-        {
-          category: "HARM_CATEGORY_HARASSMENT",
-          threshold: "BLOCK_NONE"
-        },
-        {
-          category: "HARM_CATEGORY_HATE_SPEECH",
-          threshold: "BLOCK_NONE"
-        },
-        {
-          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-          threshold: "BLOCK_NONE"
-        },
-        {
-          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-          threshold: "BLOCK_NONE"
-        }
-      ],
-      generationConfig: {
-        responseMimeType: "application/json",
-        temperature: 0.0
+      });
+
+      // Wait for the current pair of images to finish before starting the next pair
+      const batchResults = await Promise.all(batchPromises);
+      resultsArray.push(...batchResults);
+      
+      // Add a tiny 1-second breather between batches to clear the Vertex queue
+      if (i + CONCURRENCY_LIMIT < req.files.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-    };
-
-    // Correct name Vertex AI URL to "gemini-3-flash-preview" or "gemini-3.1-pro-preview"
-   const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'X-Vertex-AI-LLM-Request-Type': 'shared',
-        'X-Vertex-AI-LLM-Shared-Request-Type': 'priority'
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Vertex AI Error:', errorText);
-      return res.status(500).json({ error: 'Vertex AI request failed', details: errorText });
     }
 
-    const data = await response.json();
-    //console.log("RAW VERTEX RESPONSE:", JSON.stringify(data, null, 2));
-    let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    textResult = textResult.replace(/```json|```/g, '').trim();
-    
-    // Parse the AI window counts
-    const aiResult = JSON.parse(textResult);
-    
-    // Return ONLY the counts (Frontend will handle pricing)
-    res.json(aiResult);
+    const finalTotals = {
+      analysis: "Parallel processing complete. ",
+      window_counts: {
+        pane_3rd_story: 0,
+        pane_2nd_story: 0,
+        pane_1st_base: 0,
+        patio_door_pane: 0,
+        entry_door_pane: 0
+      },
+      stories: 1
+    };
 
-  } catch (error) {
-    console.error('Server Error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
+    resultsArray.forEach((result, index) => {
+      if (result.analysis) {
+        finalTotals.analysis += `[Img ${index + 1}: ${result.analysis}] `;
+      }
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server running on port ${port}`);
-});
+      if (result.window_counts) {
+        finalTotals.window_counts.pane_3rd_story += (result.window_counts.pane_3rd_story || 0);
+        finalTotals.window_counts.pane_2nd_story += (result.window_counts.pane_2nd_story || 0);
+        finalTotals.window_counts.pane_1st_base += (result.window_counts.pane_1st_base || 0);
+        finalTotals.window_counts.patio_door_pane += (result.window_counts.patio_door_pane || 0);
+        finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
+      }
+      
+      if (result.stories >

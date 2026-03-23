@@ -131,7 +131,7 @@ export default function EstimatorPage() {
     try {
       // Compress images to avoid payload limits
       const compressionOptions = {
-        maxSizeMB: 1.0,
+        maxSizeMB: 1.5,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
