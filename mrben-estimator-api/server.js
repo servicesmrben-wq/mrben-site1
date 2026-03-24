@@ -187,6 +187,9 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
       }
     });
 
+    // Add window_groups to the end of the analysis string for visibility
+    finalTotals.analysis += `\n\nTotal Architectural Window Groups: ${finalTotals.window_groups}`;
+
     res.json(finalTotals);
 
   } catch (error) {
