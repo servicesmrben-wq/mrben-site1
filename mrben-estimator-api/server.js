@@ -160,7 +160,8 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
         pane_2nd_story: 0,
         pane_1st_base: 0,
         patio_door_pane: 0,
-        entry_door_pane: 0
+        entry_door_pane: 0,
+        window_groups: 0
       },
       stories: 1
     };
@@ -176,6 +177,7 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
         finalTotals.window_counts.pane_1st_base += (result.window_counts.pane_1st_base || 0);
         finalTotals.window_counts.patio_door_pane += (result.window_counts.patio_door_pane || 0);
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
+        finalTotals.window_counts.window_groups += (result.window_counts.window_groups || 0);
       }
       
      if (result.stories > finalTotals.stories) {
