@@ -40,7 +40,6 @@ CRITICAL VISUAL RULES:
 - TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
 - DOORS (PATIO): Count every large glass pane of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
 - DOORS (ENTRY): Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
-- WINDOW GROUPS (EXPERIMENTAL TEST): Alongside individual panes, count the overarching architectural window groupings. A single isolated window is 1 group. A massive bay window with 5 internal panes is also 1 group. Tally the total number of distinct groupings per image and map to 'window_groups'.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
@@ -56,8 +55,7 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
     "pane_2nd_story": 0, 
     "pane_1st_base": 0, 
     "patio_door_pane": 0,
-    "entry_door_pane": 0,
-    "window_groups": 0
+    "entry_door_pane": 0 
   },
   "stories": 1
 }`;
