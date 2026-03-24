@@ -9,10 +9,17 @@ import imageCompression from "browser-image-compression";
 import { useTranslations } from "next-intl";
 import { packData } from "@/app/lib/url-packer";
 
+// Managed file interface for background processing
+interface ManagedFile {
+  id: string;
+  file: File;
+  preview: string;
+  status: "compressing" | "ready";
+}
+
 export default function EstimatorPage() {
   const t = useTranslations("estimator");
-  const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [managedFiles, setManagedFiles] = useState<ManagedFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -32,9 +39,9 @@ export default function EstimatorPage() {
   // Clean up object URLs
   useEffect(() => {
     return () => {
-      previews.forEach(url => URL.revokeObjectURL(url));
+      managedFiles.forEach(f => URL.revokeObjectURL(f.preview));
     };
-  }, [previews]);
+  }, [managedFiles]);
 
   // Warm up
   useEffect(() => {
@@ -44,7 +51,7 @@ export default function EstimatorPage() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const MAX_FILES = 10;
-      const currentCount = files.length;
+      const currentCount = managedFiles.length;
       
       if (currentCount >= MAX_FILES) {
         alert(t("errorMaxImages"));
@@ -72,33 +79,61 @@ export default function EstimatorPage() {
         return;
       }
 
-      // Generate stable URLs for new files
-      const newPreviews = validFiles.map(f => URL.createObjectURL(f));
+      // 1. Assign unique IDs and create previews for incoming files
+      const newEntries: ManagedFile[] = validFiles.map(f => ({
+        id: Math.random().toString(36).substring(7),
+        file: f,
+        preview: URL.createObjectURL(f),
+        status: "compressing"
+      }));
 
-      setFiles(prev => [...prev, ...validFiles]);
-      setPreviews(prev => [...prev, ...newPreviews]);
+      // 2. Add to state IMMEDIATELY
+      setManagedFiles(prev => [...prev, ...newEntries]);
       setResult(null);
       setError(null);
       e.target.value = "";
+
+      // 3. Trigger compression in the background for each file
+      newEntries.forEach(async (entry) => {
+        try {
+          const compressionOptions = {
+            maxSizeMB: 1.5,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          };
+          
+          const compressed = await imageCompression(entry.file, compressionOptions);
+          const compressedFile = new File([compressed], entry.file.name, { type: compressed.type });
+          
+          setManagedFiles(prev => prev.map(f => 
+            f.id === entry.id ? { ...f, file: compressedFile, status: "ready" } : f
+          ));
+        } catch (err) {
+          console.error("Compression failed for:", entry.file.name, err);
+          // Fallback to original file on failure
+          setManagedFiles(prev => prev.map(f => 
+            f.id === entry.id ? { ...f, status: "ready" } : f
+          ));
+        }
+      });
     }
   };
 
-  const removeFile = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
-    setPreviews(prev => {
-      const urlToRemove = prev[index];
-      URL.revokeObjectURL(urlToRemove);
-      return prev.filter((_, i) => i !== index);
+  const removeFile = (id: string) => {
+    setManagedFiles(prev => {
+      const target = prev.find(f => f.id === id);
+      if (target) URL.revokeObjectURL(target.preview);
+      return prev.filter(f => f.id !== id);
     });
   };
 
   const BASE_FEE = 60.00;
 
   const handleCalculate = async () => {
-    if (files.length === 0) return;
+    if (managedFiles.length === 0) return;
 
     // 1. Validation: Max 10 Images
-    if (files.length > 10) {
+    if (managedFiles.length > 10) {
       alert(t("errorMaxImages"));
       return;
     }
@@ -113,7 +148,7 @@ export default function EstimatorPage() {
 
     // Smart Progress Logic
     // Single API call with all images — estimate ~10s per image
-    const seconds = files.length * 10 + 5;
+    const seconds = managedFiles.length * 10 + 5;
     const estimatedWaitTimeMs = seconds * 1000; 
     setTimeLeft(seconds);
     const startTime = Date.now();
@@ -129,28 +164,12 @@ export default function EstimatorPage() {
     }, 1000);
 
     try {
-      // Compress images to avoid payload limits
-      const compressionOptions = {
-        maxSizeMB: 1.5,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-      };
-
-      const compressedFilesList = await Promise.all(
-        files.map(async (file) => {
-          try {
-            const compressedFile = await imageCompression(file, compressionOptions);
-            return new File([compressedFile], file.name, { type: compressedFile.type });
-          } catch (error) {
-            console.error("Compression failed:", file.name, error);
-            return file;
-          }
-        })
-      );
+      // Use the pre-compressed files
+      const filesToSend = managedFiles.map(f => f.file);
 
       // SINGLE API CALL — all images sent together for unified analysis
       const formData = new FormData();
-      compressedFilesList.forEach((file) => {
+      filesToSend.forEach((file) => {
         formData.append("files", file);
       });
 
@@ -267,8 +286,8 @@ export default function EstimatorPage() {
       // --- BACKGROUND BACKUP TO GOOGLE DRIVE ---
       const DRIVE_CHUNK_SIZE = 2;
       const driveChunks: File[][] = [];
-      for (let i = 0; i < compressedFilesList.length; i += DRIVE_CHUNK_SIZE) {
-        driveChunks.push(compressedFilesList.slice(i, i + DRIVE_CHUNK_SIZE));
+      for (let i = 0; i < filesToSend.length; i += DRIVE_CHUNK_SIZE) {
+        driveChunks.push(filesToSend.slice(i, i + DRIVE_CHUNK_SIZE));
       }
 
       (async () => {
@@ -441,20 +460,26 @@ export default function EstimatorPage() {
             </div>
 
             {/* Gallery Preview */}
-            {files.length > 0 && (
+            {managedFiles.length > 0 && (
               <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
-                {files.map((f, i) => (
-                  <div key={i} className="relative aspect-square overflow-hidden rounded-lg border border-zinc-200">
+                {managedFiles.map((f, i) => (
+                  <div key={f.id} className="relative aspect-square overflow-hidden rounded-lg border border-zinc-200">
                     <Image 
-                      src={previews[i]} 
+                      src={f.preview} 
                       alt="preview" 
                       fill 
                       className="object-cover" 
                       unoptimized 
                     />
+                    {/* Compression Overlay */}
+                    {f.status === "compressing" && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+                        <Loader2 className="h-6 w-6 animate-spin text-white" />
+                      </div>
+                    )}
                     <button 
-                      onClick={() => removeFile(i)}
-                      className="absolute right-1 top-1 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
+                      onClick={() => removeFile(f.id)}
+                      className="absolute right-1 top-1 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 z-10"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -496,14 +521,14 @@ export default function EstimatorPage() {
           {/* Calculate Button */}
           <button
             onClick={handleCalculate}
-            disabled={files.length === 0 || isProcessing}
+            disabled={managedFiles.length === 0 || isProcessing || managedFiles.some(f => f.status === "compressing")}
             className="group flex w-full transform items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 py-4 text-sm font-bold text-white shadow-lg transition duration-300 hover:scale-105 hover:shadow-xl hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {isProcessing ? (
               <div className="flex flex-col items-center w-full">
                 <div className="flex items-center gap-2 mb-2">
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>{t("processing", { count: files.length, time: timeLeft })}</span>
+                  <span>{t("processing", { count: managedFiles.length, time: timeLeft })}</span>
                 </div>
                 {/* Progress Bar */}
                 <div className="h-1.5 w-full max-w-[200px] bg-zinc-700 rounded-full overflow-hidden">
@@ -512,6 +537,11 @@ export default function EstimatorPage() {
                     style={{ width: `${progress}%` }} 
                   />
                 </div>
+              </div>
+            ) : managedFiles.some(f => f.status === "compressing") ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Compressing images...</span>
               </div>
             ) : (
               <>
