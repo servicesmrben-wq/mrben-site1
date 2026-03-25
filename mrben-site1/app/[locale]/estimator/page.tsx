@@ -97,7 +97,7 @@ export default function EstimatorPage() {
       newEntries.forEach(async (entry) => {
         try {
           const compressionOptions = {
-            maxSizeMB: 1.5,
+            maxSizeMB: 1,
             maxWidthOrHeight: 1920,
             useWebWorker: true,
           };
