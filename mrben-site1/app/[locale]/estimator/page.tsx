@@ -622,6 +622,8 @@ export default function EstimatorPage() {
                     const k = key as PricingKey;
                     const item = PRICING_DATA[k];
                     
+                    if (!item) return null;
+
                     return (
                       <div key={key} className="flex items-center justify-between border-b border-zinc-100 pb-2 last:border-0">
                         <div>
