@@ -100,6 +100,7 @@ export default function EstimatorPage() {
             maxSizeMB: 1,
             maxWidthOrHeight: 1920,
             useWebWorker: true,
+            fileType: 'image/webp' as any,
           };
           
           const compressed = await imageCompression(entry.file, compressionOptions);
