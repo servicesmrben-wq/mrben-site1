@@ -223,7 +223,11 @@ export default function EstimatorPage() {
         throw new Error(data.error || t("errorGeneral"));
       }
 
-      const totalPanes = Object.values(data.window_counts || {}).reduce((sum: number, count: any) => sum + Number(count), 0);
+      const totalPanes = (data.window_counts?.pane_1st_base || 0) + 
+                        (data.window_counts?.pane_2nd_story || 0) + 
+                        (data.window_counts?.pane_3rd_story || 0) + 
+                        (data.window_counts?.patio_door_pane || 0) + 
+                        (data.window_counts?.entry_door_pane || 0);
       
       // Helper to calculate values for the JSON backup
       const getModeData = (m: "ext" | "in_out") => {
@@ -386,7 +390,9 @@ export default function EstimatorPage() {
 
   const getTotalPanes = () => {
     if (!result || !result.window_counts) return 0;
-    return Object.values(result.window_counts).reduce((sum: number, count: any) => sum + Number(count), 0);
+    return Object.entries(result.window_counts).reduce((sum: number, [key, count]) => {
+      return sum + (PRICING_DATA.hasOwnProperty(key) ? Number(count) : 0);
+    }, 0);
   };
 
   const handleUploadClick = (e: React.MouseEvent) => {
