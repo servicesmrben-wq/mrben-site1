@@ -270,12 +270,13 @@ export default function EstimatorPage() {
         },
         pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}`,
         window_counts: {
-          pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
-          pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
-          pane_1st_base: data.window_counts?.pane_1st_base || 0,
-          patio_door_pane: data.window_counts?.patio_door_pane || 0,
-          entry_door_pane: data.window_counts?.entry_door_pane || 0,
-        },
+  pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
+  pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
+  pane_1st_base: data.window_counts?.pane_1st_base || 0,
+  patio_door_pane: data.window_counts?.patio_door_pane || 0,
+  entry_door_pane: data.window_counts?.entry_door_pane || 0,
+  window_groups: data.window_counts?.window_groups || 0, // NEW 2.5 FLASH DATA
+},
         stories: data.stories || 1,
         mode: mode,
         serviceType: mode === "ext" ? "Exterior Only" : "Inside & Out"

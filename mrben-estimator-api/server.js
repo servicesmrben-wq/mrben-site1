@@ -9,8 +9,12 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
+// Added safety limits to prevent memory leaks from massive uploads
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max per image
+});
 
 const auth = new GoogleAuth({
   scopes: ['https://www.googleapis.com/auth/cloud-platform']
@@ -19,6 +23,10 @@ const auth = new GoogleAuth({
 app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
 });
+
+// --- MODEL URLS ---
+const urlG3 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+const urlG25 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-flash:generateContent';
 
 app.post('/estimate', upload.array('files'), async (req, res) => {
   try {
@@ -30,6 +38,7 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
     const tokenResponse = await client.getAccessToken();
     const accessToken = tokenResponse.token;
 
+    // --- BRAIN 1: PANES (UNTOUCHED) ---
     const systemInstruction = `You are a highly accurate expert window pane counter. Analyze this photo to count all window panes.
 
 CRITICAL VISUAL RULES:
@@ -40,7 +49,6 @@ CRITICAL VISUAL RULES:
 - TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
 - DOORS (PATIO): Count every large glass pane of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
 - DOORS (ENTRY): Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
-- WINDOW GROUPS (EXPERIMENTAL TEST): Alongside individual panes, count the overarching architectural window groupings. A single isolated window is 1 group. A massive bay window with 5 internal panes is also 1 group. Tally the total number of distinct groupings per image and map to 'window_groups'.
 
 SPATIAL MAPPING (Top-Down):
 - 3rd Story -> 'pane_3rd_story'
@@ -56,16 +64,31 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
     "pane_2nd_story": 0, 
     "pane_1st_base": 0, 
     "patio_door_pane": 0,
-    "entry_door_pane": 0,
-    "window_groups": 0
+    "entry_door_pane": 0 
   },
   "stories": 1
 }`;
-    // gemini-2.5-flash |  gemini-3-flash-preview
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-flash:generateContent';
+
+    // --- BRAIN 2: GROUPS (NEW) ---
+    const systemInstructionGroups = `You are a specialized architectural AI. Your ONLY job is to count the overarching structural window openings (groups) in the house's exterior.
+
+CRITICAL VISUAL RULES:
+- IGNORE PANES: Completely ignore the glass, muntins, or frames splitting the window.
+- WHAT IS A GROUP: Look at the siding or brick. Every distinct hole cut into the wall for a window unit is ONE group.
+- BAY/BOW WINDOWS: A massive bay window with 3 or 5 internal sections is still just ONE architectural group.
+- DOORS: Do not count entry or patio doors. Focus only on window openings.
+
+OUTPUT FORMAT:
+Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see before outputting the final count.
+{
+  "analysis": "1 large bay window left, 2 standard windows right...",
+  "window_counts": {
+    "window_groups": 0
+  }
+}`;
 
     const MAX_RETRIES = 2; 
-    const CONCURRENCY_LIMIT = 2; // Process in batches of 2 to stay under Vertex quota
+    const CONCURRENCY_LIMIT = 2; 
     const resultsArray = [];
 
     // THE BATCHING ENGINE
@@ -73,64 +96,84 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
       const batchFiles = req.files.slice(i, i + CONCURRENCY_LIMIT);
       
       const batchPromises = batchFiles.map(async (file, index) => {
-        const globalIndex = i + index; // Keep logging numbers accurate for debugging
+        const globalIndex = i + index; 
         let attempt = 0;
         
-        // The Self-Healing Retry Loop
         while (attempt <= MAX_RETRIES) {
+          // THE ZOMBIE KILLER (60s timeout for the dual-fetch)
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 60000);
+
           try {
-            const body = {
+            const inlineData = { mime_type: file.mimetype, data: file.buffer.toString('base64') };
+            const safetySettings = [
+              { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+              { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+              { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+              { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+            ];
+            const generationConfig = { responseMimeType: "application/json", temperature: 0.0 };
+
+            // Payload for Gemini 3 (Panes)
+            const bodyPanes = {
               systemInstruction: { parts: [{ text: systemInstruction }] },
-              contents: [{
-                role: 'user',
-                parts: [{
-                  inline_data: {
-                    mime_type: file.mimetype,
-                    data: file.buffer.toString('base64')
-                  }
-                }]
-              }],
-              safetySettings: [
-                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
-              ],
-              generationConfig: {
-                responseMimeType: "application/json",
-                temperature: 0.0
-              }
+              contents: [{ role: 'user', parts: [{ inline_data: inlineData }] }],
+              safetySettings, generationConfig
             };
 
-            const response = await fetch(url, {
+            // Payload for Gemini 2.5 (Groups)
+            const bodyGroups = {
+              systemInstruction: { parts: [{ text: systemInstructionGroups }] },
+              contents: [{ role: 'user', parts: [{ inline_data: inlineData }] }],
+              safetySettings, generationConfig
+            };
+
+            const fetchOptions = {
               method: 'POST',
+              signal: controller.signal,
               headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
                 'X-Vertex-AI-LLM-Request-Type': 'shared',
                 'X-Vertex-AI-LLM-Shared-Request-Type': 'priority'
+              }
+            };
+
+            // FIRE BOTH MODELS AT ONCE
+            const [resPanes, resGroups] = await Promise.all([
+              fetch(urlG3, { ...fetchOptions, body: JSON.stringify(bodyPanes) }),
+              fetch(urlG25, { ...fetchOptions, body: JSON.stringify(bodyGroups) })
+            ]);
+
+            clearTimeout(timeoutId);
+
+            if (!resPanes.ok) throw new Error(`G3 HTTP Error: ${resPanes.status}`);
+            if (!resGroups.ok) throw new Error(`G25 HTTP Error: ${resGroups.status}`);
+
+            const dataPanes = await resPanes.json();
+            const dataGroups = await resGroups.json();
+
+            let textPanes = dataPanes.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+            let textGroups = dataGroups.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+
+            const parsedPanes = JSON.parse(textPanes.replace(/```json|```/g, '').trim());
+            const parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
+
+            // MERGE THE BRAINS
+            return {
+              analysis: `[Panes (G3): ${parsedPanes.analysis}] | [Groups (G25): ${parsedGroups.analysis}]`,
+              window_counts: {
+                ...parsedPanes.window_counts,
+                window_groups: parsedGroups.window_counts?.window_groups || 0
               },
-              body: JSON.stringify(body)
-            });
-
-            if (!response.ok) {
-              throw new Error(`HTTP Error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            let textResult = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            
-            if (!textResult) {
-              throw new Error('Empty response from model');
-            }
-
-            textResult = textResult.replace(/```json|```/g, '').trim();
-            
-            return JSON.parse(textResult);
+              stories: parsedPanes.stories || 1
+            };
 
           } catch (error) {
+            clearTimeout(timeoutId);
             attempt++;
-            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${error.message}`);
+            const isTimeout = error.name === 'AbortError';
+            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '60s Timeout (Zombie Killed)' : error.message}`);
             
             if (attempt > MAX_RETRIES) {
               console.error(`[Image ${globalIndex + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
@@ -142,11 +185,9 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
         }
       });
 
-      // Wait for the current pair of images to finish before starting the next pair
       const batchResults = await Promise.all(batchPromises);
       resultsArray.push(...batchResults);
       
-      // Add a tiny 1-second breather between batches to clear the Vertex queue
       if (i + CONCURRENCY_LIMIT < req.files.length) {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
@@ -159,16 +200,14 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
         pane_2nd_story: 0,
         pane_1st_base: 0,
         patio_door_pane: 0,
-        entry_door_pane: 0
+        entry_door_pane: 0,
+        window_groups: 0 // ADDED NEW STAT
       },
-      window_groups: 0,
       stories: 1
     };
 
     resultsArray.forEach((result, index) => {
-      if (result.analysis) {
-        finalTotals.analysis += `[Img ${index + 1}: ${result.analysis}] `;
-      }
+      if (result.analysis) finalTotals.analysis += `[Img ${index + 1}: ${result.analysis}] `;
 
       if (result.window_counts) {
         finalTotals.window_counts.pane_3rd_story += (result.window_counts.pane_3rd_story || 0);
@@ -176,18 +215,13 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
         finalTotals.window_counts.pane_1st_base += (result.window_counts.pane_1st_base || 0);
         finalTotals.window_counts.patio_door_pane += (result.window_counts.patio_door_pane || 0);
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
-        
-        // Add to top-level window_groups
-        finalTotals.window_groups += (result.window_counts.window_groups || 0);
+        finalTotals.window_counts.window_groups += (result.window_counts.window_groups || 0); // TALLY THE GROUPS
       }
       
      if (result.stories > finalTotals.stories) {
         finalTotals.stories = result.stories;
       }
     });
-
-    // Add window_groups to the end of the analysis string for visibility
-    finalTotals.analysis += `\n\nTotal Architectural Window Groups: ${finalTotals.window_groups}`;
 
     res.json(finalTotals);
 
