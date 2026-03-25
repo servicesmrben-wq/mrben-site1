@@ -61,8 +61,8 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
   },
   "stories": 1
 }`;
-
-    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+    // gemini-2.5-flash |  gemini-3-flash-preview
+    const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-flash:generateContent';
 
     const MAX_RETRIES = 2; 
     const CONCURRENCY_LIMIT = 2; // Process in batches of 2 to stay under Vertex quota
