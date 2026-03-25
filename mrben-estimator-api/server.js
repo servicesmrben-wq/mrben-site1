@@ -62,11 +62,10 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
   "stories": 1
 }`;
 
-    // Swapped to us-east1 to bypass the crowded global queue
     const url = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
 
     const MAX_RETRIES = 2; 
-    const CONCURRENCY_LIMIT = 2; // Process in batches of 2 to stay under Vertex quota
+    const CONCURRENCY_LIMIT = 4; // Process in batches of 2 to stay under Vertex quota
     const resultsArray = [];
 
     // THE BATCHING ENGINE
