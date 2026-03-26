@@ -104,7 +104,10 @@ export default function EstimatorPage() {
           };
           
           const compressed = await imageCompression(entry.file, compressionOptions);
-          const compressedFile = new File([compressed], entry.file.name, { type: compressed.type });
+          
+          // Generate new filename with .webp extension
+          const newName = entry.file.name.substring(0, entry.file.name.lastIndexOf('.')) + '.webp';
+          const compressedFile = new File([compressed], newName, { type: compressed.type });
           
           setManagedFiles(prev => prev.map(f => 
             f.id === entry.id ? { ...f, file: compressedFile, status: "ready" } : f
