@@ -229,6 +229,9 @@ export default function EstimatorPage() {
                         (data.window_counts?.patio_door_pane || 0) + 
                         (data.window_counts?.entry_door_pane || 0);
       
+      const windowGroups = data.window_counts?.window_groups || 0;
+      const windowToPanesRatio = windowGroups > 0 ? (totalPanes / windowGroups).toFixed(2) : "0.00";
+      
       // Helper to calculate values for the JSON backup
       const getModeData = (m: "ext" | "in_out") => {
         let totalMinutes = 0;
@@ -272,15 +275,17 @@ export default function EstimatorPage() {
             time: extData.time
           }
         },
-        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}, Groupes de fenêtres (Flash 2.5) : ${data.window_counts?.window_groups || 0}`,
-        total_window_groups: data.window_counts?.window_groups || 0,
+        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}, Groupes de fenêtres (Flash 2.5) : ${windowGroups}, Ratio vitres/fenêtre : ${windowToPanesRatio}`,
+        total_window_groups: windowGroups,
+        window_to_panes_ratio: windowToPanesRatio,
         window_counts: {
           pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
           pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
           pane_1st_base: data.window_counts?.pane_1st_base || 0,
           patio_door_pane: data.window_counts?.patio_door_pane || 0,
           entry_door_pane: data.window_counts?.entry_door_pane || 0,
-          window_groups: data.window_counts?.window_groups || 0, // NEW 2.5 FLASH DATA
+          window_groups: windowGroups,
+          window_to_panes_ratio: windowToPanesRatio,
         },
         stories: data.stories || 1,
         mode: mode,
