@@ -23,7 +23,7 @@ export const PRICING_DATA = {
   patio_door_pane: {
     label: "patio_door_pane_label",
     minutes_ext: 1.97,
-    minutes_int: 1.97,
+    minutes_int: 2.5,
     desc: "patio_door_pane_desc"
   },
   entry_door_pane: {

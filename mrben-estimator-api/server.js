@@ -44,6 +44,8 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
 CRITICAL VISUAL RULES:
 - FRAMES & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window groupings: if a frame splits the glass, count each distinct pane.
 - IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panes.
+- IGNORE SCREENS & SCREENED PORCHES: Completely ignore mesh insect screens and the structural panels of screened-in porches.
+- IGNORE RAILINGS & FENCES: If a window is behind a deck railing, balcony, or fence, DO NOT mistake the railing bars for window frames. Ignore the railing completely and count the structural glass panes behind it.
 - OBSTRUCTIONS & SHADOWS: Do not miss windows that are partially hidden, even if you only see a small part of a window because of an obstruction, count the visible panes as you would any other window.
 - BASEMENT: Look closely at the foundation line to count distinct panes accurately (e.g., a standard sliding basement unit = 2 panes).
 - TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
@@ -173,7 +175,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see
             clearTimeout(timeoutId);
             attempt++;
             const isTimeout = error.name === 'AbortError';
-            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '60s Timeout (Zombie Killed)' : error.message}`);
+            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '30s Timeout (Zombie Killed)' : error.message}`);
             
             if (attempt > MAX_RETRIES) {
               console.error(`[Image ${globalIndex + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
