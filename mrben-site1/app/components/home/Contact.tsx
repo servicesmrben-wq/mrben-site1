@@ -107,9 +107,9 @@ function ContactContent({
     }
   }, [estimateQuote, urlService]);
 
-  const MAX_IMAGES = 5;
+  const MAX_IMAGES = 6;
   const MAX_IMAGE_SIZE = 15 * 1024 * 1024;
-  const MAX_COMPRESSED_SIZE = 1024 * 1024;
+  const MAX_COMPRESSED_SIZE = 0.5 * 1024 * 1024; // 0.5MB
   const BLOB_THRESHOLD = 3 * 1024 * 1024;
   const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
@@ -152,14 +152,14 @@ function ContactContent({
     }
 
     const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
-    const nextName = `${baseName}.jpg`;
+    const nextName = `${baseName}.webp`;
     const qualitySteps = [0.82, 0.72, 0.62, 0.52, 0.45];
     const dimensionSteps = [2000, 1600, 1280];
     const longestEdge = Math.max(imageBitmap.width, imageBitmap.height);
 
     const toBlob = (quality: number) =>
       new Promise<Blob | null>((resolve) => {
-        canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
+        canvas.toBlob((blob) => resolve(blob), "image/webp", quality);
       });
 
     let finalBlob: Blob | null = null;
@@ -192,7 +192,7 @@ function ContactContent({
     }
 
     return new File([finalBlob], nextName, {
-      type: "image/jpeg",
+      type: "image/webp",
       lastModified: file.lastModified,
     });
   }
