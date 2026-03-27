@@ -176,11 +176,13 @@ export default function EstimatorPage() {
       let res;
       let attempts = 0;
       const maxRetries = 1;
-      const ESTIMATE_API_URL = "/api/estimate";
+      
+      // Using the direct Cloud Run URL to bypass Vercel's 4.5MB limit
+      const CLOUD_RUN_URL = process.env.NEXT_PUBLIC_CLOUD_RUN_API_URL as string;
 
       while (attempts <= maxRetries) {
         try {
-          res = await fetch(ESTIMATE_API_URL, {
+          res = await fetch(CLOUD_RUN_URL, {
             method: "POST",
             body: formData,
           });
@@ -253,11 +255,12 @@ export default function EstimatorPage() {
       const extData = getModeData("ext");
 
       const mergedResult = {
-        analysis: data.analysis || "",
+        analysis_panes: data.analysis_g3 || "",
+        analysis_vibe: data.analysis_g25 || "",
         referenceId: newRefId,
         user_selection: mode === "ext" ? "Extérieur Seulement" : "Intérieur et Extérieur",
         total_panes: totalPanes,
-        pricing_metrics: `115$/heure | Marge : +7.5% | Frais de service et déplacement : ${BASE_FEE}$`,
+        pricing_metrics: `115$/heure | Marge : +15% | Frais de service et déplacement : ${BASE_FEE}$`,
         estimates: {
           inside_and_out: {
             label: "Intérieur et Extérieur",
@@ -371,7 +374,7 @@ export default function EstimatorPage() {
     const adjustedMinutes = calculateMinutesForMode(m);
     const windowCost = adjustedMinutes * RATE_PER_MINUTE;
     
-    // Apply 7.5% Markup from pricing.ts
+    // Apply dynamic 15% Markup using MARKUP_MULTIPLIER
     let total = (windowCost * MARKUP_MULTIPLIER) + BASE_FEE;
     
     // Round to nearest $5
@@ -658,7 +661,7 @@ export default function EstimatorPage() {
                         q_inout: calculateTotalForMode("in_out"),
                         t_inout: formatHours(calculateMinutesForMode("in_out")),
                         hr: RATE_PER_MINUTE * 60,
-                        markup: "7.5%",
+                        markup: "15%",
                         fee: BASE_FEE,
                         s3: result.window_counts.pane_3rd_story,
                         s2: result.window_counts.pane_2nd_story,

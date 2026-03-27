@@ -72,21 +72,25 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
   "stories": 1
 }`;
 
-    // --- BRAIN 2: ARCHITECTURAL VIBE (NEW 5-TIER) ---
+// --- BRAIN 2: ARCHITECTURAL VIBE (NEW 5-TIER) ---
     const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
 Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 5-tier scale.
 
+CRITICAL VISUAL RULE - FLAT GRIDS VS. STRUCTURAL SASHES: 
+- IGNORE FLAT GRIDS: If you see thin, decorative grids (muntins) trapped flat inside the glass, completely ignore them. They do not slow down a squeegee. Do not increase the density category just because of flat internal grids.
+- COUNT PHYSICAL SPLITS: Thick horizontal or vertical frames (sashes) that physically split the glass into a top and bottom half DO slow down a squeegee.
+
 CATEGORIES (Choose exactly one):
-1. "dense": Intricate structural transoms, full French doors, arches, or highly cut-up small panes. High squeegee difficulty.
-2. "normal_dense": Standard windows but with complications like half-grids (fractional grilles) or asymmetrical multi-pane splits. Slower than average.
-3. "normal": Standard 2-pane or 3-pane casement/sliding windows with clear glass. The average residential baseline.
-4. "normal_large": Larger than average clear windows, big sliding doors, but not quite massive architectural sheets. Faster than average.
-5. "large_open": Massive floor-to-ceiling architectural glass, A-frames, or huge uninterrupted commercial-style picture windows. Very fast wide squeegee swipes.
+1. "dense": Intricate structural transoms, TRUE French doors with physical frames splitting the glass, arches. High squeegee difficulty.
+2. "normal_dense": Windows with physical complications like thick structural sashes splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits. Slower than average.
+3. "normal": Simple clear casements or basic 2-pane sliders. (If a simple window has FLAT internal grids, it stays 'normal' because the glass surface is flat).
+4. "normal_large": Larger than average clear windows, big sliding doors. Faster than average.
+5. "large_open": Massive floor-to-ceiling architectural glass, A-frames. Very fast wide squeegee swipes.
 
 OUTPUT FORMAT:
 Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
 {
-  "analysis": "Mixed windows. Some half-grids, some standard. Averaging out to normal_dense.",
+  "analysis": "Windows have flat internal grids (ignored), but thick horizontal sashes physically split the top and bottom panes. Averaging to normal_dense.",
   "window_counts": {
     "pane_vibe": "normal_dense"
   }
@@ -164,9 +168,10 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
             const parsedPanes = JSON.parse(textPanes.replace(/```json|```/g, '').trim());
             const parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
 
-            // MERGE THE BRAINS (Pulling pane_vibe instead of window_groups)
+            // SEPARATE THE BRAIN ANALYSIS
             return {
-              analysis: `[Panes (G3): ${parsedPanes.analysis}] | [Vibe (G25): ${parsedGroups.analysis}]`,
+              analysis_g3: parsedPanes.analysis || "No pane analysis.",
+              analysis_g25: parsedGroups.analysis || "No vibe analysis.",
               window_counts: {
                 ...parsedPanes.window_counts,
                 pane_vibe: parsedGroups.window_counts?.pane_vibe || "normal"
@@ -182,7 +187,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
             
             if (attempt > MAX_RETRIES) {
               console.error(`[Image ${globalIndex + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
-              return { window_counts: { pane_vibe: "normal" }, stories: 1, analysis: `Img ${globalIndex + 1} analysis failed after retries.` };
+              return { window_counts: { pane_vibe: "normal" }, stories: 1, analysis_g3: `Img ${globalIndex + 1} analysis failed.`, analysis_g25: `Img ${globalIndex + 1} analysis failed.` };
             }
             
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -199,7 +204,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
     }
 
     const finalTotals = {
-      analysis: "Parallel processing complete. ",
+      analysis_g3: "G3 Pane Counting: ",
+      analysis_g25: "G25 Vibe Assessment: ",
       window_counts: {
         pane_3rd_story: 0,
         pane_2nd_story: 0,
@@ -231,7 +237,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
     let validVibeCount = 0;
 
     resultsArray.forEach((result, index) => {
-      if (result.analysis) finalTotals.analysis += `[Img ${index + 1}: ${result.analysis}] `;
+      if (result.analysis_g3) finalTotals.analysis_g3 += `[Img ${index + 1}: ${result.analysis_g3}] `;
+      if (result.analysis_g25) finalTotals.analysis_g25 += `[Img ${index + 1}: ${result.analysis_g25}] `;
 
       if (result.window_counts) {
         finalTotals.window_counts.pane_3rd_story += (result.window_counts.pane_3rd_story || 0);
