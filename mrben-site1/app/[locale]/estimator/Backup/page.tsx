@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/navigation"; 
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight, Info } from "lucide-react";
-import { PRICING_DATA, PricingKey, RATE_PER_MINUTE, MARKUP_MULTIPLIER, VIBE_MULTIPLIERS, VibeKey } from "@/app/lib/pricing";
+import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
 import imageCompression from "browser-image-compression";
 import { useTranslations } from "next-intl";
 import { packData } from "@/app/lib/url-packer";
@@ -151,6 +151,7 @@ export default function EstimatorPage() {
     setReferenceId(newRefId);
 
     // Smart Progress Logic
+    // Single API call with all images — estimate ~10s per image
     const seconds = managedFiles.length * 10 + 5;
     const estimatedWaitTimeMs = seconds * 1000; 
     setTimeLeft(seconds);
@@ -167,7 +168,10 @@ export default function EstimatorPage() {
     }, 1000);
 
     try {
+      // Use the pre-compressed files
       const filesToSend = managedFiles.map(f => f.file);
+
+      // SINGLE API CALL — all images sent together for unified analysis
       const formData = new FormData();
       filesToSend.forEach((file) => {
         formData.append("files", file);
@@ -176,20 +180,25 @@ export default function EstimatorPage() {
       let res;
       let attempts = 0;
       const maxRetries = 1;
-      const ESTIMATE_API_URL = "/api/estimate";
+
+      // DIRECT CLOUD RUN URL (Bypassing Vercel for 32MB payload support)
+      const CLOUD_RUN_URL = "https://mrben-estimator-api-529910920022.us-east1.run.app/estimate";
 
       while (attempts <= maxRetries) {
         try {
-          res = await fetch(ESTIMATE_API_URL, {
+          res = await fetch(CLOUD_RUN_URL, {
             method: "POST",
             body: formData,
           });
+
           if (res.ok) break;
+
           if (attempts < maxRetries && res.status >= 500) {
             attempts++;
             await new Promise((resolve) => setTimeout(resolve, 1500));
             continue;
           }
+
           break;
         } catch (error) {
           if (attempts < maxRetries) {
@@ -223,29 +232,28 @@ export default function EstimatorPage() {
                         (data.window_counts?.patio_door_pane || 0) + 
                         (data.window_counts?.entry_door_pane || 0);
       
-      const vibe = (data.window_counts?.pane_vibe || "normal") as VibeKey;
-      const difficultyMultiplier = VIBE_MULTIPLIERS[vibe] || 1.0;
+      const windowGroups = data.window_counts?.window_groups || 0;
+      const windowToPanesRatio = windowGroups > 0 ? (totalPanes / windowGroups).toFixed(2) : "0.00";
       
       // Helper to calculate values for the JSON backup
       const getModeData = (m: "ext" | "in_out") => {
-        let baseMinutes = 0;
+        let totalMinutes = 0;
         Object.entries(data.window_counts || {}).forEach(([key, count]) => {
           const k = key as PricingKey;
           const item = PRICING_DATA[k];
           if (item && typeof count === "number") {
             const unitMinutes = m === "ext" ? item.minutes_ext : (item.minutes_ext + item.minutes_int);
-            baseMinutes += unitMinutes * count;
+            totalMinutes += unitMinutes * count;
           }
         });
-        
-        const adjustedMinutes = baseMinutes * difficultyMultiplier;
-        const windowCost = adjustedMinutes * RATE_PER_MINUTE;
-        let total = (windowCost * MARKUP_MULTIPLIER) + BASE_FEE;
+        const windowCost = totalMinutes * RATE_PER_MINUTE;
+        const SAFETY_BUFFER = 1.075;
+        let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
         total = Math.round(total / 5) * 5;
         
         return {
           price: `$${total.toFixed(2)}`,
-          time: `${(adjustedMinutes / 60).toFixed(1)}h`
+          time: `${(totalMinutes / 60).toFixed(1)}h`
         };
       };
 
@@ -270,15 +278,17 @@ export default function EstimatorPage() {
             time: extData.time
           }
         },
-        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée : ${data.window_counts?.entry_door_pane || 0}, Type de vitrage (Vibe) : ${vibe}`,
-        pane_vibe: vibe,
+        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}, Groupes de fenêtres (Flash 2.5) : ${windowGroups}, Ratio vitres/fenêtre : ${windowToPanesRatio}`,
+        total_window_groups: windowGroups,
+        window_to_panes_ratio: windowToPanesRatio,
         window_counts: {
           pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
           pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
           pane_1st_base: data.window_counts?.pane_1st_base || 0,
           patio_door_pane: data.window_counts?.patio_door_pane || 0,
           entry_door_pane: data.window_counts?.entry_door_pane || 0,
-          pane_vibe: vibe,
+          window_groups: windowGroups,
+          window_to_panes_ratio: windowToPanesRatio,
         },
         stories: data.stories || 1,
         mode: mode,
@@ -297,6 +307,8 @@ export default function EstimatorPage() {
 
       (async () => {
         let activeFolderId = "";
+
+        // 1. Send Metadata FIRST (This creates the folder and saves the JSON)
         try {
           const metaData = new FormData();
           metaData.append("metadata", JSON.stringify(mergedResult, null, 2));
@@ -311,14 +323,18 @@ export default function EstimatorPage() {
           console.warn("Metadata backup failed:", e);
         }
 
+        // 2. Send Images in chunks
         for (let i = 0; i < driveChunks.length; i++) {
           try {
             const chunk = driveChunks[i];
             const driveData = new FormData();
             driveData.append("referenceId", newRefId);
+            
+            // Pass the specific folderId we just created/found
             if (activeFolderId) {
               driveData.append("subfolderId", activeFolderId);
             }
+
             chunk.forEach((file) => {
               driveData.append("files", file);
             });
@@ -341,6 +357,7 @@ export default function EstimatorPage() {
     }
   };
 
+  // Scroll into view when result is ready
   useEffect(() => {
     if (result) {
       resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -350,29 +367,23 @@ export default function EstimatorPage() {
   const calculateMinutesForMode = (m: "ext" | "in_out") => {
     if (!result || !result.window_counts) return 0;
     
-    let baseMinutes = 0;
+    let totalMinutes = 0;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
       const item = PRICING_DATA[k];
       if (item && typeof count === "number") {
         const unitMinutes = m === "ext" ? item.minutes_ext : (item.minutes_ext + item.minutes_int);
-        baseMinutes += unitMinutes * count;
+        totalMinutes += unitMinutes * count;
       }
     });
-
-    // Apply the Vibe Engine Math
-    const vibe = (result.window_counts.pane_vibe || "normal") as VibeKey;
-    const difficultyMultiplier = VIBE_MULTIPLIERS[vibe] || 1.0;
-    
-    return baseMinutes * difficultyMultiplier;
+    return totalMinutes;
   };
 
   const calculateTotalForMode = (m: "ext" | "in_out") => {
-    const adjustedMinutes = calculateMinutesForMode(m);
-    const windowCost = adjustedMinutes * RATE_PER_MINUTE;
-    
-    // Apply 7.5% Markup from pricing.ts
-    let total = (windowCost * MARKUP_MULTIPLIER) + BASE_FEE;
+    const totalMinutes = calculateMinutesForMode(m);
+    const windowCost = totalMinutes * RATE_PER_MINUTE;
+    const SAFETY_BUFFER = 1.075; // 7.5% Markup
+    let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
     
     // Round to nearest $5
     total = Math.round(total / 5) * 5;
@@ -393,6 +404,7 @@ export default function EstimatorPage() {
   };
 
   const handleUploadClick = (e: React.MouseEvent) => {
+    // If user hasn't seen instructions, show modal and prevent default upload
     if (!hasSeenInstructions) {
       e.preventDefault();
       setShowInstructions(true);
@@ -402,6 +414,7 @@ export default function EstimatorPage() {
   const closeModal = () => {
     setShowInstructions(false);
     setHasSeenInstructions(true);
+    // Automatically trigger the file selector after closing instructions for the first time
     setTimeout(() => {
       fileInputRef.current?.click();
     }, 100);
@@ -475,6 +488,7 @@ export default function EstimatorPage() {
                       className="object-cover" 
                       unoptimized 
                     />
+                    {/* Compression Overlay */}
                     {f.status === "compressing" && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
                         <Loader2 className="h-6 w-6 animate-spin text-white" />
@@ -602,8 +616,7 @@ export default function EstimatorPage() {
 
               <div className="mt-8 border-t border-zinc-100 pt-6">
                 
-                <div className="space-y-3">                  
-                  <div className="text-sm font-semibold text-zinc-900">{t("breakdown")}</div>
+                              <div className="space-y-3">                  <div className="text-sm font-semibold text-zinc-900">{t("breakdown")}</div>
                   
                   <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
                     <div>
@@ -631,12 +644,11 @@ export default function EstimatorPage() {
                           <div className="text-sm font-medium text-zinc-900">{t(item.label)}</div>
                           <div className="text-xs text-zinc-500">{t(item.desc)}</div>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
-                            {c}x
-                          </div>
-                        </div>                      
-                      </div>
+                                              <div className="flex items-center gap-4">
+                                                <div className="text-sm font-semibold text-zinc-900 min-w-[60px] text-right">
+                                                  {c}x
+                                                </div>
+                                              </div>                      </div>
                     );
                   })}
                 </div>
@@ -688,13 +700,16 @@ export default function EstimatorPage() {
       {/* Instructions Modal */}
       {showInstructions && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={closeModal}
           />
           
+          {/* Modal Content */}
           <div className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-8 duration-300">
             <div className="relative p-6 sm:p-8">
+              {/* Close Button */}
               <button 
                 onClick={closeModal}
                 className="absolute right-4 top-4 rounded-full p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"

@@ -38,15 +38,16 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
     const tokenResponse = await client.getAccessToken();
     const accessToken = tokenResponse.token;
 
-    // --- BRAIN 1: PANES (UNTOUCHED) ---
+    // --- BRAIN 1: PANES (WITH LOOP KILLERS) ---
     const systemInstruction = `You are a highly accurate expert window pane counter. Analyze this photo to count all window panes.
 
 CRITICAL VISUAL RULES:
 - FRAMES & SPLITS: Count every distinct glass pane separated by a physical frame. Do not group them. Look closely at large window groupings: if a frame splits the glass, count each distinct pane.
-- IGNORE DECORATIVE GRIDS: Do not count the tiny glass squares (muntins) inside a window. Only count the major sliding or fixed structural panes.
-- IGNORE SCREENS & SCREENED PORCHES: Completely ignore mesh insect screens and the structural panels of screened-in porches.
+- IGNORE DECORATIVE GRIDS (MUNTINS): Completely ignore thin, decorative grids sitting inside the glass. CRITICAL: If a window has grids on the top half but clear glass on the bottom half, count the top section and bottom section as distinct panes separated by the thick structural frame between them.
+- IGNORE SCREENS & SCREENED PORCHES: Completely ignore mesh insect screens and the structural panels of screened-in porches. Only count physical, solid glass window panes.
 - IGNORE RAILINGS & FENCES: If a window is behind a deck railing, balcony, or fence, DO NOT mistake the railing bars for window frames. Ignore the railing completely and count the structural glass panes behind it.
 - OBSTRUCTIONS & SHADOWS: Do not miss windows that are partially hidden, even if you only see a small part of a window because of an obstruction, count the visible panes as you would any other window.
+- WINTER SHELTERS (IGLOOS): If an entrance is covered by a plastic/canvas winter shelter, DO NOT count the plastic seams or panels as glass. Assume 1 'entry_door_pane' for the hidden door, and only count actual glass windows you can explicitly see.
 - BASEMENT: Look closely at the foundation line to count distinct panes accurately (e.g., a standard sliding basement unit = 2 panes).
 - TRANSOMS & SIDELIGHTS: Windows directly above doors (transoms) or immediately next to doors (sidelights) must be counted separately as individual panes. Map them to 'pane_1st_base'.
 - DOORS (PATIO): Count every large glass pane of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
@@ -71,21 +72,23 @@ Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see
   "stories": 1
 }`;
 
-    // --- BRAIN 2: GROUPS (NEW) ---
-    const systemInstructionGroups = `You are a specialized architectural AI. Your ONLY job is to count the overarching structural window openings (groups) in the house's exterior.
+    // --- BRAIN 2: ARCHITECTURAL VIBE (NEW 5-TIER) ---
+    const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
+Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 5-tier scale.
 
-CRITICAL VISUAL RULES:
-- IGNORE PANES: Completely ignore the glass, muntins, or frames splitting the window.
-- WHAT IS A GROUP: Look at the siding or brick. Every distinct hole cut into the wall for a window unit is ONE group.
-- BAY/BOW WINDOWS: A massive bay window with 3 or 5 internal sections is still just ONE architectural group.
-- DOORS: Do not count entry or patio doors. Focus only on window openings.
+CATEGORIES (Choose exactly one):
+1. "dense": Intricate structural transoms, full French doors, arches, or highly cut-up small panes. High squeegee difficulty.
+2. "normal_dense": Standard windows but with complications like half-grids (fractional grilles) or asymmetrical multi-pane splits. Slower than average.
+3. "normal": Standard 2-pane or 3-pane casement/sliding windows with clear glass. The average residential baseline.
+4. "normal_large": Larger than average clear windows, big sliding doors, but not quite massive architectural sheets. Faster than average.
+5. "large_open": Massive floor-to-ceiling architectural glass, A-frames, or huge uninterrupted commercial-style picture windows. Very fast wide squeegee swipes.
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see before outputting the final count.
+Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
 {
-  "analysis": "1 large bay window left, 2 standard windows right...",
+  "analysis": "Mixed windows. Some half-grids, some standard. Averaging out to normal_dense.",
   "window_counts": {
-    "window_groups": 0
+    "pane_vibe": "normal_dense"
   }
 }`;
 
@@ -123,7 +126,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see
               safetySettings, generationConfig
             };
 
-            // Payload for Gemini 2.5 (Groups)
+            // Payload for Gemini 2.5 (Groups/Vibe)
             const bodyGroups = {
               systemInstruction: { parts: [{ text: systemInstructionGroups }] },
               contents: [{ role: 'user', parts: [{ inline_data: inlineData }] }],
@@ -161,12 +164,12 @@ Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see
             const parsedPanes = JSON.parse(textPanes.replace(/```json|```/g, '').trim());
             const parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
 
-            // MERGE THE BRAINS
+            // MERGE THE BRAINS (Pulling pane_vibe instead of window_groups)
             return {
-              analysis: `[Panes (G3): ${parsedPanes.analysis}] | [Groups (G25): ${parsedGroups.analysis}]`,
+              analysis: `[Panes (G3): ${parsedPanes.analysis}] | [Vibe (G25): ${parsedGroups.analysis}]`,
               window_counts: {
                 ...parsedPanes.window_counts,
-                window_groups: parsedGroups.window_counts?.window_groups || 0
+                pane_vibe: parsedGroups.window_counts?.pane_vibe || "normal"
               },
               stories: parsedPanes.stories || 1
             };
@@ -175,11 +178,11 @@ Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see
             clearTimeout(timeoutId);
             attempt++;
             const isTimeout = error.name === 'AbortError';
-            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '30s Timeout (Zombie Killed)' : error.message}`);
+            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '60s Timeout (Zombie Killed)' : error.message}`);
             
             if (attempt > MAX_RETRIES) {
               console.error(`[Image ${globalIndex + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
-              return { window_counts: {}, stories: 1, analysis: `Img ${globalIndex + 1} analysis failed after retries.` };
+              return { window_counts: { pane_vibe: "normal" }, stories: 1, analysis: `Img ${globalIndex + 1} analysis failed after retries.` };
             }
             
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -203,10 +206,29 @@ Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see
         pane_1st_base: 0,
         patio_door_pane: 0,
         entry_door_pane: 0,
-        window_groups: 0 // ADDED NEW STAT
+        pane_vibe: "normal" // REPLACED GROUPS WITH VIBE
       },
       stories: 1
     };
+
+    // --- VIBE WEIGHTING ENGINE ---
+    const vibeWeights = {
+      "dense": 1,
+      "normal_dense": 2,
+      "normal": 3,
+      "normal_large": 4,
+      "large_open": 5
+    };
+    const weightToVibe = {
+      1: "dense",
+      2: "normal_dense",
+      3: "normal",
+      4: "normal_large",
+      5: "large_open"
+    };
+    
+    let totalVibeWeight = 0;
+    let validVibeCount = 0;
 
     resultsArray.forEach((result, index) => {
       if (result.analysis) finalTotals.analysis += `[Img ${index + 1}: ${result.analysis}] `;
@@ -217,13 +239,24 @@ Return JSON ONLY. Use the 'analysis' field to briefly list the groupings you see
         finalTotals.window_counts.pane_1st_base += (result.window_counts.pane_1st_base || 0);
         finalTotals.window_counts.patio_door_pane += (result.window_counts.patio_door_pane || 0);
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
-        finalTotals.window_counts.window_groups += (result.window_counts.window_groups || 0); // TALLY THE GROUPS
+        
+        // Tally the vibe weights
+        if (result.window_counts.pane_vibe) {
+          totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 3; // Default to 3 (normal)
+          validVibeCount++;
+        }
       }
       
-     if (result.stories > finalTotals.stories) {
+      if (result.stories > finalTotals.stories) {
         finalTotals.stories = result.stories;
       }
     });
+
+    // Calculate the overall house vibe average
+    if (validVibeCount > 0) {
+      const avgWeight = Math.round(totalVibeWeight / validVibeCount);
+      finalTotals.window_counts.pane_vibe = weightToVibe[avgWeight] || "normal";
+    }
 
     res.json(finalTotals);
 

@@ -1,6 +1,20 @@
 export const BASE_HOURLY_RATE = 115; // $115 per hour
 export const RATE_PER_MINUTE = BASE_HOURLY_RATE / 60;
 
+// Centralized 7.5% markup to replace the hardcoded safety buffer in your frontend
+export const MARKUP_MULTIPLIER = 1.075; 
+
+// The new 5-Tier AI Vibe Engine Multipliers
+export const VIBE_MULTIPLIERS = {
+  dense: 0.60,         // French doors, transoms (fastest per pane)
+  normal_dense: 0.85,  // Half-grids, complex splits
+  normal: 1.0,         // Standard residential baseline
+  normal_large: 1.25,  // Big sliding doors, large standard frames
+  large_open: 1.50     // Massive architectural sheets (slowest per pane)
+};
+
+export type VibeKey = keyof typeof VIBE_MULTIPLIERS;
+
 export const PRICING_DATA = {
   pane_1st_base: {
     label: "pane_1st_base_label",
