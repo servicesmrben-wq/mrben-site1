@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 
 // --- MODEL URLS ---
 const urlG3 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
-const urlG25 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-flash:generateContent';
+const urlG25 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-pro:generateContent';
 
 app.post('/estimate', upload.array('files'), async (req, res) => {
   try {

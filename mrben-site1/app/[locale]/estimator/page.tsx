@@ -254,13 +254,15 @@ export default function EstimatorPage() {
       const inOutData = getModeData("in_out");
       const extData = getModeData("ext");
 
+      const markupPercent = Math.round((MARKUP_MULTIPLIER - 1) * 100 * 10) / 10;
+
       const mergedResult = {
         analysis_panes: data.analysis_g3 || "",
         analysis_vibe: data.analysis_g25 || "",
         referenceId: newRefId,
         user_selection: mode === "ext" ? "Extérieur Seulement" : "Intérieur et Extérieur",
         total_panes: totalPanes,
-        pricing_metrics: `115$/heure | Marge : +15% | Frais de service et déplacement : ${BASE_FEE}$`,
+        pricing_metrics: `${RATE_PER_MINUTE * 60}$/heure | Marge : +${markupPercent}% | Frais de service et déplacement : ${BASE_FEE}$`,
         estimates: {
           inside_and_out: {
             label: "Intérieur et Extérieur",
@@ -661,13 +663,14 @@ export default function EstimatorPage() {
                         q_inout: calculateTotalForMode("in_out"),
                         t_inout: formatHours(calculateMinutesForMode("in_out")),
                         hr: RATE_PER_MINUTE * 60,
-                        markup: "15%",
+                        markup: `${markupPercent}%`,
                         fee: BASE_FEE,
                         s3: result.window_counts.pane_3rd_story,
                         s2: result.window_counts.pane_2nd_story,
                         s1: result.window_counts.pane_1st_base,
                         patio: result.window_counts.patio_door_pane,
                         entry: result.window_counts.entry_door_pane,
+                        vibe: result.pane_vibe,
                         service: mode === "ext" ? "Exterior Only" : "Inside & Out",
                       })
                     },
