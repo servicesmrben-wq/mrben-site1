@@ -178,7 +178,7 @@ export default function EstimatorPage() {
       const maxRetries = 1;
       
       // Using the direct Cloud Run URL to bypass Vercel's 4.5MB limit
-      const CLOUD_RUN_URL = process.env.NEXT_PUBLIC_CLOUD_RUN_API_URL as string;
+      const CLOUD_RUN_URL = "https://mrben-estimator-api-529910920022.us-east1.run.app/estimate";
 
       while (attempts <= maxRetries) {
         try {
