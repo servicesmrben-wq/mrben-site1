@@ -19,6 +19,7 @@ interface ManagedFile {
 
 export default function EstimatorPage() {
   const t = useTranslations("estimator");
+  const markupPercent = Math.round((MARKUP_MULTIPLIER - 1) * 100 * 10) / 10;
   const [managedFiles, setManagedFiles] = useState<ManagedFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -253,8 +254,6 @@ export default function EstimatorPage() {
 
       const inOutData = getModeData("in_out");
       const extData = getModeData("ext");
-
-      const markupPercent = Math.round((MARKUP_MULTIPLIER - 1) * 100 * 10) / 10;
 
       const mergedResult = {
         analysis_panes: data.analysis_g3 || "",
