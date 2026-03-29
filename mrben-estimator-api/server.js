@@ -53,15 +53,17 @@ CRITICAL VISUAL RULES:
 - DOORS (PATIO): Count every large glass pane of sliding patio doors as 'patio_door_pane' (e.g., a standard 2-panel sliding door = 2 panes).
 - DOORS (ENTRY): Assume 1 glass pane for every entry door found, count as 'entry_door_pane'.
 
-SPATIAL MAPPING (Top-Down):
+SPATIAL MAPPING & FORMAT (ANTI-LOOPING):
 - 3rd Story -> 'pane_3rd_story'
 - 2nd Story -> 'pane_2nd_story'
 - Main/Basement -> 'pane_1st_base'
+- IGNORE GEOMETRIC NOISE: Do not look at siding lines, fences, or deck spindles.
+- NO SENTENCES: Write a strict, grouped tally to prevent repetitive looping.
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to physically tally the panes you see in this specific image before outputting the final counts. Do not generate text outside the JSON.
+Return JSON ONLY. Do not generate text outside the JSON. Use the 'analysis' field to physically tally the panes you see in this specific image before outputting the final counts. Format it exactly like this example:
 {
-  "analysis": "Top floor left to right: 3, 2. Main floor: 4, 2...",
+  "analysis": "2nd Story: 2x 2-pane. Main: 1x 4-pane. Basement: 2x 2-pane sliders.",
   "window_counts": { 
     "pane_3rd_story": 0, 
     "pane_2nd_story": 0, 
