@@ -153,10 +153,10 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
 
         try {
           // ==========================================
-          // TASK 1: THE 30-SECOND FLASH TRAP
+          // TASK 1: THE 15-SECOND FLASH TRAP
           // ==========================================
           const controllerG3 = new AbortController();
-          const timeoutG3 = setTimeout(() => controllerG3.abort(), 30000); // Strict 30s
+          const timeoutG3 = setTimeout(() => controllerG3.abort(), 15000); // Strict 15s
           
           try {
             const resPanes = await fetch(urlG3, { ...fetchOptions, signal: controllerG3.signal, body: JSON.stringify(bodyPanes) });
@@ -170,7 +170,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
           } catch (error) {
             clearTimeout(timeoutG3);
             const isTimeout = error.name === 'AbortError';
-            console.warn(`[${originalFileName}] Flash 3 failed (${isTimeout ? '30s Timeout' : error.message}). Deploying Gemini 2.5 Pro Rescue...`);
+            console.warn(`[${originalFileName}] Flash 3 failed (${isTimeout ? '15s Timeout' : error.message}). Deploying Gemini 2.5 Pro Rescue...`);
             
             // ==========================================
             // TASK 1.5: THE PRO RESCUE (Fallback)

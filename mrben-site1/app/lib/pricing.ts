@@ -7,7 +7,7 @@ export const MARKUP_MULTIPLIER = 1.075;
 // The new 5-Tier AI Vibe Engine Multipliers
 export const VIBE_MULTIPLIERS = {
   dense: 0.40,         // French doors, transoms (fastest per pane)
-  normal_dense: 0.85,  // Half-grids, complex splits
+  normal_dense: 0.80,  // Half-grids, complex splits
   normal: 1.0,         // Standard residential baseline
   normal_large: 1.25,  // Big sliding doors, large standard frames
   large_open: 2.50     // Massive architectural sheets (slowest per pane)
