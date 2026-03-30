@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
-const { Storage } = require('@google-cloud/storage'); // --- NEW: Added GCS Library ---
+const { Storage } = require('@google-cloud/storage'); 
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -20,7 +20,6 @@ const auth = new GoogleAuth({
   scopes: ['https://www.googleapis.com/auth/cloud-platform']
 });
 
-// --- NEW: Initialize GCS ---
 const gcs = new Storage();
 const BUCKET_NAME = 'mrben-estimator-images-qc'; 
 
@@ -102,7 +101,6 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
   }
 }`;
 
-    const MAX_RETRIES = 2; 
     const CONCURRENCY_LIMIT = 2; 
     const resultsArray = [];
 
@@ -112,111 +110,130 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       
       const batchPromises = batchFiles.map(async (file, index) => {
         const globalIndex = i + index; 
+        const originalFileName = file.originalname || `Image ${globalIndex + 1}`;
         
-        // --- NEW: Upload to GCS before processing ---
         const fileName = `estimate-${Date.now()}-${globalIndex}.jpg`;
         const gcsFile = gcs.bucket(BUCKET_NAME).file(fileName);
         
-        await gcsFile.save(file.buffer, {
-          metadata: { contentType: file.mimetype }
-        });
-        
+        await gcsFile.save(file.buffer, { metadata: { contentType: file.mimetype } });
         const gcsUri = `gs://${BUCKET_NAME}/${fileName}`;
-        // --------------------------------------------
-
-        let attempt = 0;
-        let batchResult = null;
         
-        while (attempt <= MAX_RETRIES) {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 60000); // Back to 60s, since upload is done
+        const safetySettings = [
+          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+        ];
+        const generationConfig = { responseMimeType: "application/json", temperature: 0.0 };
 
-          try {
-            const safetySettings = [
-              { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-              { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-              { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-              { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
-            ];
-            const generationConfig = { responseMimeType: "application/json", temperature: 0.0 };
+        const bodyPanes = {
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
+          safetySettings, generationConfig
+        };
 
-            // --- CHANGED: Now using file_data with the gs:// URI ---
-            const bodyPanes = {
-              systemInstruction: { parts: [{ text: systemInstruction }] },
-              contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
-              safetySettings, generationConfig
-            };
+        const bodyGroups = {
+          systemInstruction: { parts: [{ text: systemInstructionGroups }] },
+          contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
+          safetySettings, generationConfig
+        };
 
-            const bodyGroups = {
-              systemInstruction: { parts: [{ text: systemInstructionGroups }] },
-              contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
-              safetySettings, generationConfig
-            };
-
-            const fetchOptions = {
-              method: 'POST',
-              signal: controller.signal,
-              headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-                'X-Vertex-AI-LLM-Request-Type': 'shared',
-                'X-Vertex-AI-LLM-Shared-Request-Type': 'priority'
-              }
-            };
-
-            // Reinstated Promise.all because the payloads are now tiny text links, not massive blobs
-            const [resPanes, resGroups] = await Promise.all([
-              fetch(urlG3, { ...fetchOptions, body: JSON.stringify(bodyPanes) }),
-              fetch(urlG25, { ...fetchOptions, body: JSON.stringify(bodyGroups) })
-            ]);
-
-            clearTimeout(timeoutId);
-
-            if (!resPanes.ok) throw new Error(`G3 HTTP Error: ${resPanes.status}`);
-            if (!resGroups.ok) throw new Error(`G25 HTTP Error: ${resGroups.status}`);
-
-            const dataPanes = await resPanes.json();
-            const dataGroups = await resGroups.json();
-
-            let textPanes = dataPanes.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-            let textGroups = dataGroups.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-
-            const parsedPanes = JSON.parse(textPanes.replace(/```json|```/g, '').trim());
-            const parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
-
-            batchResult = {
-              analysis_g3: parsedPanes.analysis || "No pane analysis.",
-              analysis_g25: parsedGroups.analysis || "No vibe analysis.",
-              window_counts: {
-                ...parsedPanes.window_counts,
-                pane_vibe: parsedGroups.window_counts?.pane_vibe || "normal"
-              },
-              stories: parsedPanes.stories || 1
-            };
-            break; // Success, exit retry loop
-
-          } catch (error) {
-            clearTimeout(timeoutId);
-            attempt++;
-            const isTimeout = error.name === 'AbortError';
-            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '60s Timeout' : error.message}`);
-            
-            if (attempt > MAX_RETRIES) {
-              console.error(`[Image ${globalIndex + 1}] All attempts failed.`);
-              batchResult = { window_counts: { pane_vibe: "normal" }, stories: 1, analysis_g3: `Img ${globalIndex + 1} failed.`, analysis_g25: `Img ${globalIndex + 1} failed.` };
-            }
-            await new Promise(resolve => setTimeout(resolve, 500));
+        const fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'X-Vertex-AI-LLM-Request-Type': 'shared',
+            'X-Vertex-AI-LLM-Shared-Request-Type': 'priority'
           }
-        }
+        };
 
-        // --- NEW: Cleanup - Delete image from GCS to save money ---
+        let parsedPanes = null;
+        let parsedGroups = null;
+
         try {
-          await gcsFile.delete();
-        } catch (cleanupError) {
-          console.error(`Failed to delete ${fileName} from GCS:`, cleanupError.message);
-        }
+          // ==========================================
+          // TASK 1: THE 30-SECOND FLASH TRAP
+          // ==========================================
+          const controllerG3 = new AbortController();
+          const timeoutG3 = setTimeout(() => controllerG3.abort(), 30000); // Strict 30s
+          
+          try {
+            const resPanes = await fetch(urlG3, { ...fetchOptions, signal: controllerG3.signal, body: JSON.stringify(bodyPanes) });
+            clearTimeout(timeoutG3);
+            if (!resPanes.ok) throw new Error(`G3 HTTP Error: ${resPanes.status}`);
+            
+            const dataPanes = await resPanes.json();
+            const textPanes = dataPanes.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+            parsedPanes = JSON.parse(textPanes.replace(/```json|```/g, '').trim());
+            
+          } catch (error) {
+            clearTimeout(timeoutG3);
+            const isTimeout = error.name === 'AbortError';
+            console.warn(`[${originalFileName}] Flash 3 failed (${isTimeout ? '30s Timeout' : error.message}). Deploying Gemini 2.5 Pro Rescue...`);
+            
+            // ==========================================
+            // TASK 1.5: THE PRO RESCUE (Fallback)
+            // ==========================================
+            const controllerG25Fallback = new AbortController();
+            const timeoutG25Fallback = setTimeout(() => controllerG25Fallback.abort(), 60000); // Give Pro 60s to save it
+            
+            const resPanesFallback = await fetch(urlG25, { ...fetchOptions, signal: controllerG25Fallback.signal, body: JSON.stringify(bodyPanes) });
+            clearTimeout(timeoutG25Fallback);
+            if (!resPanesFallback.ok) throw new Error(`G25 Fallback HTTP Error: ${resPanesFallback.status}`);
+            
+            const dataPanesFallback = await resPanesFallback.json();
+            const textPanesFallback = dataPanesFallback.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+            parsedPanes = JSON.parse(textPanesFallback.replace(/```json|```/g, '').trim());
+            parsedPanes.analysis = "(RESCUED BY PRO) " + (parsedPanes.analysis || "");
+          }
 
-        return batchResult;
+          // ==========================================
+          // TASK 2: ARCHITECTURAL VIBE (Independent)
+          // ==========================================
+          const controllerVibe = new AbortController();
+          const timeoutVibe = setTimeout(() => controllerVibe.abort(), 60000);
+          
+          try {
+            const resGroups = await fetch(urlG25, { ...fetchOptions, signal: controllerVibe.signal, body: JSON.stringify(bodyGroups) });
+            clearTimeout(timeoutVibe);
+            if (!resGroups.ok) throw new Error(`G25 Vibe HTTP Error: ${resGroups.status}`);
+            
+            const dataGroups = await resGroups.json();
+            const textGroups = dataGroups.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+            parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
+          } catch (vibeError) {
+            clearTimeout(timeoutVibe);
+            console.warn(`[${originalFileName}] Vibe check failed. Defaulting to normal.`);
+            parsedGroups = { window_counts: { pane_vibe: "normal" }, analysis: "Vibe check defaulted." };
+          }
+
+          // Cleanup GCS on success
+          try { await gcsFile.delete(); } catch (e) { /* ignore */ }
+
+          return {
+            status: "success",
+            imageName: originalFileName,
+            analysis_g3: parsedPanes.analysis || "No pane analysis.",
+            analysis_g25: parsedGroups.analysis || "No vibe analysis.",
+            window_counts: {
+              ...parsedPanes.window_counts,
+              pane_vibe: parsedGroups.window_counts?.pane_vibe || "normal"
+            },
+            stories: parsedPanes.stories || 1
+          };
+
+        } catch (fatalError) {
+          // If the rescue mission ALSO fails, we officially log the image as dead.
+          try { await gcsFile.delete(); } catch (e) { /* ignore */ }
+          
+          console.error(`[${originalFileName}] FATAL: Both models failed. ${fatalError.message}`);
+          return { 
+            status: "failed", 
+            imageName: originalFileName,
+            reason: fatalError.message
+          };
+        }
       });
 
       const batchResults = await Promise.all(batchPromises);
@@ -228,41 +245,30 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
     }
 
     const finalTotals = {
-      analysis_g3: "G3 Pane Counting: ",
-      analysis_g25: "G25 Vibe Assessment: ",
+      analysis_g3: "Pane Counting: ",
+      analysis_g25: "Vibe Assessment: ",
       window_counts: {
-        pane_3rd_story: 0,
-        pane_2nd_story: 0,
-        pane_1st_base: 0,
-        patio_door_pane: 0,
-        entry_door_pane: 0,
-        pane_vibe: "normal" 
+        pane_3rd_story: 0, pane_2nd_story: 0, pane_1st_base: 0,
+        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" 
       },
-      stories: 1
+      stories: 1,
+      failed_images: []
     };
 
-    // --- VIBE WEIGHTING ENGINE ---
-    const vibeWeights = {
-      "dense": 1,
-      "normal_dense": 2,
-      "normal": 3,
-      "normal_large": 4,
-      "large_open": 5
-    };
-    const weightToVibe = {
-      1: "dense",
-      2: "normal_dense",
-      3: "normal",
-      4: "normal_large",
-      5: "large_open"
-    };
+    const vibeWeights = { "dense": 1, "normal_dense": 2, "normal": 3, "normal_large": 4, "large_open": 5 };
+    const weightToVibe = { 1: "dense", 2: "normal_dense", 3: "normal", 4: "normal_large", 5: "large_open" };
     
     let totalVibeWeight = 0;
     let validVibeCount = 0;
 
     resultsArray.forEach((result, index) => {
-      if (result.analysis_g3) finalTotals.analysis_g3 += `[Img ${index + 1}: ${result.analysis_g3}] `;
-      if (result.analysis_g25) finalTotals.analysis_g25 += `[Img ${index + 1}: ${result.analysis_g25}] `;
+      if (result.status === "failed") {
+        finalTotals.failed_images.push({ file: result.imageName, error: result.reason });
+        return; 
+      }
+
+      if (result.analysis_g3) finalTotals.analysis_g3 += `[${result.imageName}: ${result.analysis_g3}] `;
+      if (result.analysis_g25) finalTotals.analysis_g25 += `[${result.imageName}: ${result.analysis_g25}] `;
 
       if (result.window_counts) {
         finalTotals.window_counts.pane_3rd_story += (result.window_counts.pane_3rd_story || 0);
@@ -277,9 +283,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         }
       }
       
-      if (result.stories > finalTotals.stories) {
-        finalTotals.stories = result.stories;
-      }
+      if (result.stories > finalTotals.stories) { finalTotals.stories = result.stories; }
     });
 
     if (validVibeCount > 0) {
