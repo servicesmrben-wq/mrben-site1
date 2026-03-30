@@ -79,18 +79,19 @@ Return JSON ONLY. Do not generate text outside the JSON. Use the 'analysis' fiel
 
 // --- BRAIN 2: ARCHITECTURAL VIBE ---
     const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
-Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 5-tier scale.
+Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 6-tier scale.
 
 CRITICAL VISUAL RULE - FLAT GRIDS VS. STRUCTURAL SASHES: 
 - IGNORE FLAT GRIDS: If you see thin, decorative grids (muntins) trapped flat inside the glass, completely ignore them. They do not slow down a squeegee. Do not increase the density category just because of flat internal grids.
-- COUNT PHYSICAL SPLITS: Thick horizontal or vertical frames (sashes) that physically split the glass into a top and bottom half DO slow down a squeegee.
+- COUNT PHYSICAL SPLITS: Thick horizontal or vertical frames (sashes) that physically split the glass DO slow down a squeegee.
 
 CATEGORIES (Choose exactly one):
-1. "dense": Intricate structural transoms, TRUE French doors with physical frames splitting the glass, arches. High squeegee difficulty.
-2. "normal_dense": Windows with physical complications like thick structural sashes splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits. Slower than average.
-3. "normal": Simple clear casements or basic 2-pane sliders. (If a simple window has FLAT internal grids, it stays 'normal' because the glass surface is flat).
-4. "normal_large": Larger than average clear windows, big sliding doors. Faster than average.
-5. "large_open": Massive floor-to-ceiling architectural glass, A-frames. Very fast wide squeegee swipes.
+1. "very_dense": Intricate structural transoms, TRUE French doors with many tiny physical frames splitting the glass, complex arches. Maximum squeegee difficulty.
+2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate panes, or prominent windows with multiple thick structural sashes that physically divide the glass into 3 or more sections. Very slow squeegee work.
+3. "normal_dense": Windows with physical complications like a single thick structural sash splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits. Slower than average.
+4. "normal": Simple clear casements or basic 2-pane sliders. (If a simple window has FLAT internal grids, it stays 'normal' because the glass surface is flat).
+5. "normal_large": Larger than average clear windows, big sliding doors. Faster than average.
+6. "large_open": Massive floor-to-ceiling architectural glass, A-frames. Very fast wide squeegee swipes.
 
 OUTPUT FORMAT:
 Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
@@ -244,19 +245,19 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       }
     }
 
-    const finalTotals = {
+const finalTotals = {
       analysis_g3: "Pane Counting: ",
       analysis_g25: "Vibe Assessment: ",
       window_counts: {
         pane_3rd_story: 0, pane_2nd_story: 0, pane_1st_base: 0,
-        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" 
+        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" // Default fallback
       },
       stories: 1,
       failed_images: []
     };
-
-    const vibeWeights = { "dense": 1, "normal_dense": 2, "normal": 3, "normal_large": 4, "large_open": 5 };
-    const weightToVibe = { 1: "dense", 2: "normal_dense", 3: "normal", 4: "normal_large", 5: "large_open" };
+// 1. Updated with very_dense and shifted the numbers up
+    const vibeWeights = { "very_dense": 1, "dense": 2, "normal_dense": 3, "normal": 4, "normal_large": 5, "large_open": 6 };
+    const weightToVibe = { 1: "very_dense", 2: "dense", 3: "normal_dense", 4: "normal", 5: "normal_large", 6: "large_open" };
     
     let totalVibeWeight = 0;
     let validVibeCount = 0;
@@ -278,7 +279,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
         
         if (result.window_counts.pane_vibe) {
-          totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 3;
+          // 2. Changed the fallback from 3 to 4 here
+          totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 4;
           validVibeCount++;
         }
       }
@@ -292,7 +294,6 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
     }
 
     res.json(finalTotals);
-
   } catch (error) {
     console.error('Server Error:', error);
     res.status(500).json({ error: error.message });
