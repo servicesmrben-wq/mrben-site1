@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
+const { Storage } = require('@google-cloud/storage'); // --- NEW: Added GCS Library ---
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -9,16 +10,19 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
-// Added safety limits to prevent memory leaks from massive uploads
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max per image
+  limits: { fileSize: 5 * 1024 * 1024 } 
 });
 
 const auth = new GoogleAuth({
   scopes: ['https://www.googleapis.com/auth/cloud-platform']
 });
+
+// --- NEW: Initialize GCS ---
+const gcs = new Storage();
+const BUCKET_NAME = 'YOUR_BUCKET_NAME_HERE'; // *** YOU MUST CREATE THIS BUCKET IN GCP ***
 
 app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
@@ -38,7 +42,7 @@ app.post('/estimate', upload.array('files'), async (req, res) => {
     const tokenResponse = await client.getAccessToken();
     const accessToken = tokenResponse.token;
 
-    // --- BRAIN 1: PANES (WITH LOOP KILLERS) ---
+    // --- BRAIN 1: PANES ---
     const systemInstruction = `You are a highly accurate expert window pane counter. Analyze this photo to count all window panes.
 
 CRITICAL VISUAL RULES:
@@ -74,7 +78,7 @@ Return JSON ONLY. Do not generate text outside the JSON. Use the 'analysis' fiel
   "stories": 1
 }`;
 
-// --- BRAIN 2: ARCHITECTURAL VIBE (NEW 5-TIER) ---
+// --- BRAIN 2: ARCHITECTURAL VIBE ---
     const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
 Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 5-tier scale.
 
@@ -108,15 +112,26 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       
       const batchPromises = batchFiles.map(async (file, index) => {
         const globalIndex = i + index; 
+        
+        // --- NEW: Upload to GCS before processing ---
+        const fileName = `estimate-${Date.now()}-${globalIndex}.jpg`;
+        const gcsFile = gcs.bucket(BUCKET_NAME).file(fileName);
+        
+        await gcsFile.save(file.buffer, {
+          metadata: { contentType: file.mimetype }
+        });
+        
+        const gcsUri = `gs://${BUCKET_NAME}/${fileName}`;
+        // --------------------------------------------
+
         let attempt = 0;
+        let batchResult = null;
         
         while (attempt <= MAX_RETRIES) {
-          // THE ZOMBIE KILLER (60s timeout for the dual-fetch)
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 60000);
+          const timeoutId = setTimeout(() => controller.abort(), 60000); // Back to 60s, since upload is done
 
           try {
-            const inlineData = { mime_type: file.mimetype, data: file.buffer.toString('base64') };
             const safetySettings = [
               { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
               { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -125,17 +140,16 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
             ];
             const generationConfig = { responseMimeType: "application/json", temperature: 0.0 };
 
-            // Payload for Gemini 3 (Panes)
+            // --- CHANGED: Now using file_data with the gs:// URI ---
             const bodyPanes = {
               systemInstruction: { parts: [{ text: systemInstruction }] },
-              contents: [{ role: 'user', parts: [{ inline_data: inlineData }] }],
+              contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
               safetySettings, generationConfig
             };
 
-            // Payload for Gemini 2.5 (Groups/Vibe)
             const bodyGroups = {
               systemInstruction: { parts: [{ text: systemInstructionGroups }] },
-              contents: [{ role: 'user', parts: [{ inline_data: inlineData }] }],
+              contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
               safetySettings, generationConfig
             };
 
@@ -150,7 +164,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
               }
             };
 
-            // FIRE BOTH MODELS AT ONCE
+            // Reinstated Promise.all because the payloads are now tiny text links, not massive blobs
             const [resPanes, resGroups] = await Promise.all([
               fetch(urlG3, { ...fetchOptions, body: JSON.stringify(bodyPanes) }),
               fetch(urlG25, { ...fetchOptions, body: JSON.stringify(bodyGroups) })
@@ -170,8 +184,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
             const parsedPanes = JSON.parse(textPanes.replace(/```json|```/g, '').trim());
             const parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
 
-            // SEPARATE THE BRAIN ANALYSIS
-            return {
+            batchResult = {
               analysis_g3: parsedPanes.analysis || "No pane analysis.",
               analysis_g25: parsedGroups.analysis || "No vibe analysis.",
               window_counts: {
@@ -180,21 +193,30 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
               },
               stories: parsedPanes.stories || 1
             };
+            break; // Success, exit retry loop
 
           } catch (error) {
             clearTimeout(timeoutId);
             attempt++;
             const isTimeout = error.name === 'AbortError';
-            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '60s Timeout (Zombie Killed)' : error.message}`);
+            console.warn(`[Image ${globalIndex + 1}] Attempt ${attempt} failed: ${isTimeout ? '60s Timeout' : error.message}`);
             
             if (attempt > MAX_RETRIES) {
-              console.error(`[Image ${globalIndex + 1}] All ${MAX_RETRIES + 1} attempts failed. Giving up.`);
-              return { window_counts: { pane_vibe: "normal" }, stories: 1, analysis_g3: `Img ${globalIndex + 1} analysis failed.`, analysis_g25: `Img ${globalIndex + 1} analysis failed.` };
+              console.error(`[Image ${globalIndex + 1}] All attempts failed.`);
+              batchResult = { window_counts: { pane_vibe: "normal" }, stories: 1, analysis_g3: `Img ${globalIndex + 1} failed.`, analysis_g25: `Img ${globalIndex + 1} failed.` };
             }
-            
             await new Promise(resolve => setTimeout(resolve, 500));
           }
         }
+
+        // --- NEW: Cleanup - Delete image from GCS to save money ---
+        try {
+          await gcsFile.delete();
+        } catch (cleanupError) {
+          console.error(`Failed to delete ${fileName} from GCS:`, cleanupError.message);
+        }
+
+        return batchResult;
       });
 
       const batchResults = await Promise.all(batchPromises);
@@ -214,7 +236,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         pane_1st_base: 0,
         patio_door_pane: 0,
         entry_door_pane: 0,
-        pane_vibe: "normal" // REPLACED GROUPS WITH VIBE
+        pane_vibe: "normal" 
       },
       stories: 1
     };
@@ -249,9 +271,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         finalTotals.window_counts.patio_door_pane += (result.window_counts.patio_door_pane || 0);
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
         
-        // Tally the vibe weights
         if (result.window_counts.pane_vibe) {
-          totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 3; // Default to 3 (normal)
+          totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 3;
           validVibeCount++;
         }
       }
@@ -261,7 +282,6 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       }
     });
 
-    // Calculate the overall house vibe average
     if (validVibeCount > 0) {
       const avgWeight = Math.round(totalVibeWeight / validVibeCount);
       finalTotals.window_counts.pane_vibe = weightToVibe[avgWeight] || "normal";
