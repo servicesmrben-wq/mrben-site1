@@ -4,11 +4,12 @@ export const RATE_PER_MINUTE = BASE_HOURLY_RATE / 60;
 // Centralized 7.5% markup to replace the hardcoded safety buffer in your frontend
 export const MARKUP_MULTIPLIER = 1.075; 
 
-// The new 5-Tier AI Vibe Engine Multipliers
+// The new 6-Tier AI Vibe Engine Multipliers
 export const VIBE_MULTIPLIERS = {
-  dense: 0.40,         // French doors, transoms (fastest per pane)
-  normal_dense: 0.80,  // Half-grids, complex splits
-  normal: 1.0,         // Standard residential baseline
+  very_dense: 0.40,    // TRUE French doors, intense intricate transoms
+  dense: 0.60,         // Multiple physical splits, garage door panes, mixed dense types
+  normal_dense: 0.80,  // Standard double-hung (single split), half-grids
+  normal: 1.0,         // Standard residential baseline (clear casements/sliders)
   normal_large: 1.25,  // Big sliding doors, large standard frames
   large_open: 2.50     // Massive architectural sheets (slowest per pane)
 };
