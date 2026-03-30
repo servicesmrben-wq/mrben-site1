@@ -22,7 +22,7 @@ const auth = new GoogleAuth({
 
 // --- NEW: Initialize GCS ---
 const gcs = new Storage();
-const BUCKET_NAME = 'YOUR_BUCKET_NAME_HERE'; // *** YOU MUST CREATE THIS BUCKET IN GCP ***
+const BUCKET_NAME = 'mrben-estimator-images-qc'; 
 
 app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
