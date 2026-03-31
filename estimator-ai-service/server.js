@@ -1,47 +1,56 @@
+// 📦 DEPENDENCIES & SETUP
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 const { Storage } = require('@google-cloud/storage'); 
+const { performance } = require('perf_hooks'); 
 
+// 🌐 EXPRESS APP INIT
 const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
 
+// 📁 MULTER MEMORY STORAGE (Limit: 5MB per file)
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 } 
 });
 
+// 🔐 GOOGLE CLOUD AUTHENTICATION
 const auth = new GoogleAuth({
   scopes: ['https://www.googleapis.com/auth/cloud-platform']
 });
 
+// ☁️ GCS BUCKET SETUP
 const gcs = new Storage();
 const BUCKET_NAME = 'mrben-estimator-images-qc'; 
 
+// 🩺 HEALTH CHECK ENDPOINT
 app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
 });
 
-// --- MODEL URLS ---
+// 🔗 MODEL URLS
 const urlG3 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
 const urlG25 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-pro:generateContent';
 
+// 🚀 MAIN ESTIMATION ROUTE
 app.post('/estimate', upload.array('files'), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: 'No files uploaded' });
     }
 
+    // 🔑 GET ACCESS TOKEN
     const client = await auth.getClient();
     const tokenResponse = await client.getAccessToken();
     const accessToken = tokenResponse.token;
 
-    // --- BRAIN 1: PANES ---
+    // 🧠 BRAIN 1: PANES (System Instruction)
     const systemInstruction = `You are a highly accurate expert window pane counter. Analyze this photo to count all window panes.
 
 CRITICAL VISUAL RULES:
@@ -77,7 +86,7 @@ Return JSON ONLY. Do not generate text outside the JSON. Use the 'analysis' fiel
   "stories": 1
 }`;
 
-// --- BRAIN 2: ARCHITECTURAL VIBE ---
+    // 🧠 BRAIN 2: ARCHITECTURAL VIBE (System Instruction)
     const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
 Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 6-tier scale.
 
@@ -87,7 +96,7 @@ CRITICAL VISUAL RULE - FLAT GRIDS VS. STRUCTURAL SASHES:
 
 CATEGORIES (Choose exactly one):
 1. "very_dense": Intricate structural transoms, TRUE French doors with many tiny physical frames splitting the glass, complex arches. Maximum squeegee difficulty.
-2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate panes, or prominent windows with multiple thick structural sashes that physically divide the glass into 3 or more sections. Very slow squeegee work.
+2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate windows, or prominent windows with multiple thick structural sashes that physically divide the glass into 3 or more sections. Very slow squeegee work.
 3. "normal_dense": Windows with physical complications like a single thick structural sash splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits. Slower than average.
 4. "normal": Simple clear casements or basic 2-pane sliders. (If a simple window has FLAT internal grids, it stays 'normal' because the glass surface is flat).
 5. "normal_large": Larger than average clear windows, big sliding doors. Faster than average.
@@ -102,23 +111,27 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
   }
 }`;
 
+    // 🚦 CONCURRENCY & BATCHING ENGINE
     const CONCURRENCY_LIMIT = 2; 
     const resultsArray = [];
 
-    // THE BATCHING ENGINE
+    // 🔄 START BATCH LOOP
     for (let i = 0; i < req.files.length; i += CONCURRENCY_LIMIT) {
       const batchFiles = req.files.slice(i, i + CONCURRENCY_LIMIT);
       
       const batchPromises = batchFiles.map(async (file, index) => {
+        const startTime = performance.now(); // ⏱️ START STOPWATCH
         const globalIndex = i + index; 
         const originalFileName = file.originalname || `Image ${globalIndex + 1}`;
         
+        // ☁️ UPLOAD TO GOOGLE CLOUD STORAGE
         const fileName = `estimate-${Date.now()}-${globalIndex}.jpg`;
         const gcsFile = gcs.bucket(BUCKET_NAME).file(fileName);
         
         await gcsFile.save(file.buffer, { metadata: { contentType: file.mimetype } });
         const gcsUri = `gs://${BUCKET_NAME}/${fileName}`;
         
+        // 🛡️ SAFETY SETTINGS & CONFIG
         const safetySettings = [
           { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
           { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -127,6 +140,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         ];
         const generationConfig = { responseMimeType: "application/json", temperature: 0.0 };
 
+        // 📝 PREPARE PAYLOADS
         const bodyPanes = {
           systemInstruction: { parts: [{ text: systemInstruction }] },
           contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
@@ -154,10 +168,10 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
 
         try {
           // ==========================================
-          // TASK 1: THE 15-SECOND FLASH TRAP
+          // ⚡ TASK 1: THE 25-SECOND FLASH TRAP
           // ==========================================
           const controllerG3 = new AbortController();
-          const timeoutG3 = setTimeout(() => controllerG3.abort(), 15000); // Strict 15s
+          const timeoutG3 = setTimeout(() => controllerG3.abort(), 120000); // ⏱️ Updated to 120000ms (2 minutes)
           
           try {
             const resPanes = await fetch(urlG3, { ...fetchOptions, signal: controllerG3.signal, body: JSON.stringify(bodyPanes) });
@@ -171,13 +185,14 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
           } catch (error) {
             clearTimeout(timeoutG3);
             const isTimeout = error.name === 'AbortError';
-            console.warn(`[${originalFileName}] Flash 3 failed (${isTimeout ? '15s Timeout' : error.message}). Deploying Gemini 2.5 Pro Rescue...`);
+            // 📝 Updated the log message to reflect the new 120s limit
+            console.warn(`⚠️ [${originalFileName}] Flash 3 failed (${isTimeout ? '120s Timeout' : error.message}). Deploying Gemini 2.5 Pro Rescue...`);
             
             // ==========================================
-            // TASK 1.5: THE PRO RESCUE (Fallback)
+            // 🚑 TASK 1.5: THE PRO RESCUE (Fallback)
             // ==========================================
             const controllerG25Fallback = new AbortController();
-            const timeoutG25Fallback = setTimeout(() => controllerG25Fallback.abort(), 60000); // Give Pro 60s to save it
+            const timeoutG25Fallback = setTimeout(() => controllerG25Fallback.abort(), 60000); // 60s rescue window
             
             const resPanesFallback = await fetch(urlG25, { ...fetchOptions, signal: controllerG25Fallback.signal, body: JSON.stringify(bodyPanes) });
             clearTimeout(timeoutG25Fallback);
@@ -186,11 +201,11 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
             const dataPanesFallback = await resPanesFallback.json();
             const textPanesFallback = dataPanesFallback.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
             parsedPanes = JSON.parse(textPanesFallback.replace(/```json|```/g, '').trim());
-            parsedPanes.analysis = "(RESCUED BY PRO) " + (parsedPanes.analysis || "");
+            parsedPanes.analysis = "🦸‍♂️ (RESCUED BY PRO) " + (parsedPanes.analysis || "");
           }
 
           // ==========================================
-          // TASK 2: ARCHITECTURAL VIBE (Independent)
+          // 🎭 TASK 2: ARCHITECTURAL VIBE (Independent)
           // ==========================================
           const controllerVibe = new AbortController();
           const timeoutVibe = setTimeout(() => controllerVibe.abort(), 60000);
@@ -205,13 +220,18 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
             parsedGroups = JSON.parse(textGroups.replace(/```json|```/g, '').trim());
           } catch (vibeError) {
             clearTimeout(timeoutVibe);
-            console.warn(`[${originalFileName}] Vibe check failed. Defaulting to normal.`);
+            console.warn(`⚠️ [${originalFileName}] Vibe check failed. Defaulting to normal.`);
             parsedGroups = { window_counts: { pane_vibe: "normal" }, analysis: "Vibe check defaulted." };
           }
 
-          // Cleanup GCS on success
+          // 🧹 CLEANUP: DELETE FILE FROM GCS
           try { await gcsFile.delete(); } catch (e) { /* ignore */ }
 
+          // 🛑 STOP STOPWATCH & CALCULATE
+          const endTime = performance.now(); 
+          const durationSec = ((endTime - startTime) / 1000).toFixed(1); 
+
+          // ✅ RETURN SUCCESS FOR THIS IMAGE
           return {
             status: "success",
             imageName: originalFileName,
@@ -221,14 +241,15 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
               ...parsedPanes.window_counts,
               pane_vibe: parsedGroups.window_counts?.pane_vibe || "normal"
             },
-            stories: parsedPanes.stories || 1
+            stories: parsedPanes.stories || 1,
+            durationSec: durationSec 
           };
 
         } catch (fatalError) {
-          // If the rescue mission ALSO fails, we officially log the image as dead.
+          // 💀 FATAL ERROR: BOTH MODELS FAILED
           try { await gcsFile.delete(); } catch (e) { /* ignore */ }
           
-          console.error(`[${originalFileName}] FATAL: Both models failed. ${fatalError.message}`);
+          console.error(`❌ [${originalFileName}] FATAL: Both models failed. ${fatalError.message}`);
           return { 
             status: "failed", 
             imageName: originalFileName,
@@ -237,39 +258,44 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         }
       });
 
+      // ⏳ WAIT FOR BATCH TO FINISH
       const batchResults = await Promise.all(batchPromises);
       resultsArray.push(...batchResults);
       
+      // 🚦 THROTTLE BETWEEN BATCHES (1 Second)
       if (i + CONCURRENCY_LIMIT < req.files.length) {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
 
-const finalTotals = {
+    // 🧮 FINAL TOTALS AGGREGATION
+    const finalTotals = {
       analysis_g3: "Pane Counting: ",
       analysis_g25: "Vibe Assessment: ",
       window_counts: {
         pane_3rd_story: 0, pane_2nd_story: 0, pane_1st_base: 0,
-        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" // Default fallback
+        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" 
       },
       stories: 1,
       failed_images: []
     };
-// 1. Updated with very_dense and shifted the numbers up
+    
+    // ⚖️ VIBE WEIGHTINGS
     const vibeWeights = { "very_dense": 1, "dense": 2, "normal_dense": 3, "normal": 4, "normal_large": 5, "large_open": 6 };
     const weightToVibe = { 1: "very_dense", 2: "dense", 3: "normal_dense", 4: "normal", 5: "normal_large", 6: "large_open" };
     
     let totalVibeWeight = 0;
     let validVibeCount = 0;
 
+    // 📊 TALLY RESULTS
     resultsArray.forEach((result, index) => {
       if (result.status === "failed") {
         finalTotals.failed_images.push({ file: result.imageName, error: result.reason });
         return; 
       }
 
-      if (result.analysis_g3) finalTotals.analysis_g3 += `[${result.imageName}: ${result.analysis_g3}] `;
-      if (result.analysis_g25) finalTotals.analysis_g25 += `[${result.imageName}: ${result.analysis_g25}] `;
+      finalTotals.analysis_g3 += `[${result.imageName}: ${result.analysis_g3}] took ${result.durationSec}sec `;
+      finalTotals.analysis_g25 += `[${result.imageName}: ${result.analysis_g25}] took ${result.durationSec}sec `;
 
       if (result.window_counts) {
         finalTotals.window_counts.pane_3rd_story += (result.window_counts.pane_3rd_story || 0);
@@ -279,7 +305,6 @@ const finalTotals = {
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
         
         if (result.window_counts.pane_vibe) {
-          // 2. Changed the fallback from 3 to 4 here
           totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 4;
           validVibeCount++;
         }
@@ -288,18 +313,21 @@ const finalTotals = {
       if (result.stories > finalTotals.stories) { finalTotals.stories = result.stories; }
     });
 
+    // ⚖️ CALCULATE AVERAGE VIBE
     if (validVibeCount > 0) {
       const avgWeight = Math.round(totalVibeWeight / validVibeCount);
       finalTotals.window_counts.pane_vibe = weightToVibe[avgWeight] || "normal";
     }
 
+    // 📤 SEND FINAL RESPONSE
     res.json(finalTotals);
   } catch (error) {
-    console.error('Server Error:', error);
+    console.error('🔥 Server Error:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
+// 🎧 START LISTENING
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });

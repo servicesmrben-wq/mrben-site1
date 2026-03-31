@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/navigation"; 
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight, Info } from "lucide-react";
-import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/lib/pricing";
+import { PRICING_DATA, PricingKey, RATE_PER_MINUTE } from "@/app/(estimator)/_lib/pricing";
 import imageCompression from "browser-image-compression";
 import { useTranslations } from "next-intl";
-import { packData } from "@/app/lib/url-packer";
+import { packData } from "@/app/(estimator)/_lib/url-packer";
 
 // Managed file interface for background processing
 interface ManagedFile {
