@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Link } from "@/navigation"; 
 import { Upload, Loader2, Calculator, AlertTriangle, CheckCircle2, X, ArrowRight, Info } from "lucide-react";
 import { PRICING_DATA, PricingKey, RATE_PER_MINUTE, MARKUP_MULTIPLIER, VIBE_MULTIPLIERS, VibeKey } from "@/app/lib/pricing";
-import imageCompression from "browser-image-compression";
 import { useTranslations } from "next-intl";
 import { packData } from "@/app/lib/url-packer";
 
@@ -19,6 +18,15 @@ interface ManagedFile {
 
 export default function EstimatorPage() {
   const t = useTranslations("estimator");
+  
+  // Dynamically import image-compression only on the client
+  const [imageCompression, setImageCompression] = useState<any>(null);
+  useEffect(() => {
+    import("browser-image-compression").then(mod => {
+      setImageCompression(() => mod.default);
+    });
+  }, []);
+
   const markupPercent = Math.round((MARKUP_MULTIPLIER - 1) * 100 * 10) / 10;
   const [managedFiles, setManagedFiles] = useState<ManagedFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -97,6 +105,14 @@ export default function EstimatorPage() {
       // 3. Trigger compression in the background for each file
       newEntries.forEach(async (entry) => {
         try {
+          if (!imageCompression) {
+             // If library not loaded yet, wait slightly or skip
+             setManagedFiles(prev => prev.map(f => 
+               f.id === entry.id ? { ...f, status: "ready" } : f
+             ));
+             return;
+          }
+
           const compressionOptions = {
             maxSizeMB: 1,
             maxWidthOrHeight: 1920,
