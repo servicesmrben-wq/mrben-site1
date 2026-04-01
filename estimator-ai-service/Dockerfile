@@ -7,8 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 
-# Copy source code
-COPY server.js .
+# Copy ALL source code (This was the fix!)
+COPY . .
 
 EXPOSE 8080
 

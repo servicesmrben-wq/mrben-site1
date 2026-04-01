@@ -5,6 +5,17 @@ const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 const { Storage } = require('@google-cloud/storage'); 
 const { performance } = require('perf_hooks'); 
+const nodemailer = require('nodemailer');
+const pricing = require('./pricing');
+
+// 📧 NODEMAILER SETUP (Gmail Transporter)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+}); 
 
 // 🌐 EXPRESS APP INIT
 const app = express();
@@ -34,7 +45,7 @@ app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
 });
 
-// 🔗 MODEL URLS
+// 🔗 MODEL URLS gemini-3.1-flash-lite-preview | gemini-3-flash-preview
 const urlG3 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
 const urlG25 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-pro:generateContent';
 
@@ -87,12 +98,12 @@ CRITICAL VISUAL RULE - FLAT GRIDS VS. STRUCTURAL SASHES:
 - COUNT PHYSICAL SPLITS: Thick horizontal or vertical frames (sashes) that physically split the glass DO slow down a squeegee.
 
 CATEGORIES (Choose exactly one):
-1. "very_dense": Intricate structural transoms, TRUE French doors with many tiny physical frames splitting the glass, complex arches. Maximum squeegee difficulty.
-2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate windows, or prominent windows with multiple thick structural sashes that physically divide the glass into 3 or more sections. Very slow squeegee work.
-3. "normal_dense": Windows with physical complications like a single thick structural sash splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits. Slower than average.
+1. "very_dense": Intricate structural transoms, TRUE French doors with many tiny physical frames splitting the glass, complex arches.
+2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate windows, or prominent windows with multiple thick structural sashes that physically divide the glass into 3 or more sections. 
+3. "normal_dense": Windows with physical complications like a single thick structural sash splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits.
 4. "normal": Simple clear casements or basic 2-pane sliders. (If a simple window has FLAT internal grids, it stays 'normal' because the glass surface is flat).
-5. "normal_large": Larger than average clear windows, big sliding doors. Faster than average.
-6. "large_open": Massive floor-to-ceiling architectural glass, A-frames. Very fast wide squeegee swipes.
+5. "normal_large": Larger than average clear windows, big sliding doors.
+6. "large_open": Massive floor-to-ceiling architectural glass, A-frames.
 
 OUTPUT FORMAT:
 Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
@@ -316,6 +327,210 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
   } catch (error) {
     console.error('🔥 Server Error:', error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+// 🚀 V2 TESTING ROUTE (Background & Email support)
+app.post('/estimate-v2', upload.array('files'), async (req, res) => {
+  const deliveryMethod = req.body.deliveryMethod || 'instant';
+  const email = req.body.email;
+
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+    }
+
+    if (deliveryMethod === 'email') {
+      res.status(200).json({ message: 'Votre estimation est en cours de traitement et vous sera envoyée par courriel.' });
+    }
+
+    const client = await auth.getClient();
+    const tokenResponse = await client.getAccessToken();
+    const accessToken = tokenResponse.token;
+
+    const systemInstruction = `You are a highly accurate expert window cleaning assessor. Analyze the image and count the windows by categorizing them into these EXACT keys:
+- single_window: Individual single panes or small standard casements.
+- double_window: Standard double-hung windows or side-by-side sliders (typically 2 panes in one frame).
+- large_complex_grouping: Large groupings of windows, bay windows, or multi-pane sets.
+- architectural_cut_up: Highly intricate windows with many small structural panes or complex architectural shapes.
+- doors: Large glass panes for patio sliders or entry doors.
+
+OUTPUT FORMAT:
+Return JSON ONLY.
+{
+  "analysis": "Briefly describe what you see in the image.",
+  "window_counts": {
+    "single_window": 0,
+    "double_window": 0,
+    "large_complex_grouping": 0,
+    "architectural_cut_up": 0,
+    "doors": 0
+  }
+}`;
+
+    const CONCURRENCY_LIMIT = 2; 
+    const resultsArray = [];
+
+    for (let i = 0; i < req.files.length; i += CONCURRENCY_LIMIT) {
+      const batchFiles = req.files.slice(i, i + CONCURRENCY_LIMIT);
+      
+      const batchPromises = batchFiles.map(async (file, index) => {
+        const startTime = performance.now(); 
+        const globalIndex = i + index; 
+        const originalFileName = file.originalname || `Image ${globalIndex + 1}`;
+        
+        const fileName = `estimate-${Date.now()}-${globalIndex}.jpg`;
+        const gcsFile = gcs.bucket(BUCKET_NAME).file(fileName);
+        
+        await gcsFile.save(file.buffer, { metadata: { contentType: file.mimetype } });
+        const gcsUri = `gs://${BUCKET_NAME}/${fileName}`;
+        
+        const safetySettings = [
+          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+        ];
+        const generationConfig = { responseMimeType: "application/json", temperature: 0.0 };
+
+        const body = {
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: 'user', parts: [{ file_data: { mime_type: file.mimetype, file_uri: gcsUri } }] }],
+          safetySettings, generationConfig
+        };
+
+        const fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'X-Vertex-AI-LLM-Request-Type': 'shared',
+            'X-Vertex-AI-LLM-Shared-Request-Type': 'priority'
+          },
+          body: JSON.stringify(body)
+        };
+
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 300000); // ⏱️ Updated to 300,000ms (5 minutes)
+          
+          const resAI = await fetch(urlG3, { ...fetchOptions, signal: controller.signal });
+          clearTimeout(timeout);
+          if (!resAI.ok) throw new Error(`AI HTTP Error: ${resAI.status}`);
+          
+          const dataAI = await resAI.json();
+          const textAI = dataAI.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+          const parsed = JSON.parse(textAI.replace(/```json|```/g, '').trim());
+          
+          try { await gcsFile.delete(); } catch (e) { /* ignore */ }
+
+          const endTime = performance.now(); 
+          const durationSec = ((endTime - startTime) / 1000).toFixed(1); 
+
+          return {
+            status: "success", imageName: originalFileName,
+            analysis: parsed.analysis || "No analysis.",
+            window_counts: parsed.window_counts || {},
+            durationSec: durationSec 
+          };
+
+        } catch (error) {
+          try { await gcsFile.delete(); } catch (e) { /* ignore */ }
+          console.error(`❌ [${originalFileName}] Error: ${error.message}`);
+          return { status: "failed", imageName: originalFileName, reason: error.message };
+        }
+      });
+
+      const batchResults = await Promise.all(batchPromises);
+      resultsArray.push(...batchResults);
+      if (i + CONCURRENCY_LIMIT < req.files.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    const finalTotals = {
+      analysis: "V2 Analysis Summary: ",
+      window_counts: {
+        single_window: 0,
+        double_window: 0,
+        large_complex_grouping: 0,
+        architectural_cut_up: 0,
+        doors: 0
+      },
+      failed_images: []
+    };
+
+    resultsArray.forEach((result) => {
+      if (result.status === "failed") {
+        finalTotals.failed_images.push({ file: result.imageName, error: result.reason });
+        return; 
+      }
+      finalTotals.analysis += `[${result.imageName}: ${result.analysis}] `;
+
+      if (result.window_counts) {
+        Object.keys(finalTotals.window_counts).forEach(key => {
+          finalTotals.window_counts[key] += (result.window_counts[key] || 0);
+        });
+      }
+    });
+
+    const counts = finalTotals.window_counts;
+    let totalMinutesExt = 0;
+    let totalMinutesInt = 0;
+    
+    Object.keys(pricing.PRICING_DATA).forEach(key => {
+      const count = counts[key] || 0;
+      const data = pricing.PRICING_DATA[key];
+      totalMinutesExt += count * (data.minutes_ext || 0);
+      totalMinutesInt += count * (data.minutes_int || 0);
+    });
+    
+    const totalMinutes = totalMinutesExt + totalMinutesInt;
+    const finalPrice = totalMinutes * pricing.RATE_PER_MINUTE * pricing.MARKUP_MULTIPLIER;
+    finalTotals.estimated_price = finalPrice.toFixed(2);
+
+    if (deliveryMethod === 'email' && email) {
+      try {
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: 'Votre estimation de nettoyage de vitres - MrBen',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
+              <h1 style="color: #007bff;">Votre Estimation AI MrBen</h1>
+              <p>Merci d'avoir utilisé notre service d'estimation intelligent.</p>
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <h2 style="margin-top: 0;">Prix Total Estimé: <span style="color: #28a745;">${finalTotals.estimated_price}$</span></h2>
+              </div>
+              <h3>Détails du compte:</h3>
+              <ul>
+                <li><strong>Fenêtres simples:</strong> ${counts.single_window}</li>
+                <li><strong>Fenêtres doubles:</strong> ${counts.double_window}</li>
+                <li><strong>Gros regroupements:</strong> ${counts.large_complex_grouping}</li>
+                <li><strong>Coupes architecturales:</strong> ${counts.architectural_cut_up}</li>
+                <li><strong>Portes:</strong> ${counts.doors}</li>
+              </ul>
+              <p><em>Note: Cette estimation est basée sur l'analyse AI de vos photos et peut être ajustée lors de la visite.</em></p>
+              <hr>
+              <p style="font-size: 12px; color: #666;">Analyse technique: ${finalTotals.analysis}</p>
+            </div>
+          `
+        };
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ Email envoyé avec succès à ${email}`);
+      } catch (mailError) {
+        console.error('❌ Erreur lors de l\'envoi de l\'email:', mailError);
+      }
+    }
+
+    if (!res.headersSent) {
+      res.json(finalTotals);
+    }
+  } catch (error) {
+    console.error('🔥 Server V2 Error:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
