@@ -368,21 +368,25 @@ export default function EstimatorPage() {
   const calculateMinutesForMode = (m: "ext" | "in_out") => {
     if (!result || !result.window_counts) return 0;
     
-    let totalMinutes = 0;
+    let baseMinutes = 0;
     Object.entries(result.window_counts).forEach(([key, count]) => {
       const k = key as PricingKey;
       const item = PRICING_DATA[k];
       if (item && typeof count === "number") {
         const unitMinutes = m === "ext" ? item.minutes_ext : (item.minutes_ext + item.minutes_int);
-        totalMinutes += unitMinutes * count;
+        baseMinutes += unitMinutes * count;
       }
     });
-    return totalMinutes;
+
+    // Apply the Vibe Engine Math using granular average
+    const difficultyMultiplier = result.avgVibe || 1.0;
+    
+    return baseMinutes * difficultyMultiplier;
   };
 
   const calculateTotalForMode = (m: "ext" | "in_out") => {
-    const totalMinutes = calculateMinutesForMode(m);
-    const windowCost = totalMinutes * RATE_PER_MINUTE;
+    const adjustedMinutes = calculateMinutesForMode(m);
+    const windowCost = adjustedMinutes * RATE_PER_MINUTE;
     const SAFETY_BUFFER = 1.075; // 7.5% Markup
     let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
     

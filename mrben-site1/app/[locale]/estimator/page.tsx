@@ -234,7 +234,7 @@ export default function EstimatorPage() {
                         (data.window_counts?.entry_door_pane || 0);
       
       const vibe = (data.window_counts?.pane_vibe || "normal") as VibeKey;
-      const difficultyMultiplier = VIBE_MULTIPLIERS[vibe] || 1.0;
+      const difficultyMultiplier = data.average_vibe_multiplier || 1.0;
       
       // Helper to calculate values for the JSON backup
       const getModeData = (m: "ext" | "in_out") => {
@@ -373,9 +373,8 @@ export default function EstimatorPage() {
       }
     });
 
-    // Apply the Vibe Engine Math
-    const vibe = (result.window_counts.pane_vibe || "normal") as VibeKey;
-    const difficultyMultiplier = VIBE_MULTIPLIERS[vibe] || 1.0;
+    // Apply the Vibe Engine Math using granular average
+    const difficultyMultiplier = result.avgVibe || 1.0;
     
     return baseMinutes * difficultyMultiplier;
   };
