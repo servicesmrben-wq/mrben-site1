@@ -9,7 +9,7 @@ const { performance } = require('perf_hooks');
 // const nodemailer = require('nodemailer'); // 📧 Kept for future use
 
 // ⚖️ SHARED PRICING SOURCE OF TRUTH
-const pricing = require('../mrben-site1/app/lib/pricing');
+const pricing = require('./pricing');
 
 /* 📧 NODEMAILER SETUP (Commented out for future use)
 const transporter = nodemailer.createTransport({
