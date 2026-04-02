@@ -5,10 +5,19 @@ const cors = require('cors');
 const { GoogleAuth } = require('google-auth-library');
 const { Storage } = require('@google-cloud/storage'); 
 const { performance } = require('perf_hooks'); 
-const nodemailer = require('nodemailer');
-const pricing = require('./pricing');
+// const nodemailer = require('nodemailer'); // 📧 Kept for future use
 
-// 📧 NODEMAILER SETUP (Gmail Transporter)
+// ⚖️ VIBE MULTIPLIERS (Mirrored from pricing.ts)
+const VIBE_MULTIPLIERS = {
+  very_dense: 0.40,
+  dense: 0.60,
+  normal_dense: 0.80,
+  normal: 1.0,
+  normal_large: 1.25,
+  large_open: 2.50
+};
+
+/* 📧 NODEMAILER SETUP (Commented out for future use)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -16,6 +25,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 }); 
+*/
 
 // 🌐 EXPRESS APP INIT
 const app = express();
@@ -273,6 +283,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
 
     // 🧮 FINAL TOTALS AGGREGATION
     const finalTotals = {
+      images_count: req.files.length,
+      average_vibe_multiplier: 1.0,
       analysis_g3: "Pane Counting: ",
       analysis_g25: "Vibe Assessment: ",
       window_counts: {
@@ -283,11 +295,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       failed_images: []
     };
     
-    // ⚖️ VIBE WEIGHTINGS
-    const vibeWeights = { "very_dense": 1, "dense": 2, "normal_dense": 3, "normal": 4, "normal_large": 5, "large_open": 6 };
-    const weightToVibe = { 1: "very_dense", 2: "dense", 3: "normal_dense", 4: "normal", 5: "normal_large", 6: "large_open" };
-    
-    let totalVibeWeight = 0;
+    let totalVibeMultiplier = 0;
     let validVibeCount = 0;
 
     // 📊 TALLY RESULTS
@@ -308,7 +316,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         finalTotals.window_counts.entry_door_pane += (result.window_counts.entry_door_pane || 0);
         
         if (result.window_counts.pane_vibe) {
-          totalVibeWeight += vibeWeights[result.window_counts.pane_vibe] || 4;
+          totalVibeMultiplier += pricing.VIBE_MULTIPLIERS[result.window_counts.pane_vibe] || 1.0;
           validVibeCount++;
         }
       }
@@ -316,10 +324,17 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       if (result.stories > finalTotals.stories) { finalTotals.stories = result.stories; }
     });
 
-    // ⚖️ CALCULATE AVERAGE VIBE
+    // ⚖️ CALCULATE PRECISE AVERAGE VIBE
     if (validVibeCount > 0) {
-      const avgWeight = Math.round(totalVibeWeight / validVibeCount);
-      finalTotals.window_counts.pane_vibe = weightToVibe[avgWeight] || "normal";
+      const avgMultiplier = totalVibeMultiplier / validVibeCount;
+      finalTotals.average_vibe_multiplier = parseFloat(avgMultiplier.toFixed(4));
+      
+      // For UI/V1 compatibility, find the "closest" named vibe
+      const vibeKeys = Object.keys(pricing.VIBE_MULTIPLIERS);
+      const closestVibe = vibeKeys.reduce((prev, curr) => {
+        return Math.abs(pricing.VIBE_MULTIPLIERS[curr] - avgMultiplier) < Math.abs(pricing.VIBE_MULTIPLIERS[prev] - avgMultiplier) ? curr : prev;
+      });
+      finalTotals.window_counts.pane_vibe = closestVibe;
     }
 
     // 📤 SEND FINAL RESPONSE

@@ -81,6 +81,8 @@ export async function POST(req: Request) {
     const estimateTime = normalizeSingleLine(formData.get("estimateTime"));
     const estimateConf = normalizeSingleLine(formData.get("estimateConf"));
     const estimateVibe = normalizeSingleLine(formData.get("estimateVibe"));
+    const estimateImgCount = normalizeSingleLine(formData.get("estimateImgCount"));
+    const estimateAvgVibe = normalizeSingleLine(formData.get("estimateAvgVibe"));
     const estimateDetails = normalizeSingleLine(formData.get("estimateDetails"));
 
     // Extended comparison
@@ -193,7 +195,8 @@ export async function POST(req: Request) {
       textLines.push(`LIEN DRIVE : ${driveSearchUrl} (<-Cliquez ici, GoogleDrive Photos Client)`);
       textLines.push(`SÉLECTION DE L'UTILISATEUR : ${displayService}`);
       textLines.push(`Nombre total de panneaux vitrés : ${estimatePanes}`);
-      textLines.push(`VIBE (Difficulté) : ${estimateVibe}`);
+      textLines.push(`Nombre d'images analysées : ${estimateImgCount}`);
+      textLines.push(`VIBE (Difficulté moyenne) : ${estimateVibe} (Multiplier: ${estimateAvgVibe})`);
       textLines.push(`Métrique : ${hourlyRate}$/heure | Marge : +${markup} | Frais de service et déplacement : ${serviceFee}$`);
       textLines.push("");
       textLines.push(`OPTION 1 : Intérieur et Extérieur`);
@@ -235,7 +238,8 @@ export async function POST(req: Request) {
           <p style="margin: 5px 0;"><strong>Réf ID :</strong> <a href="${driveSearchUrl}" style="color: #166534; font-weight: bold; text-decoration: underline;">${escapeHtml(estimateRef)}</a> (<-Cliquez ici, GoogleDrive Photos Client)</p>
           <p style="margin: 5px 0;"><strong>Sélection de l'utilisateur :</strong> <span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px;">${escapeHtml(displayService)}</span></p>
           <p style="margin: 5px 0;"><strong>Nombre total de panneaux vitrés :</strong> ${escapeHtml(estimatePanes)}</p>
-          <p style="margin: 5px 0;"><strong>VIBE (Difficulté) :</strong> ${escapeHtml(estimateVibe)}</p>
+          <p style="margin: 5px 0;"><strong>Nombre d'images analysées :</strong> ${escapeHtml(estimateImgCount)}</p>
+          <p style="margin: 5px 0;"><strong>VIBE (Difficulté moyenne) :</strong> ${escapeHtml(estimateVibe)} (Multiplier: ${escapeHtml(estimateAvgVibe)})</p>
           <p style="margin: 5px 0; font-size: 0.85em; color: #64748b;"><strong>Métrique :</strong> ${escapeHtml(hourlyRate)}$/heure | <strong>Marge :</strong> +${escapeHtml(markup)} | <strong>Frais de service et déplacement :</strong> ${escapeHtml(serviceFee)}$</p>
           
           <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">

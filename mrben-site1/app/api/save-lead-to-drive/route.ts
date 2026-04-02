@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { 
       name, email, phone, referenceId, service, 
       qExt, tExt, qInOut, tInOut,
-      hourlyRate, markup 
+      hourlyRate, markup, imgCount, avgVibe 
     } = await req.json();
 
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
@@ -60,6 +60,8 @@ AI ESTIMATES:
 2. Exterior Only: $${qExt || "N/A"} (${tExt || "N/A"})
 
 Internal Metrics:
+Images: ${imgCount || "N/A"}
+Average Multiplier: ${avgVibe || "N/A"}
 Métrique: ${hourlyRate || "N/A"}$/heure
 Marge: +${markup || "N/A"}
 

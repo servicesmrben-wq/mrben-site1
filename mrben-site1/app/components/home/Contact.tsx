@@ -96,6 +96,8 @@ function ContactContent({
   const estimatePatio = estimateData?.patio || searchParams.get("patio");
   const estimateEntry = estimateData?.entry || searchParams.get("entry");
   const estimateVibe = estimateData?.vibe || searchParams.get("vibe");
+  const estimateImgCount = estimateData?.imgCount || searchParams.get("imgCount");
+  const estimateAvgVibe = estimateData?.avgVibe || searchParams.get("avgVibe");
   const urlService = estimateData?.service || searchParams.get("service");
 
   useEffect(() => {
@@ -298,6 +300,8 @@ function ContactContent({
         formData.append("estimateTime", estimateTime || "N/A");
         formData.append("estimateConf", estimateConf || "0");
         formData.append("estimateVibe", estimateVibe || "normal");
+        formData.append("estimateImgCount", estimateImgCount || "0");
+        formData.append("estimateAvgVibe", estimateAvgVibe || "1.0");
         formData.append("estimateDetails", `Rez-de-chaussée et sous-sol : ${estimateS1}, Deuxième étage : ${estimateS2}, Troisième étage : ${estimateS3}, Portes patio (panneaux) : ${estimatePatio}, Portes d'entrée (assumé 2 vitres/porte) : ${estimateEntry}`);
         
         // Extended comparison
@@ -359,9 +363,10 @@ function ContactContent({
           qInOut,
           tInOut,
           hourlyRate,
-          markup
-        };
-        await fetch("/api/save-lead-to-drive", {
+          markup,
+          imgCount: estimateImgCount,
+          avgVibe: estimateAvgVibe
+          };        await fetch("/api/save-lead-to-drive", {
            method: "POST",
            headers: { "Content-Type": "application/json" },
            body: JSON.stringify(leadData)
