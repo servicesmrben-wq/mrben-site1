@@ -83,6 +83,8 @@ export async function POST(req: Request) {
     const estimateVibe = normalizeSingleLine(formData.get("estimateVibe"));
     const estimateImgCount = normalizeSingleLine(formData.get("estimateImgCount"));
     const estimateAvgVibe = normalizeSingleLine(formData.get("estimateAvgVibe"));
+    const estimateAnalysisPanes = normalizeMultiLine(formData.get("estimateAnalysisPanes"));
+    const estimateAnalysisVibe = normalizeMultiLine(formData.get("estimateAnalysisVibe"));
     const estimateDetails = normalizeSingleLine(formData.get("estimateDetails"));
 
     // Extended comparison
@@ -206,6 +208,12 @@ export async function POST(req: Request) {
       textLines.push(`Prix : $${qExt} | Temps : ${tExt}`);
       textLines.push("");
       textLines.push(`Détails des panneaux comptés : ${estimateDetails}`);
+      textLines.push("");
+      textLines.push("ANALYSE DÉTAILLÉE PAR IMAGE (PANNEAUX) :");
+      textLines.push(estimateAnalysisPanes || "N/A");
+      textLines.push("");
+      textLines.push("ANALYSE ARCHITECTURALE (VIBE) :");
+      textLines.push(estimateAnalysisVibe || "N/A");
       textLines.push("---------------------------");
     }
 
@@ -255,9 +263,19 @@ export async function POST(req: Request) {
             </div>
           </div>
 
-          <p style="margin: 15px 0 0 0; font-size: 0.85em; color: #64748b; border-top: 1px solid #dcfce7; pt-10px;">
+          <p style="margin: 15px 0 0 0; font-size: 0.85em; color: #64748b; border-top: 1px solid #dcfce7; padding-top: 10px;">
             <strong>Détails des panneaux comptés :</strong> ${escapeHtml(estimateDetails)}
           </p>
+
+          <div style="margin-top: 15px; font-size: 0.85em; color: #64748b;">
+            <strong style="display: block; margin-bottom: 5px;">ANALYSE DÉTAILLÉE PAR IMAGE (PANNEAUX) :</strong>
+            <pre style="white-space: pre-wrap; font-family: inherit; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; margin: 0;">${escapeHtml(estimateAnalysisPanes)}</pre>
+          </div>
+
+          <div style="margin-top: 15px; font-size: 0.85em; color: #64748b;">
+            <strong style="display: block; margin-bottom: 5px;">ANALYSE ARCHITECTURALE (VIBE) :</strong>
+            <pre style="white-space: pre-wrap; font-family: inherit; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; margin: 0;">${escapeHtml(estimateAnalysisVibe)}</pre>
+          </div>
         </div>
       `);
     }

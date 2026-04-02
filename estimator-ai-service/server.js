@@ -279,8 +279,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
     const finalTotals = {
       images_count: req.files.length,
       average_vibe_multiplier: 1.0,
-      analysis_g3: "Pane Counting: ",
-      analysis_g25: "Vibe Assessment: ",
+      analysis_g3: "PANE COUNTING:\n",
+      analysis_g25: "VIBE ASSESSMENT:\n",
       window_counts: {
         pane_3rd_story: 0, pane_2nd_story: 0, pane_1st_base: 0,
         patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" 
@@ -299,8 +299,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         return; 
       }
 
-      finalTotals.analysis_g3 += `[${result.imageName}: ${result.analysis_g3}] took ${result.durationSec}sec `;
-      finalTotals.analysis_g25 += `[${result.imageName}: ${result.analysis_g25}] took ${result.durationSec}sec `;
+      finalTotals.analysis_g3 += `\n[${result.imageName}] (took ${result.durationSec}s):\n${result.analysis_g3}\n`;
+      finalTotals.analysis_g25 += `\n[${result.imageName}] (took ${result.durationSec}s):\n${result.analysis_g25}\n`;
 
       if (result.window_counts) {
         finalTotals.window_counts.pane_3rd_story += (result.window_counts.pane_3rd_story || 0);
@@ -330,6 +330,9 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       });
       finalTotals.window_counts.pane_vibe = closestVibe;
     }
+
+    // Add spacing for combined viewing
+    finalTotals.analysis_g3 += "\n\n\n";
 
     // 📤 SEND FINAL RESPONSE
     res.json(finalTotals);

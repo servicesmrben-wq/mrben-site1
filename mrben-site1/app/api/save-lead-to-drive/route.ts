@@ -8,7 +8,8 @@ export async function POST(req: Request) {
     const { 
       name, email, phone, referenceId, service, 
       qExt, tExt, qInOut, tInOut,
-      hourlyRate, markup, imgCount, avgVibe 
+      hourlyRate, markup, imgCount, avgVibe,
+      analysisPanes, analysisVibe
     } = await req.json();
 
     const clientEmail = process.env.DRIVE_CLIENT_EMAIL;
@@ -64,6 +65,12 @@ Images: ${imgCount || "N/A"}
 Average Multiplier: ${avgVibe || "N/A"}
 Métrique: ${hourlyRate || "N/A"}$/heure
 Marge: +${markup || "N/A"}
+
+AI ANALYSIS (PANES):
+${analysisPanes || "N/A"}
+
+AI ANALYSIS (VIBE):
+${analysisVibe || "N/A"}
 
 Name: ${name}
 Email: ${email}

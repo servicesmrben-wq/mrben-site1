@@ -680,6 +680,8 @@ export default function EstimatorPage() {
                         vibe: result.pane_vibe,
                         imgCount: result.imgCount,
                         avgVibe: result.avgVibe,
+                        analysisPanes: result.analysis_panes,
+                        analysisVibe: result.analysis_vibe,
                         service: mode === "ext" ? "Exterior Only" : "Inside & Out",
                       })
                     },
