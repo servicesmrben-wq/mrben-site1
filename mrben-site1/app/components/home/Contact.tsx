@@ -366,10 +366,12 @@ function ContactContent({
           markup,
           imgCount: estimateImgCount,
           avgVibe: estimateAvgVibe
-          };        await fetch("/api/save-lead-to-drive", {
-           method: "POST",
-           headers: { "Content-Type": "application/json" },
-           body: JSON.stringify(leadData)
+        };
+
+        await fetch("/api/save-lead-to-drive", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(leadData)
         });
       } catch (err) {
         console.warn("Failed to save lead to drive", err);

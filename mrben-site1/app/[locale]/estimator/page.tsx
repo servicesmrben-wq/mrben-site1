@@ -283,6 +283,8 @@ export default function EstimatorPage() {
         },
         pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée : ${data.window_counts?.entry_door_pane || 0}, Type de vitrage (Vibe) : ${vibe}`,
         pane_vibe: vibe,
+        imgCount: data.images_count || 0,
+        avgVibe: data.average_vibe_multiplier || 1.0,
         window_counts: {
           pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
           pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
@@ -677,6 +679,8 @@ export default function EstimatorPage() {
                         patio: result.window_counts.patio_door_pane,
                         entry: result.window_counts.entry_door_pane,
                         vibe: result.pane_vibe,
+                        imgCount: result.imgCount,
+                        avgVibe: result.avgVibe,
                         service: mode === "ext" ? "Exterior Only" : "Inside & Out",
                       })
                     },

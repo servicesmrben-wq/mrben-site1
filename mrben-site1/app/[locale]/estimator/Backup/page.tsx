@@ -232,28 +232,29 @@ export default function EstimatorPage() {
                         (data.window_counts?.patio_door_pane || 0) + 
                         (data.window_counts?.entry_door_pane || 0);
       
-      const windowGroups = data.window_counts?.window_groups || 0;
-      const windowToPanesRatio = windowGroups > 0 ? (totalPanes / windowGroups).toFixed(2) : "0.00";
-      
+      const vibe = (data.window_counts?.pane_vibe || "normal");
+      const difficultyMultiplier = data.average_vibe_multiplier || 1.0;
+
       // Helper to calculate values for the JSON backup
       const getModeData = (m: "ext" | "in_out") => {
-        let totalMinutes = 0;
+        let baseMinutes = 0;
         Object.entries(data.window_counts || {}).forEach(([key, count]) => {
           const k = key as PricingKey;
           const item = PRICING_DATA[k];
           if (item && typeof count === "number") {
             const unitMinutes = m === "ext" ? item.minutes_ext : (item.minutes_ext + item.minutes_int);
-            totalMinutes += unitMinutes * count;
+            baseMinutes += unitMinutes * count;
           }
         });
-        const windowCost = totalMinutes * RATE_PER_MINUTE;
-        const SAFETY_BUFFER = 1.075;
-        let total = (windowCost * SAFETY_BUFFER) + BASE_FEE;
+
+        const adjustedMinutes = baseMinutes * difficultyMultiplier;
+        const windowCost = adjustedMinutes * RATE_PER_MINUTE;
+        let total = (windowCost * 1.075) + BASE_FEE; // Matching the 7.5% markup logic
         total = Math.round(total / 5) * 5;
         
         return {
           price: `$${total.toFixed(2)}`,
-          time: `${(totalMinutes / 60).toFixed(1)}h`
+          time: `${(adjustedMinutes / 60).toFixed(1)}h`
         };
       };
 
@@ -278,17 +279,17 @@ export default function EstimatorPage() {
             time: extData.time
           }
         },
-        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}, Groupes de fenêtres (Flash 2.5) : ${windowGroups}, Ratio vitres/fenêtre : ${windowToPanesRatio}`,
-        total_window_groups: windowGroups,
-        window_to_panes_ratio: windowToPanesRatio,
+        pane_details_formatted: `Rez-de-chaussée et sous-sol : ${data.window_counts?.pane_1st_base || 0}, Deuxième étage : ${data.window_counts?.pane_2nd_story || 0}, Troisième étage : ${data.window_counts?.pane_3rd_story || 0}, Portes patio (panneaux) : ${data.window_counts?.patio_door_pane || 0}, Portes d'entrée (assumé 2 vitres/porte) : ${data.window_counts?.entry_door_pane || 0}, Type de vitrage (Vibe) : ${vibe}`,
+        pane_vibe: vibe,
+        imgCount: data.images_count || 0,
+        avgVibe: data.average_vibe_multiplier || 1.0,
         window_counts: {
           pane_3rd_story: data.window_counts?.pane_3rd_story || 0,
           pane_2nd_story: data.window_counts?.pane_2nd_story || 0,
           pane_1st_base: data.window_counts?.pane_1st_base || 0,
           patio_door_pane: data.window_counts?.patio_door_pane || 0,
           entry_door_pane: data.window_counts?.entry_door_pane || 0,
-          window_groups: windowGroups,
-          window_to_panes_ratio: windowToPanesRatio,
+          pane_vibe: vibe,
         },
         stories: data.stories || 1,
         mode: mode,
