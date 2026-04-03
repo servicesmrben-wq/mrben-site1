@@ -111,9 +111,9 @@ CATEGORIES (Choose exactly one):
 6. "large_open": Massive floor-to-ceiling architectural glass, A-frames, or massive 2-story window walls. Very fast wide squeegee swipes.
 
 OUTPUT FORMAT:
-Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
+Return JSON ONLY. The 'analysis' field MUST START with the exact category name in brackets, followed by a brief explanation.
 {
-  "analysis": "Windows are large but have structural horizontal sashes creating smaller awning panes at the bottom. The asymmetrical splits categorize this as normal_dense.",
+  "analysis": "[normal_dense] Windows are large but have structural horizontal sashes creating smaller awning panes at the bottom.",
   "window_counts": {
     "pane_vibe": "normal_dense"
   }
@@ -284,7 +284,8 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
       analysis_g25: "VIBE ASSESSMENT:\n",
       window_counts: {
         pane_3rd_story: 0, pane_2nd_story: 0, pane_1st_base: 0,
-        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal" 
+        patio_door_pane: 0, entry_door_pane: 0, pane_vibe: "normal",
+        image_vibes: {}
       },
       stories: 1,
       failed_images: []
@@ -313,6 +314,7 @@ Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
         if (result.window_counts.pane_vibe) {
           totalVibeMultiplier += pricing.VIBE_MULTIPLIERS[result.window_counts.pane_vibe] || 1.0;
           validVibeCount++;
+          finalTotals.window_counts.image_vibes[result.imageName] = result.window_counts.pane_vibe;
         }
       }
       
