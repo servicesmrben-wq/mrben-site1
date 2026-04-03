@@ -94,25 +94,26 @@ Return JSON ONLY. Do not generate text outside the JSON. Use the 'analysis' fiel
 }`;
 
     // 🧠 BRAIN 2: ARCHITECTURAL VIBE (System Instruction)
-    const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
+const systemInstructionGroups = `You are a specialized architectural assessor for a window cleaning company. 
 Your ONLY job is to look at the overall house and categorize the AVERAGE size and density of the window panes. Do not count them. Give me the general "vibe" of the glass using a 6-tier scale.
 
-CRITICAL VISUAL RULE - FLAT GRIDS VS. STRUCTURAL SASHES: 
-- IGNORE FLAT GRIDS: If you see thin, decorative grids (muntins) trapped flat inside the glass, completely ignore them. They do not slow down a squeegee. Do not increase the density category just because of flat internal grids.
-- COUNT PHYSICAL SPLITS: Thick horizontal or vertical frames (sashes) that physically split the glass DO slow down a squeegee.
+CRITICAL VISUAL RULES - SIZE VS. SPLITS: 
+- IGNORE FLAT GRIDS: If you see thin, decorative grids (muntins) trapped flat inside the glass, completely ignore them. They do not slow down a squeegee.
+- SIZE OVERRIDES SPLITS (THE MEGA-PANE RULE): Massive, two-story architectural window walls or huge floor-to-ceiling panes bypass the density penalty because huge individual panes are fast to clean ('large_open').
+- THE ASYMMETRICAL PENALTY (TRANSOMS & AWNINGS): If a window is generally large, BUT it has thick structural sashes creating smaller adjacent panes (like a large picture window with a smaller rectangular awning pane below it, or transoms above a door), it is NO LONGER a fast 'normal_large' window. The small split sections require detailed squeegee work, dropping it to 'normal_dense'.
 
 CATEGORIES (Choose exactly one):
-1. "very_dense": Intricate structural transoms, TRUE French doors with many tiny physical frames splitting the glass, complex arches.
-2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate windows, or prominent windows with multiple thick structural sashes that physically divide the glass into 3 or more sections. 
-3. "normal_dense": Windows with physical complications like a single thick structural sash splitting the top and bottom glass (like standard double-hung windows), half-grids (fractional grilles), or asymmetrical splits.
+1. "very_dense": Intricate structural transoms, TRUE French doors with many tiny physical frames splitting the glass, complex arches. Maximum squeegee difficulty.
+2. "dense": Houses with a mix of highly split windows, garage doors with multiple small separate panes, or standard-sized windows physically divided into 3 or more SMALL sections. Very slow squeegee work.
+3. "normal_dense": Windows with physical complications like a single thick structural sash splitting the top and bottom glass, half-grids, or ASYMMETRICAL SPLITS (e.g., a large main window with a distinct smaller pane structurally framed above or below it, or sliding doors with transoms). Slower than average.
 4. "normal": Simple clear casements or basic 2-pane sliders. (If a simple window has FLAT internal grids, it stays 'normal' because the glass surface is flat).
-5. "normal_large": Larger than average clear windows, big sliding doors.
-6. "large_open": Massive floor-to-ceiling architectural glass, A-frames.
+5. "normal_large": Larger than average clear windows, big sliding doors. These must be entirely clear or symmetrically massive, without small tricky split panes.
+6. "large_open": Massive floor-to-ceiling architectural glass, A-frames, or massive 2-story window walls. Very fast wide squeegee swipes.
 
 OUTPUT FORMAT:
 Return JSON ONLY. Use the 'analysis' field to briefly explain your guess.
 {
-  "analysis": "Windows have flat internal grids (ignored), but thick horizontal sashes physically split the top and bottom panes. Averaging to normal_dense.",
+  "analysis": "Windows are large but have structural horizontal sashes creating smaller awning panes at the bottom. The asymmetrical splits categorize this as normal_dense.",
   "window_counts": {
     "pane_vibe": "normal_dense"
   }
