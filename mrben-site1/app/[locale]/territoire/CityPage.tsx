@@ -123,7 +123,7 @@ export function CityPage({ city }: { city: CityPageData }) {
             {citySourceOfTruth}
           </p>
           {heroImage ? (
-            <div className="relative mt-8 w-full aspect-[21/9] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-sm">
+            <div className="relative mt-8 w-full aspect-[1.90/1] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-sm">
               <Image
                 src={heroImage}
                 alt={heroImageAlt}
