@@ -97,6 +97,12 @@ export default function Header() {
       router.replace('/services/window-cleaning', { locale: 'en' });
     } else if (pathname === '/services/window-cleaning' && nextLocale === 'fr') {
       router.replace('/services/lavage-de-vitres', { locale: 'fr' });
+    } else if (pathname.includes('lavage-de-vitres-') && nextLocale === 'en') {
+      const newPathname = pathname.replace('lavage-de-vitres-', 'window-cleaning-');
+      router.replace(newPathname, { locale: 'en' });
+    } else if (pathname.includes('window-cleaning-') && nextLocale === 'fr') {
+      const newPathname = pathname.replace('window-cleaning-', 'lavage-de-vitres-');
+      router.replace(newPathname, { locale: 'fr' });
     } else {
       router.replace(pathname, { locale: nextLocale });
     }

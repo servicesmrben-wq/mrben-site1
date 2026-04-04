@@ -23,11 +23,19 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { serviceCity } = await params;
-  const locale = (await getLocale()) as Locale;
-  const prefix = locale === 'en' ? 'window-cleaning-' : 'lavage-de-vitres-';
+  const { locale, serviceCity } = await params;
+  const currentLocale = locale as Locale;
+  const prefix = currentLocale === 'en' ? 'window-cleaning-' : 'lavage-de-vitres-';
   
   if (!serviceCity.startsWith(prefix)) {
+    // If it starts with the wrong prefix, we'll let the Page component handle the redirect
+    // but for metadata we should return something or just notFound if it's completely wrong.
+    const otherPrefix = currentLocale === 'en' ? 'lavage-de-vitres-' : 'window-cleaning-';
+    if (serviceCity.startsWith(otherPrefix)) {
+      const slug = serviceCity.slice(otherPrefix.length);
+      const city = getCityBySlug(slug);
+      if (city) return buildCityMetadata(city, currentLocale);
+    }
     notFound();
   }
   
@@ -38,13 +46,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     notFound();
   }
 
-  return buildCityMetadata(city, locale);
+  return buildCityMetadata(city, currentLocale);
 }
 
 export default async function Page({ params }: PageProps) {
-  const { serviceCity } = await params;
-  const locale = (await getLocale()) as Locale;
-  const prefix = locale === 'en' ? 'window-cleaning-' : 'lavage-de-vitres-';
+  const { locale, serviceCity } = await params;
+  const currentLocale = locale as Locale;
+  const prefix = currentLocale === 'en' ? 'window-cleaning-' : 'lavage-de-vitres-';
+  const otherPrefix = currentLocale === 'en' ? 'lavage-de-vitres-' : 'window-cleaning-';
+
+  // Handle cross-locale redirects
+  // e.g., if someone is at /en/lavage-de-vitres-lachute, redirect to /en/window-cleaning-lachute
+  if (serviceCity.startsWith(otherPrefix)) {
+    const slug = serviceCity.slice(otherPrefix.length);
+    if (CITY_SLUGS.includes(slug)) {
+      redirect(`/${currentLocale}/${prefix}${slug}`);
+    }
+  }
   
   if (!serviceCity.startsWith(prefix)) {
     notFound();
@@ -53,7 +71,7 @@ export default async function Page({ params }: PageProps) {
   let slug = serviceCity.slice(prefix.length);
 
   if (slug === "st-sauveur") {
-    redirect(`/${locale}/${prefix}saint-sauveur`);
+    redirect(`/${currentLocale}/${prefix}saint-sauveur`);
   }
 
   const city = getCityBySlug(slug);

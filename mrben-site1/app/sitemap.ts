@@ -31,17 +31,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const staticEntries = routes.flatMap((route) =>
-    locales.map((locale) => ({
-      url: `${BASE_URL}/${locale}${route}`,
-      lastModified: LAST_MAJOR_UPDATE,
-    }))
+    locales.map((locale) => {
+      const localePath = locale === 'fr' ? '' : '/en';
+      return {
+        url: `${BASE_URL}${localePath}${route}`,
+        lastModified: LAST_MAJOR_UPDATE,
+      };
+    })
   );
 
   const cityEntries = CITY_PAGES.flatMap((city) =>
     locales.map((locale) => {
       const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+      const localePath = locale === 'fr' ? '' : '/en';
       return {
-        url: `${BASE_URL}/${locale}/${prefix}-${city.slug}`,
+        url: `${BASE_URL}${localePath}/${prefix}-${city.slug}`,
         lastModified: LAST_MAJOR_UPDATE,
       };
     })
@@ -49,12 +53,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogEntries = locales.flatMap((locale) => {
     const posts = getSortedPostsData(locale);
+    const localePath = locale === 'fr' ? '' : '/en';
     const standardBlogEntries = posts.map((post) => ({
-      url: `${BASE_URL}/${locale}/blog/${post.slug}`,
+      url: `${BASE_URL}${localePath}/blog/${post.slug}`,
       lastModified: new Date(post.date),
     }));
     const levisBlogEntries = posts.map((post) => ({
-      url: `${BASE_URL}/${locale}/levis/blog/${post.slug}`,
+      url: `${BASE_URL}${localePath}/levis/blog/${post.slug}`,
       lastModified: new Date(post.date),
     }));
     return [...standardBlogEntries, ...levisBlogEntries];

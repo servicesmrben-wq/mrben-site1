@@ -123,12 +123,12 @@ export function CityPage({ city }: { city: CityPageData }) {
             {citySourceOfTruth}
           </p>
           {heroImage ? (
-            <div className="relative mt-8 w-full aspect-[1.90/1] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-sm">
+            <div className="relative mt-8 w-full max-w-lg aspect-[1.90/1] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-sm">
               <Image
                 src={heroImage}
                 alt={heroImageAlt}
                 fill
-                sizes="(max-width: 768px) 92vw, (max-width: 1280px) 1100px, 1400px"
+                sizes="(max-width: 640px) 92vw, 512px"
                 quality={90}
                 className="object-cover object-center"
                 priority
