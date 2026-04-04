@@ -18,6 +18,7 @@ export default function ServiceArea({
   hideReviewCount?: boolean
 }) {
   const locale = useLocale();
+  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
   const cities = useMemo(() => {
     return [
       { name: "Lévis", slug: "levis" },
@@ -64,7 +65,7 @@ export default function ServiceArea({
               {cities.map((c) => (
                 <Link
                   key={c.slug}
-                  href={`/territoire/${c.slug}`}
+                  href={`/${prefix}-${c.slug}`}
                   className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm hover:bg-zinc-100 transition-colors"
                 >
                   <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />

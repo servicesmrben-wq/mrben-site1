@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Link } from "@/navigation";
+import { useLocale } from "next-intl";
 import {
   ArrowRight,
   BadgeCheck,
@@ -25,6 +26,8 @@ type Props = {
 };
 
 export default function WindowCleaningContent({ t, pagePath, isLevis = false }: Props) {
+  const locale = useLocale();
+  const prefix = locale === "en" ? "window-cleaning" : "lavage-de-vitres";
   const QUOTE_HREF = isLevis ? "/levis#contact" : "/#contact";
 
   const whyUsItems = [
@@ -156,17 +159,17 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
   };
 
   const serviceAreas = isLevis ? [
-    { href: "/territoire/levis", label: "Lévis" },
-    { href: "/territoire/saint-nicolas", label: "Saint-Nicolas" },
-    { href: "/territoire/charny", label: "Charny" },
-    { href: "/territoire/dosquet", label: "Dosquet" },
+    { href: `/${prefix}-levis`, label: "Lévis" },
+    { href: `/${prefix}-saint-nicolas`, label: "Saint-Nicolas" },
+    { href: `/${prefix}-charny`, label: "Charny" },
+    { href: `/${prefix}-dosquet`, label: "Dosquet" },
   ] : [
-    { href: "/territoire/lachute", label: t("serviceAreas.cities.lachute") },
-    { href: "/territoire/saint-jerome", label: t("serviceAreas.cities.saintJerome") },
-    { href: "/territoire/saint-sauveur", label: t("serviceAreas.cities.saintSauveur") },
-    { href: "/territoire/mirabel", label: t("serviceAreas.cities.mirabel") },
-    { href: "/territoire/blainville", label: t("serviceAreas.cities.blainville") },
-    { href: "/territoire/laval", label: t("serviceAreas.cities.laval") },
+    { href: `/${prefix}-lachute`, label: t("serviceAreas.cities.lachute") },
+    { href: `/${prefix}-saint-jerome`, label: t("serviceAreas.cities.saintJerome") },
+    { href: `/${prefix}-saint-sauveur`, label: t("serviceAreas.cities.saintSauveur") },
+    { href: `/${prefix}-mirabel`, label: t("serviceAreas.cities.mirabel") },
+    { href: `/${prefix}-blainville`, label: t("serviceAreas.cities.blainville") },
+    { href: `/${prefix}-laval`, label: t("serviceAreas.cities.laval") },
   ];
 
   const heroTitle = isLevis

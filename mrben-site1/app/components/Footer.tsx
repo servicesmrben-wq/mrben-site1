@@ -16,13 +16,15 @@ const Footer = () => {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations('Footer'); // Assuming 'Footer' namespace in your translation files
+  
+  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
 
   const levisPaths = [
     "/levis", 
-    "/territoire/levis", 
-    "/territoire/saint-nicolas", 
-    "/territoire/charny", 
-    "/territoire/dosquet",
+    `/${prefix}-levis`, 
+    `/${prefix}-saint-nicolas`, 
+    `/${prefix}-charny`, 
+    `/${prefix}-dosquet`,
   ];
   const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
 
@@ -61,15 +63,15 @@ const Footer = () => {
   ];
 
   const territories = isLevis ? [
-    { href: "/territoire/levis", text: "Lévis" },
-    { href: "/territoire/saint-nicolas", text: "Saint-Nicolas" },
-    { href: "/territoire/charny", text: "Charny" },
-    { href: "/territoire/dosquet", text: "Dosquet" },
+    { href: `/${prefix}-levis`, text: "Lévis" },
+    { href: `/${prefix}-saint-nicolas`, text: "Saint-Nicolas" },
+    { href: `/${prefix}-charny`, text: "Charny" },
+    { href: `/${prefix}-dosquet`, text: "Dosquet" },
   ] : [
-    { href: "/territoire/lachute", text: t('territories.lachute') },
-    { href: "/territoire/saint-jerome", text: t('territories.stJerome') },
-    { href: "/territoire/mirabel", text: t('territories.mirabel') },
-    { href: "/territoire/blainville", text: t('territories.blainville') },
+    { href: `/${prefix}-lachute`, text: t('territories.lachute') },
+    { href: `/${prefix}-saint-jerome`, text: t('territories.stJerome') },
+    { href: `/${prefix}-mirabel`, text: t('territories.mirabel') },
+    { href: `/${prefix}-blainville`, text: t('territories.blainville') },
   ];
 
   const description = isLevis 

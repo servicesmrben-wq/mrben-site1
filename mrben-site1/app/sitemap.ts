@@ -38,10 +38,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const cityEntries = CITY_PAGES.flatMap((city) =>
-    locales.map((locale) => ({
-      url: `${BASE_URL}/${locale}/territoire/${city.slug}`,
-      lastModified: LAST_MAJOR_UPDATE,
-    }))
+    locales.map((locale) => {
+      const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+      return {
+        url: `${BASE_URL}/${locale}/${prefix}-${city.slug}`,
+        lastModified: LAST_MAJOR_UPDATE,
+      };
+    })
   );
 
   const blogEntries = locales.flatMap((locale) => {

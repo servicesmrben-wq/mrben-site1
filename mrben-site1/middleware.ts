@@ -30,6 +30,16 @@ const intlMiddleware = createMiddleware({
 
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // SEO Redirects for old /territoire routes
+  const territoireMatch = pathname.match(/^\/(en|fr)\/territoire\/(.+)$/);
+  if (territoireMatch) {
+    const locale = territoireMatch[1];
+    const slug = territoireMatch[2];
+    const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+    return NextResponse.redirect(new URL(`/${locale}/${prefix}-${slug}`, req.url), 301);
+  }
+
   const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
 
   // 0. Skip geo-redirection for search engine bots

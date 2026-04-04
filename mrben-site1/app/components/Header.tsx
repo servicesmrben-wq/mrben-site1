@@ -13,12 +13,14 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+
   const levisPaths = [
     "/levis", 
-    "/territoire/levis", 
-    "/territoire/saint-nicolas", 
-    "/territoire/charny", 
-    "/territoire/dosquet",
+    `/${prefix}-levis`, 
+    `/${prefix}-saint-nicolas`, 
+    `/${prefix}-charny`, 
+    `/${prefix}-dosquet`,
   ];
   const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
   
@@ -72,17 +74,17 @@ export default function Header() {
   ];
 
   const territoryDropdownLinks = isLevis ? [
-    { label: "Lévis", href: "/territoire/levis" },
-    { label: "Saint-Nicolas", href: "/territoire/saint-nicolas" },
-    { label: "Charny", href: "/territoire/charny" },
-    { label: "Dosquet", href: "/territoire/dosquet" },
+    { label: "Lévis", href: `/${prefix}-levis` },
+    { label: "Saint-Nicolas", href: `/${prefix}-saint-nicolas` },
+    { label: "Charny", href: `/${prefix}-charny` },
+    { label: "Dosquet", href: `/${prefix}-dosquet` },
   ] : [
-    { label: t('territoryDropdown.lachute'), href: "/territoire/lachute" },
-    { label: t('territoryDropdown.saintJerome'), href: "/territoire/saint-jerome" },
-    { label: t('territoryDropdown.saintSauveur'), href: "/territoire/saint-sauveur" },
-    { label: t('territoryDropdown.mirabel'), href: "/territoire/mirabel" },
-    { label: t('territoryDropdown.blainville'), href: "/territoire/blainville" },
-    { label: t('territoryDropdown.laval'), href: "/territoire/laval" },
+    { label: t('territoryDropdown.lachute'), href: `/${prefix}-lachute` },
+    { label: t('territoryDropdown.saintJerome'), href: `/${prefix}-saint-jerome` },
+    { label: t('territoryDropdown.saintSauveur'), href: `/${prefix}-saint-sauveur` },
+    { label: t('territoryDropdown.mirabel'), href: `/${prefix}-mirabel` },
+    { label: t('territoryDropdown.blainville'), href: `/${prefix}-blainville` },
+    { label: t('territoryDropdown.laval'), href: `/${prefix}-laval` },
   ];
 
   const handleLocaleChange = (nextLocale: "en" | "fr") => {

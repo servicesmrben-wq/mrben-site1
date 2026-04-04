@@ -7,11 +7,11 @@ export const MARKUP_MULTIPLIER = 1.075;
 // The new 6-Tier AI Vibe Engine Multipliers
 export const VIBE_MULTIPLIERS = {
   very_dense: 0.40,    // TRUE French doors, intense intricate transoms
-  dense: 0.60,         // Multiple physical splits, garage door panes, mixed dense types
-  normal_dense: 0.80,  // Standard double-hung (single split), half-grids
+  dense: 0.80,         // Multiple physical splits, garage door panes, mixed dense types
+  normal_dense: 0.90,  // Standard double-hung (single split), half-grids
   normal: 1.0,         // Standard residential baseline (clear casements/sliders)
-  normal_large: 1.25,  // Big sliding doors, large standard frames
-  large_open: 2.50     // Massive architectural sheets (slowest per pane)
+  normal_large: 1.10,  // Big sliding doors, large standard frames
+  large_open: 2.0     // Massive architectural sheets (slowest per pane)
 };
 
 export type VibeKey = keyof typeof VIBE_MULTIPLIERS;

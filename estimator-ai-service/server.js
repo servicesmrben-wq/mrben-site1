@@ -49,8 +49,8 @@ app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
 });
 
-// 🔗 MODEL URLS gemini-3.1-flash-lite-preview | gemini-3-flash-preview
-const urlG3 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3-flash-preview:generateContent';
+// 🔗 MODEL URLS gemini-3.1-flash-lite-preview | gemini-3-flash-preview | gemini-3.1-pro-preview
+const urlG3 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.1-pro-preview:generateContent';
 const urlG25 = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-2.5-pro:generateContent';
 
 // 🚀 MAIN ESTIMATION ROUTE
