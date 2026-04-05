@@ -5,9 +5,32 @@ import { MapPin } from "lucide-react";
 import SectionTitle from "./SectionTitle";
 import { BRAND } from "@/app/lib/constants";
 import { GoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
+import { Link } from "@/navigation";
+import { useLocale } from "next-intl";
+import { CITY_SLUGS } from "@/app/territoire/city-data";
 
 export default function ServiceArea({ t, googleProfile }: { t: (key: string, options?: any) => string, googleProfile: GoogleBusinessProfile }) {
-  const cities = useMemo(() => t("citiesList").split(", ").filter(Boolean), [t]);
+  const locale = useLocale();
+  
+  const normalizeSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  };
+
+  const cities = useMemo(() => {
+    const rawCities = t("citiesList").split(", ").filter(Boolean);
+    return rawCities.map(name => ({
+      name,
+      slug: normalizeSlug(name),
+      hasPage: CITY_SLUGS.includes(normalizeSlug(name))
+    }));
+  }, [t]);
+
+  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
 
   const rating = googleProfile.rating;
   const count = googleProfile.count ? `(${googleProfile.count})` : t("territory.googleTile.reviewCount");
@@ -43,16 +66,27 @@ export default function ServiceArea({ t, googleProfile }: { t: (key: string, opt
 
             <div className="mt-4 flex flex-wrap gap-2">
               {cities.map((c) => (
-                <span
-                  key={c}
-                  className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm"
-                >
-                  <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
-                  {c}
-                </span>
+                c.hasPage ? (
+                  <Link
+                    key={c.name}
+                    href={`/${prefix}-${c.slug}`}
+                    className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm hover:bg-zinc-100 hover:border-zinc-300 transition-colors"
+                  >
+                    <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4 text-zinc-400" />
+                    {c.name}
+                  </Link>
+                ) : (
+                  <span
+                    key={c.name}
+                    className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm"
+                  >
+                    <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4 text-zinc-400" />
+                    {c.name}
+                  </span>
+                )
               ))}
               <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] text-zinc-700 md:px-3 md:py-1 md:text-sm">
-                <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4" />
+                <MapPin className="mr-1.5 h-3 w-3 md:mr-2 md:h-4 md:w-4 text-zinc-400" />
                 {t("nearbyCities")}
               </span>
             </div>

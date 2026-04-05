@@ -12,7 +12,7 @@ export default function Services({ onQuote, t }: { onQuote: () => void, t: (key:
 
   const getServiceLink = (id: string) => {
     if (id === "vitres") {
-      return locale === "fr" ? "/services/lavage-de-vitres" : "/services/window-cleaning";
+      return locale === "fr" ? "/services/lavage-de-vitre" : "/services/window-cleaning";
     }
     if (id === "gouttieres") {
       return locale === "fr" ? "/services/nettoyage-de-gouttieres" : "/services/gutter-cleaning";

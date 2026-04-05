@@ -7,7 +7,7 @@ import type { CityPage as CityPageData, Locale } from "../../territoire/city-dat
 import { getCityUrl } from "./seo";
 import SeoFaq from "@/app/components/SeoFaq";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
-import { getLocalBusinessProvider } from "@/app/lib/seo/schema";
+import { getLocalBusinessProvider, getBreadcrumbSchema } from "@/app/lib/seo/schema";
 import { useLocale, useTranslations } from "next-intl";
 
 const BRAND = {
@@ -83,6 +83,8 @@ export function CityPage({ city }: { city: CityPageData }) {
   }));
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`heroImageAlt.${city.slug}`);
+  const cityUrl = getCityUrl(city.slug, locale);
+  
   const cityServiceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -97,8 +99,13 @@ export function CityPage({ city }: { city: CityPageData }) {
         name: locale === "fr" ? "Québec" : "Quebec",
       },
     },
-    url: getCityUrl(city.slug, locale),
+    url: cityUrl,
   };
+
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: locale === "fr" ? "Accueil" : "Home", item: locale === "fr" ? "https://mrben.ca" : "https://mrben.ca/en" },
+    { name: city.name, item: cityUrl },
+  ]);
 
   const contactHref = isLevisCity ? `/${locale}/levis#contact` : "/#contact";
 
@@ -107,6 +114,10 @@ export function CityPage({ city }: { city: CityPageData }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLdString(cityServiceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLdString(breadcrumbSchema) }}
       />
       <section className="border-b border-zinc-200 bg-zinc-50">
         <div className="mx-auto max-w-5xl px-4 py-14 sm:py-16">

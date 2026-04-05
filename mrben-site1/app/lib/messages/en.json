@@ -1,6 +1,8 @@
 {
   "home": {
     "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Sauveur, Saint-Jérôme, and Mirabel.",
+    "metaTitle": "Residential Window Cleaning | Free Quotes & At-Home Service",
+    "metaDescription": "Get streak-free windows for your home. MrBen offers the best residential window cleaning rates in Quebec. Specialist for inaccessible exterior windows. Request your quote online!",
     "faq": {
       "title": "Frequently asked questions",
       "items": {
@@ -590,8 +592,10 @@
     "territories": {
       "lachute": "Lachute",
       "stJerome": "Saint-Jérôme",
+      "saintSauveur": "Saint-Sauveur",
       "mirabel": "Mirabel",
-      "blainville": "Blainville"
+      "blainville": "Blainville",
+      "laval": "Laval"
     },
     "contact": "Contact",
     "reviewLink": "See Our Reviews",

@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Base routes for both Laurentides and Lévis
   const routes = [
     "", 
-    "/services/lavage-de-vitres", 
+    "/services/lavage-de-vitre", 
     "/services/window-cleaning", 
     "/services/nettoyage-de-gouttieres",
     "/services/gutter-cleaning",
@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/services/siding-cleaning",
     "/blog",
     "/levis",
-    "/levis/services/lavage-de-vitres",
+    "/levis/services/lavage-de-vitre",
     "/levis/services/window-cleaning",
     "/levis/services/nettoyage-de-gouttieres",
     "/levis/services/gutter-cleaning",
@@ -42,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const cityEntries = CITY_PAGES.flatMap((city) =>
     locales.map((locale) => {
-      const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+      const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
       const localePath = locale === 'fr' ? '' : '/en';
       return {
         url: `${BASE_URL}${localePath}/${prefix}-${city.slug}`,

@@ -137,7 +137,14 @@ export default function Hero({
   return (
     <section ref={heroRef} id="hero" className="relative -mt-24 overflow-hidden bg-zinc-950 lg:-mt-28">
       <div className="absolute inset-0 opacity-100">
-        <Image src={heroImage.src} alt={heroAlt} fill className="object-cover" priority />
+        <Image 
+          src={heroImage.src} 
+          alt={heroAlt} 
+          fill 
+          className="object-cover" 
+          priority 
+          sizes="100vw"
+        />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/60 via-zinc-950/50 to-zinc-950/80" />
 

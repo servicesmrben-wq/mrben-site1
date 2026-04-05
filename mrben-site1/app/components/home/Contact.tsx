@@ -9,7 +9,6 @@ import { usePathname, Link } from "@/navigation";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import { BRAND } from "@/app/lib/constants";
 import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
-import confetti from "canvas-confetti";
 import { unpackData } from "@/app/lib/url-packer";
 
 function Input({ label, inputRef, ...inputProps }: { label: string, inputRef?: React.RefObject<HTMLInputElement | null>, [key: string]: any }) {
@@ -393,7 +392,8 @@ function ContactContent({
         origin: { y: 0.7 }
       };
 
-      function fire(particleRatio: number, opts: any) {
+      async function fire(particleRatio: number, opts: any) {
+        const confetti = (await import("canvas-confetti")).default;
         confetti({
           ...defaults,
           ...opts,

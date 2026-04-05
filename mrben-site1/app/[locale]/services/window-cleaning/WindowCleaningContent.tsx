@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import SeoFaq from "@/app/components/SeoFaq";
 import { toJsonLdString } from "@/app/lib/seo/jsonld";
-import { getAbsoluteUrl, getLocalBusinessProvider } from "@/app/lib/seo/schema";
+import { getAbsoluteUrl, getLocalBusinessProvider, getBreadcrumbSchema } from "@/app/lib/seo/schema";
 
 const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
 
@@ -27,7 +27,7 @@ type Props = {
 
 export default function WindowCleaningContent({ t, pagePath, isLevis = false }: Props) {
   const locale = useLocale();
-  const prefix = locale === "en" ? "window-cleaning" : "lavage-de-vitres";
+  const prefix = locale === "en" ? "window-cleaning" : "lavage-de-vitre";
   const QUOTE_HREF = isLevis ? "/levis#contact" : "/#contact";
 
   const whyUsItems = [
@@ -157,6 +157,11 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
     ],
     url: getAbsoluteUrl(pagePath),
   };
+
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: locale === "fr" ? "Accueil" : "Home", item: locale === "fr" ? "https://mrben.ca" : "https://mrben.ca/en" },
+    { name: t("jsonld.service.name"), item: getAbsoluteUrl(pagePath) },
+  ]);
 
   const serviceAreas = isLevis ? [
     { href: `/${prefix}-levis`, label: "Lévis" },
@@ -373,6 +378,10 @@ export default function WindowCleaningContent({ t, pagePath, isLevis = false }: 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLdString(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLdString(breadcrumbSchema) }}
       />
 
       {/* Service Areas Section */}

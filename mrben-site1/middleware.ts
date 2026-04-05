@@ -31,15 +31,25 @@ const intlMiddleware = createMiddleware({
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // SEO Redirects for old /territoire routes
-  // Matches: /territoire/slug (fr) OR /en/territoire/slug (en)
-  const territoireMatch = pathname.match(/^(\/en)?\/territoire\/(.+)$/);
+  // SEO Redirects for old routes
+  // 1. Matches: /territoire/slug (fr) OR /en/territoire/slug (en)
+  // 2. Matches: /lavage-de-vitres-slug (old plural fr)
+  const pathnameStr = pathname.toString();
+  
+  // Handle old /territoire/ redirects
+  const territoireMatch = pathnameStr.match(/^(\/en)?\/territoire\/(.+)$/);
   if (territoireMatch) {
     const localePrefix = territoireMatch[1] ?? '';
     const locale = localePrefix === '/en' ? 'en' : 'fr';
     const slug = territoireMatch[2];
-    const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+    const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
     return NextResponse.redirect(new URL(`${localePrefix}/${prefix}-${slug}`, req.url), 301);
+  }
+
+  // Handle old plural /lavage-de-vitres- redirects to new singular /lavage-de-vitre-
+  if (pathnameStr.includes('/lavage-de-vitres-')) {
+    const newPath = pathnameStr.replace('/lavage-de-vitres-', '/lavage-de-vitre-');
+    return NextResponse.redirect(new URL(newPath, req.url), 301);
   }
 
   const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';

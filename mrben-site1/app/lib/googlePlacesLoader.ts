@@ -15,11 +15,6 @@ export function loadGooglePlaces(): Promise<unknown | null> {
     return Promise.resolve(null);
   }
 
-  const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  if (!key) {
-    return Promise.resolve(null);
-  }
-
   if (window.google?.maps?.places) {
     return Promise.resolve(window.google);
   }
@@ -29,34 +24,28 @@ export function loadGooglePlaces(): Promise<unknown | null> {
   }
 
   googlePlacesPromise = new Promise((resolve) => {
-    const existingScript = document.querySelector("script[data-google-maps='places']");
+    let attempts = 0;
+    const maxAttempts = 100; // 10 seconds with 100ms intervals
 
-    const handleLoad = () => {
-      resolve(window.google?.maps?.places ? window.google : null);
-    };
-
-    const handleError = () => {
-      resolve(null);
-    };
-
-    if (existingScript) {
+    const check = () => {
       if (window.google?.maps?.places) {
         resolve(window.google);
-        return;
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(check, 100);
+      } else {
+        // Fallback: check if script exists but not yet loaded
+        const script = document.querySelector("script[data-google-maps='places']");
+        if (script) {
+          script.addEventListener("load", () => resolve(window.google?.maps?.places ? window.google : null), { once: true });
+          script.addEventListener("error", () => resolve(null), { once: true });
+        } else {
+          resolve(null);
+        }
       }
-      existingScript.addEventListener("load", handleLoad, { once: true });
-      existingScript.addEventListener("error", handleError, { once: true });
-      return;
-    }
+    };
 
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.dataset.googleMaps = "places";
-    script.addEventListener("load", handleLoad, { once: true });
-    script.addEventListener("error", handleError, { once: true });
-    document.head.appendChild(script);
+    check();
   });
 
   return googlePlacesPromise;

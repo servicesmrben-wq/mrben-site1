@@ -2,16 +2,18 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, getMessages } from "next-intl/server";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Script from "next/script";
 
-export async function generateMetadata() {
-  const t = await getTranslations('home');
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'home' });
   
   return {
     title: {
-      default: "MrBen.ca",
-      template: "%s | MrBen.ca",
+      default: t("metaTitle"),
+      template: `%s | ${t("metaTitle")}`,
     },
-    description: t("jsonld.localBusiness.description"),
+    description: t("metaDescription"),
     icons: {
       icon: "/favicon-32x32.png",
       apple: "/apple-touch-icon-180x180.png",
@@ -34,6 +36,13 @@ export default async function LocaleLayout({
       <Header />
       {children}
       <Footer />
+      {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="lazyOnload"
+          data-google-maps="places"
+        />
+      )}
     </NextIntlClientProvider>
   );
 }

@@ -18,7 +18,7 @@ export default function ServiceArea({
   hideReviewCount?: boolean
 }) {
   const locale = useLocale();
-  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
   const cities = useMemo(() => {
     return [
       { name: "Lévis", slug: "levis" },

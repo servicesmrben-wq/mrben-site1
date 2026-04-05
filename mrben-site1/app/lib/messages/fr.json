@@ -1,6 +1,8 @@
 {
   "home": {
     "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Sauveur, Saint-Jérôme et Mirabel.",
+    "metaTitle": "Lavage de Vitre Résidentiel | Estimation de Prix & Service à Domicile",
+    "metaDescription": "Obtenez un lavage de vitre impeccable pour votre maison. MrBen offre le meilleur tarif de nettoyage de vitres à domicile au Québec. Spécialiste des vitres extérieures inaccessibles. Demandez votre prix en ligne!",
     "faq": {
       "title": "Questions fréquentes",
       "items": {
@@ -36,8 +38,8 @@
     "getQuote": "Obtenir une estimation gratuite"
   },
   "windowCleaning": {
-    "metaTitle": "Lavage de vitres dans le Grand Montréal | Mr. Ben",
-    "metaDescription": "Mr. Ben offre un lavage de vitres résidentiel et commercial dans le Grand Montréal et les Laurentides. Vitres intérieures/extérieures, moustiquaires et cadrages inclus avec une finition sans traces. Demandez votre estimation gratuite!",
+    "metaTitle": "Lavage de Vitre Résidentiel | Estimation de Prix & Service à Domicile",
+    "metaDescription": "Obtenez un lavage de vitre impeccable pour votre maison. MrBen offre le meilleur tarif de nettoyage de vitres à domicile au Québec. Spécialiste des vitres extérieures inaccessibles. Demandez votre prix en ligne!",
     "heroKicker": "Service de lavage de vitres",
     "heroTitle": "Lavage de vitres impeccable dans les Laurentides",
     "heroSubtitle": "Résultats sans traces, équipe fiable et garantie de satisfaction à 100 %.",
@@ -467,18 +469,18 @@
         "serviceDescriptionPrefix": "Service de lavage de vitres et d’entretien extérieur offert à "
       }
     },
-    "h1": "Nettoyage de vitres à {CITY}",
-    "servicesTitle": "Services offerts à {CITY}",
-    "buildingsTitle": "Types de bâtiments desservis",
-    "pricingTitle": "Prix estimatifs pour le nettoyage de vitres",
-    "whyTitle": "Pourquoi choisir MrBen à {CITY}",
-    "faqTitle": "Questions fréquentes",
-    "pricingSentence": "Le prix du nettoyage de vitres à {CITY} varie généralement entre {LOW} $ et {HIGH} $, selon le nombre de fenêtres, le nombre d’étages, l’accessibilité et si le nettoyage est intérieur et extérieur.",
+    "h1": "Lavage de vitre à {CITY}",
+    "servicesTitle": "Services de lavage de vitre offerts à {CITY}",
+    "buildingsTitle": "Types de bâtiments desservis pour le lavage de vitre",
+    "pricingTitle": "Prix estimatifs pour le lavage de vitre à domicile",
+    "whyTitle": "Pourquoi choisir MrBen pour votre lavage de vitre à {CITY}",
+    "faqTitle": "Questions fréquentes sur le lavage de vitre",
+    "pricingSentence": "Le prix du lavage de vitre à {CITY} varie généralement entre {LOW} $ et {HIGH} $, selon le nombre de fenêtres, le nombre d’étages, l’accessibilité et si le lavage est intérieur et extérieur.",
     "servicesBullets": [
-      "Nettoyage de vitres (intérieur + extérieur)",
-      "Nettoyage de vitres extérieures",
-      "Cadres et rails",
-      "Verrières et solariums (si applicable)"
+      "Lavage de vitre (intérieur + extérieur)",
+      "Lavage de vitre extérieures",
+      "Nettoyage des cadres et rails",
+      "Lavage de verrières et solariums"
     ],
     "buildingsBullets": [
       "Maison unifamiliale / bungalow",
@@ -590,8 +592,10 @@
     "territories": {
       "lachute": "Lachute",
       "stJerome": "Saint-Jérôme",
+      "saintSauveur": "Saint-Sauveur",
       "mirabel": "Mirabel",
-      "blainville": "Blainville"
+      "blainville": "Blainville",
+      "laval": "Laval"
     },
     "contact": "Contact",
     "reviewLink": "Voir nos avis",
@@ -621,7 +625,7 @@
     "navSub": "Vitres • Gouttières • Revêtement",
     "heroBadgeA": "Résidentiel et commercial",
     "heroBadgeB": "Laurentides et environs",
-    "heroH1a": "Lavage de vitres résidentiel et commercial dans les Laurentides",
+    "heroH1a": "Lavage de vitre résidentiel et commercial dans les Laurentides",
     "heroH1b": "Lachute, Saint-Jérôme, Mirabel et environs",
     "heroP": "Équipe attentionnée, courtoise et ponctuelle — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
     "heroCTA": "Obtenir une estimation gratuite",
@@ -640,10 +644,10 @@
     "heroStat3T": "Professionnel",
     "heroStat3S": "Équipement adapté",
     "secServicesK": "Ce qu’on fait",
-    "secServicesT": "Services principaux",
-    "secServicesS": "Trois services, un standard: travail propre, rapide et adapté à vos besoins.",
-    "serviceVitresT": "Lavage de vitres",
-    "serviceVitresD": "Intérieur/extérieur, cadrages, moustiquaires — pour maison plain-pied ou plusieurs étages.",
+    "secServicesT": "Nos services de lavage de vitre",
+    "secServicesS": "Trois services professionnels pour un extérieur impeccable, rapide et adapté à vos besoins.",
+    "serviceVitresT": "Lavage de vitre",
+    "serviceVitresD": "Lavage de vitre intérieur et extérieur, cadrages et moustiquaires pour maison et commerce.",
     "serviceVitresH": "À partir de 165$ (plain-pied)",
     "serviceVitresB1": "Résidentiel et commercial",
     "serviceVitresB2": "Équipement pour hauteurs",

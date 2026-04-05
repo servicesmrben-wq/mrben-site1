@@ -47,12 +47,9 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const localBusinessJsonLd = {
     "@context": "https://schema.org",
     ...provider,
-    name: "MrBen",
-    url: BASE_URL,
-    image: "https://mrben.ca/hero.jpg",
     areaServed: servedCities,
     serviceType: locale === "fr" ? "Lavage de vitres" : "Window cleaning",
-    description: t("jsonld.localBusiness.description"), // Renamed key
+    description: t("jsonld.localBusiness.description"),
   };
 
   return (

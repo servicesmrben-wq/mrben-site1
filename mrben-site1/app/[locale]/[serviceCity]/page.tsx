@@ -16,7 +16,7 @@ type PageProps = {
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
     CITY_SLUGS.map((slug) => {
-      const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+      const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
       return { locale, serviceCity: `${prefix}-${slug}` };
     })
   );
@@ -25,12 +25,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, serviceCity } = await params;
   const currentLocale = locale as Locale;
-  const prefix = currentLocale === 'en' ? 'window-cleaning-' : 'lavage-de-vitres-';
+  const prefix = currentLocale === 'en' ? 'window-cleaning-' : 'lavage-de-vitre-';
   
   if (!serviceCity.startsWith(prefix)) {
     // If it starts with the wrong prefix, we'll let the Page component handle the redirect
     // but for metadata we should return something or just notFound if it's completely wrong.
-    const otherPrefix = currentLocale === 'en' ? 'lavage-de-vitres-' : 'window-cleaning-';
+    const otherPrefix = currentLocale === 'en' ? 'lavage-de-vitre-' : 'window-cleaning-';
     if (serviceCity.startsWith(otherPrefix)) {
       const slug = serviceCity.slice(otherPrefix.length);
       const city = getCityBySlug(slug);
@@ -52,8 +52,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function Page({ params }: PageProps) {
   const { locale, serviceCity } = await params;
   const currentLocale = locale as Locale;
-  const prefix = currentLocale === 'en' ? 'window-cleaning-' : 'lavage-de-vitres-';
-  const otherPrefix = currentLocale === 'en' ? 'lavage-de-vitres-' : 'window-cleaning-';
+  const prefix = currentLocale === 'en' ? 'window-cleaning-' : 'lavage-de-vitre-';
+  const otherPrefix = currentLocale === 'en' ? 'lavage-de-vitre-' : 'window-cleaning-';
 
   // Handle cross-locale redirects
   // e.g., if someone is at /en/lavage-de-vitres-lachute, redirect to /en/window-cleaning-lachute

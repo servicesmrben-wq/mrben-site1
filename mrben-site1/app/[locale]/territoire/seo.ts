@@ -5,7 +5,7 @@ import type { CityPage, Locale } from "../../territoire/city-data";
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
 export function getCityUrl(slug: string, locale: Locale) {
-  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitres';
+  const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
   const localePath = locale === 'fr' ? '' : '/en';
   return `${BASE_URL}${localePath}/${prefix}-${slug}`;
 }
