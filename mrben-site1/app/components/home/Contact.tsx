@@ -7,6 +7,7 @@ import { CheckCircle2, Phone, Mail, ArrowRight, Upload, Calculator } from "lucid
 import { useLocale } from "next-intl";
 import { usePathname, Link } from "@/navigation";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
+import imageCompression from "browser-image-compression";
 import { BRAND } from "@/app/lib/constants";
 import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
 import { unpackData } from "@/app/lib/url-packer";
@@ -148,62 +149,18 @@ function ContactContent({
   }
 
   async function compressImage(file: File) {
-    // If we can't identify it as an image, or if it's HEIC (which createImageBitmap often fails on),
-    // we just return the original file and let the server/backup handle it.
-    const isHeic = file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif");
-    if (!file.type.startsWith("image/") || isHeic) return file;
-
     try {
-      const imageBitmap = await createImageBitmap(file);
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      if (!context) {
-        imageBitmap.close?.();
-        return file;
-      }
-
+      const options = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: "image/webp" as any,
+      };
+      const compressed = await imageCompression(file, options);
       const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
-      const nextName = `${baseName}.webp`;
-      const qualitySteps = [0.82, 0.72, 0.62, 0.52, 0.45];
-      const dimensionSteps = [2000, 1600, 1280];
-      const longestEdge = Math.max(imageBitmap.width, imageBitmap.height);
-
-      const toBlob = (quality: number) =>
-        new Promise<Blob | null>((resolve) => {
-          canvas.toBlob((blob) => resolve(blob), "image/webp", quality);
-        });
-
-      let finalBlob: Blob | null = null;
-
-      for (const maxEdge of dimensionSteps) {
-        const scale = Math.min(1, maxEdge / longestEdge);
-        const targetWidth = Math.max(1, Math.round(imageBitmap.width * scale));
-        const targetHeight = Math.max(1, Math.round(imageBitmap.height * scale));
-
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        context.clearRect(0, 0, targetWidth, targetHeight);
-        context.drawImage(imageBitmap, 0, 0, targetWidth, targetHeight);
-
-        for (const quality of qualitySteps) {
-          const blob = await toBlob(quality);
-          if (blob && blob.size <= MAX_COMPRESSED_SIZE) {
-            finalBlob = blob;
-            break;
-          }
-        }
-
-        if (finalBlob) break;
-      }
-
-      imageBitmap.close?.();
-
-      if (!finalBlob) return file; // Fallback to original if compression doesn't meet size target
-
-      return new File([finalBlob], nextName, {
+      return new File([compressed], `${baseName}.webp`, {
         type: "image/webp",
-        lastModified: file.lastModified,
+        lastModified: Date.now(),
       });
     } catch (e) {
       console.warn("Compression failed, using original file:", e);

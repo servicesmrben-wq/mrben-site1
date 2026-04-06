@@ -71,11 +71,18 @@ export default function EstimatorPage() {
       const availableSlots = MAX_FILES - currentCount;
       
       const validFiles = incomingFiles
-        .filter(f => f.type.startsWith("image/"))
+        .filter(f => {
+          if (f.type) return f.type.startsWith("image/");
+          return /\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(f.name);
+        })
         .slice(0, availableSlots);
       
       if (validFiles.length < incomingFiles.length) {
-        if (incomingFiles.some(f => !f.type.startsWith("image/"))) {
+        const hasNonImages = incomingFiles.some(f => {
+          if (f.type) return !f.type.startsWith("image/");
+          return !/\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(f.name);
+        });
+        if (hasNonImages) {
           alert(t("errorImageOnly"));
         } else if (incomingFiles.length > availableSlots) {
           alert(t("errorMaxImages"));
