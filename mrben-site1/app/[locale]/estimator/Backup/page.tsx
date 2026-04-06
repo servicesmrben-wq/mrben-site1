@@ -64,15 +64,17 @@ export default function EstimatorPage() {
       
       const validFiles = incomingFiles
         .filter(f => {
-          if (f.type) return f.type.startsWith("image/");
-          return /\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(f.name);
+          const isImageMime = f.type && f.type.startsWith("image/");
+          const isImageExt = /\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(f.name);
+          return isImageMime || isImageExt;
         })
         .slice(0, availableSlots);
       
       if (validFiles.length < incomingFiles.length) {
         const hasNonImages = incomingFiles.some(f => {
-          if (f.type) return !f.type.startsWith("image/");
-          return !/\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(f.name);
+          const isImageMime = f.type && f.type.startsWith("image/");
+          const isImageExt = /\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(f.name);
+          return !(isImageMime || isImageExt);
         });
         if (hasNonImages) {
           alert(t("errorImageOnly"));

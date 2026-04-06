@@ -137,8 +137,9 @@ function ContactContent({
     // Some browsers/OS don't provide a MIME type for HEIC, so we check if type exists AND starts with image, 
     // or if the name ends with a common image extension.
     if (list.some((file) => {
-      if (file.type) return !file.type.startsWith("image/");
-      return !/\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(file.name);
+      const isImageMime = file.type && file.type.startsWith("image/");
+      const isImageExt = /\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(file.name);
+      return !(isImageMime || isImageExt);
     })) {
       return t("photoErrorType");
     }

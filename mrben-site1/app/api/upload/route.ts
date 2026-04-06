@@ -15,17 +15,17 @@ export async function POST(req: Request) {
       });
     }
 
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.startsWith("image/") && !/\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(file.name)) {
       return new Response(JSON.stringify({ error: "Only images allowed" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Optional: enforce a size limit (e.g., 15 MB)
-    const MAX_BYTES = 15 * 1024 * 1024;
+    // Optional: enforce a size limit (e.g., 20 MB)
+    const MAX_BYTES = 20 * 1024 * 1024;
     if (file.size > MAX_BYTES) {
-      return new Response(JSON.stringify({ error: "File too large (max 8MB)" }), {
+      return new Response(JSON.stringify({ error: "File too large (max 20MB)" }), {
         status: 413,
         headers: { "Content-Type": "application/json" },
       });

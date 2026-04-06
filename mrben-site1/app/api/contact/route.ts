@@ -4,10 +4,14 @@ import nodemailer from "nodemailer";
 export const runtime = "nodejs";
 
 const MAX_IMAGES = 6;
-const MAX_IMAGE_SIZE = 15 * 1024 * 1024;
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
 const DEFAULT_FROM = "MrBen.ca <no-reply@mrben.ca>";
 const DEFAULT_TO = "info@mrben.ca";
+
+function isImage(file: File) {
+  if (file.type && file.type.startsWith("image/")) return true;
+  return /\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(file.name);
+}
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -134,7 +138,7 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json" },
       });
     }
-    if (files.some((file) => !ALLOWED_IMAGE_TYPES.includes(file.type))) {
+    if (files.some((file) => !isImage(file))) {
       return new Response(JSON.stringify({ ok: false, error: "Invalid image type." }), {
         status: 400,
         headers: { "Content-Type": "application/json" },

@@ -28,11 +28,11 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
-// 📁 MULTER MEMORY STORAGE (Limit: 5MB per file)
+// 📁 MULTER MEMORY STORAGE (Limit: 20MB per file)
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } 
+  limits: { fileSize: 20 * 1024 * 1024 } 
 });
 
 // 🔐 GOOGLE CLOUD AUTHENTICATION
