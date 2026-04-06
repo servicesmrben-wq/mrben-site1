@@ -133,7 +133,12 @@ function ContactContent({
     if (list.length > MAX_IMAGES) {
       return t("photoErrorMax");
     }
-    if (list.some((file) => !file.type.startsWith("image/"))) {
+    // Some browsers/OS don't provide a MIME type for HEIC, so we check if type exists AND starts with image, 
+    // or if the name ends with a common image extension.
+    if (list.some((file) => {
+      if (file.type) return !file.type.startsWith("image/");
+      return !/\.(jpe?g|png|webp|heic|heif|avif|bmp|tiff?)$/i.test(file.name);
+    })) {
       return t("photoErrorType");
     }
     if (list.some((file) => file.size > MAX_IMAGE_SIZE)) {
@@ -143,61 +148,67 @@ function ContactContent({
   }
 
   async function compressImage(file: File) {
-    if (!file.type.startsWith("image/")) return file;
+    // If we can't identify it as an image, or if it's HEIC (which createImageBitmap often fails on),
+    // we just return the original file and let the server/backup handle it.
+    const isHeic = file.name.toLowerCase().endsWith(".heic") || file.name.toLowerCase().endsWith(".heif");
+    if (!file.type.startsWith("image/") || isHeic) return file;
 
-    const imageBitmap = await createImageBitmap(file);
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
+    try {
+      const imageBitmap = await createImageBitmap(file);
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
 
-    if (!context) {
-      imageBitmap.close?.();
-      return file;
-    }
-
-    const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
-    const nextName = `${baseName}.webp`;
-    const qualitySteps = [0.82, 0.72, 0.62, 0.52, 0.45];
-    const dimensionSteps = [2000, 1600, 1280];
-    const longestEdge = Math.max(imageBitmap.width, imageBitmap.height);
-
-    const toBlob = (quality: number) =>
-      new Promise<Blob | null>((resolve) => {
-        canvas.toBlob((blob) => resolve(blob), "image/webp", quality);
-      });
-
-    let finalBlob: Blob | null = null;
-
-    for (const maxEdge of dimensionSteps) {
-      const scale = Math.min(1, maxEdge / longestEdge);
-      const targetWidth = Math.max(1, Math.round(imageBitmap.width * scale));
-      const targetHeight = Math.max(1, Math.round(imageBitmap.height * scale));
-
-      canvas.width = targetWidth;
-      canvas.height = targetHeight;
-      context.clearRect(0, 0, targetWidth, targetHeight);
-      context.drawImage(imageBitmap, 0, 0, targetWidth, targetHeight);
-
-      for (const quality of qualitySteps) {
-        const blob = await toBlob(quality);
-        if (blob && blob.size <= MAX_COMPRESSED_SIZE) {
-          finalBlob = blob;
-          break;
-        }
+      if (!context) {
+        imageBitmap.close?.();
+        return file;
       }
 
-      if (finalBlob) break;
+      const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
+      const nextName = `${baseName}.webp`;
+      const qualitySteps = [0.82, 0.72, 0.62, 0.52, 0.45];
+      const dimensionSteps = [2000, 1600, 1280];
+      const longestEdge = Math.max(imageBitmap.width, imageBitmap.height);
+
+      const toBlob = (quality: number) =>
+        new Promise<Blob | null>((resolve) => {
+          canvas.toBlob((blob) => resolve(blob), "image/webp", quality);
+        });
+
+      let finalBlob: Blob | null = null;
+
+      for (const maxEdge of dimensionSteps) {
+        const scale = Math.min(1, maxEdge / longestEdge);
+        const targetWidth = Math.max(1, Math.round(imageBitmap.width * scale));
+        const targetHeight = Math.max(1, Math.round(imageBitmap.height * scale));
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        context.clearRect(0, 0, targetWidth, targetHeight);
+        context.drawImage(imageBitmap, 0, 0, targetWidth, targetHeight);
+
+        for (const quality of qualitySteps) {
+          const blob = await toBlob(quality);
+          if (blob && blob.size <= MAX_COMPRESSED_SIZE) {
+            finalBlob = blob;
+            break;
+          }
+        }
+
+        if (finalBlob) break;
+      }
+
+      imageBitmap.close?.();
+
+      if (!finalBlob) return file; // Fallback to original if compression doesn't meet size target
+
+      return new File([finalBlob], nextName, {
+        type: "image/webp",
+        lastModified: file.lastModified,
+      });
+    } catch (e) {
+      console.warn("Compression failed, using original file:", e);
+      return file;
     }
-
-    imageBitmap.close?.();
-
-    if (!finalBlob) {
-      throw new Error("image_too_large");
-    }
-
-    return new File([finalBlob], nextName, {
-      type: "image/webp",
-      lastModified: file.lastModified,
-    });
   }
 
   React.useEffect(() => {
