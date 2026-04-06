@@ -133,7 +133,7 @@ function ContactContent({
     if (list.length > MAX_IMAGES) {
       return t("photoErrorMax");
     }
-    if (list.some((file) => !ALLOWED_IMAGE_TYPES.includes(file.type))) {
+    if (list.some((file) => !file.type.startsWith("image/"))) {
       return t("photoErrorType");
     }
     if (list.some((file) => file.size > MAX_IMAGE_SIZE)) {
