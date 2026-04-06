@@ -112,10 +112,9 @@ function ContactContent({
   }, [estimateQuote, urlService]);
 
   const MAX_IMAGES = 6;
-  const MAX_IMAGE_SIZE = 15 * 1024 * 1024;
+  const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
   const MAX_COMPRESSED_SIZE = 0.5 * 1024 * 1024; // 0.5MB
   const BLOB_THRESHOLD = 3 * 1024 * 1024;
-  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const serviceOptions = [
     t("serviceOption1"),
@@ -272,7 +271,7 @@ function ContactContent({
       const totalSize = images.reduce((sum, f) => sum + f.size, 0);
       const useBlobBackup = totalSize > BLOB_THRESHOLD;
       
-      let uploadedUrls: string[] = [];
+      const uploadedUrls: string[] = [];
       if (useBlobBackup) {
         for (const file of images) {
           const upData = new FormData();
@@ -575,7 +574,7 @@ function ContactContent({
                   <input
                     id="contactPhotos"
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*"
                     multiple
                     className="sr-only"
                     onChange={async (e) => {
