@@ -177,7 +177,7 @@ export default function GutterCleaningContent({ t, pagePath, isLevis = false }: 
   ];
 
   const heroTitle = isLevis
-    ? t("heroTitle").replace("dans les Laurentides", "à Lévis").replace("in the Laurentians", "in Lévis")
+    ? t("heroTitle").replace("dans les Laurentides", "dans la région de Lotbinière").replace("in the Laurentians", "in the Lotbinière region")
     : t("heroTitle");
 
   const heroSubtitle = isLevis 
@@ -192,7 +192,7 @@ export default function GutterCleaningContent({ t, pagePath, isLevis = false }: 
     : t("testimonials.quote1.author");
 
   const finalCTASubtitle = isLevis
-    ? t("finalCTA.subtitle").replace("dans les Laurentides", "à Lévis").replace("in the Laurentians", "in Lévis")
+    ? t("finalCTA.subtitle").replace("dans les Laurentides", "dans la région de Lotbinière").replace("in the Laurentians", "in the Lotbinière region")
     : t("finalCTA.subtitle");
 
   return (

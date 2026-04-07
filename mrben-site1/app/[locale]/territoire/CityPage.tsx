@@ -44,7 +44,9 @@ export function CityPage({ city }: { city: CityPageData }) {
     phoneHref: isLevisCity ? "tel:+14187412217" : "tel:+15146997145",
   };
 
-  const citySourceOfTruth = tCommon("city.sourceOfTruth", { city: city.name });
+  const citySourceOfTruth = isLevisCity 
+    ? tCommon("city.sourceOfTruth", { city: city.name }).replace("dans les Laurentides", "dans la région de Lotbinière").replace("in the Laurentians", "in the Lotbinière region")
+    : tCommon("city.sourceOfTruth", { city: city.name });
   const priceLow = city.priceLow ?? DEFAULT_PRICE_LOW;
   const priceHigh = city.priceHigh ?? DEFAULT_PRICE_HIGH;
   const pageH1 = t("h1", { CITY: city.name });
