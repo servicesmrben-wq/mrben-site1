@@ -1,4 +1,13 @@
 {
+  "levis": {
+    "metaTitle": "MrBen | Window cleaning and exterior maintenance in Lévis",
+    "metaDescription": "Professional window cleaning, gutter cleaning, and siding washing in Lévis, Saint-Nicolas, Charny, and Dosquet. Free estimate.",
+    "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
+    "faqQuestion": "What areas do you serve?",
+    "faqAnswer": "We are a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
+    "jsonldDescription": "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
+    "serviceType": "Window cleaning"
+  },
   "home": {
     "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving the Laurentians, including Lachute, Saint-Sauveur, Saint-Jérôme, and Mirabel.",
     "metaTitle": "Residential Window Cleaning | Free Quotes & At-Home Service",

@@ -12,20 +12,12 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'home' });
+  const tLevis = await getTranslations({ locale, namespace: 'levis' });
   const canonical = `${BASE_URL}/${locale}/levis`;
   
-  const title = locale === "fr" 
-    ? "MrBen | Lavage de vitres et entretien extérieur à Lévis"
-    : "MrBen | Window cleaning and exterior maintenance in Lévis";
-    
-  const description = locale === "fr"
-    ? "Services professionnels de lavage de vitres, nettoyage de gouttières et revêtement à Lévis, Saint-Nicolas, Charny et Dosquet. Estimation gratuite."
-    : "Professional window cleaning, gutter cleaning, and siding washing in Lévis, Saint-Nicolas, Charny, and Dosquet. Free estimate.";
-
   return {
-    title,
-    description,
+    title: tLevis('metaTitle'),
+    description: tLevis('metaDescription'),
     alternates: {
       canonical,
       languages: {
@@ -40,12 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 export default async function Page({ params }: { params: Promise<Params> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'home' });
+  const tLevis = await getTranslations({ locale, namespace: 'levis' });
   const provider = getLocalBusinessProvider();
   
-  // Custom strings for Lévis
-  const sourceOfTruth = locale === "fr" 
-    ? "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny et Dosquet."
-    : "MrBen is a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.";
+  const sourceOfTruth = tLevis('sourceOfTruth');
 
   const homeFaqItems = [0, 1, 2, 3, 4].map((index) => {
     let q = t(`faq.items.${index}.q`);
@@ -53,10 +43,8 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     
     // Replace regions in FAQ
     if (index === 1) {
-      q = locale === "fr" ? "Quelles régions desservez-vous?" : "What areas do you serve?";
-      a = locale === "fr" 
-        ? "Nous sommes une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny et Dosquet."
-        : "We are a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.";
+      q = tLevis('faqQuestion');
+      a = tLevis('faqAnswer');
     }
     
     return { q, a };
@@ -79,10 +67,19 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     url: `${BASE_URL}/${locale}/levis`,
     image: "https://mrben.ca/hero.jpg",
     areaServed: servedCities,
-    serviceType: locale === "fr" ? "Lavage de vitres" : "Window cleaning",
-    description: locale === "fr"
-      ? "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur à Lévis et dans la région de Lotbinière, notamment à Saint-Nicolas, Charny et Dosquet."
-      : "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
+    serviceType: tLevis('serviceType'),
+    description: tLevis('jsonldDescription'),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Lévis",
+      addressRegion: "QC",
+      addressCountry: "CA",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 46.8033,
+      longitude: -71.1772,
+    },
   };
 
   return (

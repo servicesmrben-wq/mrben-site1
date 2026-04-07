@@ -1,4 +1,13 @@
 {
+  "levis": {
+    "metaTitle": "MrBen | Lavage de vitres et entretien extérieur à Lévis",
+    "metaDescription": "Services professionnels de lavage de vitres, nettoyage de gouttières et revêtement à Lévis, Saint-Nicolas, Charny et Dosquet. Estimation gratuite.",
+    "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny et Dosquet.",
+    "faqQuestion": "Quelles régions desservez-vous?",
+    "faqAnswer": "Nous sommes une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny et Dosquet.",
+    "jsonldDescription": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur à Lévis et dans la région de Lotbinière, notamment à Saint-Nicolas, Charny et Dosquet.",
+    "serviceType": "Lavage de vitres"
+  },
   "home": {
     "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Sauveur, Saint-Jérôme et Mirabel.",
     "metaTitle": "Lavage de Vitre Résidentiel | Estimation de Prix & Service à Domicile",
