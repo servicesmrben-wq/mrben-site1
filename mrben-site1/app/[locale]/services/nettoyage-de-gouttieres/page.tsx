@@ -12,11 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t("metaDescription"),
     alternates: {
       canonical: locale === "fr" 
-        ? "https://mrben.ca/fr/services/nettoyage-de-gouttieres"
+        ? "https://mrben.ca/services/nettoyage-de-gouttieres"
         : "https://mrben.ca/en/services/gutter-cleaning",
       languages: {
         "en-CA": "https://mrben.ca/en/services/gutter-cleaning",
-        "fr-CA": "https://mrben.ca/fr/services/nettoyage-de-gouttieres",
+        "fr-CA": "https://mrben.ca/services/nettoyage-de-gouttieres",
+        "x-default": "https://mrben.ca/services/nettoyage-de-gouttieres",
       },
     },
   };

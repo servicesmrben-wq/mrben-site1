@@ -10,15 +10,16 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const url = `${BASE_URL}/${locale}`;
+  const localePath = locale === 'fr' ? '' : '/en';
+  const url = `${BASE_URL}${localePath}`;
 
   return {
     alternates: {
       canonical: url,
       languages: {
-        "fr-CA": `${BASE_URL}/fr`,
+        "fr-CA": `${BASE_URL}`,
         "en-CA": `${BASE_URL}/en`,
-        "x-default": `${BASE_URL}/fr`,
+        "x-default": `${BASE_URL}`,
       },
     },
   };

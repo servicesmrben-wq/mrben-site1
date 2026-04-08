@@ -60,7 +60,8 @@ export default async function Page({ params }: PageProps) {
   if (serviceCity.startsWith(otherPrefix)) {
     const slug = serviceCity.slice(otherPrefix.length);
     if (CITY_SLUGS.includes(slug)) {
-      redirect(`/${currentLocale}/${prefix}${slug}`);
+      const localePath = currentLocale === 'en' ? '/en' : '';
+      redirect(`${localePath}/${prefix}${slug}`);
     }
   }
   
@@ -71,7 +72,8 @@ export default async function Page({ params }: PageProps) {
   let slug = serviceCity.slice(prefix.length);
 
   if (slug === "st-sauveur") {
-    redirect(`/${currentLocale}/${prefix}saint-sauveur`);
+    const localePath = currentLocale === 'en' ? '/en' : '';
+    redirect(`${localePath}/${prefix}saint-sauveur`);
   }
 
   const city = getCityBySlug(slug);

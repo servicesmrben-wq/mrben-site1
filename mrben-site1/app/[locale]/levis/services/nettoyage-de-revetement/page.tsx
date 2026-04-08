@@ -10,7 +10,7 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${BASE_URL}/fr/levis/services/nettoyage-de-revetement`;
+  const canonical = `${BASE_URL}/levis/services/nettoyage-de-revetement`;
   const enUrl = `${BASE_URL}/en/levis/services/siding-cleaning`;
   const t = await getTranslations({locale, namespace: 'sidingCleaning'});
 

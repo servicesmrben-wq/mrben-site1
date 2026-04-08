@@ -10,7 +10,7 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${BASE_URL}/fr/levis/services/lavage-de-vitre`;
+  const canonical = `${BASE_URL}/levis/services/lavage-de-vitre`;
   const enUrl = `${BASE_URL}/en/levis/services/window-cleaning`;
   const t = await getTranslations({locale, namespace: 'windowCleaning'});
 
@@ -32,7 +32,7 @@ export default async function LevisWindowCleaningEnPage({ params }: { params: Pr
   const { locale } = await params;
 
   if (locale === 'fr') {
-    redirect('/fr/levis/services/lavage-de-vitre');
+    redirect('/levis/services/lavage-de-vitre');
   }
 
   const t = await getTranslations({locale, namespace: 'windowCleaning'});

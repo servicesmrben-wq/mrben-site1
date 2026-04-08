@@ -13,7 +13,8 @@ type Params = { locale: string };
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
   const tLevis = await getTranslations({ locale, namespace: 'levis' });
-  const canonical = `${BASE_URL}/${locale}/levis`;
+  const localePath = locale === 'fr' ? '' : '/en';
+  const canonical = `${BASE_URL}${localePath}/levis`;
   
   return {
     title: tLevis('metaTitle'),
@@ -21,9 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     alternates: {
       canonical,
       languages: {
-        "fr-CA": `${BASE_URL}/fr/levis`,
+        "fr-CA": `${BASE_URL}/levis`,
         "en-CA": `${BASE_URL}/en/levis`,
-        "x-default": `${BASE_URL}/fr/levis`,
+        "x-default": `${BASE_URL}/levis`,
       },
     },
   };

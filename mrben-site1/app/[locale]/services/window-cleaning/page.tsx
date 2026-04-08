@@ -10,7 +10,7 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${BASE_URL}/fr/services/lavage-de-vitre`;
+  const canonical = `${BASE_URL}/services/lavage-de-vitre`;
   const enUrl = `${BASE_URL}/en/services/window-cleaning`;
   const t = await getTranslations({locale, namespace: 'windowCleaning'});
 
@@ -32,7 +32,7 @@ export default async function WindowCleaningEnPage({ params }: { params: Promise
   const { locale } = await params;
 
   if (locale === 'fr') {
-    redirect('/fr/services/lavage-de-vitre');
+    redirect('/services/lavage-de-vitre');
   }
 
   const t = await getTranslations({locale, namespace: 'windowCleaning'});
