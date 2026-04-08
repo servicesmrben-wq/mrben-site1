@@ -40,7 +40,19 @@ export function loadGooglePlaces(): Promise<unknown | null> {
           script.addEventListener("load", () => resolve(window.google?.maps?.places ? window.google : null), { once: true });
           script.addEventListener("error", () => resolve(null), { once: true });
         } else {
-          resolve(null);
+          const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+          if (apiKey) {
+            const newScript = document.createElement("script");
+            newScript.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+            newScript.async = true;
+            newScript.defer = true;
+            newScript.setAttribute("data-google-maps", "places");
+            newScript.addEventListener("load", () => resolve(window.google?.maps?.places ? window.google : null), { once: true });
+            newScript.addEventListener("error", () => resolve(null), { once: true });
+            document.head.appendChild(newScript);
+          } else {
+            resolve(null);
+          }
         }
       }
     };

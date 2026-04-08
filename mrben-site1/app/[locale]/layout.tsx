@@ -36,13 +36,6 @@ export default async function LocaleLayout({
       <Header />
       {children}
       <Footer />
-      {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
-        <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-          strategy="lazyOnload"
-          data-google-maps="places"
-        />
-      )}
     </NextIntlClientProvider>
   );
 }

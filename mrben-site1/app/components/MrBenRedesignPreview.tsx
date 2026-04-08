@@ -8,14 +8,16 @@ import { classNames } from "@/app/lib/utils";
 import { BRAND } from "@/app/lib/constants";
 import { useGoogleBusinessProfile } from "@/app/hooks/useGoogleBusinessProfile";
 import { usePathname } from "@/navigation";
+import dynamic from "next/dynamic";
 
 import Hero from "./home/Hero";
-import Services from "./home/Services";
-import Pricing from "./home/Pricing";
-import Gallery from "./home/Gallery";
-import Reviews from "./home/Reviews";
-import ServiceArea from "./home/ServiceArea";
-import Contact from "./home/Contact";
+
+const Services = dynamic(() => import("./home/Services"));
+const Pricing = dynamic(() => import("./home/Pricing"));
+const Gallery = dynamic(() => import("./home/Gallery"));
+const Reviews = dynamic(() => import("./home/Reviews"));
+const ServiceArea = dynamic(() => import("./home/ServiceArea"));
+const Contact = dynamic(() => import("./home/Contact"));
 
 export default function MrBenRedesignPreview({ sourceOfTruth }: { sourceOfTruth?: string }) {
   const t = useTranslations('MrBenRedesignPreview');
