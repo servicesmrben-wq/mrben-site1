@@ -15,28 +15,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routesByLocale: Record<string, string[]> = {
     fr: [
       "",
-      "/services/lavage-de-vitre",
-      "/services/nettoyage-de-gouttieres",
-      "/services/nettoyage-de-revetement",
+      "/lavage-de-vitre",
+      "/nettoyage-de-gouttieres",
+      "/nettoyage-de-revetement",
       "/blog",
       "/estimator",
       "/levis",
-      "/levis/services/lavage-de-vitre",
-      "/levis/services/nettoyage-de-gouttieres",
-      "/levis/services/nettoyage-de-revetement",
+      "/levis/lavage-de-vitre",
+      "/levis/nettoyage-de-gouttieres",
+      "/levis/nettoyage-de-revetement",
       "/levis/blog"
     ],
     en: [
       "",
-      "/services/window-cleaning",
-      "/services/gutter-cleaning",
-      "/services/siding-cleaning",
+      "/window-cleaning",
+      "/gutter-cleaning",
+      "/siding-cleaning",
       "/blog",
       "/estimator",
       "/levis",
-      "/levis/services/window-cleaning",
-      "/levis/services/gutter-cleaning",
-      "/levis/services/siding-cleaning",
+      "/levis/window-cleaning",
+      "/levis/gutter-cleaning",
+      "/levis/siding-cleaning",
       "/levis/blog"
     ]
   };
@@ -47,7 +47,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       // Home pages and main regional pages get higher priority
       let priority = 0.8;
       if (route === "" || route === "/levis") priority = 1.0;
-      if (route.includes("/services/")) priority = 0.9;
+      if (route === "/lavage-de-vitre" || route === "/window-cleaning") priority = 0.9;
+      if (route === "/nettoyage-de-gouttieres" || route === "/gutter-cleaning") priority = 0.9;
+      if (route === "/nettoyage-de-revetement" || route === "/siding-cleaning") priority = 0.9;
       
       return {
         url: `${BASE_URL}${localePath}${route}`,

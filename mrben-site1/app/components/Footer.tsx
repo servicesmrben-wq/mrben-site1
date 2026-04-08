@@ -36,28 +36,28 @@ const Footer = () => {
 
   const services = isLevis ? [
     {
-      href: locale === "fr" ? "/levis/services/lavage-de-vitre" : "/levis/services/window-cleaning",
+      href: locale === "fr" ? "/levis/lavage-de-vitre" : "/levis/window-cleaning",
       text: t('services.vitres')
     },
     {
-      href: locale === "fr" ? "/levis/services/nettoyage-de-gouttieres" : "/levis/services/gutter-cleaning",
+      href: locale === "fr" ? "/levis/nettoyage-de-gouttieres" : "/levis/gutter-cleaning",
       text: t('services.gouttieres')
     },
     {
-      href: locale === "fr" ? "/levis/services/nettoyage-de-revetement" : "/levis/services/siding-cleaning",
+      href: locale === "fr" ? "/levis/nettoyage-de-revetement" : "/levis/siding-cleaning",
       text: t('services.pression')
     },
   ] : [
     {
-      href: locale === "fr" ? "/services/lavage-de-vitre" : "/services/window-cleaning",
+      href: locale === "fr" ? "/lavage-de-vitre" : "/window-cleaning",
       text: t('services.vitres')
     },
     {
-      href: locale === "fr" ? "/services/nettoyage-de-gouttieres" : "/services/gutter-cleaning",
+      href: locale === "fr" ? "/nettoyage-de-gouttieres" : "/gutter-cleaning",
       text: t('services.gouttieres')
     },
     {
-      href: locale === "fr" ? "/services/nettoyage-de-revetement" : "/services/siding-cleaning",
+      href: locale === "fr" ? "/nettoyage-de-revetement" : "/siding-cleaning",
       text: t('services.pression')
     },
   ];

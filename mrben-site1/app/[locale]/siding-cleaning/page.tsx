@@ -12,12 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t("metaDescription"),
     alternates: {
       canonical: locale === "fr" 
-        ? "https://mrben.ca/services/nettoyage-de-revetement"
-        : "https://mrben.ca/en/services/siding-cleaning",
+        ? "https://mrben.ca/nettoyage-de-revetement"
+        : "https://mrben.ca/en/siding-cleaning",
       languages: {
-        "en-CA": "https://mrben.ca/en/services/siding-cleaning",
-        "fr-CA": "https://mrben.ca/services/nettoyage-de-revetement",
-        "x-default": "https://mrben.ca/services/nettoyage-de-revetement",
+        "en-CA": "https://mrben.ca/en/siding-cleaning",
+        "fr-CA": "https://mrben.ca/nettoyage-de-revetement",
+        "x-default": "https://mrben.ca/nettoyage-de-revetement",
       },
     },
   };
@@ -25,5 +25,5 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default function SidingCleaningPage() {
   const t = useTranslations("sidingCleaning");
-  return <SidingCleaningContent t={t} pagePath="/services/siding-cleaning" />;
+  return <SidingCleaningContent t={t} pagePath="/siding-cleaning" />;
 }

@@ -52,6 +52,12 @@ export default function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(newPath, req.url), 301);
   }
 
+  // Handle old /services/ redirects
+  if (pathnameStr.includes('/services/')) {
+    const newPath = pathnameStr.replace('/services/', '/');
+    return NextResponse.redirect(new URL(newPath, req.url), 301);
+  }
+
   const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
 
   // 0. Skip geo-redirection for search engine bots

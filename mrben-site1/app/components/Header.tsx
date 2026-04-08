@@ -48,28 +48,28 @@ export default function Header() {
   const servicesDropdownLinks = isLevis ? [
     {
       label: t('servicesDropdown.windowCleaning'),
-      href: locale === "fr" ? "/levis/services/lavage-de-vitre" : "/levis/services/window-cleaning"
+      href: locale === "fr" ? "/levis/lavage-de-vitre" : "/levis/window-cleaning"
     },
     {
       label: t('nav.gutters'),
-      href: locale === "fr" ? "/levis/services/nettoyage-de-gouttieres" : "/levis/services/gutter-cleaning"
+      href: locale === "fr" ? "/levis/nettoyage-de-gouttieres" : "/levis/gutter-cleaning"
     },
     {
       label: t('nav.siding'),
-      href: locale === "fr" ? "/levis/services/nettoyage-de-revetement" : "/levis/services/siding-cleaning"
+      href: locale === "fr" ? "/levis/nettoyage-de-revetement" : "/levis/siding-cleaning"
     },
   ] : [
     {
       label: t('servicesDropdown.windowCleaning'),
-      href: locale === "fr" ? "/services/lavage-de-vitre" : "/services/window-cleaning"
+      href: locale === "fr" ? "/lavage-de-vitre" : "/window-cleaning"
     },
     {
       label: t('nav.gutters'),
-      href: locale === "fr" ? "/services/nettoyage-de-gouttieres" : "/services/gutter-cleaning"
+      href: locale === "fr" ? "/nettoyage-de-gouttieres" : "/gutter-cleaning"
     },
     {
       label: t('nav.siding'),
-      href: locale === "fr" ? "/services/nettoyage-de-revetement" : "/services/siding-cleaning"
+      href: locale === "fr" ? "/nettoyage-de-revetement" : "/siding-cleaning"
     },
   ];
 
@@ -93,10 +93,10 @@ export default function Header() {
     }
     
     // For specialized service pages, we should redirect to the correct slug
-    if (pathname === '/services/lavage-de-vitre' && nextLocale === 'en') {
-      router.replace('/services/window-cleaning', { locale: 'en' });
-    } else if (pathname === '/services/window-cleaning' && nextLocale === 'fr') {
-      router.replace('/services/lavage-de-vitre', { locale: 'fr' });
+    if (pathname === '/lavage-de-vitre' && nextLocale === 'en') {
+      router.replace('/window-cleaning', { locale: 'en' });
+    } else if (pathname === '/window-cleaning' && nextLocale === 'fr') {
+      router.replace('/lavage-de-vitre', { locale: 'fr' });
     } else if (pathname.includes('lavage-de-vitre-') && nextLocale === 'en') {
       const newPathname = pathname.replace('lavage-de-vitre-', 'window-cleaning-');
       router.replace(newPathname, { locale: 'en' });

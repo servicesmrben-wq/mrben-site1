@@ -12,13 +12,13 @@ export default function Services({ onQuote, t }: { onQuote: () => void, t: (key:
 
   const getServiceLink = (id: string) => {
     if (id === "vitres") {
-      return locale === "fr" ? "/services/lavage-de-vitre" : "/services/window-cleaning";
+      return locale === "fr" ? "/lavage-de-vitre" : "/window-cleaning";
     }
     if (id === "gouttieres") {
-      return locale === "fr" ? "/services/nettoyage-de-gouttieres" : "/services/gutter-cleaning";
+      return locale === "fr" ? "/nettoyage-de-gouttieres" : "/gutter-cleaning";
     }
     if (id === "revetement") {
-      return locale === "fr" ? "/services/nettoyage-de-revetement" : "/services/siding-cleaning";
+      return locale === "fr" ? "/nettoyage-de-revetement" : "/siding-cleaning";
     }
     return "#";
   };

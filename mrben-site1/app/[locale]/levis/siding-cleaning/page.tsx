@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import GutterCleaningContent from "@/app/[locale]/services/gutter-cleaning/GutterCleaningContent";
+import SidingCleaningContent from "@/app/[locale]/siding-cleaning/SidingCleaningContent";
 import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
@@ -10,9 +10,9 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${BASE_URL}/levis/services/nettoyage-de-gouttieres`;
-  const enUrl = `${BASE_URL}/en/levis/services/gutter-cleaning`;
-  const t = await getTranslations({locale, namespace: 'gutterCleaning'});
+  const canonical = `${BASE_URL}/levis/nettoyage-de-revetement`;
+  const enUrl = `${BASE_URL}/en/levis/siding-cleaning`;
+  const t = await getTranslations({locale, namespace: 'sidingCleaning'});
 
   return {
     title: `${t("metaTitle")} in Lévis`,
@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function LevisGutterCleaningEnPage({ params }: { params: Promise<Params> }) {
+export default async function LevisSidingCleaningEnPage({ params }: { params: Promise<Params> }) {
   const { locale } = await params;
 
   if (locale === 'fr') {
-    redirect('/levis/services/nettoyage-de-gouttieres');
+    redirect('/levis/nettoyage-de-revetement');
   }
 
-  const t = await getTranslations({locale, namespace: 'gutterCleaning'});
+  const t = await getTranslations({locale, namespace: 'sidingCleaning'});
 
-  return <GutterCleaningContent t={t} pagePath="/levis/services/gutter-cleaning" isLevis={true} />;
+  return <SidingCleaningContent t={t} pagePath="/levis/siding-cleaning" isLevis={true} />;
 }

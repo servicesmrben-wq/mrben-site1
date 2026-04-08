@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import WindowCleaningContent from "../../../services/window-cleaning/WindowCleaningContent";
+import SidingCleaningContent from "../../siding-cleaning/SidingCleaningContent";
 import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
@@ -10,9 +10,9 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${BASE_URL}/levis/services/lavage-de-vitre`;
-  const enUrl = `${BASE_URL}/en/levis/services/window-cleaning`;
-  const t = await getTranslations({locale, namespace: 'windowCleaning'});
+  const canonical = `${BASE_URL}/levis/nettoyage-de-revetement`;
+  const enUrl = `${BASE_URL}/en/levis/siding-cleaning`;
+  const t = await getTranslations({locale, namespace: 'sidingCleaning'});
 
   return {
     title: `${t("metaTitle")} à Lévis`,
@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function LevisWindowCleaningFrPage({ params }: { params: Promise<Params> }) {
+export default async function LevisSidingCleaningFrPage({ params }: { params: Promise<Params> }) {
   const { locale } = await params;
-  
+
   if (locale === 'en') {
-    redirect('/en/levis/services/window-cleaning');
+    redirect('/en/levis/siding-cleaning');
   }
 
-  const t = await getTranslations({locale, namespace: 'windowCleaning'});
+  const t = await getTranslations({locale, namespace: 'sidingCleaning'});
 
-  return <WindowCleaningContent t={t} pagePath="/levis/services/lavage-de-vitre" isLevis={true} />;
+  return <SidingCleaningContent t={t} pagePath="/levis/nettoyage-de-revetement" isLevis={true} />;
 }

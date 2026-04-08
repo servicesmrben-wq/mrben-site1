@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import GutterCleaningContent from "../gutter-cleaning/GutterCleaningContent";
+import GutterCleaningContent from "./GutterCleaningContent";
 
 // SEO Metadata
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -12,12 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t("metaDescription"),
     alternates: {
       canonical: locale === "fr" 
-        ? "https://mrben.ca/services/nettoyage-de-gouttieres"
-        : "https://mrben.ca/en/services/gutter-cleaning",
+        ? "https://mrben.ca/nettoyage-de-gouttieres"
+        : "https://mrben.ca/en/gutter-cleaning",
       languages: {
-        "en-CA": "https://mrben.ca/en/services/gutter-cleaning",
-        "fr-CA": "https://mrben.ca/services/nettoyage-de-gouttieres",
-        "x-default": "https://mrben.ca/services/nettoyage-de-gouttieres",
+        "en-CA": "https://mrben.ca/en/gutter-cleaning",
+        "fr-CA": "https://mrben.ca/nettoyage-de-gouttieres",
+        "x-default": "https://mrben.ca/nettoyage-de-gouttieres",
       },
     },
   };
@@ -25,5 +25,5 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default function GutterCleaningPage() {
   const t = useTranslations("gutterCleaning");
-  return <GutterCleaningContent t={t} pagePath="/services/nettoyage-de-gouttieres" />;
+  return <GutterCleaningContent t={t} pagePath="/gutter-cleaning" />;
 }

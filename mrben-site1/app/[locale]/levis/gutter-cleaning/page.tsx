@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import GutterCleaningContent from "../../../services/gutter-cleaning/GutterCleaningContent";
+import GutterCleaningContent from "@/app/[locale]/gutter-cleaning/GutterCleaningContent";
 import { getTranslations } from 'next-intl/server';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
@@ -10,13 +10,13 @@ type Params = { locale: string };
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale } = await params;
-  const canonical = `${BASE_URL}/levis/services/nettoyage-de-gouttieres`;
-  const enUrl = `${BASE_URL}/en/levis/services/gutter-cleaning`;
+  const canonical = `${BASE_URL}/levis/nettoyage-de-gouttieres`;
+  const enUrl = `${BASE_URL}/en/levis/gutter-cleaning`;
   const t = await getTranslations({locale, namespace: 'gutterCleaning'});
 
   return {
-    title: `${t("metaTitle")} à Lévis`,
-    description: t("metaDescription").replace("Laurentides", "région de Lévis"),
+    title: `${t("metaTitle")} in Lévis`,
+    description: t("metaDescription").replace("Laurentides", "Lévis region"),
     alternates: {
       canonical,
       languages: {
@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function LevisGutterCleaningFrPage({ params }: { params: Promise<Params> }) {
+export default async function LevisGutterCleaningEnPage({ params }: { params: Promise<Params> }) {
   const { locale } = await params;
-  
-  if (locale === 'en') {
-    redirect('/en/levis/services/gutter-cleaning');
+
+  if (locale === 'fr') {
+    redirect('/levis/nettoyage-de-gouttieres');
   }
 
   const t = await getTranslations({locale, namespace: 'gutterCleaning'});
 
-  return <GutterCleaningContent t={t} pagePath="/levis/services/nettoyage-de-gouttieres" isLevis={true} />;
+  return <GutterCleaningContent t={t} pagePath="/levis/gutter-cleaning" isLevis={true} />;
 }
