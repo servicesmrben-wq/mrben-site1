@@ -41,8 +41,10 @@ export default async function LocaleLayout({
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=AW-969249151"
         strategy="afterInteractive"
+        type="text/plain"
+        data-cookieconsent="marketing"
       />
-      <Script id="google-tag-init" strategy="afterInteractive">
+      <Script id="google-tag-init" strategy="afterInteractive" type="text/plain" data-cookieconsent="marketing">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

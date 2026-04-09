@@ -46,6 +46,8 @@ export function loadGooglePlaces(): Promise<unknown | null> {
             newScript.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
             newScript.async = true;
             newScript.defer = true;
+            newScript.type = "text/plain";
+            newScript.setAttribute("data-cookieconsent", "marketing");
             newScript.setAttribute("data-google-maps", "places");
             newScript.addEventListener("load", () => resolve(window.google?.maps?.places ? window.google : null), { once: true });
             newScript.addEventListener("error", () => resolve(null), { once: true });
