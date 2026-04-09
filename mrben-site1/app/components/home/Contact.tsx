@@ -355,6 +355,14 @@ function ContactContent({
         message: t("sendSuccess"),
       });
 
+      if (isLevis && typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+        (window as any).gtag("event", "conversion", {
+          send_to: "AW-969249151/B8viCIv4gZkcEP-ils4D",
+          value: 1.0,
+          currency: "CAD",
+        });
+      }
+
       const count = 200;
       const defaults = {
         origin: { y: 0.7 }

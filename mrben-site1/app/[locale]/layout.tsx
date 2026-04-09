@@ -36,6 +36,18 @@ export default async function LocaleLayout({
       <Header />
       {children}
       <Footer />
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-969249151"
+        strategy="afterInteractive"
+      />
+      <Script id="google-tag-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-969249151');
+        `}
+      </Script>
     </NextIntlClientProvider>
   );
 }
