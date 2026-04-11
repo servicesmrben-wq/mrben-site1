@@ -115,7 +115,6 @@ function ContactContent({
   const MAX_IMAGES = 6;
   const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
   const MAX_COMPRESSED_SIZE = 0.5 * 1024 * 1024; // 0.5MB
-  const BLOB_THRESHOLD = 3 * 1024 * 1024;
 
   const serviceOptions = [
     t("serviceOption1"),
@@ -152,7 +151,7 @@ function ContactContent({
   async function compressImage(file: File) {
     try {
       const options = {
-        maxSizeMB: 0.5,
+        maxSizeMB: 1.5,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
         fileType: "image/webp" as any,
@@ -237,18 +236,22 @@ function ContactContent({
     setStatus({ state: "sending", message: "" });
 
     try {
-      const totalSize = images.reduce((sum, f) => sum + f.size, 0);
-      const useBlobBackup = totalSize > BLOB_THRESHOLD;
-      
-      const uploadedUrls: string[] = [];
-      if (useBlobBackup) {
-        for (const file of images) {
-          const upData = new FormData();
-          upData.append("file", file);
-          const upRes = await fetch("/api/upload", { method: "POST", body: upData });
-          if (!upRes.ok) throw new Error("Upload to backup storage failed.");
-          const { url } = await upRes.json();
-          uploadedUrls.push(url);
+      const contactRef = estimateRef || `REF-${Date.now().toString(36).toUpperCase()}`;
+
+      if (images.length > 0) {
+        try {
+          const CHUNK_SIZE = 2;
+          for (let i = 0; i < images.length; i += CHUNK_SIZE) {
+            const chunk = images.slice(i, i + CHUNK_SIZE);
+            const driveData = new FormData();
+            driveData.append("referenceId", contactRef);
+            chunk.forEach((file) => driveData.append("files", file));
+            
+            const driveRes = await fetch("/api/save-to-drive", { method: "POST", body: driveData });
+            if (!driveRes.ok) console.warn("Failed to upload image chunk to drive");
+          }
+        } catch (e) {
+          console.error("Failed to upload images to drive", e);
         }
       }
 
@@ -261,6 +264,10 @@ function ContactContent({
       formData.append("message", form.message);
       formData.append("company", company);
       
+      if (images.length > 0 || estimateRef) {
+        formData.append("contactRef", contactRef);
+      }
+
       // Inject Estimate Data if present
       if (estimateQuote) {
         formData.append("estimateRef", estimateRef || "");
@@ -286,14 +293,6 @@ function ContactContent({
         formData.append("hourlyRate", hourlyRate || "N/A");
         formData.append("markup", markup || "N/A");
         formData.append("serviceFee", serviceFee || "N/A");
-      }
-      
-      if (useBlobBackup) {
-        formData.append("imageUrls", JSON.stringify(uploadedUrls));
-      } else {
-        images.forEach((file) => {
-          formData.append("images", file);
-        });
       }
 
       let res;

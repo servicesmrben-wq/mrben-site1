@@ -74,9 +74,9 @@ export async function POST(req: Request) {
     const email = normalizeSingleLine(formData.get("email"));
     const address = normalizeSingleLine(formData.get("address"));
     const servicesRaw = formData.get("services")?.toString() || "[]";
-    const imageUrlsRaw = formData.get("imageUrls")?.toString() || "[]";
     const message = normalizeMultiLine(formData.get("message"));
     const honeypot = normalizeSingleLine(formData.get("company"));
+    const contactRef = normalizeSingleLine(formData.get("contactRef"));
 
     // Estimate Data
     const estimateRef = normalizeSingleLine(formData.get("estimateRef"));
@@ -120,37 +120,6 @@ export async function POST(req: Request) {
       services = [];
     }
 
-    let imageUrls: string[] = [];
-    try {
-      const parsed = JSON.parse(imageUrlsRaw);
-      imageUrls = Array.isArray(parsed) ? parsed.filter((u) => typeof u === "string") : [];
-    } catch {
-      imageUrls = [];
-    }
-
-    const files = formData
-      .getAll("images")
-      .filter((item): item is File => item instanceof File);
-
-    if (files.length > MAX_IMAGES) {
-      return new Response(JSON.stringify({ ok: false, error: "Too many images." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-    if (files.some((file) => !isImage(file))) {
-      return new Response(JSON.stringify({ ok: false, error: "Invalid image type." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-    if (files.some((file) => file.size > MAX_IMAGE_SIZE)) {
-      return new Response(JSON.stringify({ ok: false, error: "Image exceeds size limit." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
     if (!name) {
       return new Response(JSON.stringify({ ok: false, error: "Name is required." }), {
         status: 400,
@@ -185,9 +154,10 @@ export async function POST(req: Request) {
     textLines.push(safeMessage);
 
     textLines.push("");
-    if (imageUrls.length > 0) {
-      textLines.push("PHOTOS (LIENS) :");
-      textLines.push(...imageUrls);
+    if (contactRef) {
+      const driveSearchUrl = `https://drive.google.com/drive/search?q=${contactRef}`;
+      textLines.push("PHOTOS (GOOGLE DRIVE) :");
+      textLines.push(driveSearchUrl);
       textLines.push("");
     }
 
@@ -232,12 +202,9 @@ export async function POST(req: Request) {
 
     htmlLines.push(`<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`);
 
-    if (imageUrls.length > 0) {
-      htmlLines.push(`<p><strong>PHOTOS (LIENS) :</strong></p><ul>`);
-      imageUrls.forEach((url) => {
-        htmlLines.push(`<li><a href="${url}">${url}</a></li>`);
-      });
-      htmlLines.push(`</ul>`);
+    if (contactRef) {
+      const driveSearchUrl = `https://drive.google.com/drive/search?q=${contactRef}`;
+      htmlLines.push(`<p><strong>PHOTOS (GOOGLE DRIVE) :</strong> <br /><a href="${driveSearchUrl}">${driveSearchUrl}</a></p>`);
     }
 
     if (estimateQuote) {
@@ -284,17 +251,6 @@ export async function POST(req: Request) {
       `);
     }
 
-    const attachments = await Promise.all(
-      files.map(async (file) => {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        return {
-          filename: file.name || "attachment",
-          content: buffer,
-          contentType: file.type || "application/octet-stream",
-        };
-      })
-    );
-
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -326,7 +282,6 @@ export async function POST(req: Request) {
       subject,
       text: textLines.filter(Boolean).join("\n"),
       html: htmlLines.join("\n"),
-      attachments: attachments.length ? attachments : undefined,
     });
 
     return new Response(JSON.stringify({ ok: true }), {
