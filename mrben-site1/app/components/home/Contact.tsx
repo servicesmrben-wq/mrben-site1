@@ -112,7 +112,7 @@ function ContactContent({
     }
   }, [estimateQuote, urlService]);
 
-  const MAX_IMAGES = 6;
+  const MAX_IMAGES = 10;
   const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
   const MAX_COMPRESSED_SIZE = 0.5 * 1024 * 1024; // 0.5MB
 
@@ -241,14 +241,26 @@ function ContactContent({
       if (images.length > 0) {
         try {
           const CHUNK_SIZE = 2;
+          let activeFolderId: string | undefined = undefined;
+
           for (let i = 0; i < images.length; i += CHUNK_SIZE) {
             const chunk = images.slice(i, i + CHUNK_SIZE);
             const driveData = new FormData();
             driveData.append("referenceId", contactRef);
+            if (activeFolderId) {
+              driveData.append("subfolderId", activeFolderId);
+            }
             chunk.forEach((file) => driveData.append("files", file));
             
             const driveRes = await fetch("/api/save-to-drive", { method: "POST", body: driveData });
-            if (!driveRes.ok) console.warn("Failed to upload image chunk to drive");
+            if (driveRes.ok) {
+              const driveJson = await driveRes.json();
+              if (driveJson.success && driveJson.folderId) {
+                activeFolderId = driveJson.folderId;
+              }
+            } else {
+              console.warn("Failed to upload image chunk to drive");
+            }
           }
         } catch (e) {
           console.error("Failed to upload images to drive", e);

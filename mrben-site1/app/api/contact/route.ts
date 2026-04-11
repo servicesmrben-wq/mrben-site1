@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
-const MAX_IMAGES = 6;
+const MAX_IMAGES = 10;
 const MAX_IMAGE_SIZE = 20 * 1024 * 1024;
 const DEFAULT_FROM = "MrBen.ca <no-reply@mrben.ca>";
 const DEFAULT_TO = "info@mrben.ca";

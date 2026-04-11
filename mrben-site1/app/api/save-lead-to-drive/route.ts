@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     // --- SUBFOLDER LOGIC ---
     let targetFolderId = folderId;
-    if (referenceId && referenceId.startsWith("EST-")) {
+    if (referenceId && (referenceId.startsWith("EST-") || referenceId.startsWith("REF-"))) {
       try {
         const searchRes = await drive.files.list({
           q: `name = '${referenceId}' and '${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
