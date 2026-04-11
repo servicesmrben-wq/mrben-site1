@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   try {
     const { 
-      name, email, phone, referenceId, service, 
+      name, email, phone, referenceId, subfolderId, service, 
       qExt, tExt, qInOut, tInOut,
       hourlyRate, markup, imgCount, avgVibe,
       analysisPanes, analysisVibe
@@ -31,8 +31,10 @@ export async function POST(req: Request) {
     const drive = google.drive({ version: "v3", auth });
 
     // --- SUBFOLDER LOGIC ---
-    let targetFolderId = folderId;
-    if (referenceId && (referenceId.startsWith("EST-") || referenceId.startsWith("REF-"))) {
+    let targetFolderId = subfolderId || folderId;
+    
+    // If no explicit subfolderId was passed, try to find one by referenceId
+    if (!subfolderId && referenceId && (referenceId.startsWith("EST-") || referenceId.startsWith("REF-"))) {
       try {
         const searchRes = await drive.files.list({
           q: `name = '${referenceId}' and '${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,

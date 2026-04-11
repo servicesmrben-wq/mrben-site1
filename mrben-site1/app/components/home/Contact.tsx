@@ -338,7 +338,8 @@ function ContactContent({
           name: form.name,
           email: form.email,
           phone: form.phone,
-          referenceId: estimateRef || `LEAD-${Date.now()}`,
+          referenceId: contactRef,
+          subfolderId: activeFolderId,
           service: urlService || (services.length ? services.join(", ") : "(none selected)"),
           qExt,
           tExt,
@@ -346,7 +347,7 @@ function ContactContent({
           tInOut,
           hourlyRate,
           markup,
-          imgCount: estimateImgCount,
+          imgCount: estimateImgCount || (images.length > 0 ? images.length.toString() : "0"),
           avgVibe: estimateAvgVibe,
           analysisPanes: estimateAnalysisPanes,
           analysisVibe: estimateAnalysisVibe
