@@ -237,11 +237,11 @@ function ContactContent({
 
     try {
       const contactRef = estimateRef || `REF-${Date.now().toString(36).toUpperCase()}`;
+      let activeFolderId: string | undefined = undefined;
 
       if (images.length > 0) {
         try {
           const CHUNK_SIZE = 2;
-          let activeFolderId: string | undefined = undefined;
 
           for (let i = 0; i < images.length; i += CHUNK_SIZE) {
             const chunk = images.slice(i, i + CHUNK_SIZE);
