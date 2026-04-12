@@ -3,7 +3,6 @@ import { getTranslations, getMessages } from "next-intl/server";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import GoogleAdsTracker from "../components/GoogleAdsTracker";
-import Script from "next/script";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -38,20 +37,20 @@ export default async function LocaleLayout({
       <Header />
       {children}
       <Footer />
-      <Script
+      <script
+        async
         src="https://www.googletagmanager.com/gtag/js?id=AW-969249151"
-        strategy="afterInteractive"
         type="text/plain"
         data-cookieconsent="marketing"
-      />
-      <Script id="google-tag-init" strategy="afterInteractive" type="text/plain" data-cookieconsent="marketing">
+      ></script>
+      <script type="text/plain" data-cookieconsent="marketing">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'AW-969249151');
         `}
-      </Script>
+      </script>
     </NextIntlClientProvider>
   );
 }
