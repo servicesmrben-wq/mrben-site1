@@ -24,6 +24,8 @@ export default function ServiceArea({
       { name: "Lévis", slug: "levis" },
       { name: "Saint-Nicolas", slug: "saint-nicolas" },
       { name: "Charny", slug: "charny" },
+      { name: "Saint-Apollinaire", slug: "saint-apollinaire" },
+      { name: "Laurier-Station", slug: "laurier-station" },
       { name: "Dosquet", slug: "dosquet" },
       { name: "Lotbinière", slug: "lotbiniere" },
     ];
