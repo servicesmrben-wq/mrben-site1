@@ -4,21 +4,24 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowRight } from "lucide-react";
 import SectionTitle from "./SectionTitle";
-import { Link } from "@/navigation";
+import { Link, usePathname } from "@/navigation";
 import { useLocale } from "next-intl";
 
 export default function Services({ onQuote, t }: { onQuote: () => void, t: (key: string, options?: any) => string }) {
   const locale = useLocale();
+  const pathname = usePathname();
+  const isLevis = pathname?.startsWith("/levis");
 
   const getServiceLink = (id: string) => {
+    const prefix = isLevis ? "/levis" : "";
     if (id === "vitres") {
-      return locale === "fr" ? "/lavage-de-vitre" : "/window-cleaning";
+      return locale === "fr" ? `${prefix}/lavage-de-vitre` : `${prefix}/window-cleaning`;
     }
     if (id === "gouttieres") {
-      return locale === "fr" ? "/nettoyage-de-gouttieres" : "/gutter-cleaning";
+      return locale === "fr" ? `${prefix}/nettoyage-de-gouttieres` : `${prefix}/gutter-cleaning`;
     }
     if (id === "revetement") {
-      return locale === "fr" ? "/nettoyage-de-revetement" : "/siding-cleaning";
+      return locale === "fr" ? `${prefix}/nettoyage-de-revetement` : `${prefix}/siding-cleaning`;
     }
     return "#";
   };
