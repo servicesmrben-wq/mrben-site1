@@ -79,10 +79,17 @@ export function CityPage({ city }: { city: CityPageData }) {
     t("whyBullets.2"),
     t("whyBullets.3"),
   ];
-  const faqItems = [0, 1, 2, 3, 4].map((index) => ({
-    q: t(`faq.${index}.q`),
-    a: t(`faq.${index}.a`),
-  }));
+  const faqItems = [0, 1, 2, 3, 4].map((index) => {
+    const q = t(`faq.${index}.q`);
+    const a = t(`faq.${index}.a`);
+    // If next-intl returns the key string (which happens for arrays in some versions), 
+    // we should try to get the raw data if we really wanted to be robust, 
+    // but here we just ensure we don't crash and provide fallback.
+    return {
+      q: q.includes(`faq.${index}.q`) ? "" : q,
+      a: a.includes(`faq.${index}.a`) ? "" : a,
+    };
+  }).filter(item => item.q !== "");
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`heroImageAlt.${city.slug}`);
   const cityUrl = getCityUrl(city.slug, locale);

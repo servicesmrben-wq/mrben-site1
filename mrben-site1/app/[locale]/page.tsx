@@ -31,8 +31,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const provider = getLocalBusinessProvider();
   const homeSourceOfTruth = t("sourceOfTruth"); // Renamed key
   const homeFaqItems = [0, 1, 2, 3, 4].map((index) => ({
-    q: t(`faq.items.${index}.q`), // Renamed key
-    a: t(`faq.items.${index}.a`), // Renamed key
+    q: t(`faq.items.${index}.q`),
+    a: t(`faq.items.${index}.a`),
   }));
 
   const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville", "Gore"].map((city) => ({

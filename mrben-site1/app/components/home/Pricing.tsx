@@ -52,8 +52,9 @@ export default function Pricing({ onQuote, t }: { onQuote: () => void, t: (key: 
 
               <ul role="list" className="mt-6 space-y-3 text-sm text-zinc-600 flex-1">
                 {[0, 1, 2].map((idx) => {
-                  const feature = t(`pricing.${card.key}.features.${idx}`);
-                  if (!feature) return null;
+                  const key = `pricing.${card.key}.features.${idx}`;
+                  const feature = t(key);
+                  if (!feature || feature === key || feature.includes(key)) return null;
                   return (
                     <li key={idx} className="flex gap-3">
                       <CheckCircle2 className={`h-5 w-5 flex-shrink-0 ${card.highlight ? "text-zinc-900" : "text-zinc-500"}`} />

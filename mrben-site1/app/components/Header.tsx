@@ -96,6 +96,13 @@ export default function Header() {
     if (nextLocale === locale) {
       return;
     }
+
+    setMenuOpen(false);
+
+    if (!pathname) {
+      router.replace("/", { locale: nextLocale });
+      return;
+    }
     
     // For specialized service pages, we should redirect to the correct slug
     if (pathname === '/lavage-de-vitre' && nextLocale === 'en') {
@@ -111,8 +118,6 @@ export default function Header() {
     } else {
       router.replace(pathname, { locale: nextLocale });
     }
-    
-    setMenuOpen(false);
   };
 
   useEffect(() => {
