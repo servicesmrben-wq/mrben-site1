@@ -106,32 +106,8 @@ export default function SidingCleaningContent({ t, pagePath, isLevis = false }: 
     },
   ];
 
-  const faqItems = [
-    {
-      q: t("faq.items.0.q"),
-      a: t("faq.items.0.a"),
-    },
-    {
-      q: t("faq.items.1.q"),
-      a: t("faq.items.1.a"),
-    },
-    {
-      q: t("faq.items.2.q"),
-      a: t("faq.items.2.a"),
-    },
-    {
-      q: t("faq.items.3.q"),
-      a: t("faq.items.3.a"),
-    },
-    {
-      q: t("faq.items.4.q"),
-      a: t("faq.items.4.a"),
-    },
-    {
-      q: t("faq.items.5.q"),
-      a: t("faq.items.5.a"),
-    },
-  ];
+  const faqData = t.raw("faq.items");
+  const faqItems = faqData ? Object.values(faqData).map((item: any) => ({ q: item.q, a: item.a })) : [];
 
   const serviceSchema = {
     "@context": "https://schema.org",

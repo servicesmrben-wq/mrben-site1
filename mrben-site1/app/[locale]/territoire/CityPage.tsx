@@ -60,36 +60,22 @@ export function CityPage({ city }: { city: CityPageData }) {
     LOW: String(priceLow),
     HIGH: String(priceHigh),
   });
-  const servicesBullets = [
-    t("servicesBullets.0"),
-    t("servicesBullets.1"),
-    t("servicesBullets.2"),
-    t("servicesBullets.3"),
-  ];
-  const buildingsBullets = [
-    t("buildingsBullets.0"),
-    t("buildingsBullets.1"),
-    t("buildingsBullets.2"),
-    t("buildingsBullets.3"),
-  ];
+  
+  const servicesBulletsRaw = t.raw("servicesBullets");
+  const servicesBullets = Array.isArray(servicesBulletsRaw) ? servicesBulletsRaw : [];
+  
+  const buildingsBulletsRaw = t.raw("buildingsBullets");
+  const buildingsBullets = Array.isArray(buildingsBulletsRaw) ? buildingsBulletsRaw : [];
+
   const whyParagraph = t("whyParagraph", { CITY: city.name });
-  const whyBullets = [
-    t("whyBullets.0"),
-    t("whyBullets.1"),
-    t("whyBullets.2"),
-    t("whyBullets.3"),
-  ];
-  const faqItems = [0, 1, 2, 3, 4].map((index) => {
-    const q = t(`faq.${index}.q`);
-    const a = t(`faq.${index}.a`);
-    // If next-intl returns the key string (which happens for arrays in some versions), 
-    // we should try to get the raw data if we really wanted to be robust, 
-    // but here we just ensure we don't crash and provide fallback.
-    return {
-      q: q.includes(`faq.${index}.q`) ? "" : q,
-      a: a.includes(`faq.${index}.a`) ? "" : a,
-    };
-  }).filter(item => item.q !== "");
+  
+  const whyBulletsRaw = t.raw("whyBullets");
+  const whyBullets = Array.isArray(whyBulletsRaw) ? whyBulletsRaw : [];
+
+  const faqData = t.raw("faq");
+  const faqItems = Array.isArray(faqData) 
+    ? faqData.map((item: any) => ({ q: item.q, a: item.a }))
+    : [];
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`heroImageAlt.${city.slug}`);
   const cityUrl = getCityUrl(city.slug, locale);
