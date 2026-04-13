@@ -28,7 +28,7 @@ const Footer = () => {
     `/${prefix}-saint-apollinaire`,
     `/${prefix}-laurier-station`,
   ];
-  const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
+  const isLevis = pathname ? (levisPaths.includes(pathname) || pathname.startsWith("/levis")) : false;
 
   const phoneDisplay = isLevis ? "418-741-2217" : BRAND.phoneDisplay;
   const phoneHref = isLevis ? "tel:+14187412217" : BRAND.phoneHref;
