@@ -135,19 +135,6 @@ export function CityPage({ city }: { city: CityPageData }) {
           <p className="mt-3 max-w-3xl text-base leading-relaxed text-zinc-700">
             {citySourceOfTruth}
           </p>
-          {heroImage ? (
-            <div className="relative mt-8 w-full max-w-lg aspect-[1.90/1] overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-100 shadow-sm">
-              <Image
-                src={heroImage}
-                alt={heroImageAlt}
-                fill
-                sizes="(max-width: 640px) 92vw, 512px"
-                quality={90}
-                className="object-cover object-center"
-                priority
-              />
-            </div>
-          ) : null}
           <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-zinc-600">
             <span className="rounded-full border border-zinc-200 bg-white px-3 py-1">
               {t("services.windowCleaning")}
