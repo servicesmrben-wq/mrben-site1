@@ -97,9 +97,11 @@ export default function ServiceArea({
               </div>
               <div className="flex flex-wrap items-center gap-2 text-base text-zinc-700">
                 <span className="font-semibold text-zinc-900">
-                  {rating.toFixed(1)}
+                  {(rating || 5.0).toFixed(1)}
                 </span>
-                <span className="text-yellow-500">★★★★★</span>
+                <span className="text-yellow-500">
+                  {"★".repeat(Math.max(0, Math.floor(rating || 5)))}
+                </span>
                 {!hideReviewCount && <span>{count}</span>}
               </div>
               <div className="text-base text-zinc-600">

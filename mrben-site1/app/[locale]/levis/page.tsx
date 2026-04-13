@@ -39,17 +39,23 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const sourceOfTruth = tLevis('sourceOfTruth');
 
   const homeFaqItems = [0, 1, 2, 3, 4].map((index) => {
-    let q = t(`faq.items.${index}.q`);
-    let a = t(`faq.items.${index}.a`);
+    const qKey = `faq.items.${index}.q`;
+    const aKey = `faq.items.${index}.a`;
+    let q = t(qKey);
+    let a = t(aKey);
     
     // Replace regions in FAQ
     if (index === 1) {
       q = tLevis('faqQuestion');
       a = tLevis('faqAnswer');
     }
+
+    // Safety fallback
+    if (q === qKey) q = "";
+    if (a === aKey) a = "";
     
     return { q, a };
-  });
+  }).filter(item => item.q !== "");
 
   const servedCities = ["Lévis", "Saint-Nicolas", "Charny", "Dosquet", "Saint-Apollinaire", "Laurier-Station", "Lotbinière"].map((city) => ({
     "@type": "City",

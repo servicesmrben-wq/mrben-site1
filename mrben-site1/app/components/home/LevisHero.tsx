@@ -104,7 +104,7 @@ export default function Hero({
       </span>
       {shouldReduceMotion ? (
         <span className="flex items-center gap-0.5">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: Math.max(0, Math.floor(rating || 0)) }).map((_, index) => (
             <Star key={index} className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
           ))}
         </span>
