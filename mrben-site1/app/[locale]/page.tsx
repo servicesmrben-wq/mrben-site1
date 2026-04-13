@@ -35,7 +35,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     a: t(`faq.items.${index}.a`), // Renamed key
   }));
 
-  const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville"].map((city) => ({
+  const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville", "Gore"].map((city) => ({
     "@type": "City",
     name: city,
     address: {

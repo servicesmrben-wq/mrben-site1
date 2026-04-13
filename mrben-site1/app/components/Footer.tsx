@@ -25,6 +25,8 @@ const Footer = () => {
     `/${prefix}-saint-nicolas`, 
     `/${prefix}-charny`, 
     `/${prefix}-dosquet`,
+    `/${prefix}-saint-apollinaire`,
+    `/${prefix}-laurier-station`,
   ];
   const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
 
@@ -67,6 +69,8 @@ const Footer = () => {
     { href: `/${prefix}-saint-nicolas`, text: "Saint-Nicolas" },
     { href: `/${prefix}-charny`, text: "Charny" },
     { href: `/${prefix}-dosquet`, text: "Dosquet" },
+    { href: `/${prefix}-saint-apollinaire`, text: "Saint-Apollinaire" },
+    { href: `/${prefix}-laurier-station`, text: "Laurier-Station" },
   ] : [
     { href: `/${prefix}-lachute`, text: t('territories.lachute') },
     { href: `/${prefix}-saint-jerome`, text: t('territories.stJerome') },
@@ -74,6 +78,7 @@ const Footer = () => {
     { href: `/${prefix}-mirabel`, text: t('territories.mirabel') },
     { href: `/${prefix}-blainville`, text: t('territories.blainville') },
     { href: `/${prefix}-laval`, text: t('territories.laval') },
+    { href: `/${prefix}-gore`, text: t('territories.gore') },
   ];
 
   const description = isLevis 

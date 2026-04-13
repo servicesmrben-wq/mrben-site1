@@ -51,7 +51,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     return { q, a };
   });
 
-  const servedCities = ["Lévis", "Saint-Nicolas", "Charny", "Dosquet", "Lotbinière"].map((city) => ({
+  const servedCities = ["Lévis", "Saint-Nicolas", "Charny", "Dosquet", "Saint-Apollinaire", "Laurier-Station", "Lotbinière"].map((city) => ({
     "@type": "City",
     name: city,
     address: {

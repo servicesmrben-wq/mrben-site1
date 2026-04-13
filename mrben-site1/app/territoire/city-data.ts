@@ -264,6 +264,66 @@ export const CITY_PAGES: CityPage[] = [
       ],
     },
   },
+  {
+    slug: "saint-apollinaire",
+    name: "Saint-Apollinaire",
+    fr: {
+      title: "Lavage de vitres et entretien extérieur à Saint-Apollinaire",
+      description: "Services de nettoyage de vitres et gouttières à Saint-Apollinaire (Rive-Sud de Québec).",
+      paragraphs: [
+        "À Saint-Apollinaire, le développement résidentiel rapide demande un entretien régulier pour conserver l'aspect neuf des habitations. Notre équipe intervient avec soin pour le lavage de vos vitres et le nettoyage de vos gouttières.",
+        "Nous offrons un service professionnel adapté aux besoins des familles et des propriétaires de la région, garantissant une finition sans traces et un environnement propre.",
+      ],
+    },
+    en: {
+      title: "Window cleaning and exterior maintenance in Saint-Apollinaire",
+      description: "Window and gutter cleaning services in Saint-Apollinaire (South Shore of Quebec City).",
+      paragraphs: [
+        "In Saint-Apollinaire, rapid residential growth calls for regular maintenance to keep homes looking their best. Our team provides careful window washing and gutter cleaning services.",
+        "We offer professional service tailored to the needs of local families and homeowners, ensuring a streak-free finish and a clean environment.",
+      ],
+    },
+  },
+  {
+    slug: "laurier-station",
+    name: "Laurier-Station",
+    fr: {
+      title: "Services de nettoyage extérieur à Laurier-Station",
+      description: "Lavage de vitres et entretien de gouttières à Laurier-Station (Lévis).",
+      paragraphs: [
+        "Pour les résidents de Laurier-Station, nous proposons un service de nettoyage extérieur complet. Nous prenons en charge le lavage de vos vitres et l'entretien de vos gouttières pour protéger votre investissement.",
+        "Notre approche est simple : un travail bien fait, des prix transparents et un service client irréprochable dans toute la région de Lotbinière et Lévis.",
+      ],
+    },
+    en: {
+      title: "Exterior cleaning services in Laurier-Station",
+      description: "Window washing and gutter cleaning in Laurier-Station (Lévis area).",
+      paragraphs: [
+        "For Laurier-Station residents, we offer a complete exterior cleaning service. We handle your window washing and gutter maintenance to protect your investment.",
+        "Our approach is simple: high-quality work, transparent pricing, and excellent customer service throughout the Lotbinière and Lévis region.",
+      ],
+    },
+  },
+  {
+    slug: "gore",
+    name: "Gore",
+    fr: {
+      title: "Lavage de vitres et entretien de chalets à Gore",
+      description: "Services de nettoyage extérieur à Gore (près de Lachute et des Laurentides).",
+      paragraphs: [
+        "À Gore, l'environnement boisé et les nombreux lacs rendent l'entretien des vitres et des gouttières indispensable. Nous aidons les propriétaires de chalets et de maisons à préserver la clarté de leur vue et la solidité de leur toiture.",
+        "Que vous soyez au Lac Barron ou dans les secteurs environnants, notre équipe se déplace pour offrir un service de nettoyage professionnel respectueux de la nature environnante.",
+      ],
+    },
+    en: {
+      title: "Window cleaning and chalet maintenance in Gore",
+      description: "Exterior cleaning services in Gore (near Lachute and the Laurentians).",
+      paragraphs: [
+        "In Gore, the wooded environment and many lakes make window and gutter maintenance essential. We help chalet and homeowners preserve their clear views and the integrity of their roofs.",
+        "Whether you're at Lake Barron or in the surrounding areas, our team travels to provide professional cleaning services that respect the natural environment.",
+      ],
+    },
+  },
 ];
 
 function normalizeSlug(s: string) {

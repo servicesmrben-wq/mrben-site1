@@ -1,11 +1,11 @@
 {
   "levis": {
     "metaTitle": "MrBen | Window cleaning and exterior maintenance in Lévis",
-    "metaDescription": "Professional window cleaning, gutter cleaning, and siding washing in Lévis, Saint-Nicolas, Charny, and Dosquet. Free estimate.",
-    "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
+    "metaDescription": "Professional window cleaning, gutter cleaning, and siding washing in Lévis, Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire and Laurier-Station. Free estimate.",
+    "sourceOfTruth": "MrBen is a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire and Laurier-Station.",
     "faqQuestion": "What areas do you serve?",
-    "faqAnswer": "We are a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
-    "jsonldDescription": "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across Lévis and the Lotbinière region, including Saint-Nicolas, Charny, and Dosquet.",
+    "faqAnswer": "We are a local residential and commercial window cleaning company serving Lévis and the Lotbinière region, including Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire and Laurier-Station.",
+    "jsonldDescription": "MrBen.ca provides professional window cleaning, gutter cleaning, and exterior washing services across Lévis and the Lotbinière region, including Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire and Laurier-Station.",
     "serviceType": "Window cleaning"
   },
   "home": {
@@ -540,7 +540,10 @@
       "levis": "Professional window cleaning on a residential home in Lévis",
       "saint-nicolas": "Professional window cleaning on a residential home in Saint-Nicolas",
       "charny": "Professional window cleaning on a residential home in Charny",
-      "dosquet": "Professional window cleaning on a residential home in Dosquet"
+      "dosquet": "Professional window cleaning on a residential home in Dosquet",
+      "saint-apollinaire": "Professional window cleaning on a residential home in Saint-Apollinaire",
+      "laurier-station": "Professional window cleaning on a residential home in Laurier-Station",
+      "gore": "Window cleaning and chalet maintenance in Gore"
     },
     "services": {
       "windowCleaning": "Window cleaning",
@@ -574,7 +577,8 @@
       "saintSauveur": "Saint-Sauveur",
       "mirabel": "Mirabel",
       "blainville": "Blainville",
-      "laval": "Laval"
+      "laval": "Laval",
+      "gore": "Gore"
     },
     "quote": "Get a free estimate",
     "ctaReassurance": "Fast response • No obligation",
@@ -604,7 +608,8 @@
       "saintSauveur": "Saint-Sauveur",
       "mirabel": "Mirabel",
       "blainville": "Blainville",
-      "laval": "Laval"
+      "laval": "Laval",
+      "gore": "Gore"
     },
     "contact": "Contact",
     "reviewLink": "See Our Reviews",

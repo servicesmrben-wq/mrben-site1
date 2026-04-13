@@ -1,11 +1,11 @@
 {
   "levis": {
     "metaTitle": "MrBen | Lavage de vitres et entretien extérieur à Lévis",
-    "metaDescription": "Services professionnels de lavage de vitres, nettoyage de gouttières et revêtement à Lévis, Saint-Nicolas, Charny et Dosquet. Estimation gratuite.",
-    "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny et Dosquet.",
+    "metaDescription": "Services professionnels de lavage de vitres, nettoyage de gouttières et revêtement à Lévis, Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire et Laurier-Station. Estimation gratuite.",
+    "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire et Laurier-Station.",
     "faqQuestion": "Quelles régions desservez-vous?",
-    "faqAnswer": "Nous sommes une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny et Dosquet.",
-    "jsonldDescription": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur à Lévis et dans la région de Lotbinière, notamment à Saint-Nicolas, Charny et Dosquet.",
+    "faqAnswer": "Nous sommes une entreprise locale de nettoyage de vitres résidentiel et commercial desservant Lévis et la région de Lotbinière, incluant Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire et Laurier-Station.",
+    "jsonldDescription": "MrBen.ca offre des services professionnels de lavage de vitres, de nettoyage de gouttières et de nettoyage extérieur à Lévis et dans la région de Lotbinière, notamment à Saint-Nicolas, Charny, Dosquet, Saint-Apollinaire et Laurier-Station.",
     "serviceType": "Lavage de vitres"
   },
   "home": {
@@ -540,7 +540,10 @@
       "levis": "Lavage de vitres professionnel sur une maison résidentielle à Lévis",
       "saint-nicolas": "Lavage de vitres professionnel sur une maison résidentielle à Saint-Nicolas",
       "charny": "Lavage de vitres professionnel sur une maison résidentielle à Charny",
-      "dosquet": "Lavage de vitres professionnel sur une maison résidentielle à Dosquet"
+      "dosquet": "Lavage de vitres professionnel sur une maison résidentielle à Dosquet",
+      "saint-apollinaire": "Lavage de vitres professionnel sur une maison résidentielle à Saint-Apollinaire",
+      "laurier-station": "Lavage de vitres professionnel sur une maison résidentielle à Laurier-Station",
+      "gore": "Lavage de vitres et entretien de chalet à Gore"
     },
     "services": {
       "windowCleaning": "Lavage de vitres",
@@ -574,7 +577,8 @@
       "saintSauveur": "Saint-Sauveur",
       "mirabel": "Mirabel",
       "blainville": "Blainville",
-      "laval": "Laval"
+      "laval": "Laval",
+      "gore": "Gore"
     },
     "quote": "Obtenir une estimation gratuite",
     "ctaReassurance": "Réponse rapide • Aucune obligation",
@@ -604,7 +608,8 @@
       "saintSauveur": "Saint-Sauveur",
       "mirabel": "Mirabel",
       "blainville": "Blainville",
-      "laval": "Laval"
+      "laval": "Laval",
+      "gore": "Gore"
     },
     "contact": "Contact",
     "reviewLink": "Voir nos avis",

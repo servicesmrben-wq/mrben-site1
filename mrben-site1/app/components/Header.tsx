@@ -21,6 +21,8 @@ export default function Header() {
     `/${prefix}-saint-nicolas`, 
     `/${prefix}-charny`, 
     `/${prefix}-dosquet`,
+    `/${prefix}-saint-apollinaire`,
+    `/${prefix}-laurier-station`,
   ];
   const isLevis = levisPaths.includes(pathname) || pathname.startsWith("/levis");
   
@@ -78,6 +80,8 @@ export default function Header() {
     { label: "Saint-Nicolas", href: `/${prefix}-saint-nicolas` },
     { label: "Charny", href: `/${prefix}-charny` },
     { label: "Dosquet", href: `/${prefix}-dosquet` },
+    { label: "Saint-Apollinaire", href: `/${prefix}-saint-apollinaire` },
+    { label: "Laurier-Station", href: `/${prefix}-laurier-station` },
   ] : [
     { label: t('territoryDropdown.lachute'), href: `/${prefix}-lachute` },
     { label: t('territoryDropdown.saintJerome'), href: `/${prefix}-saint-jerome` },
@@ -85,6 +89,7 @@ export default function Header() {
     { label: t('territoryDropdown.mirabel'), href: `/${prefix}-mirabel` },
     { label: t('territoryDropdown.blainville'), href: `/${prefix}-blainville` },
     { label: t('territoryDropdown.laval'), href: `/${prefix}-laval` },
+    { label: t('territoryDropdown.gore'), href: `/${prefix}-gore` },
   ];
 
   const handleLocaleChange = (nextLocale: "en" | "fr") => {
