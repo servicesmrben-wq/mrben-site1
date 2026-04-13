@@ -28,7 +28,7 @@ const CITY_HERO_IMAGES: Record<string, string> = {
   laval: "/nettoyage-vitres-maison-laval-laurentides-mrben.jpg",
 };
 
-const LEVIS_SLUGS = ["levis", "saint-nicolas", "charny", "dosquet"];
+const LEVIS_SLUGS = ["levis", "saint-nicolas", "charny", "dosquet", "saint-apollinaire", "laurier-station", "lotbiniere"];
 
 export function CityPage({ city }: { city: CityPageData }) {
   const locale = useLocale() as Locale;

@@ -324,6 +324,28 @@ export const CITY_PAGES: CityPage[] = [
       ],
     },
   },
+  {
+    slug: "lotbiniere",
+    name: "Lotbinière",
+    fr: {
+      title: "Lavage de vitres et entretien extérieur à Lotbinière",
+      description: "Services professionnels de nettoyage de vitres et gouttières à Lotbinière.",
+      paragraphs: [
+        "Dans la belle région de Lotbinière, l'entretien des maisons et des bâtiments ancestraux demande une attention particulière. Notre équipe propose un service de lavage de vitres et de nettoyage de gouttières adapté au climat du fleuve et aux besoins des résidents.",
+        "Que vous soyez dans le village même ou dans les municipalités environnantes, nous nous assurons que vos vitres retrouvent leur transparence. Un entretien régulier protège non seulement vos fenêtres, mais améliore aussi l'aspect général de votre propriété.",
+        "Le nettoyage de vos gouttières est essentiel pour prévenir les infiltrations d'eau, surtout avec les vents et les pluies que nous connaissons dans la région. Nous offrons un service fiable et sécuritaire pour garder votre maison en parfait état.",
+      ],
+    },
+    en: {
+      title: "Window cleaning and exterior maintenance in Lotbinière",
+      description: "Professional window and gutter cleaning services in Lotbinière.",
+      paragraphs: [
+        "In the beautiful Lotbinière region, maintaining homes and ancestral buildings requires special care. Our team offers window washing and gutter cleaning services tailored to the river climate and the needs of residents.",
+        "Whether you are in the village itself or in surrounding municipalities, we ensure your windows regain their transparency. Regular maintenance not only protects your windows but also improves the overall look of your property.",
+        "Cleaning your gutters is essential to prevent water infiltration, especially with the winds and rain we experience in the region. We offer reliable and safe service to keep your home in perfect condition.",
+      ],
+    },
+  },
 ];
 
 function normalizeSlug(s: string) {
