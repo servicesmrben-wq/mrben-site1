@@ -19,7 +19,7 @@ import { getAbsoluteUrl, getLocalBusinessProvider, getBreadcrumbSchema } from "@
 const HERO_IMAGE = "/gallery/nettoyage-exterieur-laurentides.jpg";
 
 type Props = {
-  t: (key: string) => string;
+  t: any;
   pagePath: string;
   isLevis?: boolean;
 };

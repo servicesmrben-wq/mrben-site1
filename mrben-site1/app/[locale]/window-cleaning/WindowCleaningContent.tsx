@@ -20,7 +20,7 @@ import { getAbsoluteUrl, getLocalBusinessProvider, getBreadcrumbSchema } from "@
 const HERO_IMAGE = "/gallery/lavage-vitres-residentiel-avant-apres.jpg";
 
 type Props = {
-  t: (key: string) => string;
+  t: any;
   pagePath: string;
   isLevis?: boolean;
 };
