@@ -49,7 +49,7 @@ export default function RootLayout({
           type="text/javascript"
         ></script>
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning translate="no">
         {children}
       </body>
     </html>

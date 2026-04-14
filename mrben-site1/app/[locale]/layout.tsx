@@ -33,10 +33,14 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <GoogleAdsTracker />
-      <Header />
-      {children}
-      <Footer />
+      <div className="flex min-h-screen flex-col" key={locale}>
+        <GoogleAdsTracker />
+        <Header key={`header-${locale}`} />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer key={`footer-${locale}`} />
+      </div>
       <script
         async
         src="https://www.googletagmanager.com/gtag/js?id=AW-969249151"

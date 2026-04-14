@@ -95,7 +95,7 @@ export default function Reviews({ t, onQuote, googleProfile, hideReviewCount = f
                     )}
                     <div className="text-xs font-semibold text-zinc-900">{r.name}</div>
                   </div>
-                  <Image src="/public/google-g.svg" alt="Google" width={16} height={16} className="opacity-60" />
+                  <Image src="/google-g.svg" alt="Google" width={16} height={16} className="opacity-60" />
                 </div>
                 <div className="flex items-center gap-0.5 mb-2">
                   {Array.from({ length: Number.isFinite(r.stars) ? Math.max(0, Math.floor(r.stars)) : 0 }).map((_, i) => (
