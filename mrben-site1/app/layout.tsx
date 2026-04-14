@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,8 +21,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning translate="no">
       <head>
         <meta name="google" content="notranslate" />
-        <script
-          data-cookieconsent="ignore"
+        <Script
+          id="gtag-consent"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -41,13 +43,13 @@ export default function RootLayout({
             `
           }}
         />
-        <script
+        <Script
           id="Cookiebot"
           src="https://consent.cookiebot.com/uc.js"
           data-cbid="87cd4632-6174-4bb4-8b65-fc961ba5f6c1"
           data-blockingmode="auto"
-          type="text/javascript"
-        ></script>
+          strategy="afterInteractive"
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning translate="no">
         {children}
