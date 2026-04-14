@@ -9,7 +9,15 @@ import { Link } from "@/navigation";
 import { useLocale } from "next-intl";
 import { CITY_SLUGS } from "@/app/territoire/city-data";
 
-export default function ServiceArea({ t, googleProfile }: { t: (key: string, options?: any) => string, googleProfile: GoogleBusinessProfile }) {
+export default function ServiceArea({ 
+  t, 
+  googleProfile,
+  hideReviewCount = false 
+}: { 
+  t: (key: string, options?: any) => string, 
+  googleProfile: GoogleBusinessProfile,
+  hideReviewCount?: boolean
+}) {
   const locale = useLocale();
   
   const normalizeSlug = (name: string) => {
