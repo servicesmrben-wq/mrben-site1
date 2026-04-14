@@ -73,8 +73,8 @@ export function CityPage({ city }: { city: CityPageData }) {
   const whyBullets = Array.isArray(whyBulletsRaw) ? whyBulletsRaw : [];
 
   const faqData = t.raw("faq");
-  const faqItems = Array.isArray(faqData) 
-    ? faqData.map((item: any) => ({ q: item.q, a: item.a }))
+  const faqItems = (Array.isArray(faqData) || (faqData && typeof faqData === 'object'))
+    ? Object.values(faqData).map((item: any) => ({ q: item?.q || "", a: item?.a || "" })).filter(item => item.q)
     : [];
   const heroImage = CITY_HERO_IMAGES[city.slug];
   const heroImageAlt = t(`heroImageAlt.${city.slug}`);

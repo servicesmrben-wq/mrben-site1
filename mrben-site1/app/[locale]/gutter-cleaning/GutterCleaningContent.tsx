@@ -107,7 +107,9 @@ export default function GutterCleaningContent({ t, pagePath, isLevis = false }: 
   ];
 
   const faqData = t.raw("faq.items");
-  const faqItems = faqData ? Object.values(faqData).map((item: any) => ({ q: item.q, a: item.a })) : [];
+  const faqItems = (Array.isArray(faqData) || (faqData && typeof faqData === 'object'))
+    ? Object.values(faqData).map((item: any) => ({ q: item?.q || "", a: item?.a || "" })).filter(item => item.q)
+    : [];
 
   const serviceSchema = {
     "@context": "https://schema.org",

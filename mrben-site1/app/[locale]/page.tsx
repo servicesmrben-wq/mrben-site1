@@ -31,7 +31,9 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const provider = getLocalBusinessProvider();
   const homeSourceOfTruth = t("sourceOfTruth"); // Renamed key
   const faqData = t.raw("faq.items");
-  const homeFaqItems = faqData ? Object.values(faqData).map((item: any) => ({ q: item.q, a: item.a })) : [];
+  const homeFaqItems = (Array.isArray(faqData) || (faqData && typeof faqData === 'object'))
+    ? Object.values(faqData).map((item: any) => ({ q: item?.q || "", a: item?.a || "" })).filter(item => item.q)
+    : [];
 
   const servedCities = ["Lachute", "Saint-Jérôme", "Mirabel", "Blainville", "Gore"].map((city) => ({
     "@type": "City",

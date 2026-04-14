@@ -36,26 +36,19 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const tLevis = await getTranslations({ locale, namespace: 'levis' });
   const provider = getLocalBusinessProvider();
   
-  const sourceOfTruth = tLevis('sourceOfTruth');
-
-  const homeFaqItems = [0, 1, 2, 3, 4].map((index) => {
-    const qKey = `faq.items.${index}.q`;
-    const aKey = `faq.items.${index}.a`;
-    let q = t(qKey);
-    let a = t(aKey);
-    
-    // Replace regions in FAQ
-    if (index === 1) {
-      q = tLevis('faqQuestion');
-      a = tLevis('faqAnswer');
-    }
-
-    // Safety fallback
-    if (q === qKey) q = "";
-    if (a === aKey) a = "";
-    
-    return { q, a };
-  }).filter(item => item.q !== "");
+  const sourceOfTruth = t("sourceOfTruth");
+  const faqData = t.raw("faq.items");
+  const homeFaqItems = (Array.isArray(faqData) || (faqData && typeof faqData === 'object'))
+    ? Object.values(faqData).map((item: any, index: number) => {
+        let q = item?.q || "";
+        let a = item?.a || "";
+        if (index === 1) {
+          q = tLevis('faqQuestion');
+          a = tLevis('faqAnswer');
+        }
+        return { q, a };
+      }).filter(item => item.q)
+    : [];
 
   const servedCities = ["Lévis", "Saint-Nicolas", "Charny", "Dosquet", "Saint-Apollinaire", "Laurier-Station", "Lotbinière"].map((city) => ({
     "@type": "City",

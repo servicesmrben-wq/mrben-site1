@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/navigation"; // Use custom navigation hooks
 
@@ -12,7 +12,6 @@ export default function Header() {
   const t = useTranslations('Header'); // Assuming 'Header' namespace in your translation files
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
   const prefix = locale === 'en' ? 'window-cleaning' : 'lavage-de-vitre';
 
@@ -98,29 +97,27 @@ export default function Header() {
       return;
     }
 
-    startTransition(() => {
-      setMenuOpen(false);
+    setMenuOpen(false);
 
-      if (!pathname) {
-        router.replace("/", { locale: nextLocale });
-        return;
-      }
-      
-      // For specialized service pages, we should redirect to the correct slug
-      if (pathname === '/lavage-de-vitre' && nextLocale === 'en') {
-        router.replace('/window-cleaning', { locale: 'en' });
-      } else if (pathname === '/window-cleaning' && nextLocale === 'fr') {
-        router.replace('/lavage-de-vitre', { locale: 'fr' });
-      } else if (pathname.includes('lavage-de-vitre-') && nextLocale === 'en') {
-        const newPathname = pathname.replace('lavage-de-vitre-', 'window-cleaning-');
-        router.replace(newPathname, { locale: 'en' });
-      } else if (pathname.includes('window-cleaning-') && nextLocale === 'fr') {
-        const newPathname = pathname.replace('window-cleaning-', 'lavage-de-vitre-');
-        router.replace(newPathname, { locale: 'fr' });
-      } else {
-        router.replace(pathname, { locale: nextLocale });
-      }
-    });
+    if (!pathname) {
+      router.replace("/", { locale: nextLocale });
+      return;
+    }
+    
+    // For specialized service pages, we should redirect to the correct slug
+    if (pathname === '/lavage-de-vitre' && nextLocale === 'en') {
+      router.replace('/window-cleaning', { locale: 'en' });
+    } else if (pathname === '/window-cleaning' && nextLocale === 'fr') {
+      router.replace('/lavage-de-vitre', { locale: 'fr' });
+    } else if (pathname.includes('lavage-de-vitre-') && nextLocale === 'en') {
+      const newPathname = pathname.replace('lavage-de-vitre-', 'window-cleaning-');
+      router.replace(newPathname, { locale: 'en' });
+    } else if (pathname.includes('window-cleaning-') && nextLocale === 'fr') {
+      const newPathname = pathname.replace('window-cleaning-', 'lavage-de-vitre-');
+      router.replace(newPathname, { locale: 'fr' });
+    } else {
+      router.replace(pathname, { locale: nextLocale });
+    }
   };
 
   useEffect(() => {

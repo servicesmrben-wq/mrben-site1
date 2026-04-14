@@ -100,7 +100,7 @@ export default function ServiceArea({
                   {(rating || 5.0).toFixed(1)}
                 </span>
                 <span className="text-yellow-500">
-                  {"★".repeat(Math.max(0, Math.floor(rating || 5)))}
+                  {"★".repeat(Number.isFinite(rating) ? Math.max(0, Math.floor(rating)) : 5)}
                 </span>
                 {!hideReviewCount && <span>{count}</span>}
               </div>
