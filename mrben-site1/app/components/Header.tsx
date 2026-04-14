@@ -99,25 +99,24 @@ export default function Header() {
 
     setMenuOpen(false);
 
-    if (!pathname) {
-      router.replace("/", { locale: nextLocale });
-      return;
-    }
+    let targetPath = pathname || "/";
     
     // For specialized service pages, we should redirect to the correct slug
-    if (pathname === '/lavage-de-vitre' && nextLocale === 'en') {
-      router.replace('/window-cleaning', { locale: 'en' });
-    } else if (pathname === '/window-cleaning' && nextLocale === 'fr') {
-      router.replace('/lavage-de-vitre', { locale: 'fr' });
-    } else if (pathname.includes('lavage-de-vitre-') && nextLocale === 'en') {
-      const newPathname = pathname.replace('lavage-de-vitre-', 'window-cleaning-');
-      router.replace(newPathname, { locale: 'en' });
-    } else if (pathname.includes('window-cleaning-') && nextLocale === 'fr') {
-      const newPathname = pathname.replace('window-cleaning-', 'lavage-de-vitre-');
-      router.replace(newPathname, { locale: 'fr' });
-    } else {
-      router.replace(pathname, { locale: nextLocale });
+    if (targetPath === '/lavage-de-vitre' && nextLocale === 'en') {
+      targetPath = '/window-cleaning';
+    } else if (targetPath === '/window-cleaning' && nextLocale === 'fr') {
+      targetPath = '/lavage-de-vitre';
+    } else if (targetPath.includes('lavage-de-vitre-') && nextLocale === 'en') {
+      targetPath = targetPath.replace('lavage-de-vitre-', 'window-cleaning-');
+    } else if (targetPath.includes('window-cleaning-') && nextLocale === 'fr') {
+      targetPath = targetPath.replace('window-cleaning-', 'lavage-de-vitre-');
     }
+
+    // Construct the final URL for a hard page reload
+    const localePrefix = nextLocale === 'en' ? '/en' : '';
+    const finalUrl = targetPath === '/' ? (localePrefix || '/') : `${localePrefix}${targetPath}`;
+    
+    window.location.href = finalUrl;
   };
 
   useEffect(() => {
