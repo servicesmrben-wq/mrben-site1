@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import SpringCampaignContent from "./SpringCampaignContent";
+import SpringCampaignContent from "../spring-2026/SpringCampaignContent";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mrben.ca";
 
@@ -29,13 +29,13 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function SpringCampaignEnPage({ params }: { params: Promise<Params> }) {
+export default async function SpringCampaignFrPage({ params }: { params: Promise<Params> }) {
   const { locale } = await params;
   
-  // If locale is French, we want to use the /printemps-2026 URL
-  if (locale === 'fr') {
-    redirect('/printemps-2026');
+  // If locale is English, we want to use the /en/spring-2026 URL
+  if (locale === 'en') {
+    redirect('/en/spring-2026');
   }
 
-  return <SpringCampaignContent locale="en" />;
+  return <SpringCampaignContent locale="fr" />;
 }
