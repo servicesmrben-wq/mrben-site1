@@ -78,6 +78,7 @@ export async function POST(req: Request) {
     const message = normalizeMultiLine(formData.get("message"));
     const honeypot = normalizeSingleLine(formData.get("company"));
     const contactRef = normalizeSingleLine(formData.get("contactRef"));
+    const campaign = normalizeSingleLine(formData.get("campaign"));
 
     // Check if images were uploaded
     const files = formData.getAll("images") as File[];
@@ -138,7 +139,10 @@ export async function POST(req: Request) {
       });
     }
 
-    const subject = `Nouvelle demande de contact — ${name}`;
+    let subject = `Nouvelle demande de contact — ${name}`;
+    if (campaign === "Spring 2026 VIP") {
+      subject = `Campagne courriel printemps 2026 - ${name}`;
+    }
 
     const safeMessage = message || "(no message)";
     const servicesLabel = services.length ? services.join(", ") : "(none selected)";
