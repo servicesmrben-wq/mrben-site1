@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const enUrl = `${BASE_URL}/en/spring-2026`;
 
   return {
-    title: isEn ? "Spring 2026 Promotion" : "Promotion Printemps 2026",
+    title: isEn ? "Spring 2026 Promotion" : "Printemps 2026",
     description: isEn 
       ? "Reserve your spot for spring window, gutter, and siding maintenance. Quick VIP booking for returning customers."
       : "Réservez votre place pour l'entretien printanier des vitres, gouttières et revêtement. Réservation rapide pour nos clients fidèles.",
