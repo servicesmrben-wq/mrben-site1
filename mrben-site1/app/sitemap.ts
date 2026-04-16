@@ -24,8 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       "/levis/lavage-de-vitre",
       "/levis/nettoyage-de-gouttieres",
       "/levis/nettoyage-de-revetement",
-      "/levis/blog",
-      "/printemps-2026"
+      "/levis/blog"
     ],
     en: [
       "",
@@ -38,8 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       "/levis/window-cleaning",
       "/levis/gutter-cleaning",
       "/levis/siding-cleaning",
-      "/levis/blog",
-      "/spring-2026"
+      "/levis/blog"
     ]
   };
 
@@ -52,7 +50,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       if (route === "/lavage-de-vitre" || route === "/window-cleaning") priority = 0.9;
       if (route === "/nettoyage-de-gouttieres" || route === "/gutter-cleaning") priority = 0.9;
       if (route === "/nettoyage-de-revetement" || route === "/siding-cleaning") priority = 0.9;
-      if (route === "/spring-2026" || route === "/printemps-2026") priority = 0.9;
       
       return {
         url: `${BASE_URL}${localePath}${route}`,
