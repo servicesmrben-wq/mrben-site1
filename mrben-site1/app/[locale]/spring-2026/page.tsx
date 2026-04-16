@@ -201,14 +201,14 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
             <div className="p-6 sm:p-10 md:col-span-3">
               <form onSubmit={onSubmit}>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <Input label={t("name")} placeholder="" required value={form.name} onChange={(e: any) => setForm(p => ({ ...p, name: e.target.value }))} />
-                  <Input label={t("phone")} placeholder="" required type="tel" value={form.phone} onChange={(e: any) => setForm(p => ({ ...p, phone: formatPhoneNumber(e.target.value) }))} />
-                  <Input label={t("email")} placeholder="" type="email" value={form.email} onChange={(e: any) => setForm(p => ({ ...p, email: e.target.value }))} />
-                  <Input label={t("address")} placeholder="" required inputRef={addressInputRef} value={form.address} onChange={(e: any) => setForm(p => ({ ...p, address: e.target.value }))} />
+                  <Input label={t("name") as string} placeholder="" required value={form.name} onChange={(e: any) => setForm(p => ({ ...p, name: e.target.value }))} />
+                  <Input label={t("phone") as string} placeholder="" required type="tel" value={form.phone} onChange={(e: any) => setForm(p => ({ ...p, phone: formatPhoneNumber(e.target.value) }))} />
+                  <Input label={t("email") as string} placeholder="" type="email" value={form.email} onChange={(e: any) => setForm(p => ({ ...p, email: e.target.value }))} />
+                  <Input label={t("address") as string} placeholder="" required inputRef={addressInputRef} value={form.address} onChange={(e: any) => setForm(p => ({ ...p, address: e.target.value }))} />
                 </div>
 
                 <div className="mt-6">
-                  <div className="text-sm font-semibold text-zinc-900">{t("choose")}</div>
+                  <div className="text-sm font-semibold text-zinc-900">{t("choose") as string}</div>
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
                     {(i18n[locale].services as string[]).map((serviceName) => (
                       <label key={serviceName} className="flex items-start gap-2 rounded-xl border border-zinc-200 p-3 cursor-pointer hover:bg-zinc-50 transition-colors">
@@ -220,11 +220,11 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
                 </div>
 
                 <div className="mt-6">
-                  <div className="text-sm font-semibold text-zinc-900">{t("desc")}</div>
+                  <div className="text-sm font-semibold text-zinc-900">{t("desc") as string}</div>
                   <textarea 
                     rows={2} 
                     className="mt-2 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white" 
-                    placeholder={t("descPlaceholder")} 
+                    placeholder={t("descPlaceholder") as string} 
                     value={form.message} 
                     onChange={(e) => setForm(p => ({ ...p, message: e.target.value }))} 
                   />
