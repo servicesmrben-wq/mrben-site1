@@ -26,7 +26,7 @@ const i18n = {
     weekOptions: ["Dès que possible", "Début mai", "Mi-mai", "Fin mai", "Début juin", "Mi-juin", "Fin juin", "Plus tard"],
     desc: "Détails ou demandes spéciales",
     descPlaceholder: "Ex: Même chose que l'an dernier, merci !",
-    send: "Confirmer ma réservation",
+    send: "Demander mon rendez-vous",
     sending: "Envoi en cours...",
     sendSuccess: "Demande reçue ! Nous vous contacterons sous peu pour confirmer la date.",
     sendError: "Une erreur s'est produite. Veuillez réessayer ou nous appeler.",
@@ -45,7 +45,7 @@ const i18n = {
     weekOptions: ["As soon as possible", "Early May", "Mid-May", "Late May", "Early June"],
     desc: "Details or special requests",
     descPlaceholder: "Ex: Same as last year, thanks !",
-    send: "Confirm my booking",
+    send: "Request my appointment",
     sending: "Sending...",
     sendSuccess: "Request received ! We'll contact you shortly to confirm the date.",
     sendError: "An error occurred. Please try again or call us.",
@@ -273,32 +273,40 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
               <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#6AC126]/10 rounded-full blur-3xl" />
               
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#6AC126]/20 px-3 py-1 text-xs font-bold text-[#6AC126] ring-1 ring-[#6AC126]/30 mb-6">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>VIP CLIENT</span>
-                </div>
-                <h3 className="text-2xl font-bold mb-6">
-                  {locale === "fr" ? "Besoin d'aide ?" : "Need help?"}
-                </h3>
-                <div className="space-y-5">
-                  <a href={BRAND.phoneHref} className="flex items-center gap-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/10 group-hover:bg-[#6AC126] group-hover:ring-[#6AC126] transition-all">
-                      <Phone className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{t("phone")}</div>
-                      <span className="font-semibold">{BRAND.phoneDisplay}</span>
-                    </div>
-                  </a>
-                  <a href={toMailto(BRAND.emailHref)} className="flex items-center gap-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/10 group-hover:bg-[#6AC126] group-hover:ring-[#6AC126] transition-all">
-                      <Mail className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{t("email")}</div>
-                      <span className="font-semibold">{BRAND.email}</span>
-                    </div>
-                  </a>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-12 italic">
+                  {locale === "fr" 
+                    ? "Gagnez du temps : utilisez ce formulaire pour réserver votre place rapidement." 
+                    : "Save time: use this form to reserve your spot quickly."}
+                </p>
+
+                <div className="mt-12 sm:mt-24">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#6AC126]/20 px-3 py-1 text-xs font-bold text-[#6AC126] ring-1 ring-[#6AC126]/30 mb-6">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    <span>VIP CLIENT</span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-6">
+                    {locale === "fr" ? "Vous avez une question ?" : "Have a question?"}
+                  </h3>
+                  <div className="space-y-5">
+                    <a href={BRAND.phoneHref} className="flex items-center gap-4 group">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/10 group-hover:bg-[#6AC126] group-hover:ring-[#6AC126] transition-all">
+                        <Phone className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{t("phone") as string}</div>
+                        <span className="font-semibold">{BRAND.phoneDisplay}</span>
+                      </div>
+                    </a>
+                    <a href={toMailto(BRAND.emailHref)} className="flex items-center gap-4 group">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/10 group-hover:bg-[#6AC126] group-hover:ring-[#6AC126] transition-all">
+                        <Mail className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">{t("email") as string}</div>
+                        <span className="font-semibold">{BRAND.email}</span>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
               
