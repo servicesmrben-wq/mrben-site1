@@ -179,7 +179,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
         {/* Header Area */}
         <div className="text-center mb-6 sm:mb-10">
           <Image 
-            src="/mrben-logo-transparent (2).png" 
+            src="/brand/mrben-logo-transparent.png" 
             alt="MrBen.ca" 
             width={120} 
             height={40} 
