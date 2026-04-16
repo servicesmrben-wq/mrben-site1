@@ -74,9 +74,14 @@ export async function POST(req: Request) {
     const email = normalizeSingleLine(formData.get("email"));
     const address = normalizeSingleLine(formData.get("address"));
     const servicesRaw = formData.get("services")?.toString() || "[]";
+    const week = normalizeSingleLine(formData.get("week"));
     const message = normalizeMultiLine(formData.get("message"));
     const honeypot = normalizeSingleLine(formData.get("company"));
     const contactRef = normalizeSingleLine(formData.get("contactRef"));
+
+    // Check if images were uploaded
+    const files = formData.getAll("images") as File[];
+    const hasImages = files.length > 0 && files.some(f => f.size > 0);
 
     // Estimate Data
     const estimateRef = normalizeSingleLine(formData.get("estimateRef"));
@@ -149,12 +154,17 @@ export async function POST(req: Request) {
       `SERVICES : ${servicesLabel}`
     ];
 
+    if (week) {
+      textLines.push(`PÉRIODE SOUHAITÉE : ${week}`);
+    }
+
     textLines.push("");
     textLines.push("MESSAGE :");
     textLines.push(safeMessage);
 
     textLines.push("");
-    if (contactRef) {
+    // Only show Drive link if images were actually uploaded
+    if (hasImages && contactRef) {
       const driveSearchUrl = `https://drive.google.com/drive/search?q=${contactRef}`;
       textLines.push("PHOTOS (GOOGLE DRIVE) :");
       textLines.push(driveSearchUrl);
@@ -200,9 +210,14 @@ export async function POST(req: Request) {
       `<p><strong>SERVICES :</strong> ${escapeHtml(servicesLabel)}</p>`,
     ];
 
+    if (week) {
+      htmlLines.push(`<p><strong>PÉRIODE SOUHAITÉE :</strong> ${escapeHtml(week)}</p>`);
+    }
+
     htmlLines.push(`<p><strong>MESSAGE :</strong><br />${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>`);
 
-    if (contactRef) {
+    // Only show Drive link if images were actually uploaded
+    if (hasImages && contactRef) {
       const driveSearchUrl = `https://drive.google.com/drive/search?q=${contactRef}`;
       htmlLines.push(`<p><strong>PHOTOS (GOOGLE DRIVE) :</strong> <br /><a href="${driveSearchUrl}">${driveSearchUrl}</a></p>`);
     }

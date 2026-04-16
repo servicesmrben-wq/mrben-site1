@@ -273,7 +273,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
               <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#6AC126]/10 rounded-full blur-3xl" />
               
               <div className="relative z-10">
-                <p className="text-zinc-400 text-sm leading-relaxed mb-12 italic">
+                <p className="text-white text-sm leading-relaxed mb-12 font-medium">
                   {locale === "fr" 
                     ? "Gagnez du temps : utilisez ce formulaire pour réserver votre place rapidement." 
                     : "Save time: use this form to reserve your spot quickly."}
