@@ -14,14 +14,16 @@ import { toMailto, formatPhoneNumber } from "@/app/lib/utils";
 
 const i18n = {
   fr: {
-    pageTitle: "Réservation VIP Printemps 2026",
-    subtitle: "Merci de votre fidélité ! Réservez votre entretien printanier en quelques secondes.",
+    pageTitle: "Réservation Printemps 2026",
+    subtitle: "Merci de votre fidélité ! Réservez votre entretien printanier dès maintenant.",
     name: "Nom complet",
     phone: "Téléphone",
     email: "Courriel",
     address: "Adresse",
     choose: "Services requis",
     services: ["Lavage de vitres", "Nettoyage de gouttières", "Lavage de revêtement"],
+    weekLabel: "Semaine souhaitée",
+    weekOptions: ["Dès que possible", "Début mai", "Mi-mai", "Fin mai", "Début juin"],
     desc: "Détails ou demandes spéciales",
     descPlaceholder: "Ex: Même chose que l'an dernier, merci !",
     send: "Confirmer ma réservation",
@@ -31,14 +33,16 @@ const i18n = {
     networkError: "Erreur de connexion. Veuillez vérifier votre internet.",
   },
   en: {
-    pageTitle: "Spring 2026 VIP Booking",
-    subtitle: "Thank you for your loyalty ! Book your spring maintenance in seconds.",
+    pageTitle: "Spring 2026 Booking",
+    subtitle: "Thank you for your loyalty ! Book your spring maintenance today.",
     name: "Full Name",
     phone: "Phone",
     email: "Email",
     address: "Property Address",
     choose: "Services needed",
     services: ["Window cleaning", "Gutter cleaning", "Siding wash"],
+    weekLabel: "Preferred Week",
+    weekOptions: ["As soon as possible", "Early May", "Mid-May", "Late May", "Early June"],
     desc: "Details or special requests",
     descPlaceholder: "Ex: Same as last year, thanks !",
     send: "Confirm my booking",
@@ -71,6 +75,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
     email: "",
     address: "",
     message: "",
+    week: i18n[locale].weekOptions[0],
   });
   const [services, setServices] = useState<string[]>([]);
   const [status, setStatus] = useState({ state: "idle", message: "" });
@@ -120,6 +125,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
       formData.append("email", form.email);
       formData.append("address", form.address);
       formData.append("services", JSON.stringify(services));
+      formData.append("week", form.week);
       formData.append("message", form.message);
       formData.append("contactRef", contactRef);
       formData.append("campaign", "Spring 2026 VIP");
@@ -144,6 +150,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
           phone: form.phone,
           referenceId: contactRef,
           service: services.length ? services.join(", ") : "(none selected)",
+          preferredWeek: form.week,
           vipCampaign: "Spring 2026",
         };
         await fetch("/api/save-lead-to-drive", {
@@ -156,7 +163,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
       }
 
       setStatus({ state: "success", message: t("sendSuccess") as string });
-      setForm({ name: "", phone: "", email: "", address: "", message: "" });
+      setForm({ name: "", phone: "", email: "", address: "", message: "", week: i18n[locale].weekOptions[0] });
       setServices([]);
 
       // Confetti
@@ -181,9 +188,11 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
           <Image 
             src="/brand/mrben-logo-transparent.png" 
             alt="MrBen.ca" 
-            width={120} 
-            height={40} 
-            className="mx-auto drop-shadow-sm"
+            width={180} 
+            height={60}
+            priority
+            quality={100}
+            className="mx-auto drop-shadow-sm h-auto"
           />
           <h1 className="mt-4 text-2xl sm:text-4xl font-extrabold tracking-tight text-zinc-900">
             {t("pageTitle")}
@@ -217,6 +226,19 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
                       </label>
                     ))}
                   </div>
+                </div>
+
+                <div className="mt-6">
+                  <div className="text-sm font-semibold text-zinc-900">{t("weekLabel") as string}</div>
+                  <select
+                    className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-400 focus:bg-white cursor-pointer"
+                    value={form.week}
+                    onChange={(e) => setForm(p => ({ ...p, week: e.target.value }))}
+                  >
+                    {(i18n[locale].weekOptions as string[]).map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="mt-6">
