@@ -155,7 +155,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
         console.warn("Failed to save lead to drive", err);
       }
 
-      setStatus({ state: "success", message: t("sendSuccess") });
+      setStatus({ state: "success", message: t("sendSuccess") as string });
       setForm({ name: "", phone: "", email: "", address: "", message: "" });
       setServices([]);
 
@@ -165,7 +165,7 @@ function SpringPromoContent({ locale }: { locale: "en" | "fr" }) {
 
     } catch (error) {
       console.error("Form error:", error);
-      setStatus({ state: "error", message: t("networkError") });
+      setStatus({ state: "error", message: t("networkError") as string });
     }
   }
 
