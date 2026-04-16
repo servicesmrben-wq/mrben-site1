@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: isEn ? "Spring 2026 Promotion" : "Promotion Printemps 2026",
     description: isEn 
-      ? "Get your windows, gutters, and siding ready for spring with MrBen.ca. Free estimates!"
-      : "Préparez vos vitres, gouttières et revêtement pour le printemps avec MrBen.ca. Estimation gratuite!",
+      ? "Reserve your spot for spring window, gutter, and siding maintenance. Quick VIP booking for returning customers."
+      : "Réservez votre place pour l'entretien printanier des vitres, gouttières et revêtement. Réservation rapide pour nos clients fidèles.",
     alternates: {
-      canonical: isEn ? enUrl : canonical,
+      canonical,
       languages: {
         "fr-CA": canonical,
         "en-CA": enUrl,
