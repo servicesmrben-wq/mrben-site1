@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Phone, Mail, ArrowRight, Upload, Calculator } from "lucide-react";
 import { useLocale } from "next-intl";
-import { usePathname, Link } from "@/navigation";
+import { usePathname, Link, useRouter } from "@/navigation";
 import { loadGooglePlaces } from "@/app/lib/googlePlacesLoader";
 import imageCompression from "browser-image-compression";
 import { BRAND } from "@/app/lib/constants";
@@ -39,6 +39,7 @@ function ContactContent({
   const locale = useLocale();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const isLevis = pathname === "/levis";
   const phoneNumber = propPhoneNumber ?? (isLevis ? "418-741-2217" : BRAND.phoneDisplay);
@@ -400,6 +401,7 @@ function ContactContent({
       setServices([]);
       setImages([]);
       setImageError("");
+      router.push("/thank-you");
     } catch (error) {
       console.error("Contact form error:", error);
       setStatus({
