@@ -81,8 +81,7 @@ export async function POST(req: Request) {
     const campaign = normalizeSingleLine(formData.get("campaign"));
 
     // Check if images were uploaded
-    const files = formData.getAll("images") as File[];
-    const hasImages = files.length > 0 && files.some(f => f.size > 0);
+    const hasImages = formData.get("hasImages") === "true";
 
     // Estimate Data
     const estimateRef = normalizeSingleLine(formData.get("estimateRef"));

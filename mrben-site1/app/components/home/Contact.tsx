@@ -276,6 +276,7 @@ function ContactContent({
       formData.append("services", JSON.stringify(services));
       formData.append("message", form.message);
       formData.append("company", company);
+      formData.append("hasImages", images.length > 0 ? "true" : "false");
       
       if (images.length > 0 || estimateRef) {
         formData.append("contactRef", contactRef);
