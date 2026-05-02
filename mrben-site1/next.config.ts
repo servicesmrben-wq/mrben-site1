@@ -10,6 +10,17 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.mrben.ca",
+          },
+        ],
+        destination: "https://mrben.ca/:path*",
+        permanent: true,
+      },
+      {
         source: "/contact",
         destination: "/#contact",
         permanent: true,
