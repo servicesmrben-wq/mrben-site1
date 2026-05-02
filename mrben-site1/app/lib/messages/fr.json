@@ -10,8 +10,8 @@
   },
   "home": {
     "sourceOfTruth": "MrBen est une entreprise locale de nettoyage de vitres résidentiel et commercial desservant les Laurentides, incluant Lachute, Saint-Sauveur, Saint-Jérôme et Mirabel.",
-    "metaTitle": "Lavage de Vitre Résidentiel | Estimation de Prix & Service à Domicile",
-    "metaDescription": "Obtenez un lavage de vitre impeccable pour votre maison. MrBen offre le meilleur tarif de nettoyage de vitres à domicile au Québec. Spécialiste des vitres extérieures inaccessibles. Demandez votre prix en ligne!",
+    "metaTitle": "Lavage de vitre dans les Laurentides | Résidentiel et Commercial | MrBen",
+    "metaDescription": "Expert en lavage de vitre résidentiel et commercial dans les Laurentides (Lachute, Saint-Jérôme, Mirabel). Demandez votre estimation gratuite pour des vitres impeccables.",
     "faq": {
       "title": "Questions fréquentes",
       "items": {
@@ -589,9 +589,9 @@
     }
   },
   "Footer": {
-    "description": "Nettoyage de vitres, gouttières et revêtement extérieur dans les Laurentides.",
+    "description": "Lavage de vitre, nettoyage de gouttières et revêtement extérieur dans les Laurentides.",
     "company": "Entreprise",
-    "home": "Accueil",
+    "home": "Lavage de vitre (Accueil)",
     "nav": {
       "blog": "Blog",
       "services": "Services",
@@ -641,7 +641,7 @@
     "heroBadgeB": "Laurentides et environs",
     "heroH1a": "Lavage de vitre résidentiel et commercial dans les Laurentides",
     "heroH1b": "Lachute, Saint-Jérôme, Mirabel et environs",
-    "heroP": "Équipe attentionnée, courtoise et ponctuelle — service rapide et soigné pour vous offrir le meilleur rapport qualité-prix.",
+    "heroP": "Votre spécialiste en lavage de vitre : une équipe attentionnée, courtoise et ponctuelle pour un nettoyage de vitres impeccable au meilleur prix.",
     "heroCTA": "Obtenir une estimation gratuite",
     "primaryCTA": "Obtenir une estimation gratuite",
     "ctaReassurance": "Réponse rapide • Aucune obligation",
