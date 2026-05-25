@@ -1,4 +1,4 @@
-let googlePlacesPromise: Promise<unknown | null> | null = null;
+let googlePlacesPromise: Promise<any | null> | null = null;
 
 declare global {
   interface Window {
@@ -7,59 +7,84 @@ declare global {
         places?: unknown;
       };
     };
+    initGoogleMaps?: () => void;
   }
 }
 
-export function loadGooglePlaces(): Promise<unknown | null> {
+/**
+ * Loads the Google Maps Places library script and returns a promise that resolves
+ * when the library is ready to use.
+ */
+export function loadGooglePlaces(): Promise<any | null> {
   if (typeof window === "undefined") {
     return Promise.resolve(null);
   }
 
+  // 1. If already loaded, resolve immediately
   if (window.google?.maps?.places) {
     return Promise.resolve(window.google);
   }
 
+  // 2. If a load is already in progress, return the existing promise
   if (googlePlacesPromise) {
     return googlePlacesPromise;
   }
 
+  // 3. Start a new load process
   googlePlacesPromise = new Promise((resolve) => {
-    let attempts = 0;
-    const maxAttempts = 100; // 10 seconds with 100ms intervals
+    // Check again if it somehow loaded between turns
+    if (window.google?.maps?.places) {
+      return resolve(window.google);
+    }
 
-    const check = () => {
-      if (window.google?.maps?.places) {
-        resolve(window.google);
-      } else if (attempts < maxAttempts) {
-        attempts++;
-        setTimeout(check, 100);
-      } else {
-        // Fallback: check if script exists but not yet loaded
-        const script = document.querySelector("script[data-google-maps='places']");
-        if (script) {
-          script.addEventListener("load", () => resolve(window.google?.maps?.places ? window.google : null), { once: true });
-          script.addEventListener("error", () => resolve(null), { once: true });
-        } else {
-          const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-          if (apiKey) {
-            const newScript = document.createElement("script");
-            newScript.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-            newScript.async = true;
-            newScript.defer = true;
-            newScript.type = "text/plain";
-            newScript.setAttribute("data-cookieconsent", "marketing");
-            newScript.setAttribute("data-google-maps", "places");
-            newScript.addEventListener("load", () => resolve(window.google?.maps?.places ? window.google : null), { once: true });
-            newScript.addEventListener("error", () => resolve(null), { once: true });
-            document.head.appendChild(newScript);
-          } else {
-            resolve(null);
-          }
-        }
-      }
+    // Set up the global callback for Google Maps
+    const CALLBACK_NAME = "initGoogleMaps";
+    window[CALLBACK_NAME] = () => {
+      resolve(window.google);
+      delete window[CALLBACK_NAME];
     };
 
-    check();
+    // Check if script already exists in DOM
+    const existingScript = document.querySelector("script[data-google-maps='places']");
+    if (existingScript) {
+      // If it exists but we're here, it's either still loading or failed
+      existingScript.addEventListener("load", () => {
+        if (window.google?.maps?.places) {
+          resolve(window.google);
+        }
+      }, { once: true });
+      existingScript.addEventListener("error", () => resolve(null), { once: true });
+      return;
+    }
+
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      console.error("Google Maps API Key is missing (NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)");
+      resolve(null);
+      return;
+    }
+
+    // Create and inject the script
+    const script = document.createElement("script");
+    // Use the recommended loading pattern with callback
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=${CALLBACK_NAME}`;
+    script.async = true;
+    script.defer = true;
+    
+    // Cookiebot integration:
+    // We keep data-cookieconsent to ensure compliance, but we don't force type="text/plain"
+    // here because if we're injecting it via JS, it means the user has likely interacted
+    // or we're handling the logic ourselves. Cookiebot's auto-blocking will still
+    // catch the domain if necessary.
+    script.setAttribute("data-cookieconsent", "marketing");
+    script.setAttribute("data-google-maps", "places");
+
+    script.addEventListener("error", () => {
+      console.error("Failed to load Google Maps script");
+      resolve(null);
+    }, { once: true });
+
+    document.head.appendChild(script);
   });
 
   return googlePlacesPromise;

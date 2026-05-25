@@ -78,9 +78,9 @@ export default function SpringCampaignContent({ locale }: { locale: "en" | "fr" 
   useEffect(() => {
     let isMounted = true;
     import("@/app/lib/googlePlacesLoader").then(({ loadGooglePlaces }) => {
-      loadGooglePlaces().then(() => {
-        if (!isMounted || !addressInputRef.current) return;
-        const googleMaps = (window as any).google;
+      loadGooglePlaces().then((google) => {
+        if (!isMounted || !addressInputRef.current || !google) return;
+        const googleMaps = google;
         if (!googleMaps?.maps?.places) return;
         
         const autocomplete = new googleMaps.maps.places.Autocomplete(

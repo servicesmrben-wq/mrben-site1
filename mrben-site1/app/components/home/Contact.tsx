@@ -183,9 +183,9 @@ function ContactContent({
   useEffect(() => {
     let isMounted = true;
 
-    loadGooglePlaces().then(() => {
-      if (!isMounted || !addressInputRef.current) return;
-      const googleMaps = /** @type {any} */ (window.google);
+    loadGooglePlaces().then((google) => {
+      if (!isMounted || !addressInputRef.current || !google) return;
+      const googleMaps = google;
       if (!googleMaps?.maps?.places) return;
       if (autocompleteRef.current) return;
       const autocomplete = new (googleMaps.maps.places as any).Autocomplete(
