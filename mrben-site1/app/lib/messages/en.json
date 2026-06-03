@@ -46,6 +46,12 @@
   "common": {
     "getQuote": "Get Your Free Quote"
   },
+  "cookieConsent": {
+    "title": "We value your privacy",
+    "description": "We use cookies to improve your experience, analyze site traffic, and track conversions. You can choose to accept all cookies or decline optional ones.",
+    "accept": "Accept All",
+    "decline": "Decline"
+  },
   "windowCleaning": {
     "metaTitle": "Window Cleaning Services in the Laurentians | Mr. Ben",
     "metaDescription": "Mr. Ben offers professional residential and commercial window cleaning across the Laurentides areas. Interior & exterior panes, screens, and frames included with a streak-free guarantee. Get your free quote today!",

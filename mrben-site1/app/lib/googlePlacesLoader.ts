@@ -71,12 +71,6 @@ export function loadGooglePlaces(): Promise<any | null> {
     script.async = true;
     script.defer = true;
     
-    // Cookiebot integration:
-    // We keep data-cookieconsent to ensure compliance, but we don't force type="text/plain"
-    // here because if we're injecting it via JS, it means the user has likely interacted
-    // or we're handling the logic ourselves. Cookiebot's auto-blocking will still
-    // catch the domain if necessary.
-    script.setAttribute("data-cookieconsent", "marketing");
     script.setAttribute("data-google-maps", "places");
 
     script.addEventListener("error", () => {

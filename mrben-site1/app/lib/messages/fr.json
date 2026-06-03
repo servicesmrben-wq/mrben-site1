@@ -46,6 +46,12 @@
   "common": {
     "getQuote": "Obtenir une estimation gratuite"
   },
+  "cookieConsent": {
+    "title": "Nous respectons votre vie privée",
+    "description": "Nous utilisons des témoins (cookies) pour améliorer votre expérience, analyser le trafic du site et suivre les conversions. Vous pouvez choisir d'accepter tous les cookies ou de refuser les cookies facultatifs.",
+    "accept": "Tout accepter",
+    "decline": "Refuser"
+  },
   "windowCleaning": {
     "metaTitle": "Lavage de Vitre Résidentiel | Estimation de Prix & Service à Domicile",
     "metaDescription": "Obtenez un lavage de vitre impeccable pour votre maison. MrBen offre le meilleur tarif de nettoyage de vitres à domicile au Québec. Spécialiste des vitres extérieures inaccessibles. Demandez votre prix en ligne!",
@@ -543,6 +549,7 @@
       "dosquet": "Lavage de vitres professionnel sur une maison résidentielle à Dosquet",
       "saint-apollinaire": "Lavage de vitres professionnel sur une maison résidentielle à Saint-Apollinaire",
       "laurier-station": "Lavage de vitres professionnel sur une maison résidentielle à Laurier-Station",
+      "lotbiniere": "Lavage de vitres et entretien extérieur dans Lotbinière",
       "gore": "Lavage de vitres et entretien de chalet à Gore"
     },
     "services": {
