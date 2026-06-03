@@ -167,10 +167,20 @@ const Footer = () => {
 
         <div className="mt-10 border-t border-zinc-200 pt-8 text-center text-sm text-zinc-500">
           <p>&copy; {new Date().getFullYear()} {BRAND.name}. {t('rights')}</p>
-          <p className="mt-1">
+          <p className="mt-1 flex flex-wrap justify-center gap-x-4 gap-y-1">
             <Link href={locale === "fr" ? "/confidentialite" : "/privacy-policy"} className="hover:underline">
               {t('privacyPolicy')}
             </Link>
+            <span className="hidden sm:inline text-zinc-300">•</span>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                window.dispatchEvent(new Event("show-cookie-banner"));
+              }}
+              className="hover:underline cursor-pointer bg-transparent border-none p-0 text-zinc-500 text-sm"
+            >
+              {locale === "fr" ? "Gérer les cookies" : "Manage Cookies"}
+            </button>
           </p>
         </div>
       </div>

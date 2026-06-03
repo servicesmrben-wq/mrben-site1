@@ -23,6 +23,16 @@ export default function CookieBanner() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleShow = () => {
+      setVisible(true);
+    };
+    window.addEventListener("show-cookie-banner", handleShow);
+    return () => {
+      window.removeEventListener("show-cookie-banner", handleShow);
+    };
+  }, []);
+
   const updateGtagConsent = (granted: boolean) => {
     if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
       const state = granted ? "granted" : "denied";
