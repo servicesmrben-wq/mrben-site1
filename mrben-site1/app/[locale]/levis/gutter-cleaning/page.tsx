@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: `${t("metaTitle")} in Lévis`,
     description: t("metaDescription").replace("Laurentides", "Lévis region"),
     alternates: {
-      canonical,
+      canonical: enUrl,
       languages: {
         "fr-CA": canonical,
         "en-CA": enUrl,

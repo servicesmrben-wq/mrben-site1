@@ -7,7 +7,7 @@ export function getAbsoluteUrl(path = ""): string {
 
 export function getLocalBusinessProvider() {
   return {
-    "@type": "LocalBusiness",
+    "@type": "WindowCleaningService",
     "@id": getAbsoluteUrl("/#localbusiness"),
     name: "MrBen.ca",
     url: getAbsoluteUrl("/"),
@@ -49,6 +49,36 @@ export function getLocalBusinessProvider() {
       "https://maps.app.goo.gl/82eQKhoEpkAHebBS9",
       "https://www.yellowpages.ca/bus/Quebec/Lachute/MrBen-ca-Lavage-de-Vitres-Gouttieres/100668164.html"
     ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Services d'entretien extérieur / Exterior Maintenance Services",
+      itemListElement: [
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "Lavage de vitres / Window Cleaning",
+            description: "Service professionnel de lavage de vitres résidentiel et commercial / Professional residential and commercial window cleaning service."
+          }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "Nettoyage de gouttières / Gutter Cleaning",
+            description: "Nettoyage complet de gouttières, vidange de débris et tests d'écoulement / Complete gutter cleaning, debris removal and downspout flushing."
+          }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "Nettoyage de revêtement / Siding Cleaning",
+            description: "Lavage à pression doux pour le revêtement de vinyle, d'aluminium, allées et terrasses / Soft washing for vinyl, aluminum siding, decks and driveways."
+          }
+        }
+      ]
+    }
   };
 }
 

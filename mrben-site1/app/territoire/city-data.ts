@@ -158,15 +158,15 @@ export const CITY_PAGES: CityPage[] = [
     slug: "laval",
     name: "Laval",
     fr: {
-      title: "Services de nettoyage extérieur à Laval",
+      title: "Lavage de Vitres à Laval | Service Résidentiel & Commercial | MrBen",
       description:
-        "Lavage de vitres à Laval (Sainte-Rose, Vimont, Fabreville, Chomedey).",
+        "Besoin d'un lavage de vitres professionnel à Laval (Sainte-Rose, Vimont, Chomedey)? Obtenez un nettoyage de vitre impeccable et sans traces. Prix gratuit!",
       paragraphs: [
-        "À Laval, de Sainte-Rose à Chomedey, l’environnement urbain peut laisser des résidus sur les façades. Nous proposons un service de nettoyage extérieur conçu pour maintenir une apparence impeccable malgré la poussière de la ville. Que votre propriété soit un duplex à Vimont ou une maison unifamiliale à Fabreville, notre équipe travaille avec soin.",
-        "Le lavage de vitres est essentiel pour garder la lumière naturelle. Nous nettoyons les vitres et les cadrages pour un rendu clair. La vidange de gouttières aide à prévenir les débordements et protège les fondations, surtout lors des fortes pluies urbaines. Le nettoyage de revêtement enlève la saleté accumulée.",
-        "Dans un contexte urbain comme Laval, l’efficacité est importante. Nous planifions les interventions pour minimiser les perturbations, avec un service bien organisé. Nous utilisons l’équipement adapté pour les zones difficiles d’accès.",
-        "Nous savons que chaque propriété a ses priorités. Nous ajustons nos recommandations selon l’état des surfaces. La coordination des services facilite aussi la planification.",
-        "Pour un nettoyage extérieur à Laval, cliquez sur « Obtenir une estimation gratuite ». Notre équipe est prête à offrir un service professionnel pour des vitres et gouttières impeccables.",
+        "À Laval, de Sainte-Rose à Chomedey, l’environnement urbain laisse des résidus sur les façades. Notre équipe propose un service de lavage de vitres à Laval conçu pour maintenir une apparence impeccable malgré la poussière de la ville. Que votre propriété soit un duplex à Vimont ou une maison unifamiliale à Fabreville, nous intervenons avec soin pour votre nettoyage extérieur.",
+        "Notre service de lavage de vitres résidentiel et commercial à Laval est pensé pour maximiser la lumière naturelle. Nous nettoyons vitres, cadres et moustiquaires pour une finition sans traces. En plus du lavage de vitre, nous offrons la vidange de gouttières et le nettoyage à pression de revêtements extérieurs pour protéger votre propriété.",
+        "Le lavage de vitres à Laval exige de s’adapter à différents types de bâtiments. Nous utilisons l’équipement professionnel adapté pour laver les fenêtres en hauteur en toute sécurité. Que ce soit pour un commerce de Chomedey ou une résidence à Sainte-Rose, notre méthode garantit un séchage sans tache.",
+        "Nous savons que chaque propriétaire a ses priorités. C’est pourquoi nous offrons des estimations claires et rapides. Regrouper le lavage de vitre et le nettoyage de gouttières permet d’obtenir un entretien extérieur complet au meilleur tarif.",
+        "Pour planifier un lavage de vitres à Laval, cliquez sur « Obtenir une estimation gratuite ». Notre équipe est prête à vous offrir un service professionnel, courtois et ponctuel pour des vitres impeccables.",
       ],
     },
     en: {
@@ -186,12 +186,13 @@ export const CITY_PAGES: CityPage[] = [
     slug: "levis",
     name: "Lévis",
     fr: {
-      title: "Lavage de vitres et entretien extérieur à Lévis",
-      description: "Services professionnels de nettoyage de vitres et gouttières à Lévis (Vieux-Lévis, Lauzon, Pintendre).",
+      title: "Lavage de Vitres à Lévis | Tarif Clair & Sans Traces | MrBen",
+      description: "Besoin d'un lavage de vitres impeccable à Lévis (Vieux-Lévis, St-Nicolas, Charny)? MrBen propose un nettoyage professionnel sans traces. Obtenez votre prix gratuit!",
       paragraphs: [
-        "À Lévis, du charme historique du Vieux-Lévis jusqu'aux nouveaux développements de Pintendre, l'entretien des propriétés est essentiel pour faire face aux vents du fleuve et aux changements de saison. Notre équipe offre un service méticuleux pour redonner de l'éclat à vos fenêtres et assurer le bon fonctionnement de vos gouttières.",
-        "Le lavage de vitres permet de maximiser la luminosité et de profiter pleinement de la vue, que vous soyez face au Château Frontenac ou dans un quartier résidentiel paisible. Nous utilisons des techniques de nettoyage sans traces pour un résultat professionnel durable.",
-        "Le nettoyage de gouttières est une étape clé pour protéger votre fondation contre les eaux de pluie. Dans une région boisée comme Lévis, les débris s'accumulent rapidement; nous nous assurons que l'évacuation se fait sans encombre.",
+        "À Lévis, du Vieux-Lévis historique aux nouveaux secteurs de Pintendre, l'entretien des façades est essentiel pour contrer l'humidité du fleuve. Notre équipe est spécialisée en lavage de vitres à Lévis pour redonner de la clarté à vos fenêtres tout en protégeant vos cadres et moustiquaires.",
+        "Notre service de lavage de vitres résidentiel et commercial à Lévis assure une luminosité maximale, que vous ayez une vue sur le fleuve ou habitiez dans un quartier familial. En tant que laveur de vitre d'expérience, nous utilisons des techniques de nettoyage de vitres sans traces pour des fenêtres étincelantes.",
+        "Le nettoyage de vitres à Lévis s'accompagne idéalement d'un entretien de gouttières. Dans des zones boisées comme Charny ou Saint-Nicolas, les débris s'accumulent vite. Nous vidons vos gouttières et libérons les descentes pour assurer un bon drainage et protéger vos fondations.",
+        "Profitez d'un service de nettoyage extérieur clé en main. En regroupant le lavage de vitres et le lavage sous pression de vos revêtements, vous obtenez un résultat impeccable et durable. Cliquez sur « Obtenir une estimation gratuite » pour planifier vos travaux à Lévis.",
       ],
     },
     en: {
