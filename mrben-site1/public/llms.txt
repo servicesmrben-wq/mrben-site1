@@ -1,0 +1,35 @@
+# MrBen.ca
+
+> MrBen provides professional window cleaning, gutter cleaning, and siding washing services in the Laurentides (Lachute, Saint-Jérôme, Mirabel, Blainville, Laval) and Lévis regions in Quebec.
+
+## Core Services
+
+- [Lavage de vitres / Window Cleaning](/lavage-de-vitre): Residential and commercial window washing inside and out, including screens and sills.
+- [Nettoyage de gouttières / Gutter Cleaning](/nettoyage-de-gouttieres): Full gutter debris removal, downspout flushing, and flow checks to prevent water damage.
+- [Nettoyage de revêtement / Siding Cleaning](/nettoyage-de-revetement): Soft washing and pressure washing for vinyl/aluminum siding, decks, driveways, and patios.
+
+## Interactive Tools
+
+- [AI Estimator / Estimateur en ligne](/estimator): Online interactive tool where users can upload exterior home photos to get a preliminary window cleaning price quote instantly.
+
+## Service Areas & Locations
+
+### Laurentians (Laurentides)
+- [Lachute](/lavage-de-vitre-lachute)
+- [Saint-Jérôme](/lavage-de-vitre-saint-jerome)
+- [Saint-Sauveur](/lavage-de-vitre-saint-sauveur)
+- [Mirabel](/lavage-de-vitre-mirabel)
+- [Blainville](/lavage-de-vitre-blainville)
+- [Laval](/lavage-de-vitre-laval)
+- [Gore](/lavage-de-vitre-gore)
+
+### Lévis & Lotbinière
+- [Lévis Main Page](/levis): regional services and coverage for Lévis.
+- [Lévis Window Cleaning](/levis/lavage-de-vitre)
+- [Lévis Gutter Cleaning](/levis/nettoyage-de-gouttieres)
+- [Lévis Siding Cleaning](/levis/nettoyage-de-revetement)
+- [Saint-Nicolas](/lavage-de-vitre-saint-nicolas)
+- [Charny](/lavage-de-vitre-charny)
+- [Dosquet](/lavage-de-vitre-dosquet)
+- [Saint-Apollinaire](/lavage-de-vitre-saint-apollinaire)
+- [Laurier-Station](/lavage-de-vitre-laurier-station)
