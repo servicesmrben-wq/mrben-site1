@@ -36,7 +36,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const tLevis = await getTranslations({ locale, namespace: 'levis' });
   const provider = getLocalBusinessProvider();
   
-  const sourceOfTruth = t("sourceOfTruth");
+  const sourceOfTruth = tLevis("sourceOfTruth");
   const faqData = t.raw("faq.items");
   const homeFaqItems = (Array.isArray(faqData) || (faqData && typeof faqData === 'object'))
     ? Object.values(faqData).map((item: any, index: number) => {
