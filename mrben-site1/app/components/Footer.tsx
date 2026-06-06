@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/navigation"; // Use custom Link
-import { Phone, Mail, Star } from "lucide-react";
+import { Phone, Mail, Star, Facebook } from "lucide-react";
 
 const BRAND = {
   name: "MrBen.ca",
@@ -159,6 +159,12 @@ const Footer = () => {
                 <Star className="h-4 w-4 text-zinc-500" />
                 <a href={googleReviewsUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-600 hover:text-zinc-900">
                   {t('reviewLink')}
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Facebook className="h-4 w-4 text-zinc-500" />
+                <a href="https://www.facebook.com/MrBenLavagedeVitres" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-600 hover:text-zinc-900">
+                  Facebook
                 </a>
               </li>
             </ul>

@@ -176,13 +176,13 @@ export default function Hero({
               style={heroTextShadow}
             >
               {t("heroH1a")}
-              <span
-                className="block text-lg font-normal leading-snug text-white sm:text-xl md:text-3xl md:leading-normal"
-                style={heroTextShadow}
-              >
-                {t("heroH1b")}
-              </span>
             </h1>
+            <p
+              className="block text-lg font-normal leading-snug text-white sm:text-xl md:text-3xl md:leading-normal mt-2"
+              style={heroTextShadow}
+            >
+              {t("heroH1b")}
+            </p>
             {sourceOfTruth ? (
               <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/90 sm:text-base" style={heroTextShadow}>
                 {sourceOfTruth}
