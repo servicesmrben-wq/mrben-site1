@@ -747,7 +747,7 @@
     "name": "Nom",
     "phoneLabel": "Téléphone",
     "emailLabel": "Courriel",
-    "address": "Adresse",
+    "address": "Adresse complète",
     "choose": "Choisissez un ou plusieurs services",
     "servicesRequested": "Services demandés",
     "chooseServices": "Choisir les services",
