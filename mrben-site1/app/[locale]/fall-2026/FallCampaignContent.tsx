@@ -19,15 +19,11 @@ const i18n = {
     weekLabel: "Période souhaitée",
     weekOptions: [
       "Dès que possible",
-      "Début septembre",
-      "Mi-septembre",
-      "Fin septembre",
       "Début octobre",
       "Mi-octobre",
-      "Fin octobre",
-      "Novembre",
-      "Plus tard"
+      "Fin octobre"
     ],
+    badge: "AUTOMNE 2026",
     desc: "Détails ou demandes spéciales",
     descPlaceholder: "Ex: Même service que l'an dernier, merci !",
     send: "Demander mon rendez-vous",
@@ -48,15 +44,11 @@ const i18n = {
     weekLabel: "Desired period",
     weekOptions: [
       "As soon as possible",
-      "Early September",
-      "Mid-September",
-      "Late September",
       "Early October",
       "Mid-October",
-      "Late October",
-      "November",
-      "Later"
+      "Late October"
     ],
+    badge: "FALL 2026",
     desc: "Details or special requests",
     descPlaceholder: "Ex: Same service as last year, thanks !",
     send: "Request my appointment",
@@ -289,7 +281,7 @@ export default function FallCampaignContent({ locale }: { locale: "en" | "fr" })
                 <div className="mt-12 sm:mt-24">
                   <div className="inline-flex items-center gap-2 rounded-full bg-[#6AC126]/20 px-3 py-1 text-xs font-bold text-[#6AC126] ring-1 ring-[#6AC126]/30 mb-6">
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    <span>AUTOMNE 2026</span>
+                    <span>{t("badge" as any)}</span>
                   </div>
                   <h3 className="text-2xl font-bold mb-6">
                     {locale === "fr" ? "Vous avez une question ?" : "Have a question?"}
