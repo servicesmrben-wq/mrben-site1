@@ -15,7 +15,7 @@ const i18n = {
     email: "Courriel",
     address: "Adresse de la propriété",
     choose: "Services requis",
-    services: ["Vidange de gouttières", "Lavage de vitres", "Lavage de revêtement"],
+    services: ["Vidange de gouttières", "Lavage de vitres"],
     weekLabel: "Période souhaitée",
     weekOptions: [
       "Dès que possible",
@@ -40,7 +40,7 @@ const i18n = {
     email: "Email",
     address: "Property Address",
     choose: "Services needed",
-    services: ["Gutter cleaning", "Window cleaning", "Siding wash"],
+    services: ["Gutter cleaning", "Window cleaning"],
     weekLabel: "Desired period",
     weekOptions: [
       "As soon as possible",

@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: isEn ? "Fall 2026 Promotion" : "Automne 2026",
     description: isEn 
-      ? "Reserve your spot for fall window, gutter, and siding maintenance. Quick VIP booking for returning customers."
-      : "Réservez votre place pour l'entretien d'automne des vitres, gouttières et revêtement. Réservation rapide pour nos clients fidèles.",
+      ? "Reserve your spot for fall window and gutter maintenance. Quick VIP booking for returning customers."
+      : "Réservez votre place pour l'entretien d'automne des vitres et gouttières. Réservation rapide pour nos clients fidèles.",
     alternates: {
       canonical,
       languages: {
