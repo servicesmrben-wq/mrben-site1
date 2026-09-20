@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
   res.status(200).send('Microservice is healthy');
 });
 
-// 🔗 MODEL URL - Production stable endpoint for Gemini 3.5 Flash
-const urlG35Flash = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.5-flash:generateContent';
+// 🔗 MODEL URL - Production stable endpoint for Gemini Flash Latest
+const urlFlashLatest = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-flash-latest:generateContent';
 
 // 🚀 MAIN ESTIMATION ROUTE
 app.post('/estimate', upload.array('files'), async (req, res) => {
@@ -144,7 +144,7 @@ Return JSON ONLY. Do not wrap response in markdown code blocks. The output must 
     let parsedModelResponse = null;
 
     try {
-      const response = await fetch(urlG35Flash, {
+      const response = await fetch(urlFlashLatest, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -157,7 +157,7 @@ Return JSON ONLY. Do not wrap response in markdown code blocks. The output must 
       });
       
       clearTimeout(timeout);
-      if (!response.ok) throw new Error(`Gemini 3.5 Flash Batch HTTP Error: ${response.status}`);
+      if (!response.ok) throw new Error(`Gemini Flash Latest Batch HTTP Error: ${response.status}`);
       
       const rawData = await response.json();
       const rawText = rawData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
@@ -180,7 +180,7 @@ Return JSON ONLY. Do not wrap response in markdown code blocks. The output must 
       images_count: req.files.length,
       average_vibe_multiplier: 1.0,
       analysis_g3: "", // Populated dynamically below
-      analysis_g25: `Global Vibe selected directly by Gemini 3.5 Flash: [${parsedModelResponse.global_pane_vibe || 'normal'}]`,
+      analysis_g25: `Global Vibe selected directly by Gemini Flash Latest: [${parsedModelResponse.global_pane_vibe || 'normal'}]`,
       window_counts: {
         pane_3rd_story: 0,
         pane_2nd_story: 0,
