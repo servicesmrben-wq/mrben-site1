@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 // 🔗 MODEL URL - Production stable endpoint for Gemini Flash Latest
-const urlFlashLatest = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-flash-latest:generateContent';
+const urlFlashLatest = 'https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0569585575/locations/global/publishers/google/models/gemini-3.8-flash:generateContent';
 
 // 🚀 MAIN ESTIMATION ROUTE
 app.post('/estimate', upload.array('files'), async (req, res) => {
