@@ -142,6 +142,8 @@ export async function POST(req: Request) {
     let subject = `Nouvelle demande ${region} — ${name}`;
     if (campaign === "Spring 2026 VIP") {
       subject = `Campagne courriel printemps 2026 - ${name}`;
+    } else if (campaign === "Fall 2026 VIP") {
+      subject = `Campagne courriel automne 2026 - ${name}`;
     }
 
     const safeMessage = message || "(no message)";
