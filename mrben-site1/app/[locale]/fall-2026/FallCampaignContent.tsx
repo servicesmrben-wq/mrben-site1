@@ -13,7 +13,7 @@ const i18n = {
     name: "Nom complet",
     phone: "Téléphone",
     email: "Courriel",
-    address: "Adresse de la propriété",
+    address: "Ville",
     choose: "Services requis",
     services: ["Vidange de gouttières", "Lavage de vitres"],
     weekLabel: "Période souhaitée",
@@ -38,7 +38,7 @@ const i18n = {
     name: "Full Name",
     phone: "Phone",
     email: "Email",
-    address: "Property Address",
+    address: "City",
     choose: "Services needed",
     services: ["Gutter cleaning", "Window cleaning"],
     weekLabel: "Desired period",
@@ -97,7 +97,7 @@ export default function FallCampaignContent({ locale }: { locale: "en" | "fr" })
         
         const autocomplete = new googleMaps.maps.places.Autocomplete(
           addressInputRef.current,
-          { types: ["address"], componentRestrictions: { country: "ca" } }
+          { types: ["(cities)"], componentRestrictions: { country: "ca" } }
         );
 
         autocomplete.setFields?.(["formatted_address"]);
