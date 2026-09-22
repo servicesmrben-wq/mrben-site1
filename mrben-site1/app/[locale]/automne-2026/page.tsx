@@ -26,6 +26,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
         "x-default": canonical,
       },
     },
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 
