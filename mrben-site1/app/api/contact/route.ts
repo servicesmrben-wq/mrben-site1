@@ -150,13 +150,14 @@ export async function POST(req: Request) {
     const servicesLabel = services.length ? services.join(", ") : "(none selected)";
     const phoneLabel = phone ? phone : "(not provided)";
     const addressLabel = address ? address : "(not provided)";
+    const addressTitle = campaign === "Fall 2026 VIP" ? "VILLE" : "ADRESSE";
     
     // Construct Text Body
     const textLines = [
       `NOM : ${name}`,
       `COURRIEL : ${email}`,
       `TÉLÉPHONE : ${phoneLabel}`,
-      `ADRESSE : ${addressLabel}`,
+      `${addressTitle} : ${addressLabel}`,
       `SERVICES : ${servicesLabel}`
     ];
 
@@ -212,7 +213,7 @@ export async function POST(req: Request) {
       `<p><strong>NOM :</strong> ${escapeHtml(name)}</p>`,
       `<p><strong>COURRIEL :</strong> ${escapeHtml(email)}</p>`,
       `<p><strong>TÉLÉPHONE :</strong> ${escapeHtml(phoneLabel)}</p>`,
-      `<p><strong>ADRESSE :</strong> ${escapeHtml(addressLabel)}</p>`,
+      `<p><strong>${addressTitle} :</strong> ${escapeHtml(addressLabel)}</p>`,
       `<p><strong>SERVICES :</strong> ${escapeHtml(servicesLabel)}</p>`,
     ];
 
