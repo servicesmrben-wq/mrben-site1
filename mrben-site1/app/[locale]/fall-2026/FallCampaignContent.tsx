@@ -100,11 +100,11 @@ export default function FallCampaignContent({ locale }: { locale: "en" | "fr" })
           { types: ["(cities)"], componentRestrictions: { country: "ca" } }
         );
 
-        autocomplete.setFields?.(["formatted_address"]);
+        autocomplete.setFields?.(["formatted_address", "name", "address_components"]);
         autocomplete.addListener("place_changed", () => {
           const place = autocomplete.getPlace?.();
-          const formatted = place?.formatted_address;
-          if (formatted) setForm((prev) => ({ ...prev, address: formatted }));
+          const city = place?.name || place?.address_components?.find((c: any) => c.types?.includes("locality"))?.long_name || place?.formatted_address;
+          if (city) setForm((prev) => ({ ...prev, address: city }));
         });
       });
     });
@@ -210,10 +210,10 @@ export default function FallCampaignContent({ locale }: { locale: "en" | "fr" })
             <div className="p-6 sm:p-10 md:col-span-3">
               <form onSubmit={onSubmit}>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <Input label={t("name") as string} placeholder="" required value={form.name} onChange={(e: any) => setForm(p => ({ ...p, name: e.target.value }))} />
-                  <Input label={t("phone") as string} placeholder="" required type="tel" value={form.phone} onChange={(e: any) => setForm(p => ({ ...p, phone: formatPhoneNumber(e.target.value) }))} />
-                  <Input label={t("email") as string} placeholder="" type="email" value={form.email} onChange={(e: any) => setForm(p => ({ ...p, email: e.target.value }))} />
-                  <Input label={t("address") as string} placeholder="" required inputRef={addressInputRef} value={form.address} onChange={(e: any) => setForm(p => ({ ...p, address: e.target.value }))} />
+                  <Input name="name" autoComplete="name" label={t("name") as string} placeholder="" required value={form.name} onChange={(e: any) => setForm(p => ({ ...p, name: e.target.value }))} />
+                  <Input name="phone" autoComplete="tel" label={t("phone") as string} placeholder="" required type="tel" value={form.phone} onChange={(e: any) => setForm(p => ({ ...p, phone: formatPhoneNumber(e.target.value) }))} />
+                  <Input name="email" autoComplete="email" label={t("email") as string} placeholder="" type="email" value={form.email} onChange={(e: any) => setForm(p => ({ ...p, email: e.target.value }))} />
+                  <Input name="city" id="city" autoComplete="address-level2" label={t("address") as string} placeholder="" required inputRef={addressInputRef} value={form.address} onChange={(e: any) => setForm(p => ({ ...p, address: e.target.value }))} />
                 </div>
 
                 <div className="mt-6">
